@@ -1,0 +1,14 @@
+Link
+
+http://archive.ics.uci.edu/ml/datasets/vertebral+column#
+
+Rótulos
+
+* Rótulo classe Hérnia de Disco		[1 -1 -1] 
+(60 primeiras linhas)
+
+* Rótulo classe Espondilolistese	[-1 1 -1] 
+(150 linhas intermediárias)
+
+* Rótulo classe Normal			[-1 -1 1] 
+(100 linhas finais)

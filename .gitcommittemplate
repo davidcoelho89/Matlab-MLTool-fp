@@ -1,0 +1,22 @@
+# Lines starting with '#' will be ignored
+# Title: [Should contain a brief commit description, max one line] 
+#
+# Description: [A more detailed description about the changes]
+#
+#
+# Commit-Type: [Commit type] the options are:
+# Add: Adding functionality of behavior.
+# Mod: Modifying something about behavior, changing some behavior. 
+# Ref: Refactoring code. 
+# Fix: To do a fixing commit. 
+# Rem: Removing something.
+#
+# TaskNumber #Number:[If your commit is about a bug, put the bug number]
+# Dont forget to remove the [ ]
+[Title]
+
+Description:[Description]
+
+Commit:[Commit type]
+
+TaskNumber:[#Number]

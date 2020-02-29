@@ -1,0 +1,10 @@
+-> This data set is two dimensional
+
+- It is composed of two clusters of data
+
+- Each cluster has a "moon format".
+
+-> Usage
+
+- the data set can be used for classification or 
+  clustering

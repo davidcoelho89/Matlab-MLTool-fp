@@ -1,0 +1,6 @@
+- Digits are 28x28
+
+- Already vectorized (784)
+
+- 60.000 first samples are for training
+- 10.000 last samples are for testing

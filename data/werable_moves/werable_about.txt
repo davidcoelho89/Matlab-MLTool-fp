@@ -1,0 +1,19 @@
+-> user:
+
+1: debora
+2: katia
+3: wallace
+4: jose_carlos
+
+-> gender:
+
+1: woman
+2: man
+
+-> class:
+
+1: sitting
+2: sittingdown
+3: standing
+4: standingup
+5: walking

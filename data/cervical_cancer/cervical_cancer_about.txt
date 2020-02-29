@@ -1,0 +1,25 @@
+----- Links:
+
+https://www.researchgate.net/profile/Jan_Jantzen/publication/265873515_Pap-smear_Benchmark_Data_For_Pattern_Classification/links/551af0090cf2fdce84383bdb.pdf
+http://eventos.ufabc.edu.br/siimsps/files/id74.pdf
+http://mde-lab.aegean.gr/downloads
+
+----- General:
+
+- Cervical cancer detection
+
+- 7 classes (3 from normal and 4 from abnormal)
+
+- 20 attributes
+
+-> Samples	917
+
+- Class 1	74
+- Class 2	70
+- Class 3	98	(242 from normal)
+- Class 4	182
+- Class 5	146
+- Class 6	197
+- Class 7	150	(675 from abnormal)
+
+----- 

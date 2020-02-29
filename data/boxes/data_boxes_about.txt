@@ -1,0 +1,6 @@
+-> Cada amostra representa a imagem de uma caixa de determinado tamanho
+
+- Pequeno (1), Médio (2), Grande (3)
+- Os atributos correspondem a imagens já transformadas
+- São 36 atributos
+

@@ -1,0 +1,50 @@
+----- Name and Sources
+
+Title: Wisconsin Breast Cancer Database
+
+Dr. WIlliam H. Wolberg (physician)
+Donor: Olvi Mangasarian
+
+https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29
+
+----- Files
+
+- data_breast_cancer1.txt: with all instances
+
+----- Citation
+
+This breast cancer databases was obtained from the University of Wisconsin
+Hospitals, Madison from Dr. William H. Wolberg.
+
+O. L. Mangasarian and W. H. Wolberg: "Cancer diagnosis via linear 
+programming", SIAM News, Volume 23, Number 5, September 1990, pp 1 & 18.
+
+----- General Information
+
+- Number of Instances: 699 (as of 15 July 1992)
+- Number of Attributes: 10 plus the class attribute
+
+- Instances missing attributes: 16
+  (can be removed - 24 41 140 146 159 165 236 250 276 293 295 298 316 322 412 618)
+  (missing attributes = 0
+
+- Class distribution:
+	Benign: 458 (65.5%)
+   	Malignant: 241 (34.5%)
+
+----- Atributes
+
+   #  Attribute                     Domain
+   -- -----------------------------------------
+   1. Sample code number            id number
+   2. Clump Thickness               1 - 10
+   3. Uniformity of Cell Size       1 - 10
+   4. Uniformity of Cell Shape      1 - 10
+   5. Marginal Adhesion             1 - 10
+   6. Single Epithelial Cell Size   1 - 10
+   7. Bare Nuclei                   1 - 10
+   8. Bland Chromatin               1 - 10
+   9. Normal Nucleoli               1 - 10
+  10. Mitoses                       1 - 10
+  11. Class:                        (2 for benign, 4 for malignant)
+

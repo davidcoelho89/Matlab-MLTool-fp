@@ -1,0 +1,17 @@
+% http://en.wikipedia.org/wiki/Rastrigin_function
+% a = -5.12:0.01:5.12;
+% b = -5.12:0.01:5.12;
+% c = a.^2 + b.^2 + 20 - 10.*cos(2*pi*a) -10.*cos(2*pi*b);
+
+[x1,x2] = meshgrid(-5.12:0.01:5.12);
+y = x1.^2 + x2.^2 + 20 - 10.*cos(2*pi*x1) -10.*cos(2*pi*x2);
+
+figure;
+mesh(x1,x2,y);      % plota um gráfico colorido de uma função de 2 var
+% surf(x1,x2,y);    % plota um gráfico p&b de uma função de 2 var
+% plot3(x1,x2,y);   % plota uma curva 3D em função dos 3 vetores
+title ('Rastrigin Function')
+
+figure;
+contour(x1,x2,y);
+title ('Contours Curves')

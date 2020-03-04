@@ -1,9 +1,9 @@
-# MLTool_Matlab_new
+# MLTool_Matlab
 
 Open Machine Learning Toolbox in Matlab Language.
 
 Author: David Nascimento Coelho.
-Last Update: 2019/07/15.
+Last Update: 2020/03/04.
 
 => Thanks to:
 
@@ -22,7 +22,3 @@ Last Update: 2019/07/15.
 
 - Have and "f" after the algorithm name
 - Ex: mlp_f_ativ (activation function of mlp classifier)
-
-=> Documentation for Specific Functions
-
-- Access "docs" folder

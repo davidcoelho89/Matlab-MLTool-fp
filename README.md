@@ -22,7 +22,3 @@ Last Update: 2019/07/15.
 
 - Have and "f" after the algorithm name
 - Ex: mlp_f_ativ (activation function of mlp classifier)
-
-=> Documentation for Specific Functions
-
-- Access "docs" folder

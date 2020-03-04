@@ -3,7 +3,7 @@
 Open Machine Learning Toolbox in Matlab Language.
 
 Author: David Nascimento Coelho.
-Last Update: 2019/07/15.
+Last Update: 2020/03/04.
 
 => Thanks to:
 

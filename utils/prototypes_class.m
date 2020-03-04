@@ -99,7 +99,9 @@ if (K == 1),        % if it is a nearest neighbor case
             else
                 dm = -1;        % get minimum distance from other classes
                 for j = 1:Nc,
-                    if(j == class),
+                    if(j == class), % looking for other classes
+                        continue;
+                    elseif (d_min(j) == -1), % no prot from this class
                         continue;
                     elseif (dm == -1 || d_min(j) < dm),
                         dm = d_min(j);

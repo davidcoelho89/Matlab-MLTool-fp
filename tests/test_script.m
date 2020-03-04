@@ -776,6 +776,18 @@ format long e;
 % 
 % save('mnist.mat');
 
+%% Pairplot Test
+
+clear; clc;
+
+OPT.prob = 6;
+DATA = data_class_loading(OPT);
+label = {'SL','SW','PL','PW'};
+
+figure; pairplot(DATA);
+% figure; pairplot(DATA,label);
+% figure; pairplot(DATA,label,'histogram');
+
 %% Eigenfaces and FisherFaces Test
 
 % ToDo - All

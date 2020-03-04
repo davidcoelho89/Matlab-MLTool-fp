@@ -18,17 +18,47 @@ function [DATAout] = normalize(DATAin,OPTION)
 %   Output:
 %       DATAout.
 %           input = normalized matrix               [p x N]
+%           Xmin = Minimum value of attributes      [p x 1]
+%           Xmax = Maximum value of attributes      [p x 1]
+%           Xmed = Mean value of attributes         [p x 1]
+%           Xdp = Standard Deviation of attributes  [p x 1]
 
 %% INITIALIZATIONS
 
-option = OPTION.norm;   % gets normalization option from structure
-X = DATAin.input';      % gets and transpose data from structure - [N x p]
+% Get normalization option and data matrix [N x p]
 
-[N,p] = size(X);        % number of samples and attributes
-Xmin = min(X)';         % minimum value of each attribute
-Xmax = max(X)';         % maximum value of each attribute
-Xmed = mean(X)';        % mean of each attribute
-dp = std(X)';           % standard deviation of each attribute
+option = OPTION.norm;   
+X = DATAin.input';      
+
+% Get number of samples and attributes
+
+[N,p] = size(X);
+
+% Get min, max, mean and standard deviation measures
+
+if (~(isfield(DATAin,'Xmin'))),
+    Xmin = min(X)';
+else
+    Xmin = DATAin.Xmin;
+end
+
+if (~(isfield(DATAin,'Xmax'))),
+    Xmax = max(X)';
+else
+    Xmax = DATAin.Xmax;
+end
+
+if (~(isfield(DATAin,'Xmed'))),
+    Xmed = mean(X)';
+else
+    Xmed = DATAin.Xmed;
+end
+
+if (~(isfield(DATAin,'Xdp'))),
+    Xdp = std(X)';
+else
+    Xdp = DATAin.Xdp;
+end
 
 %% ALGORITHM
 
@@ -52,7 +82,7 @@ switch option
     case (3)    % normalize by z-score transform (by mean and std)
         for i = 1:N,
             for j = 1:p,
-                X_norm(i,j) = (X(i,j) - Xmed(j))/dp(j); 
+                X_norm(i,j) = (X(i,j) - Xmed(j))/Xdp(j); 
             end
         end
     otherwise
@@ -68,7 +98,7 @@ DATAin.input = X_norm;
 DATAin.Xmin = Xmin;
 DATAin.Xmax = Xmax;
 DATAin.Xmed = Xmed;
-DATAin.dp = dp;
+DATAin.Xdp = Xdp;
 
 DATAout = DATAin;
 

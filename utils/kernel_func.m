@@ -19,10 +19,9 @@ function [Kxy] = kernel_func(x,y,PAR)
 %               8 -> Kmod
 %           sig2n = kernel regularization parameter             [cte]
 %           sigma   (gauss / exp / cauchy / log / kmod)         [cte]
-%           order   (poly / log)                                [cte]
+%           gamma   (poly / log / Kmod)                         [cte]
 %           alpha   (poly / sigmoid)                            [cte]
 %           theta   (lin / poly / sigmoid)                      [cte]
-%           gamma   (Kmod)                                      [cte]
 %   Output:
 %       Kxy = result of dot product in feature space            [cte]
 
@@ -30,7 +29,7 @@ function [Kxy] = kernel_func(x,y,PAR)
 
 if ((nargin == 2) || (isempty(PAR))),
     PARaux.Ktype = 2;   	% Kernel Type (gaussian)
-    PARaux.sigma = 0.1;   	% Kernel Std
+    PARaux.sigma = 0.1;   	% Kernel Std (gaussian)
     PAR = PARaux;
 else
     % The default values are define by the kernel type
@@ -52,11 +51,13 @@ else
             PAR.sigma = 0.1;
         end
     end
-    if (~(isfield(PAR,'order'))),
+    if (~(isfield(PAR,'gamma'))),
         if(PAR.Ktype == 3),
-            PAR.order = 2;
+            PAR.gamma = 2;
         elseif (PAR.Ktype == 6),
-            PAR.order = 2;
+            PAR.gamma = 2;
+        elseif (PAR.Ktype == 8),
+            PAR.gamma = 3.5;
         end
     end
     if (~(isfield(PAR,'alpha'))),
@@ -76,11 +77,6 @@ else
             PAR.theta = 0.1;
         end
     end
-    if (~(isfield(PAR,'gamma'))),
-        if (PAR.Ktype == 8),
-            PAR.gamma = 3.5;
-        end
-    end
 end
 
 %% INITIALIZATIONS
@@ -98,14 +94,14 @@ elseif (Ktype == 2),    % Gaussian
 elseif (Ktype == 3),    % Polynomial
     alpha = PAR.alpha;
     theta = PAR.theta;
-    order = PAR.order;
+    gamma = PAR.gamma;
 elseif (Ktype == 4),    % Exponencial / Laplacian
     sigma = PAR.sigma;
 elseif (Ktype == 5),    % Cauchy
     sigma = PAR.sigma;
 elseif (Ktype == 6),    % Log
     sigma = PAR.sigma;
-    order = PAR.order;
+    gamma = PAR.gamma;
 elseif (Ktype == 7),    % Sigmoid
 	alpha = PAR.alpha;
     theta = PAR.theta;
@@ -122,13 +118,13 @@ if (Ktype == 1),        % Linear
 elseif (Ktype == 2),    % Gaussian
     Kxy = exp(-norm(x-y)^2/(sigma^2));
 elseif (Ktype == 3),    % Polynomial
-    Kxy = (alpha * x' * y + theta)^order;
+    Kxy = (alpha * x' * y + theta)^gamma;
 elseif (Ktype == 4),    % Exponencial / Laplacian
     Kxy = exp(-norm(x-y)/sigma);
 elseif (Ktype == 5),    % Cauchy
     Kxy = (1 + (norm(x-y)^2)/(sigma^2))^(-1);
 elseif (Ktype == 6),    % Log
-    Kxy = -log(1 + (norm(x-y)^order)/(sigma^2));
+    Kxy = -log(1 + (norm(x-y)^gamma)/(sigma^2));
 elseif (Ktype == 7),    % Sigmoid (hyperbolic tangent)
     Kxy = tanh(alpha * x' * y + theta);
 elseif (Ktype == 8),    % Kmod

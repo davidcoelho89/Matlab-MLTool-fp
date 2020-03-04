@@ -18,7 +18,7 @@ OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 50;              	% Number of repetitions of the algorithm
+OPT.Nr = 100;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
@@ -27,29 +27,34 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 % Handlers for classification functions
 
-class_name = 'k2nn';
-class_train = @k2nn_train;
-class_test = @k2nn_classify;
+class_name = 'ols';
+class_train = @ols_train;
+class_test = @ols_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
-HP.Dm = 2;          % Design Method
-HP.Ss = 1;          % Sparsification strategy
-HP.Ps = 0;          % Prunning strategy
-HP.min_score = -10; % Score that leads the sample to be pruned
-HP.Us = 1;          % Update strategy
-HP.v1 = 2;          % Sparseness parameter 1 
-HP.v2 = 0.9;        % Sparseness parameter 2
-HP.Von = 0;         % enable / disable video 
-HP.K = 1;           % Number of nearest neighbors (classify)
-HP.Ktype = 1;       % Kernel Type (Gaussian)
-HP.sig2n = 0.001;   % Kernel Regularization parameter
-HP.sigma = 10;    	% Kernel width
+HP.aprox = 1;         % Type of aproximation
+
+% HP.Dm = 2;          % Design Method
+% HP.Ss = 1;          % Sparsification strategy
+% HP.v1 = 0.4;        % Sparseness parameter 1 
+% HP.v2 = 0.9;        % Sparseness parameter 2
+% HP.Ps = 1;          % Prunning strategy
+% HP.min_score = -10; % Score that leads the sample to be pruned
+% HP.Us = 1;          % Update strategy
+% HP.eta = 0.01;      % Update rate
+% HP.Von = 1;         % Enable / disable video 
+% HP.K = 1;           % Number of nearest neighbors (classify)
+% HP.Ktype = 3;       % Kernel Type ( 2 Gauss / 3 poly / 5 cauc / 7 sigm)
+% HP.sig2n = 0.001;   % Kernel Regularization parameter
+% HP.sigma = 2;    	% Kernel width (gaussian)
+% HP.alpha = 1;       % Dot product multiplier (poly 1 / sigm 0.1)
+% HP.theta = 1;       % Dot product adding (poly 1 / sigm 0.1)
+% HP.order = 2;       % polynomial order (poly 2 or 3)
 
 %% DATA LOADING AND PRE-PROCESSING
 
 DATA = data_class_loading(OPT);     % Load Data Set
-DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% ACCUMULATORS
@@ -77,6 +82,17 @@ display(datestr(now));
 DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
 DATAtr = DATA_acc{r}.DATAtr;        % Training Data
 DATAts = DATA_acc{r}.DATAts;      	% Test Data
+
+% %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
+
+DATAtr = normalize(DATAtr,OPT);	% training data normalization
+
+DATAts.Xmin = DATAtr.Xmin;
+DATAts.Xmax = DATAtr.Xmax;
+DATAts.Xmed = DATAtr.Xmed;
+DATAts.Xdp = DATAtr.Xdp;
+
+DATAts = normalize(DATAts,OPT); % test data normalization
 
 % %%%%%%%%%%%%%% SHUFFLE TRAINING DATA %%%%%%%%%%%%%%%%%%%
 

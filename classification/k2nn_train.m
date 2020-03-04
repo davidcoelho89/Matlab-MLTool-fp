@@ -2,7 +2,7 @@
 
 % --- Kernel KNN Prototype-Based Training Function ---
 %
-%   PAR = k2nn_train(DATA,PAR)
+%   PAR = k2nn_train(DATA,HP)
 % 
 %   Input:
 %       DATA.
@@ -31,6 +31,7 @@
 %               = 1 -> lms (wta)
 %               = 2 -> lvq (supervised)
 %           eta = Update rate                                   [cte]
+%           max_prot = max number of prototypes                 [cte]
 %           Von = enable or disable video                       [cte]
 %           K = number of nearest neighbors (classify)        	[cte]
 %           Ktype = kernel type ( see kernel_func() )           [cte]
@@ -61,6 +62,7 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.min_score = -10; % Score that leads to prune prototype
     PARaux.Us = 0;          % Update strategy
     PARaux.eta = 0.01;      % Update Rate
+    PARaux.max_prot = Inf;  % Max number of prototypes
     PARaux.Von = 0;         % enable / disable video
     PARaux.K = 1;           % Number of nearest neighbors (classify)
     PARaux.Ktype = 2;       % Kernel Type (Gaussian)
@@ -92,6 +94,9 @@ else
     if (~(isfield(HP,'eta'))),
         HP.eta = 0.01;
     end
+    if (~(isfield(HP,'max_prot'))),
+        HP.max_prot = Inf;
+    end
     if (~(isfield(HP,'Von'))),
         HP.Von = 0;
     end
@@ -118,7 +123,8 @@ Y = DATA.output;        % Output Matrix
 
 % Get Hyperparameters
 
-Von = HP.Von;
+% Von = HP.Von;
+max_prot = HP.max_prot;
 
 % Problem Initialization
 
@@ -173,21 +179,21 @@ for t = 1:N,
     % Get the size of the dictionary
     [~,mt_1] = size(D.x);
     
+    % Dont Add if number of prototypes is too high
+    if (mt_1 > max_prot),
+        break;
+    end
+
     % Apply sparsification strategy
     [D] = k2nn_dict_grow(xt,yt,D,HP);
     
     % Get the new size of the dictionary
     [~,mt] = size(D.x);
     
-    % Break if number of prototypes is too high
-    % (for cross validation and preliminar tests)
-%     if (mt > 400),
-%         break;
-%     end
-    
     % Apply prunning strategy
     [D] = k2nn_dict_prun(D,HP);
 
+    % Verify number of prototypes
     if ((mt - mt_1) == 1)
         % Number of prototypes (for debug)
      	display(mt);

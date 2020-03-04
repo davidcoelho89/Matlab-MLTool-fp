@@ -10,19 +10,11 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% OBSERVATIONS
-
-% Contribuição Teórica: kernels
-% Polinomial: d = 2 ou 3 ou fracionario. alpha = 1 e c = 1 (sem HP)
-% (alpha * x' * y + c)
-% Tg Hiperb: alpha = 1 e c = 1 -> 0.1 e 0.1 (sem HP)
-% (alpha * x' * y + c)
-
 %% GENERAL DEFINITIONS
 
 % General options' structure
 
-OPT.prob = 06;              % Which problem will be solved / used
+OPT.prob = 25;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
@@ -33,62 +25,79 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 %% CHOOSE HYPERPARAMETERS
 
+% Kernel Functions: 1 lin / 2 gauss / 3 poly / 5 cauchy / 6 log / 7 sigm /
+
 HP.Dm = 2;          % Design Method
 HP.Ss = 1;          % Sparsification strategy
-HP.v1 = 0.4;        % Sparseness parameter 1 
+HP.v1 = 0.5;        % Sparseness parameter 1 
 HP.v2 = 0.9;        % Sparseness parameter 2
 HP.Ps = 1;          % Prunning strategy
 HP.min_score = -10; % Score that leads the sample to be pruned
 HP.Us = 1;          % Update strategy
 HP.eta = 0.01;      % Update rate
+HP.max_prot = Inf;  % Max number of prototypes
 HP.Von = 1;         % Enable / disable video 
 HP.K = 1;           % Number of nearest neighbors (classify)
 HP.Ktype = 2;       % Kernel Type ( 2 Gauss / 3 poly / 5 cauc / 7 sigm)
 HP.sig2n = 0.001;   % Kernel Regularization parameter
 HP.sigma = 2;    	% Kernel width (gaussian)
+HP.gamma = 2;       % polynomial order (poly 2 or 3)
 HP.alpha = 1;       % Dot product multiplier (poly 1 / sigm 0.1)
 HP.theta = 1;       % Dot product adding (poly 1 / sigm 0.1)
-HP.order = 2;       % polynomial order
 
 %% DATA LOADING AND PRE-PROCESSING
 
 DATA = data_class_loading(OPT);     % Load Data Set
+
 DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-[~,N] = size(DATA.input);        	% get number of attributes and samples
+[Nc,N] = size(DATA.output);        	% get number of classes and samples
 
-DATAn = struct('input',[],'output',[]);
+%% VISUALIZE DATA
+
+DATA1 = DATA;
+DATA1.input = DATA.input(:,25000:30000);
+DATA1.output = DATA.output(:,25000:30000);
+ 
+figure; pairplot(DATA1);             % visualize data
 
 %% ACCUMULATORS
 
-NAMES = {'train','test'};           % Acc of names for plots
-DATA_acc = cell(OPT.Nr,1);       	% Acc of Data
-PAR_acc = cell(OPT.Nr,1);         	% Acc of Parameters and Hyperparameters
-STATS_tr_acc = cell(OPT.Nr,1);   	% Acc of Statistics of training data
-STATS_ts_acc = cell(OPT.Nr,1);   	% Acc of Statistics of test data
-nSTATS_all = cell(2,1);             % Acc of General statistics
+NAMES = {'train','test'};           % Hold names for plots
+DATA_acc = cell(OPT.Nr,1);       	% Hold Data
+PAR_acc = cell(OPT.Nr,1);         	% Hold Parameters and Hyperparameters
+STATS_tr_acc = cell(OPT.Nr,1);   	% Hold Statistics of training data
+STATS_ts_acc = cell(OPT.Nr,1);   	% Hold Statistics of test data
+nSTATS_all = cell(2,1);             % Hold General statistics
 
-accuracy_vector = zeros(1,N);
-no_of_correct = zeros(1,N);
-no_of_errors = zeros(1,N);
+accuracy_vector = zeros(1,N);       % Hold Acc / (Acc + Err)
+no_of_correct = zeros(1,N);         % Hold # of correctly classified x
+no_of_errors = zeros(1,N);          % Hold # of misclassified x
+predict_vector = zeros(2,N);        % Hold true and predicted labels
+no_of_samples = zeros(Nc,N);        % Hold number of samples per class
 
-VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
+figure; VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
 
 %% SEQUENTIAL TESTS AND STATISTICS
 
 % Shuffle Data
-% I = randperm(size(DATA.input,2));
-% DATA.input = DATA.input(:,I);
-% DATA.output = DATA.output(:,I);
-% DATA.lbl = DATA.lbl(:,I);
-
-% Get max and min values of data
-% And update "prototypes_frame" function!! (axis fixed)
+I = randperm(size(DATA.input,2));
+DATA.input = DATA.input(:,I);
+DATA.output = DATA.output(:,I);
+DATA.lbl = DATA.lbl(:,I);
 
 % Get first element to dictionary
-DATAn.input = DATA.input(:,1);
-DATAn.output = DATA.output(:,1);
+DATAn.input = DATA.input(:,1);      % first element input
+DATAn.output = DATA.output(:,1);    % first element output
+DATAn.Xmax = max(DATA.input,[],2);  % max value
+DATAn.Xmin = min(DATA.input,[],2);  % min value
+DATAn.Xmed = mean(DATA.input,2);    % mean value
+DATAn.Xdp = std(DATA.input,[],2);   % std value
+
+[~,max_y] = max(DATAn.output);      % add element to dictionary
+
+no_of_samples(max_y,1) = 1;
 PAR = k2nn_train(DATAn,HP);
 
 if (HP.Von),
@@ -98,21 +107,37 @@ end
 for n = 2:N,
     
     % Display number of samples already seen (for debug)
+    
     if(mod(n,1000) == 0),
         disp(n);
         disp(datestr(now));
     end
     
     % Get current data
+    
     DATAn.input = DATA.input(:,n);
     DATAn.output = DATA.output(:,n);
     
-    % Test (classify arring data with current model)
+    % Test (classify arriving data with current model)
+    
     OUTn = k2nn_classify(DATAn,PAR);
     
     % Statistics
+    
     [~,max_y] = max(DATAn.output);
     [~,max_yh] = max(OUTn.y_h);
+    
+    predict_vector(1,n) = max_y;
+    predict_vector(2,n) = max_yh;
+
+    for c = 1:Nc,
+        if (c == max_y),
+            no_of_samples(c,n) = no_of_samples(c,n-1) + 1;
+        else
+            no_of_samples(c,n) = no_of_samples(c,n-1);
+        end
+    end
+    
     if (max_y == max_yh),
         no_of_correct(n) = no_of_correct(n-1) + 1;
         no_of_errors(n) = no_of_errors(n-1);
@@ -124,12 +149,15 @@ for n = 2:N,
                         (no_of_correct(n) + no_of_errors(n));
     
     % Update score (for prunning method)
+    
     PAR = k2nn_score_updt(DATAn,PAR,OUTn);
     
     % Train (with arriving data)
+    
     PAR = k2nn_train(DATAn,PAR);
     
     % Video Function
+    
     if (HP.Von),
         VID(n) = prototypes_frame(PAR.Cx,DATAn);
     end
@@ -140,20 +168,32 @@ end
 
 x = 1:N;
 
+% Data and Prototypes
 figure;
 plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
 hold on 
 plot(DATA.input(1,:),DATA.input(2,:),'r.');
 hold off
 
+% Number of hits x number of errors
 figure;
-plot(x,no_of_errors,'r-');
 hold on
+plot(x,no_of_errors,'r-');
 plot(x,no_of_correct,'b-');
 hold off
 
+% Percentage of Correct Classified
 figure;
 plot(x,accuracy_vector,'r-');
+
+% Number of samples per class
+figure;
+colors = lines(Nc);
+hold on
+for c = 1:Nc,
+    plot(x,no_of_samples(c,:),'Color',colors(c,:));
+end
+hold off
 
 %% SAVE FILE
 

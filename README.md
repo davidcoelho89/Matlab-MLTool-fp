@@ -7,7 +7,7 @@ Last Update: 2020/03/04.
 
 => Thanks to:
 
-- Diego Perdigao: clusters' index functions
+- Diego Perdigao: clusters' index functions and lvq algorithms
 
 => To know how classification, regression, clustering and optimization 
    functions works:

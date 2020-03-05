@@ -21,6 +21,8 @@ function [Dout] = k2nn_dict_updt(xt,yt,Din,PAR)
 %               = 0 -> do not update prototypes
 %               = 1 -> lms (wta)
 %               = 2 -> lvq (supervised)
+%               = 3 -> ng (neural gas - neigborhood)
+%               = 4 -> som (self-organizing maps - neigborhood)
 %           eta = Update rate                                   [cte]
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sig2n = kernel regularization parameter             [cte]
@@ -75,6 +77,10 @@ if (Dm == 1 && Us ~= 0),
         else
             Dx(:,win) = Dx(:,win) - eta * (xt - Dx(:,win));
         end
+    elseif (Us == 3), % (NG)
+        % ToDo - All
+    elseif (Us == 4), % (SOM)
+        % ToDo - All
     end
     
     % Permute Postions of winner and last prototype

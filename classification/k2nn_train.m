@@ -123,7 +123,7 @@ Y = DATA.output;        % Output Matrix
 
 % Get Hyperparameters
 
-% Von = HP.Von;
+Von = HP.Von;
 max_prot = HP.max_prot;
 
 % Problem Initialization
@@ -168,9 +168,9 @@ for t = 1:N,
 %     end
 
     % Save frame of the current epoch
-%     if (Von),
-%         VID(t) = prototypes_frame(D.x,DATA);
-%     end
+    if (Von),
+        VID(t) = prototypes_frame(D.x,DATA);
+    end
     
     % Get sample
     xt = X(:,t);

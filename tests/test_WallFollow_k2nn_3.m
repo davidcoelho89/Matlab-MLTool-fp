@@ -109,9 +109,6 @@ PAR_acc{r} = k2nn_train(DATAtr,HP);	% Calculate and acc parameters
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
-% [OUTtr] = k2nn_classify(DATAtr,PAR_acc{r});      	% Outputs with training data
-% STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);	% Results with training data
-
 [OUTts] = k2nn_classify(DATAts,PAR_acc{r});     	% Outputs with test data
 STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);	% Results with test data
 

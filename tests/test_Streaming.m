@@ -36,7 +36,7 @@ HP.min_score = -10; % Score that leads the sample to be pruned
 HP.Us = 1;          % Update strategy
 HP.eta = 0.01;      % Update rate
 HP.max_prot = Inf;  % Max number of prototypes
-HP.Von = 1;         % Enable / disable video 
+HP.Von = 0;         % Enable / disable video 
 HP.K = 1;           % Number of nearest neighbors (classify)
 HP.Ktype = 2;       % Kernel Type ( 2 Gauss / 3 poly / 5 cauc / 7 sigm)
 HP.sig2n = 0.001;   % Kernel Regularization parameter
@@ -82,10 +82,10 @@ figure; VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
 %% SEQUENTIAL TESTS AND STATISTICS
 
 % Shuffle Data
-I = randperm(size(DATA.input,2));
-DATA.input = DATA.input(:,I);
-DATA.output = DATA.output(:,I);
-DATA.lbl = DATA.lbl(:,I);
+% I = randperm(size(DATA.input,2));
+% DATA.input = DATA.input(:,I);
+% DATA.output = DATA.output(:,I);
+% DATA.lbl = DATA.lbl(:,I);
 
 % Get first element to dictionary
 DATAn.input = DATA.input(:,1);      % first element input
@@ -95,8 +95,8 @@ DATAn.Xmin = min(DATA.input,[],2);  % min value
 DATAn.Xmed = mean(DATA.input,2);    % mean value
 DATAn.Xdp = std(DATA.input,[],2);   % std value
 
-[~,max_y] = max(DATAn.output);      % add element to dictionary
-
+% add element to dictionary
+[~,max_y] = max(DATAn.output);      
 no_of_samples(max_y,1) = 1;
 PAR = k2nn_train(DATAn,HP);
 
@@ -170,9 +170,9 @@ x = 1:N;
 
 % Data and Prototypes
 figure;
-plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
 hold on 
 plot(DATA.input(1,:),DATA.input(2,:),'r.');
+plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
 hold off
 
 % Number of hits x number of errors

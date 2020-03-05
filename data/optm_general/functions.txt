@@ -1,0 +1,1 @@
+% f(x,y) = |x . sen( y . pi/4 ) + y . sen( x . pi/4 )|

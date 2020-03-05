@@ -1,7 +1,7 @@
 %% Machine Learning ToolBox
 
 % Test For Wall-Following DataBase and K2NN classifier
-% cross validation: try-and-error: 1 kernel, v1, sigm
+% cross validation: try-and-error: 1 kernel, v1, sigma
 % Author: David Nascimento Coelho
 % Last Update: 2019/12/10
 

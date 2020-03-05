@@ -18,46 +18,8 @@ function DATAout = klda_transform(DATAin,PAR)
 %           input = input matrix                            [q x Nin]
 %           output = output matrix                          [Nc x Nin]
 
-%% INITIALIZATIONS
-
-% Get Data
-Xin = DATAin.input;     % input matrix
-Y = DATAin.output;      % output matrix
-[~,Nin] = size(Xin); 	% dimension of input matrix
-
-% Get Parameters
-rem = PAR.rem;          % mean removal
-mu = PAR.mu;            % mean of training data set
-W = PAR.W;              % Transformation matrix
-[Ntr,q] = size(W);      % Dimension of transformation matrix
-X = PAR.X;              % Samples used to transform data
-
-%% ALGORITHM
-
-% Remove mean
-
-if (rem == 1),
-    Xin = Xin - repmat(mu,1,Nin);
-end
-
-% Transform input matrix
-
-Xtr = zeros(q,Nin);
-
-for n = 1:Nin,
-    xn = Xin(:,n);
-    for k = 1:q,
-        ak = W(:,k);
-        for i = 1:Ntr,
-            xi = X(:,i);
-            Xtr(k,n) = Xtr(k,n) + ak(i)*kernel_func(xn,xi,PAR);
-        end
-    end
-end
-
 %% FILL OUTPUT STRUCTURE
 
-DATAout.input = Xtr;
-DATAout.output = Y;
+DATAout = kpca_transform(DATAin,PAR);
 
 %% END

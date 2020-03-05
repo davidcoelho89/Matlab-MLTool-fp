@@ -778,13 +778,13 @@ format long e;
 
 %% Pairplot Test
 
-clear; clc;
-
-OPT.prob = 6;
-DATA = data_class_loading(OPT);
-label = {'SL','SW','PL','PW'};
-
-figure; pairplot(DATA);
+% clear; clc;
+% 
+% OPT.prob = 6;
+% DATA = data_class_loading(OPT);
+% label = {'SL','SW','PL','PW'};
+% 
+% figure; pairplot(DATA);
 % figure; pairplot(DATA,label);
 % figure; pairplot(DATA,label,'histogram');
 

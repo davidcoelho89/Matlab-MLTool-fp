@@ -20,9 +20,9 @@ function DATAout = pca_transform(DATAin,PAR)
 %% INITIALIZATIONS
 
 % Get Data
-Xin = DATAin.input;     % input matrix
+X = DATAin.input;       % input matrix
 Y = DATAin.output;      % output matrix
-[~,Nin] = size(Xin);	% dimension of input matrix
+[~,N] = size(X);        % dimension of input matrix
 
 % Get Parameters
 rem = PAR.rem;          % mean removal
@@ -34,16 +34,16 @@ W = PAR.W;              % Transformation matrix
 % Remove mean from input matrix
 
 if (rem == 1),
-    Xin = Xin - repmat(mu,1,Nin);
+    X = X - repmat(mu,1,N);
 end
 
 % Transform input matrix (generate matrix -> [q x N])
 
-Xtr = W' * Xin;
+X = W' * X;
 
 %% FILL OUTPUT STRUCTURE
 
-DATAout.input = Xtr;
+DATAout.input = X;
 DATAout.output = Y;
 
 %% END

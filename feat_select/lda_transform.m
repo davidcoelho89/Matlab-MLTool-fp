@@ -2,7 +2,7 @@ function DATAout = lda_transform(DATAin,PAR)
 
 % --- Linear Discriminant Analysis Data Transformation ---
 %
-%   DATAout = pca_transform(DATAin,PAR)
+%   DATAout = lda_transform(DATAin,PAR)
 %
 %   Input:
 %       DATAin.
@@ -17,31 +17,8 @@ function DATAout = lda_transform(DATAin,PAR)
 %           input = input matrix                            [q x N]
 %           output = output matrix                          [Nc x N]
 
-%% INITIALIZATIONS
-
-% Get Data
-X = DATAin.input;   % input matrix
-Y = DATAin.output;  % output matrix
-[~,N] = size(X);    % dimension of input matrix
-
-% Get Parameters
-rem = PAR.rem;      % mean removal
-mu = PAR.mu;        % mean of training data set
-W = PAR.W;          % Transformation matrix
-
-%% ALGORITHM
-
-% Remove mean
-if (rem == 1),
-    X = X - repmat(mu,1,N);
-end
-
-% Transform input matrix
-X = W' * X;     % generate matrix -> [q x N]
-
 %% FILL OUTPUT STRUCTURE
 
-DATAout.input = X;
-DATAout.output = Y;
+DATAout = pca_transform(DATAin,PAR);
 
 %% END

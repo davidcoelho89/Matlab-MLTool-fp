@@ -1,0 +1,57 @@
+class_test_1
+        \item Test for Motor Failure DataBase
+        \item With Cross validation and Reject option
+        \item OLS, Gauss, PS, MLP, ELM, SVM, LSSVM, MLM, GP, KNN
+        \item Reject option for binary and multiclass
+        \item Matthews Correlation for training, test and reject option
+        \item Training and Tests results: for binary and multiclass
+
+class_test_2
+        \item defines 16 turns of tests, each one with different OPT, CVp and REJp
+        \item for each turn, calls class\_test\_3
+
+class_test_3
+        \item Test for Motor Failure DataBase
+        \item Used by class\_test\_2
+        \item OLS, PS, BAY, MLP, ELM, SVM, LSSVM, MLM, GP algorithms
+
+cluster_test_1
+        \item kmeans, wta, som1d, som2d, ksom\_gd algorithms
+        \item tries to define better division of data (best number of clusters)
+        \item plot graphics of cluster's distributions
+
+cluster_test_2
+        \item prototype-based classifiers
+        \item kmeans, wta, som1d, som2d, ksom\_gd, ksom\_ef algorithms
+        \item Training and Tests results: for binary and multiclass
+
+cluster_test_3
+        \item General function for using all clustering algorithms and indexes
+
+esann_test_1
+        \item K2NN for sample selecting and model building.
+
+test_script
+        \item General Drafts for algorithms
+
+WSOMconf_2017
+        \item SOM2D / KSOM-GD-G / KSOM-GD-C / KSOM-GD-L / KSOM-EF-G / KSOM-EF-C / KSOM-EF-L
+
+WSOMJournal_2018_1
+        \item SOM2D / KSOM-GD / KSOM-EF / KSOM-PS-A / KSOM-PS-N / KSOM-PS-R
+
+WSOMJournal_2018_2
+        \item SOM2D / KSOM-GD / KSOM-EF / KSOM-GD + ALD / KSOM-EF + ALD
+
+WSOMJournal_2018_3
+        \item KSOM-ALD + GD test / KSOM-ALD + EF test
+
+YaleA_GenClass_1
+        \item Test for Yale Image DataBase and others classifiers
+        \item OLS, MLP, SVM, LSSVM
+
+YaleA_k2nn_1
+        \item Test For Yale Images DataBase and K2NN classifier
+        \item 8 types of k2nn
+        \item Ss = 1 (ALD) / Us = x / Ps = x / Dm = 1,2 / 
+        \item v = CV / Ktype = 1,2,3,4 / sig2 = CV /

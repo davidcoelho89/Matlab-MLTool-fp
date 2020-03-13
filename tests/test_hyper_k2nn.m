@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% SEA Concepts and k2nn classifier
+% Rotating Hyperplane and k2nn classifier
 % Author: David Nascimento Coelho
-% Last Update: 2020/02/23
+% Last Update: 2020/03/13
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,12 +14,12 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 25;              % Which problem will be solved / used
+OPT.prob = 26;              % Which problem will be solved / used
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
-OPT.file = 'sea_k2nn_c1.mat';     % file where all the variables will be saved
+OPT.file = 'hyper_k2nn_lin.mat';     % file where all the variables will be saved
 
 %% HYPERPARAMETERS - DEFAULT
 
@@ -36,7 +36,7 @@ HP.eta = 0.01;      % Update rate
 HP.max_prot = Inf;  % Max number of prototypes
 HP.Von = 0;         % Enable / disable video 
 HP.K = 1;           % Number of nearest neighbors (classify)
-HP.Ktype = 5;       % Kernel Type ( 2 Gauss / 3 poly / 5 cauc / 7 sigm)
+HP.Ktype = 1;       % Kernel Type
 HP.sig2n = 0.001;   % Kernel Regularization parameter
 HP.sigma = 2;    	% Kernel width (gaussian)
 HP.gamma = 2;       % polynomial order (poly 2 or 3)
@@ -48,12 +48,12 @@ HP.theta = 1;       % Dot product adding (poly 1 / sigm 0.1)
 % Set Variables Hyperparameters
 
 K2NNcv = HP;
-K2NNcv.v1 = 2.^linspace(-4,3,8);
-K2NNcv.sigma = 2.^linspace(-10,9,20);
+% K2NNcv.v1 = 2.^linspace(-15,5,21);
+K2NNcv.v1 = 0.1;
 
 % Number of repetitions of the algorithm
 
-OPT.Nr = length(K2NNcv.v1)*length(K2NNcv.sigma);
+OPT.Nr = length(K2NNcv.v1);
 
 % Variable HyperParameters
 
@@ -105,7 +105,6 @@ disp('Begin Algorithm');
 r = 0;
 
 for i = 1:length(K2NNcv.v1);
-for j = 1:length(K2NNcv.sigma);
     
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
     
@@ -116,7 +115,6 @@ for j = 1:length(K2NNcv.sigma);
 % %%%%%%%%%%%%% UPDATE HYPERPARAMETERS %%%%%%%%%%%%%%%%%%%
 
     HP.v1 = K2NNcv.v1(i);
-    HP.sigma = K2NNcv.sigma(j);
 
 % %%%%%%%%%%%%%%%%%%% INIT VECTORS %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -124,8 +122,8 @@ for j = 1:length(K2NNcv.sigma);
     no_of_correct = zeros(1,N);         % Hold # of correctly classified x
     no_of_errors = zeros(1,N);          % Hold # of misclassified x
     predict_vector = zeros(2,N);        % Hold true and predicted labels
-    no_of_samples = zeros(Nc,N);        % Hold number of samples per class
-    no_of_prot = zeros(Nc,N);           % Hold number of prot per class
+    no_of_samples = zeros(Nc,N);        % Hold # of samples per class
+    no_of_prot = zeros(Nc,N);           % Hold # of prot per class
 
 % %%%%%%%%%%%%%%%% TRAINING AND TEST %%%%%%%%%%%%%%%%%%%%%
 
@@ -140,6 +138,7 @@ for j = 1:length(K2NNcv.sigma);
     % add element to dictionary
     [~,max_y] = max(DATAn.output);
     no_of_samples(max_y,1) = 1;
+    no_of_prot(max_y,1) = 1;
     PAR = k2nn_train(DATAn,HP);
 
     for n = 2:N,
@@ -200,6 +199,13 @@ for j = 1:length(K2NNcv.sigma);
 %             VID(n) = prototypes_frame(PAR.Cx,DATAn);
 %         end
 
+        % Hold number of prototypes per class
+        
+        [~,prot_lbl] = max(PAR.Cy);
+        for c = 1:Nc,
+            no_of_prot(c,n) = sum(prot_lbl == c);
+        end
+        
         % Break if number of prototypes is too high
         
         [~,mt] = size(PAR.Cx);
@@ -218,7 +224,6 @@ for j = 1:length(K2NNcv.sigma);
     PAR_acc{r} = PAR;
 
 end
-end
 
 %% PLOTS
 
@@ -229,6 +234,7 @@ figure;
 hold on 
 plot(DATA.input(1,:),DATA.input(2,:),'r.');
 plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
+title('Data and Prototypes');
 hold off
 
 % Number of hits x number of errors
@@ -236,11 +242,13 @@ figure;
 hold on
 plot(x,no_of_errors,'r-');
 plot(x,no_of_correct,'b-');
+title('number of hits and errors');
 hold off
 
 % Percentage of Correct Classified
 figure;
 plot(x,accuracy_vector,'r-');
+title('number of correct classified')
 
 % Number of samples per class
 figure;
@@ -249,7 +257,17 @@ hold on
 for c = 1:Nc,
     plot(x,no_of_samples(c,:),'Color',colors(c,:));
 end
+title('number of samples per class');
 hold off
+
+% Number of prototypes per class
+figure;
+colors = lines(Nc);
+hold on
+for c = 1:Nc,
+    plot(x,no_of_prot(c,:),'Color',colors(c,:));
+end
+title('number of prototypes per class');
 
 %% SAVE FILE
 

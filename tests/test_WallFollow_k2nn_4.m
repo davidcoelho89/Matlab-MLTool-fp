@@ -116,7 +116,6 @@ title('Number of prototypes x accuracy')
 xlabel('1 - % of prototypes');
 ylabel('accuracy');
 
-
 %% SAVE DATA
 
 % save(OPT.file);

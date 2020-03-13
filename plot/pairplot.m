@@ -51,11 +51,11 @@ for i = 1:p
         subplot(p,p,sub2ind([p p], i, j));
         
         if i == 1
-            ylabel(label{j});
+            ylabel(label{j},'fontweight','bold');
         end
         
         if j == p
-            xlabel(label{i});
+            xlabel(label{i},'fontweight','bold');
         end
         
         hold on;

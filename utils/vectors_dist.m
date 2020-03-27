@@ -26,16 +26,16 @@ function [d] = vectors_dist(x,y,PAR)
 %% INITIALIZATION
 
 % If the algorithm is kernelized
-if(isfield(PAR,Ktype)),
+if(isfield(PAR,'Ktype')),
 	Ktype = PAR.Ktype;        	% Kernel type
-else,
+else
 	Ktype = 0;
 end
 
 % If the algorithm is not kernelized
-if (Ktype == 0 && isfield(PAR,dist)),            	
+if (Ktype == 0 && isfield(PAR,'dist')),            	
     dist = PAR.dist;        	% Choose distance
-else,
+else
 	dist = 2;					% Euclidean distance
 end
 

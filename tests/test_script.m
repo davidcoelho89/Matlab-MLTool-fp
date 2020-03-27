@@ -788,6 +788,35 @@ format long e;
 % figure; pairplot(DATA,label);
 % figure; pairplot(DATA,label,'histogram');
 
+%% Results Analysis
+
+Nprots = zeros(1,OPT.Nr);
+Accs = zeros(1,OPT.Nr);
+v1s = zeros(1,OPT.Nr);
+sigmas = zeros(1,OPT.Nr);
+alphas = zeros(1,OPT.Nr);
+
+for r = 1:OPT.Nr,
+%     display(r);
+    
+    acc_vect = accuracy_vector_acc{r};
+    Accs(r) = acc_vect(end);
+    
+    param = PAR_acc{r};
+    [~,Nprots(r)] = size(param.Cx);
+    v1s(r) = param.v1;
+%     sigmas(r) = param.sigma;
+    alphas(r) = param.alpha;
+%     display(Accs(r));
+%     display(Nprots(r));
+end
+
+plot(Nprots,Accs,'k.');
+
+indexes = find(Accs == max(Accs));
+v1s(indexes),
+% sigmas(indexes),
+
 %% Eigenfaces and FisherFaces Test
 
 % ToDo - All

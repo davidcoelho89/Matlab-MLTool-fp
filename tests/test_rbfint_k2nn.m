@@ -1,6 +1,6 @@
 %% Machine Learning ToolBox
 
-% Rotating Hyperplane and k2nn classifier
+% RBF Interchanging and k2nn classifier
 % Author: David Nascimento Coelho
 % Last Update: 2020/03/13
 
@@ -14,12 +14,12 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 26;              % Which problem will be solved / used
+OPT.prob = 28;              % Which problem will be solved / used
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
-OPT.file = 'hyper_k2nn_p1.mat';     % file where all the variables will be saved
+OPT.file = 'rbfi_k2nn_lin.mat'; % file where all the variables will be saved
 
 %% HYPERPARAMETERS - DEFAULT
 
@@ -36,7 +36,7 @@ HP.eta = 0.01;      % Update rate
 HP.max_prot = Inf;  % Max number of prototypes
 HP.Von = 0;         % Enable / disable video 
 HP.K = 1;           % Number of nearest neighbors (classify)
-HP.Ktype = 3;       % Kernel Type
+HP.Ktype = 1;       % Kernel Type
 HP.sig2n = 0.001;   % Kernel Regularization parameter
 HP.sigma = 2;    	% Kernel width (gaussian)
 HP.gamma = 2;       % polynomial order (poly 2 or 3)
@@ -48,17 +48,16 @@ HP.theta = 1;       % Dot product adding (poly 1 / sigm 0.1)
 % Set Variables Hyperparameters
 
 K2NNcv = HP;
-K2NNcv.v1 = 2.^linspace(-13,6,20);
-K2NNcv.gamma = [2,3];
+K2NNcv.v1 = 2.^linspace(-12,8,21);
 
 % Number of repetitions of the algorithm
 
-OPT.Nr = length(K2NNcv.v1)*length(K2NNcv.gamma);
+OPT.Nr = length(K2NNcv.v1);%*length(K2NNcv.gamma);
 
 % Variable HyperParameters
 
 % % linear 1
-% K2NNcv.v1 = 2.^linspace(-15,5,21);
+% K2NNcv.v1 = 2.^linspace(-10,10,21);
 % % Gaussian 2
 % K2NNcv.v1 = 2.^linspace(-4,3,8);
 % K2NNcv.sigma = 2.^linspace(-10,9,20);
@@ -105,7 +104,7 @@ disp('Begin Algorithm');
 r = 0;
 
 for i = 1:length(K2NNcv.v1),
-for j = 1:length(K2NNcv.gamma),
+% for j = 1:length(K2NNcv.gamma),
     
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
     
@@ -116,7 +115,7 @@ for j = 1:length(K2NNcv.gamma),
 % %%%%%%%%%%%%% UPDATE HYPERPARAMETERS %%%%%%%%%%%%%%%%%%%
 
     HP.v1 = K2NNcv.v1(i);
-    HP.gamma = K2NNcv.gamma(j);
+%     HP.gamma = K2NNcv.gamma(j);
 
 % %%%%%%%%%%%%%%%%%%% INIT VECTORS %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -225,7 +224,7 @@ for j = 1:length(K2NNcv.gamma),
     no_of_prot_acc{r} = no_of_prot;
     PAR_acc{r} = PAR;
 
-end
+% end
 end
 
 %% PLOTS

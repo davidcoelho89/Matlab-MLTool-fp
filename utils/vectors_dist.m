@@ -25,15 +25,23 @@ function [d] = vectors_dist(x,y,PAR)
 
 %% INITIALIZATION
 
-Ktype = PAR.Ktype;              % Kernel type
+% If the algorithm is kernelized
+if(isfield(PAR,Ktype)),
+	Ktype = PAR.Ktype;        	% Kernel type
+else,
+	Ktype = 0;
+end
 
-if (Ktype == 0),            	% If the algorithm is not kernelized
+% If the algorithm is not kernelized
+if (Ktype == 0 && isfield(PAR,dist)),            	
     dist = PAR.dist;        	% Choose distance
+else,
+	dist = 2;					% Euclidean distance
 end
 
 %% ALGORITHM
 
-% Calculate distance => non-kernelized algorithms
+% Calculate distance for non-kernelized algorithms
 if(Ktype == 0),
     
     if (dist == 0),         % Dot product
@@ -52,7 +60,7 @@ if(Ktype == 0),
         d = sum((x - y).^2); % Euclidean as default
     end
     
-% Calculate distance => kernelized algorithms
+% Calculate distance for kernelized algorithms
 else
     d = kernel_func(x,x,PAR) - ...
         2*kernel_func(x,y,PAR) + ...

@@ -1,15 +1,14 @@
-function [] = plot_labeled_neurons(PAR)
+function [] = plot_clusters_grid(PAR)
 
 % --- Plot Neurons Grid with labels ---
 %
-%   [] = plot_labeled_neurons(PAR)
+%   [] = plot_clusters_grid(PAR)
 %
 %   Input:
 %       PAR.
 %           Cx = prototypes                                     [p x Nk]
 %           Cy = class of each prototype                        [Nc x Nk]
 %           ind = indexes indicating each sample's cluster    	[1 x N]
-%           SSE = squared error of each turn of training        [1 x Nep]
 %   Output:
 %       "void" (print a graphic at screen)
 

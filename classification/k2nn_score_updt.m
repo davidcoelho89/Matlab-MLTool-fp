@@ -12,9 +12,11 @@ function [PARout] = k2nn_score_updt(DATAn,PAR,OUTn)
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
 %           score = used for prunning method                    [1 x Nk]
+%           class_hist = used for prunning method               [1 x Nk]
 %           Ps = Prunning strategy                              [cte]
 %               = 0 -> do not remove prototypes
-%               = 1 -> score-based method
+%               = 1 -> score-based method 1
+%               = 2 -> score-based method 2
 %       OUT.
 %           y_h = classifier's output                           [Nc x 1]
 %           win = closest prototype to each sample              [1 x 1]
@@ -30,9 +32,13 @@ function [PARout] = k2nn_score_updt(DATAn,PAR,OUTn)
 yt = DATAn.output;
 
 % Get Hyperparameters
+Ps = PAR.Ps;                    % Pruning Strategy
+score = PAR.score;              % Score of each prototype from dictionary
+class_hist = PAR.class_hist;    % Verify if last time that was chosen,
+                                % it classified correctly.
+
+% Get Parameters
 Dy = PAR.Cy;        % Classes of dictionary
-score = PAR.score;  % Score of each prototype from dictionary
-Ps = PAR.Ps;        % Pruning Strategy
 
 % Get predicted output
 yh = OUTn.y_h;
@@ -42,26 +48,32 @@ win = OUTn.win;
 [~,Nk] = size(Dy);   % hold dictionary size
 
 % Init Outputs
-score_out = zeros(1,Nk);
+score_out = score;
+class_hist_out = class_hist;
 
 %% ALGORITHM
 
-if(Ps == 1),
+if(Ps == 0),
+    
+    % Does nothing
+    
+else
     
     % Get current data class, predicted class and prototypes classes
     [~,yt_class] = max(yt);
     [~,yh_class] = max(yh);
     [~,Dy_class] = max(Dy);
     
-    % number of elements, in the dictionary, of the same class as yh
+    % number of elements, in the dictionary, of the same class as yt
     mc = sum(Dy_class == yt_class); 
     
-    % Do not update dictinary score
+    % if there are no prototypes from yt class
     if (mc == 0),
-        score_out = score;
-
-    % Update score
-    else
+        % Does nothing
+        
+    % Update all scores
+    elseif (Ps == 1),
+        
         for k = 1:Nk,
             % if it was a hit
             if (yt_class == yh_class),
@@ -81,13 +93,35 @@ if(Ps == 1),
                 end
             end
         end
+        
+    % Update score of winner
+    elseif (Ps == 2),
+        
+        if(Dy_class(win) == yt_class)
+            % Update class_hist
+            class_hist_out(win) = 1;
+            % Update score of winner
+            if((score(win) < 0) && (class_hist == 1)),
+                score_out(win) = score(win) + 1;
+            end
+        else
+            % Update class_hist
+            class_hist_out(win) = -1;
+            % Update score of winner
+            if (class_hist == -1),
+                score_out(win) = score(win) - 1;
+            end
+        end
+        
     end
+    
     
 end
 
 %% FILL OUTPUT STRUCTURE
 
-PARout = PAR;               % get all the parameters
-PARout.score = score_out;   % updated score
+PARout = PAR;                       % Get all the parameters
+PARout.score = score_out;           % Updated score
+PARout.class_hist = class_hist_out; % Update classification history
 
 %% END

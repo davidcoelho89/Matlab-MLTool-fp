@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 06;              % Which problem will be solved / used
+OPT.prob = 11;              % Which problem will be solved / used
 OPT.prob2 = 01;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
@@ -55,7 +55,12 @@ DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
 
-DATA = label_adjust(DATA,OPT);      % adjust labels for the problem
+DATA = label_encode(DATA,OPT);      % adjust labels for the problem
+
+DATA.Xmax = max(DATA.input,[],2);  % max value
+DATA.Xmin = min(DATA.input,[],2);  % min value
+DATA.Xmed = mean(DATA.input,2);    % mean value
+DATA.Xdp = std(DATA.input,[],2);   % std value
 
 %% ACCUMULATORS
 
@@ -96,37 +101,32 @@ nSTATS = cluster_stats_nturns(STATS_acc);
 %% GRAPHICS
 
 % Quantization error (of last turn)
-figure;
-hold on
-title ('SSQE Curve');
-xlabel('Epochs');
-ylabel('SSQE');
-axis ([0 length(PAR_acc{r}.SSE) ...
-      min(PAR_acc{r}.SSE)-0.1 max(PAR_acc{r}.SSE)+0.1]);
-plot(1:length(PAR_acc{r}.SSE),PAR_acc{r}.SSE);
-hold off
+plot_stats_ssqe(PAR_acc{r}.SSE);
 
 % Clusters' Prototypes and Data (of last turn)
-plot_clusters_and_data(DATA,PAR_acc{r});
+plot_clusters_data(DATA,PAR_acc{r});
 
-% Clusters' Grid and Data (of last turn)
-plot_grid_and_data(DATA,PAR_acc{r});
+% Clusters' neigborhood and Data (of last turn)
+plot_clusters_neigborhood(DATA,PAR_acc{r});
 
-% Labeled Neurons' Grid (of last turn)
-plot_labeled_neurons(PAR_acc{r});
+% Voronoi Cells (of last turn)
+plot_clusters_voronoi(DATA,PAR_acc{r});
 
-% See Clusters Movie (of last turn)
-if (HP.Von == 1),
-    figure;
-    movie(PAR_acc{r}.VID)
-end
+% Labeled Prototypes' Grid (of last turn)
+plot_clusters_grid(PAR_acc{r});
 
-%% SAVE DATA AND VIDEO
+%% SAVE VARIABLES AND VIDEO
 
-% Data
+% % Save All Variables
 % save(OPT.file);
 
-% Video
+% % See Clusters Video (of last turn)
+% if (HP.Von == 1),
+%     figure;
+%     movie(PAR_acc{r}.VID)
+% end
+
+% % Save Clusters Video (of last turn)
 % v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
 % v.FrameRate = 1;
 % open(v);

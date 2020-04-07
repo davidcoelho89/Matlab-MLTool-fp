@@ -1,8 +1,8 @@
-function [frame] = plot_lin_boundary(DATA,PAR)
+function [frame] = plot_class_boundary_lin(DATA,PAR,OPTION)
 
 % --- Save current frame for Linear Classifiers functions ---
 %
-%   [frame] = plot_lin_boundary(DATA,PAR)
+%   [frame] = plot_class_boundary_lin(DATA,PAR)
 %
 %   Input:
 %       DATA.
@@ -10,14 +10,22 @@ function [frame] = plot_lin_boundary(DATA,PAR)
 %           output = output matrix          [c x N]
 %       PAR.
 %           W = weight's matrix             [c x p+1]
+%       OPTION.
+%           p1 = first attribute         	[cte]
+%           p2 = second attribute          	[cte]
 %   Output:
 %       frame = struct containing 'cdata' and 'colormap'
 
 %% INITIALIZATION
 
-% chosen attributes
-p1 = 1;
-p2 = 2;
+% Get chosen attributes
+if(nargin == 2),
+    p1 = 1;
+    p2 = 2;
+else
+    p1 = OPTION.p1;
+    p2 = OPTION.p2;
+end
 
 % Get the 2 attributes of input data
 x = DATA.input([p1 p2],:);
@@ -28,12 +36,12 @@ x1_max = max(x(1,:));
 x2_min = min(x(2,:));
 x2_max = max(x(2,:));
 
-% chosen neuron
-neu = 1;
+% chosen prototype
+prot = 1;
 
 % Get neuron and bias
-w = PAR.W(neu, [p1+1 p2+1]);
-b = PAR.W(neu, 1);
+w = PAR.W(prot, [p1+1 p2+1]);
+b = PAR.W(prot, 1);
 
 %% ALGORITHM
 

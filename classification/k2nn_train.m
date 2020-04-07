@@ -21,23 +21,23 @@
 %           v2 = Sparseness parameter 2                         [cte]
 %           Ps = Prunning strategy                              [cte]
 %               = 0 -> do not remove prototypes
-%               = 1 -> score-based method
-%               = 2 -> Matching-pursuit (remove prototype, verify error)
-%               = 3 -> Penalization (build lssvm model, remove prot)
-%               = 4 -> FBS - forward-backward 
+%               = 1 -> score-based method 1
+%               = 2 -> score-based method 2
+%               = 2 -> Matching-pursuit (rem prot, verify error)
+%               = 3 -> Penalization (build lssvm, rem prot)
+%               = 4 -> FBS - forward-backward
 %           min_score = score that leads to prune prototype     [cte]
 %           Us = Update strategy                                [cte]
 %               = 0 -> do not update prototypes
 %               = 1 -> lms (wta)
 %               = 2 -> lvq (supervised)
 %           eta = Update rate                                   [cte]
-%           max_prot = max number of prototypes                 [cte]
+%           max_prot = max number of prototypes ("Budget")      [cte]
 %           Von = enable or disable video                       [cte]
 %           K = number of nearest neighbors (classify)        	[cte]
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sig2n = kernel regularization parameter             [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
-%           order = kernel hyperparameter ( see kernel_func() ) [cte]
 %           alpha = kernel hyperparameter ( see kernel_func() ) [cte]
 %           theta = kernel hyperparameter ( see kernel_func() ) [cte]
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
@@ -45,11 +45,12 @@
 %       PAR.
 %       	Cx = clusters' centroids (prototypes)               [p x Nk]
 %           Cy = clusters' labels                               [Nc x Nk]
-%           ind = cluster index for each sample                 [1 x N]
-%           VID = frame struct (played by 'video function')     [1 x Nep]
 %           Km = Kernel Matrix of Dictionary                    [Nk x Nk]
 %           Kinv = Inverse Kernel Matrix of Dictionary          [Nk x Nk]
 %           score = used for prunning method                    [1 x Nk]
+%           class_hist = used for prunning method               [1 x Nk]
+%           ind = cluster index for each sample                 [1 x N]
+%           VID = frame struct (played by 'video function')     [1 x Nep]
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -65,9 +66,12 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.max_prot = Inf;  % Max number of prototypes
     PARaux.Von = 0;         % enable / disable video
     PARaux.K = 1;           % Number of nearest neighbors (classify)
-    PARaux.Ktype = 2;       % Kernel Type (Gaussian)
+    PARaux.Ktype = 2;       % Kernel Type (gaussian)
     PARaux.sig2n = 0.001;   % Kernel regularization parameter
-    PARaux.sigma = 2;       % Kernel width
+    PARaux.sigma = 2;       % Kernel width (gaussian)
+    PARaux.gamma = 2;       % Polynomial order
+    PARaux.alpha = 1;       % Dot product multiplier
+    PARaux.theta = 1;       % Dot product add cte 
 	HP = PARaux;
 else
     if (~(isfield(HP,'Dm'))),
@@ -112,6 +116,15 @@ else
     if (~(isfield(HP,'sigma'))),
         HP.sigma = 2;
     end
+    if (~(isfield(HP,'gamma'))),
+        HP.gamma = 2;
+    end
+    if (~(isfield(HP,'alpha'))),
+        HP.alpha = 1;
+    end
+    if (~(isfield(HP,'theta'))),
+        HP.theta = 1;
+    end
 end
 
 %% INITIALIZATIONS
@@ -150,8 +163,10 @@ end
 
 if (isfield(HP,'score'))
     D.score = HP.score;
+    D.class_hist = HP.class_hist;
 else
     D.score = [];
+    D.class_hist = [];
 end
 
 ind = zeros(1,N);
@@ -177,10 +192,10 @@ for t = 1:N,
     yt = Y(:,t);
 
     % Get the size of the dictionary
-    [~,mt_1] = size(D.x);
+    [~,mt1] = size(D.x);
     
     % Dont Add if number of prototypes is too high
-    if (mt_1 > max_prot),
+    if (mt1 > max_prot),
         break;
     end
 
@@ -188,23 +203,22 @@ for t = 1:N,
     [D] = k2nn_dict_grow(xt,yt,D,HP);
     
     % Get the new size of the dictionary
-    [~,mt] = size(D.x);
+    [~,mt2] = size(D.x);
     
     % Apply prunning strategy
     [D] = k2nn_dict_prun(D,HP);
 
     % Verify number of prototypes
-    if ((mt - mt_1) == 1)
-        % Number of prototypes (for debug)
-     	display(mt);
-     else
+    if ((mt2 - mt1) ~= 1)
      	% Apply update strategy
         [D] = k2nn_dict_updt(xt,yt,D,HP);
+    else
+     	display(mt2); % Debug
      end
     
 end
 
-% Assign indexes
+% Assign indexes (the algorithm becomes slow with the following lines)
 % for i = 1:N,
 %     xn = DATA.input(:,i);               % not shuffled data
 %     win = prototypes_win(D.x,xn,PAR);  	% Winner Neuron index
@@ -216,10 +230,11 @@ end
 PAR = HP;
 PAR.Cx = D.x;
 PAR.Cy = D.y;
-PAR.ind = ind;
-PAR.VID = VID;
 PAR.Km = D.Km;
 PAR.Kinv = D.Kinv;
 PAR.score = D.score;
+PAR.class_hist = D.class_hist;
+PAR.ind = ind;
+PAR.VID = VID;
 
 %% END

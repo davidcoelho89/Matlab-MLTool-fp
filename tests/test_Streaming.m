@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 25;              % Which problem will be solved / used
+OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
@@ -29,7 +29,7 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 HP.Dm = 2;          % Design Method
 HP.Ss = 1;          % Sparsification strategy
-HP.v1 = 0.5;        % Sparseness parameter 1 
+HP.v1 = 0.9;        % Sparseness parameter 1 
 HP.v2 = 0.9;        % Sparseness parameter 2
 HP.Ps = 1;          % Prunning strategy
 HP.min_score = -10; % Score that leads the sample to be pruned
@@ -40,10 +40,10 @@ HP.Von = 0;         % Enable / disable video
 HP.K = 1;           % Number of nearest neighbors (classify)
 HP.Ktype = 2;       % Kernel Type ( 2 Gauss / 3 poly / 5 cauc / 7 sigm)
 HP.sig2n = 0.001;   % Kernel Regularization parameter
-HP.sigma = 2;    	% Kernel width (gaussian)
+HP.sigma = 7;    	% Kernel width (gaussian)
 HP.gamma = 2;       % polynomial order (poly 2 or 3)
 HP.alpha = 1;       % Dot product multiplier (poly 1 / sigm 0.1)
-HP.theta = 1;       % Dot product adding (poly 1 / sigm 0.1)
+HP.theta = 1;       % Dot product add cte (lin 0 / poly 1 / sigm 0.1)
 
 %% DATA LOADING AND PRE-PROCESSING
 
@@ -56,11 +56,17 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% VISUALIZE DATA
 
-DATA1 = DATA;
-DATA1.input = DATA.input(:,25000:30000);
-DATA1.output = DATA.output(:,25000:30000);
- 
-figure; pairplot(DATA1);             % visualize data
+% For SEA data
+
+% DATA1 = DATA;
+% DATA1.input = DATA.input(:,25000:30000);
+% DATA1.output = DATA.output(:,25000:30000);
+%  
+% figure; plot_data_pairplot(DATA1);             % visualize data
+
+% For Iris
+
+figure; plot_data_pairplot(DATA)
 
 %% ACCUMULATORS
 

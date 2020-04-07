@@ -1,17 +1,15 @@
-function [] = plot_grid_and_data(DATA,OUT_CL,OPTION)
+function [] = plot_clusters_data(DATA,OUT_CL,OPTION)
 
-% --- Plot Clusters Grid and Data ---
+% --- Plot clusters Organization and Data ---
 %
-%   [] = plot_grid_and_data(DATA,OUT_CL,OPTION)
+%   [] = plot_clusters_data(DATA,OUT_CL,OPTION)
 %
 %   Input:
 %       DATA.
 %           input = input matrix                             	[p x N]
 %       OUT_CL.
 %           Cx = prototypes                                     [p x Nk]
-%           R = prototypes' grid positions                      [Nd x Nk]
-%           ind = indexes indicating each sample's cluster    	[Nd x N]
-%           SSE = squared error of each turn of training        [1 x Nep]
+%           ind = indexes indicating each sample's cluster    	[1 x N]
 %       OPTION.
 %           Xaxis = Attribute to be plotted at x axis           [cte]
 %           Yaxis = Attribute to be plotted at y axis           [cte]
@@ -55,7 +53,7 @@ hold on
 s1 = 'Attribute ';  s2 = int2str(Xaxis);    s3 = int2str(Yaxis);
 xlabel(strcat(s1,s2));
 ylabel(strcat(s1,s3));
-title ('2D of Clusters Grid');
+title ('2D of Clusters Distribution');
 
 % Plot Data
 
@@ -81,40 +79,9 @@ for i = 1:Nk,
          plot_color)
 end    
 
-% Plot prototypes and grid
+% Plot prototypes
 
-if (isfield(OUT_CL,'R')),
-    R = OUT_CL.R;
-    [Ndim,~] = size(R);
-    if (Ndim == 1),
-        plot(Cx(Xaxis,:),Cx(Yaxis,:),'-ms',...
-        'LineWidth',1,...
-        'MarkerEdgeColor','k',...
-        'MarkerFaceColor','g',...
-        'MarkerSize',5)
-    elseif (Ndim == 2),
-        for dim = 1:Ndim,
-            dim_len = max(R(dim,:));
-            for i = 1:dim_len,
-                samples = find(R(dim,:) == i);
-              	plot(Cx(Xaxis,samples),Cx(Yaxis,samples),'-ms',...
-               	'LineWidth',1,...
-               	'MarkerEdgeColor','k',...
-                'MarkerFaceColor','g',...
-                'MarkerSize',5) 
-            end
-        end
-    elseif (Ndim == 3),
-        % ToDo - Tridimensional Plot
-    end
-    
-else
-	plot(Cx(Xaxis,:),Cx(Yaxis,:),'-ms',...
-	'LineWidth',1,...
-	'MarkerEdgeColor','k',...
-	'MarkerFaceColor','g',...
-	'MarkerSize',5)   
-end
+plot(Cx(Xaxis,:),Cx(Yaxis,:),'k*')
 
 % Finish Figure
 

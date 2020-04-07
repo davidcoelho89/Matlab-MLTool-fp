@@ -16,7 +16,6 @@ function [d] = vectors_dist(x,y,PAR)
 %               2: Euclidean distance
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
-%           order = kernel hyperparameter ( see kernel_func() ) [cte]
 %           alpha = kernel hyperparameter ( see kernel_func() ) [cte]
 %           theta = kernel hyperparameter ( see kernel_func() ) [cte]
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
@@ -42,6 +41,7 @@ end
 %% ALGORITHM
 
 % Calculate distance for non-kernelized algorithms
+
 if(Ktype == 0),
     
     if (dist == 0),         % Dot product
@@ -61,10 +61,13 @@ if(Ktype == 0),
     end
     
 % Calculate distance for kernelized algorithms
+
 else
+    
     d = kernel_func(x,x,PAR) - ...
         2*kernel_func(x,y,PAR) + ...
         kernel_func(y,y,PAR);
+
 end
 
 %% END

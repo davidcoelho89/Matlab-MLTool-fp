@@ -35,11 +35,12 @@ function [Dout] = k2nn_dict_prun(Din,PAR)
 %% INITIALIZATIONS
 
 % Get dictionary
-Dx = Din.x;         % Attributes of dictionary
-Dy = Din.y;         % Classes of dictionary
-Km = Din.Km;        % Dictionary Kernel Matrix
-Kinv = Din.Kinv;    % Dictionary Inverse Kernel Matrix
-score = Din.score;  % Score of each prototype from dictionary
+Dx = Din.x;                     % Attributes of dictionary
+Dy = Din.y;                     % Classes of dictionary
+Km = Din.Km;                    % Dictionary Kernel Matrix
+Kinv = Din.Kinv;                % Dictionary Inverse Kernel Matrix
+score = Din.score;              % Score of each prototype
+class_hist = Din.class_hist;    % Classification history of each prototype
 
 % Get Hyperparameters
 Dm = PAR.Dm;                % Design Method
@@ -82,6 +83,44 @@ if(Dm == 1),
                 Dx(:,k) = [];
                 Dy(:,k) = [];
                 score(k) = [];
+                class_hist(k) = [];
+                
+                % If ALD or Surprise method, update kernel matrix
+                if (Ss == 1 || Ss == 4),
+                    % Remove line and column from inverse kernel matrix
+                    ep = zeros(m,1);
+                    ep(k) = 1;
+                    u = Km(:,k) - ep;
+                    eq = zeros(m,1);
+                    eq(k) = 1;
+                    v = eq;
+                    Kinv = Kinv + (Kinv * u)*(v' * Kinv) / ...
+                               (1 - v' * Kinv * u);
+                    Kinv(k,:) = [];
+                    Kinv(:,k) = [];
+                    % Remove line and column from kernel matrix
+                    Km(k,:) = [];
+                    Km(:,k) = [];
+                end
+                
+                % Just remove one prototype per loop
+                break;
+                
+            end
+        end
+        
+    elseif( Ps == 2),
+        
+        for k = 1:m,
+          	
+            % Remove element
+            if (score(k) < min_score),
+                
+                % Remove Prototype and its score
+                Dx(:,k) = [];
+                Dy(:,k) = [];
+                score(k) = [];
+                class_hist(k) = [];
                 
                 % If ALD or Surprise method, update kernel matrix
                 if (Ss == 1 || Ss == 4),
@@ -148,6 +187,7 @@ if(Dm == 2),
                 Dx(:,k) = [];
                 Dy(:,k) = [];
                 score(k) = [];
+                class_hist(k) = [];
                 
              	% If ALD or Surprise method, update kernel matrix
                 if (Ss == 1 || Ss == 4),
@@ -172,6 +212,62 @@ if(Dm == 2),
                 
             end
         end
+        
+    elseif(Ps == 2),
+        
+        [~,Dy_seq] = max(Dy);	% get sequential label of dictionary
+        
+        for k = 1:m,
+            
+            % class of prototype
+            c = Dy_seq(k);
+            
+            % number of elements from the same class as of prototype
+            mc = sum(Dy_seq == c);
+            
+            % dont rem element if it is the only element of its class
+%             if (mc == 1),
+%                 continue;
+%             end
+            
+            % Remove element
+            if (score(k) < min_score),
+                
+                % Get prototypes from the same class
+                Dx_c = Dx(:,Dy_seq == c);
+                
+                % Find position of prototype between elements of same class
+                win_c = prototypes_win(Dx_c,Dx(:,k),PAR);
+                
+                % Remove Prototype and its score
+                Dx(:,k) = [];
+                Dy(:,k) = [];
+                score(k) = [];
+                class_hist(k) = [];
+                
+             	% If ALD or Surprise method, update kernel matrix
+                if (Ss == 1 || Ss == 4),
+                    % Remove line and column from inverse kernel matrix
+                    ep = zeros(mc,1);
+                    ep(win_c) = 1;
+                    u = Km{c}(:,win_c) - ep;
+                    eq = zeros(mc,1);
+                    eq(win_c) = 1;
+                    v = eq;
+                    Kinv{c} = Kinv{c} + (Kinv{c}*u)*(v'*Kinv{c}) / ...
+                                  (1 - v'*Kinv{c}*u);
+                    Kinv{c}(win_c,:) = [];
+                    Kinv{c}(:,win_c) = [];
+                    % Remove line and column from kernel matrix
+                    Km{c}(win_c,:) = [];
+                    Km{c}(:,win_c) = [];
+                end
+                
+                % Just remove one prototype per loop
+                break;
+                
+            end
+        end        
 
     end
     
@@ -179,10 +275,12 @@ end
 
 %% FILL OUTPUT STRUCTURE
 
+Dout = Din;
 Dout.x = Dx;
 Dout.y = Dy;
 Dout.Km = Km;
 Dout.Kinv = Kinv;
 Dout.score = score;
+Dout.class_hist = class_hist;
 
 %% END

@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 06;              % Which problem will be solved / used
+OPT.prob = 11;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 005;              	% Number of repetitions of the algorithm
+OPT.Nr = 05;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
@@ -33,11 +33,13 @@ class_test = @k2nn_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
+% K2NN
+
 % Kernel Functions: 1 lin / 2 gauss / 3 poly / 5 cauchy / 6 log / 7 sigm /
 
 HP.Dm = 2;          % Design Method
 HP.Ss = 1;          % Sparsification strategy
-HP.v1 = 0.005;      % Sparseness parameter 1 
+HP.v1 = 0.8;        % Sparseness parameter 1 
 HP.v2 = 0.9;        % Sparseness parameter 2
 HP.Ps = 0;          % Prunning strategy
 HP.min_score = -10; % Score that leads the sample to be pruned
@@ -45,10 +47,11 @@ HP.Us = 0;          % Update strategy
 HP.eta = 0.01;      % Update rate
 HP.max_prot = Inf;  % Max number of prototypes
 HP.Von = 1;         % Enable / disable video 
-HP.K = 1;           % Number of nearest neighbors (classify)
-HP.Ktype = 7;       % Kernel Type
+HP.K = 5;           % Number of nearest neighbors (classify)
+HP.knn_type = 2;    % Type of knn aproximation
+HP.Ktype = 2;       % Kernel Type
 HP.sig2n = 0.001;   % Kernel Regularization parameter
-HP.sigma = 2;    	% Kernel width (gaussian)
+HP.sigma = 2;    	% Kernel width (gauss, exp, cauchy, log, kmod)
 HP.gamma = 2;       % polynomial order (poly 2 or 3)
 HP.alpha = 0.1;     % Dot product multiplier (poly 1 / sigm 0.1)
 HP.theta = 0.1;     % Dot product adding (poly 1 / sigm 0.1)
@@ -144,13 +147,21 @@ nSTATS_all{2,1} = nSTATS_ts;
 
 %% GRAPHICS - DECISION BOUNDARY / ROC CURVE / PRECISION-RECALL
 
+% [Nc,~] = size(DATA.output);
+% 
 % % Plot Decision boundary (of last test)
 % if (Nc == 2),
 %     figure;
-%     plot_class_boundary(DATA,PAR_acc{r},class_test);
+%     plot_class_boundary_all(DATA,PAR_acc{r},class_test);
 % end
 % 
-% % Plot one ROC Curve (1 - spec x sens) for each class (of last test)
+% % Plot Linear Decision boundary (of last test)
+% if (Nc == 2),
+%     figure;
+%     plot_class_boundary_lin(DATA,PAR_acc{r});
+% end
+% 
+% % Plot one ROC Curve (1 - spec x sens) for each class (of last turn)
 % for c = 1:Nc,
 %     figure;
 %     plot(STATS_ts_acc{r}.roc_fpr(c,:),STATS_ts_acc{r}.roc_tpr(c,:),'r.-');
@@ -160,7 +171,7 @@ nSTATS_all{2,1} = nSTATS_ts;
 %     hold off
 % end
 % 
-% % Plot one Precision-Recall Curve for each class (of last test)
+% % Plot one Precision-Recall Curve for each class (of last turn)
 % for c = 1:Nc,
 %     figure;
 %     plot(STATS_ts_acc{r}.roc_prec(c,:),STATS_ts_acc{r}.roc_rec(c,:),'r.-');

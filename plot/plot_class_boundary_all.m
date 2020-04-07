@@ -1,8 +1,8 @@
-function [frame] = plot_class_boundary(DATA,PAR,class_test)
+function [frame] = plot_class_boundary_all(DATA,PAR,class_test,OPTION)
 
-% --- Save current frame for Nonlinear Classifiers functions ---
+% --- Save current frame for Any Classifiers functions ---
 %
-%   [frame] = plot_class_boundary(DATA,PAR,class_test)
+%   [frame] = plot_class_boundary_all(DATA,PAR,class_test)
 %
 %   Input:
 %       DATA.
@@ -10,14 +10,22 @@ function [frame] = plot_class_boundary(DATA,PAR,class_test)
 %           output = output matrix              [c x N]
 %       PAR = parameters structure              [struct]
 %       class_test = classifier test function   [handle]
+%       OPTION.
+%           p1 = first attribute                [cte]
+%           p2 = second attribute               [cte]
 %   Output:
 %       frame = struct containing 'cdata' and 'colormap'
 
 %% INITIALIZATION
 
-% chosen attributes
-p1 = 1;
-p2 = 2;
+% Get chosen attributes
+if(nargin == 3),
+    p1 = 1;
+    p2 = 2;
+else
+    p1 = OPTION.p1;
+    p2 = OPTION.p2;
+end
 
 % choose grid length
 grid_len = 100;
@@ -34,33 +42,42 @@ x2_max = max(X(p2,:));
 
 % Init auxiliary variables
 hp = zeros(2,grid_len^2);	% 2d points of hyperplane
-x = zeros(p,1);             % pattern to be used in function
+xn = zeros(p,1);           	% pattern to be used in function
 count = 0;                  % count number of points from hyperplane
 
 %% ALGORITHM
     
 % Define grid
-x_p1 = linspace(x1_min,x1_max,grid_len);
-x_p2 = linspace(x2_min,x2_max,grid_len);
+xaxis_values = linspace(x1_min,x1_max,grid_len);
+yaxis_values = linspace(x2_min,x2_max,grid_len);
 
-% Get previous classifier output
-x(p1) = x_p1(1);
-x(p2) = x_p2(1);
-DATAts.input = x;
-OUTts = class_test(DATAts,PAR);
-[~,class_prev] = max(OUTts.y_h);
+% % Get previous classifier output
+% xn(p1) = xaxis_values(1);
+% xn(p2) = yaxis_values(1);
+% DATAts.input = xn;
+% OUTts = class_test(DATAts,PAR);
+% [~,class_prev] = max(OUTts.y_h);
 
-% Get points of hyperplane
+% Get points of hyperplane (horizontal)
 for i = 1:grid_len,
-    x(p1) = x_p1(i);                        % set p1 attribute value
-    for j = 1:grid_len,
-        x(p2) = x_p2(j);                    % set p2 attribute value
-        DATAts.input = x;                   % build data in struct
+    
+    % set p1 attribute value
+    xn(p1) = xaxis_values(i);
+    
+    % Get class of first point
+    xn(p2) = yaxis_values(1);
+    DATAts.input = xn;
+    OUTts = class_test(DATAts,PAR);
+    [~,class_prev] = max(OUTts.y_h);
+
+    for j = 2:grid_len,
+        xn(p2) = yaxis_values(j);         	% set p2 attribute value
+        DATAts.input = xn;                  % build data in struct
         OUTts = class_test(DATAts,PAR);     % get classifier output
-        [~,class] = max(OUTts.y_h);         % get class
+        [~,class] = max(OUTts.y_h);         % get current class
         if (class ~= class_prev)
             count = count + 1;
-            hp(:,count) = [x(p1);x(p2)];    % hold point
+            hp(:,count) = xn;               % hold point
         end
         class_prev = class;                 % update previous class
     end

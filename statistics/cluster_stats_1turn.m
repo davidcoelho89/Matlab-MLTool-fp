@@ -69,7 +69,7 @@ FPE = index_fpe(DATA,OUT_CL);
 MDL = index_mdl(DATA,OUT_CL);
 SIL = index_silhouette(DATA,OUT_CL);
 
-% Metricas intermediarias: Sb, Sw
+% Medidas intermediarias: Sb, Sw
 
 %% FILL OUTPUT STRUCTURE
 

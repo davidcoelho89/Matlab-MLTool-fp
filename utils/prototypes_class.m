@@ -35,7 +35,18 @@ X = DATA.input;                 % Input matrix
 [~,N] = size(X);                % Number of samples
 
 % Get Hyperparameters
-K = PAR.K;                      % Number of nearest neighbors
+
+if(isfield(PAR,'K'))            % Number of nearest neighbors
+    K = PAR.K;                      
+else
+    K = 1;
+end
+
+if(isfield(PAR,'knn_type'))
+    knn_type = PAR.knn_type;
+else
+    knn_type = 1;
+end
 
 % Prototypes and its labels
 Cx = PAR.Cx;                 	% Prototype attributes
@@ -57,6 +68,7 @@ win = zeros(1,N);               % One closest prototype for each sample
 if (K == 1),        % if it is a nearest neighbor case
     
     for i = 1:N,
+        
         % Display classification iteration (for debug)
         if(mod(i,1000) == 0)
             display(i);
@@ -75,7 +87,8 @@ if (K == 1),        % if it is a nearest neighbor case
             if(d_min(class) == -1 || d < d_min(class)),
                 d_min(class) = d;
             end
-            if(d_min_all == -1 || d < d_min_all),   % Get closest prototype
+            % Get closest prototype
+            if(d_min_all == -1 || d < d_min_all),
                 d_min_all = d;
                 win(i) = k;
             end
@@ -93,11 +106,14 @@ if (K == 1),        % if it is a nearest neighbor case
             
             % Calculate Class output for the sample
             
-            dp = d_min(class);   % Get minimum distance from class
-            if (dp == -1),      % no prototypes from class
+            % Get minimum distance from class
+            dp = d_min(class);
+            % no prototypes from this class
+            if (dp == -1),
                 y_h(class,i) = -1;
             else
-                dm = -1;        % get minimum distance from other classes
+                % get minimum distance from other classes
+                dm = -1;        
                 for j = 1:Nc,
                     if(j == class), % looking for other classes
                         continue;
@@ -120,28 +136,81 @@ if (K == 1),        % if it is a nearest neighbor case
 elseif (K > 1),    % if it is a knn case
     
     for i = 1:N,
-        % Test sample
+        
+        % Display classification iteration (for debug)
+        if(mod(i,1000) == 0)
+            display(i);
+        end
+        
+        % Get test sample
         sample = X(:,i);
+        
         % Measure distance from sample to each prototype
         Vdist = zeros(1,Nk);
         for k = 1:Nk,
             prot = Cx(:,k);
             Vdist(k) = vectors_dist(prot,sample,PAR);
         end
-        % sort distances and get nearest neighbors
+        
+        % Sort distances and get nearest neighbors
         out = bubble_sort(Vdist,1);
-        Knear = out.ind(1:K);
-        % Find labels of nearest neighbors
-        lbls = Cy(:,Knear);
-        % Voting in order to find estimated label
-        votes = zeros(1,Nc);
-        for k = 1:K,
-            [~,class] = max(lbls(:,k));
-            votes(class) = votes(class) + 1;
+        
+        % Get closest prototype
+        win(i) = out.ind(1);
+        
+        % Verify number of prototypes and neighbors
+        if(Nk <= K),
+            nearest_indexes = out.ind(1:Nk);
+            number_of_nearest = Nk;
+        else
+            nearest_indexes = out.ind(1:K+1);
+            number_of_nearest = K;
         end
-        % Update class
-        [~,class] = max(votes);
-        y_h(class,i) = 1;
+        
+        % Get labels of nearest neighbors
+        lbls_near = Cy(:,nearest_indexes);
+        
+        if (knn_type == 1), % majority voting method
+            
+            % Compute votes
+            votes = zeros(1,Nc);
+            for k = 1:number_of_nearest,
+                [~,class] = max(lbls_near(:,k));
+                votes(class) = votes(class) + 1;
+            end
+            
+            % Update class
+            [~,class] = max(votes);
+            y_h(class,i) = 1;
+
+        else % weighted knn
+            
+            % Avoid weights of 0
+            epsilon = 0.001;
+            
+            % Auxiliary output and weight
+            y_aux = zeros(Nc,1);
+            w_sum = 0;
+            
+            % Get distances of nearest neighbors
+            Dnear = Vdist(nearest_indexes);
+            
+            % Calculate Output
+            for k = 1:number_of_nearest,
+                % Compute Weight
+                if (knn_type == 2), % Triangular
+                    Dnorm = Dnear(k)/(Dnear(end) + epsilon);
+                    w = 1 - Dnorm;
+                end
+                w_sum = w_sum + w;
+                % Compute weighted outptut
+                y_aux = y_aux + w*lbls_near(:,k);
+
+            end
+            y_h(:,i) = y_aux / w_sum;
+            
+        end
+        
     end
     
 end

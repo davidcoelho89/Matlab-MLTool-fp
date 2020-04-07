@@ -42,11 +42,12 @@ function [Dout] = k2nn_dict_updt(xt,yt,Din,PAR)
 %% INITIALIZATIONS
 
 % Get dictionary
-Dx = Din.x;         % Attributes of dictionary
-Dy = Din.y;         % Classes of dictionary
-Km = Din.Km;        % Dictionary Kernel Matrix
-Kinv = Din.Kinv;    % Dictionary Inverse Kernel Matrix
-score = Din.score;  % Score of each prototype from dictionary 
+Dx = Din.x;                     % Attributes of dictionary
+Dy = Din.y;                     % Classes of dictionary
+Km = Din.Km;                    % Dictionary Kernel Matrix
+Kinv = Din.Kinv;                % Dictionary Inverse Kernel Matrix
+score = Din.score;              % Score of each prototype
+class_hist = Din.class_hist;    % Classification history of each prototype
 
 % Get Hyperparameters
 Dm = PAR.Dm;        % Design Method
@@ -170,6 +171,10 @@ if (Dm == 2 && Us ~= 0),
         else
             Dx_c(:,win_c) = Dx_c(:,win_c) - eta * (xt - Dx_c(:,win_c));
         end
+    elseif (Us == 3),   % NG
+        % ToDo - All
+    elseif (Us == 4),   % SOM
+        % ToDo - All
     end
     
     Dx(:,win) = Dx_c(:,win_c);
@@ -181,6 +186,8 @@ if (Dm == 2 && Us ~= 0),
         
     Dx(:,[win,m]) = Dx(:,[m,win]);
     Dy(:,[win,m]) = Dy(:,[m,win]);
+    score(:,[win,m]) = score(:,[m,win]);
+    class_hist(:,[win,m]) = class_hist(:,[m,win]);
     
     % Remove line and column from kernel matrix
     
@@ -234,10 +241,12 @@ end
 
 %% FILL OUTPUT STRUCTURE
 
+Dout = Din;
 Dout.x = Dx;
 Dout.y = Dy;
 Dout.Km = Km;
 Dout.Kinv = Kinv;
 Dout.score = score;
+Dout.class_hist = class_hist;
 
 %% END

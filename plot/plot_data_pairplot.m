@@ -1,8 +1,8 @@
-function pairplot(DATA,label,mode)
+function plot_data_pairplot(DATA,label,mode)
 
 % --- Histograms and Pairwise Scatter from Input Variables ---
 % 
-%   pairplot(DATA,label,mode)
+%   plot_data_pairplot(DATA,label,mode)
 %
 %   Inputs:
 %       DATA.

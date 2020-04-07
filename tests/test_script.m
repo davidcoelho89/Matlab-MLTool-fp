@@ -817,6 +817,17 @@ indexes = find(Accs == max(Accs));
 v1s(indexes),
 % sigmas(indexes),
 
+%% Weighted Knn
+
+K = 5;
+Nc = 3;
+lbls_near = [[-1;-1;1], [-1;1;-1], [-1;1;-1] [1;-1;-1] [1;-1;-1]];
+votes = zeros(1,Nc);
+for k = 1:K,
+	[~,class] = max(lbls_near(:,k));
+	votes(class) = votes(class) + 1;
+end
+
 %% Eigenfaces and FisherFaces Test
 
 % ToDo - All

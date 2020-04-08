@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 11;              % Which problem will be solved / used
+OPT.prob = 39;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition

@@ -273,12 +273,12 @@ switch (choice),
     case 33, % weather
         loaded_data = load('weather.mat');
         DATA.input = loaded_data.weather_data;
-        DATA.output = loaded_data.weather_class;
+        DATA.output = loaded_data.weather_class + 1;
         DATA.lbl = DATA.output;
     case 34, % electricity
         loaded_data = load('elec_market.mat');
         DATA.input = loaded_data.elec2data';
-        DATA.output = loaded_data.elec2label';
+        DATA.output = loaded_data.elec2label' + 1;
         DATA.lbl = DATA.output;
     case 35, % Cover Type
         loaded_data = load('covtypeNorm.txt');
@@ -291,15 +291,15 @@ switch (choice),
         DATA.lbl = DATA.output;
     case 37, % Outdoor
         DATA.input = load('outdoorStream.data')';
-        DATA.output = load('outdoorStream.labels')';
+        DATA.output = load('outdoorStream.labels')' + 1;
         DATA.lbl = DATA.output;
     case 38 % Rialto
         DATA.input = load('rialto.data')';
-        DATA.output = load('rialto.labels')';
+        DATA.output = load('rialto.labels')' + 1;
         DATA.lbl = DATA.output;
     case 39 % Spam        
         DATA.input = load('spam.data')';
-        DATA.output = load('spam.labels')';
+        DATA.output = load('spam.labels')' + 1;
         DATA.lbl = DATA.output;
     otherwise
         % None of the sets

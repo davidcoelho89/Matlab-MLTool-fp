@@ -1,8 +1,8 @@
 function [HP_o] = cross_valid_gs2(DATA,CVp,HP_cv,f_train,f_class)
 
-% --- Optimum hyperparameters (HP) definition by Cross Validation and Grid Search ---
+% --- Optimum hyperparameters definition by Cross Validation and Grid Search ---
 %
-%   [HP_o] = cross_valid_gs(DATA, CVp, HP_cv, f_train, f_class)
+%   [HP_o] = cross_valid_gs2(DATA, CVp, HP_cv, f_train, f_class)
 %
 %   Input:
 %       DATA.

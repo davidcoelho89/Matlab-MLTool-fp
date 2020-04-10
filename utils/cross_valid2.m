@@ -2,7 +2,7 @@ function [CVout] = cross_valid2(DATA,HP,CVp,f_train,f_class)
 
 % --- Cross Validation Function ---
 %
-%   [accuracy] = cross_valid(DATA,HP,CVp,f_train,f_class)
+%   [accuracy] = cross_valid2(DATA,HP,CVp,f_train,f_class)
 %
 %   Input:
 %       DATA.
@@ -62,7 +62,7 @@ for fold = 1:Nfold;
     Ds_fold = prod(size_Cx(2:end));
     Ds = Ds + Ds_fold;
 
-    % Dont measure accuracy if number of prototypes is too high or low
+    % Dont measure accuracy if number of prototypes is too high
     if (Ds_fold > 400)
         continue;
     end

@@ -93,19 +93,20 @@ figure; VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
 % DATA.output = DATA.output(:,I);
 % DATA.lbl = DATA.lbl(:,I);
 
-% Get first element to dictionary
-DATAn.input = DATA.input(:,1);      % first element input
-DATAn.output = DATA.output(:,1);    % first element output
+% Get statistics from data (For Video Function)
 DATAn.Xmax = max(DATA.input,[],2);  % max value
 DATAn.Xmin = min(DATA.input,[],2);  % min value
 DATAn.Xmed = mean(DATA.input,2);    % mean value
 DATAn.Xdp = std(DATA.input,[],2);   % std value
 
-% add element to dictionary
-[~,max_y] = max(DATAn.output);      
-no_of_samples(max_y,1) = 1;
-PAR = k2nn_train(DATAn,HP);
+% Add first element to dictionary
+DATAn.input = DATA.input(:,1);      % First element input
+DATAn.output = DATA.output(:,1);    % First element output
+[~,max_y] = max(DATAn.output);      % Get sample's class   
+no_of_samples(max_y,1) = 1;         % Update number of samples per class
+PAR = k2nn_train(DATAn,HP);         % Add element
 
+% Update Video Function
 if (HP.Von),
     VID(1) = prototypes_frame(PAR.Cx,DATAn);
 end
@@ -119,23 +120,14 @@ for n = 2:N,
         disp(datestr(now));
     end
     
-    % Get current data
+    % Get current data (and hold its class)
     
     DATAn.input = DATA.input(:,n);
     DATAn.output = DATA.output(:,n);
     
-    % Test (classify arriving data with current model)
-    
-    OUTn = k2nn_classify(DATAn,PAR);
-    
-    % Statistics
-    
     [~,max_y] = max(DATAn.output);
-    [~,max_yh] = max(OUTn.y_h);
-    
     predict_vector(1,n) = max_y;
-    predict_vector(2,n) = max_yh;
-
+    
     for c = 1:Nc,
         if (c == max_y),
             no_of_samples(c,n) = no_of_samples(c,n-1) + 1;
@@ -143,6 +135,15 @@ for n = 2:N,
             no_of_samples(c,n) = no_of_samples(c,n-1);
         end
     end
+    
+    % Test (classify arriving data with current model)
+    
+    OUTn = k2nn_classify(DATAn,PAR);
+
+    [~,max_yh] = max(OUTn.y_h);
+    predict_vector(2,n) = max_yh;
+    
+    % Statistics
     
     if (max_y == max_yh),
         no_of_correct(n) = no_of_correct(n-1) + 1;

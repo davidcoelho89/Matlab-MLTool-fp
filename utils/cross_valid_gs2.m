@@ -20,16 +20,19 @@ function [HP_o] = cross_valid_gs2(DATA,CVp,HP_cv,f_train,f_class)
 
 %% INIT
 
+% Init General Characteristics of Problem
+
 HP_names = fieldnames(HP_cv);	% Names of HP
 N_HP = numel(HP_names);         % Number of HP
-
 index_HP = ones(N_HP,1);        % Index for each HP in grid search
 
 % Init optimum and auxiliary hyperparameters
+
 for j = 1:N_HP,
-    hp = HP_cv.(HP_names{j});     	% get HP vector of values
-    HP_aux.(HP_names{j}) = hp(1);   % auxiliary HP
-    HP_o.(HP_names{j}) = hp(1);     % optimum HP
+    HP_name = HP_names{j};              % name of HyperParameter
+    HP_values = HP_cv.(HP_name);    	% get HP vector of values
+    HP_aux.(HP_name) = HP_values(1);	% init auxiliary HP
+    HP_o.(HP_name) = HP_values(1);      % init optimum HP
 end
 
 end_flag = 0;           % Signalize end of grid search
@@ -80,8 +83,8 @@ while 1,
     % update auxiliary HP
 
     for j = 1:N_HP,
-        hp = HP_cv.(HP_names{j});               % get HP vector
-        HP_aux.(HP_names{j}) = hp(index_HP(j)); % get HP value
+        HP_values = HP_cv.(HP_names{j});               % get HP vector
+        HP_aux.(HP_names{j}) = HP_values(index_HP(j)); % get HP value
     end
 
 end % end of while

@@ -26,8 +26,7 @@ if (nargin == 4),
 end
 
 % trade-off between error and dictionary size
-lambda = GSp.lambda;	
-
+lambda = GSp.lambda;
 
 % Get General Characteristics of Problem
 
@@ -55,7 +54,7 @@ while 1,
 
     % "Interleaved Test-Then-Train" or "Prequential" Method
     
-    PresequentialOut = presequential_valid(DATA,HPaux,f_train,f_class);
+    PresequentialOut = presequential_valid1(DATA,HPaux,f_train,f_class);
     cv_metric = PresequentialOut.Ds + lambda * PresequentialOut.err;
 
     % Define new optimum HP
@@ -96,7 +95,7 @@ while 1,
          HyperParameterName = HyperParameterNames{j};
          HpValuesVector = HPgs.(HyperParameterName);
          HPaux.(HyperParameterName) = ...
-                        HpValuesVector(IndexOfHyperParameters(i));
+                        HpValuesVector(IndexOfHyperParameters(j));
      end
 
 end

@@ -54,7 +54,8 @@ HP.theta = 1;       % Dot product add cte (lin 0 / poly 1 / sigm 0.1)
 %% HYPERPARAMETERS - FOR GRID SEARCH
 
 HP_gs = HP;
-HP_gs.v1 = 2.^linspace(-10,10,21);
+K2NNcv.v1 = 2.^linspace(-4,3,8);
+K2NNcv.sigma = 2.^linspace(-10,9,20);
 
 % Kernel Functions: 1 lin / 2 gauss / 3 poly / 5 cauchy / 6 log / 7 sigm /
 
@@ -133,6 +134,7 @@ figure; VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 %% CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
 
+display('begin grid search')
 
 HPo = grid_search_ttt(DATAhpo,HP_gs,class_train,class_test);
 
@@ -149,12 +151,14 @@ DATAn.input = DATA.input(:,1);      % First element input
 DATAn.output = DATA.output(:,1);    % First element output
 [~,max_y] = max(DATAn.output);      % Get sample's class
 no_of_samples(max_y,1) = 1;         % Update number of samples per class
-PAR = k2nn_train(DATAn,HP);         % Add element
+PAR = k2nn_train(DATAn,HPo);     	% Add element
 
 % Update Video Function
-if (HP.Von),
+if (HPo.Von),
     VID(1) = prototypes_frame(PAR.Cx,DATAn);
 end
+
+display('begin Test-than-train')
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 

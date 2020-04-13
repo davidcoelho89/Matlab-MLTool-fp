@@ -1,43 +1,51 @@
-function [HP_o] = cross_valid_gs2(DATA,CVp,HP_cv,f_train,f_class)
+function [HP_o] = grid_search_cv2(DATA,HP_cv,f_train,f_class,CVp)
 
-% --- Optimum hyperparameters definition by Cross Validation and Grid Search ---
+% --- Optm hyperparameters definition by Grid Search and Cross Validation ---
 %
-%   [HP_o] = cross_valid_gs2(DATA, CVp, HP_cv, f_train, f_class)
+%   [HP_o] = grid_search_cv2(DATA,HP_cv,f_train,f_class,CVp)
 %
 %   Input:
 %       DATA.
 %           input = training attributes                             [p x N]
 %           output = training labels                                [Nc x N]
-%       CVp.
-%           fold = number of folds for cross validation             [cte]
-%           lambda = trade-off between error and dictionary size   	[cte]
-%       HP_cv = hyperparameters for cross validation of classifier
+%       HP_gs = hyperparameters for grid search of classifier
 %                (vectors containing values that will be tested)
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's classification function       
+%       CVp.
+%           fold = number of folds for cross validation             [cte]
+%           lambda = trade-off between error and dictionary size   	[cte]
 %   Output:
 %       HP_o = optimum hyperparameters of classifier for data set
 
 %% INIT
 
-% Init General Characteristics of Problem
+% Get Hyperparameters of Grid Search
+
+if (nargin == 4),
+    CVp.lambda = 0.5;
+end
+
+% trade-off between error and dictionary size
+lambda = CVp.lambda;
+
+% Get General Characteristics of Problem
 
 HP_names = fieldnames(HP_cv);	% Names of HP
 N_HP = numel(HP_names);         % Number of HP
-index_HP = ones(N_HP,1);        % Index for each HP in grid search
 
 % Init optimum and auxiliary hyperparameters
 
-for j = 1:N_HP,
-    HP_name = HP_names{j};              % name of HyperParameter
+for i = 1:N_HP,
+    HP_name = HP_names{i};              % name of HyperParameter
     HP_values = HP_cv.(HP_name);    	% get HP vector of values
     HP_aux.(HP_name) = HP_values(1);	% init auxiliary HP
     HP_o.(HP_name) = HP_values(1);      % init optimum HP
 end
 
-end_flag = 0;           % Signalize end of grid search
-min_metric = 2;         % minimum metric of an HP set (max value = 2)
-lambda = CVp.lambda;	% trade-off between error and dictionary size
+index_HP = ones(N_HP,1);	% Index for each HP in grid search
+end_flag = 0;               % Signalize end of grid search
+min_metric = 2;             % minimum metric of an HP set (max value = 2)
 
 %% ALGORITHM
 
@@ -45,7 +53,7 @@ while 1,
 
     % Cross Validation
 
-    CVout = cross_valid2(DATA,HP_aux,CVp,f_train,f_class);
+    CVout = cross_valid2(DATA,HP_aux,f_train,f_class,CVp);
     cv_metric = CVout.Ds + lambda * CVout.err;
 
     % Define new optimum HP
@@ -83,8 +91,9 @@ while 1,
     % update auxiliary HP
 
     for j = 1:N_HP,
-        HP_values = HP_cv.(HP_names{j});               % get HP vector
-        HP_aux.(HP_names{j}) = HP_values(index_HP(j)); % get HP value
+        HP_name = HP_names{j};                      % get HP name
+        HP_values = HP_cv.(HP_name);                % get HP values vector
+        HP_aux.(HP_name) = HP_values(index_HP(j));  % get HP value
     end
 
 end % end of while

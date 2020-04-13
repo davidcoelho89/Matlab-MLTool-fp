@@ -1,30 +1,35 @@
-function [accuracy] = cross_valid(DATA,HP,CVp,f_train,f_class)
+function [accuracy] = cross_valid1(DATA,HP,f_train,f_class,CVp)
 
 % --- Cross Validation Function ---
 %
-%   [accuracy] = cross_valid(DATA,HP,CVp,f_train,f_class)
+%   [accuracy] = cross_valid1(DATA,HP,f_train,f_class,CVp)
 %
 %   Input:
 %       DATA.
 %           input = Matrix of training attributes             	[p x N]
 %           output = Matrix of training labels                 	[Nc x N]
 %       HP = set of HyperParameters to be tested
-%       CVp.
-%           fold = number of partitions                      	[cte]
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's classification function       
+%       CVp.
+%           Nfold = number of data partitions                  	[cte]
 %   Output:
 %       accuracy = mean accuracy for data set and parameters
 
 %% INIT
 
+% Get Data 
+
 X = DATA.input;     	% Attributes Matrix [p x N]
 Y = DATA.output;     	% labels Matriz [Nc x N]
-
 [~,N] = size(X);      	% Number of samples
 
-Nfold = CVp.fold;     	% Number of folds
+% Get HyperParameter
+
+Nfold = CVp.Nfold;     	% Number of data partitions
 part = floor(N/Nfold); 	% Size of each data partition
+
+% Init Outupt
 
 accuracy = 0;          	% Init accurary
 

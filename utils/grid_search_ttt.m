@@ -1,8 +1,8 @@
-function [HPoptimum] = cross_valid_gs3(DATA,HPgs,f_train,f_class,GSp)
+function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
 
-% --- Optimum hyperparameters definition by Cross Validation and Grid Search ---
+% --- Optm hyperparameters definition by Grid Search for Sequential Learn ---
 %
-%   [HP_o] = cross_valid_gs3(DATA,HPgs,f_train,f_class,GSp)
+%   [HP_o] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
 %
 %   Input:
 %       DATA.
@@ -22,28 +22,30 @@ function [HPoptimum] = cross_valid_gs3(DATA,HPgs,f_train,f_class,GSp)
 % Get Hyperparameters
 
 if (nargin == 4),
-    lambda = 0.5;
-else
-    lambda = GSp.lambda;	% trade-off between error and dictionary size
+    GSp.lambda = 0.5;
 end
+
+% trade-off between error and dictionary size
+lambda = GSp.lambda;	
+
 
 % Get General Characteristics of Problem
 
 HyperParameterNames = fieldnames(HPgs);
 NumberOfHyperParameters = numel(HyperParameterNames);
-IndexOfHyperParameters = ones(NumberOfHyperParameters,1);
 
 % Init Optimum and Auxiliary HyperParameters
 
-for hp = 1:NumberOfHyperParameters,
-    HyperParameterName = HyperParameterNames{hp};
+for i = 1:NumberOfHyperParameters,
+    HyperParameterName = HyperParameterNames{i};
     HpValuesVector = HPgs.(HyperParameterName);
-    HPauxiliary.(HyperParameterName) = HpValuesVector(1);
-    HPoptimum.(HyperParameterName) = HpValuesVector(1);
+    HPaux.(HyperParameterName) = HpValuesVector(1);
+    HPoptm.(HyperParameterName) = HpValuesVector(1);
 end
 
 % Init Auxiliary Variables
 
+IndexOfHyperParameters = ones(NumberOfHyperParameters,1);
 end_flag = 0;           % Signalize end of grid search
 min_metric = 2;         % minimum metric of an HP set (max value = 2)
 
@@ -51,15 +53,16 @@ min_metric = 2;         % minimum metric of an HP set (max value = 2)
 
 while 1,
 
-    % "Interleaved Test-Then-Train" or "Prequential"
+    % "Interleaved Test-Then-Train" or "Prequential" Method
     
-    PresequentialOut = presequential(DATA,HPauxiliary,f_train,f_class);
+    PresequentialOut = presequential_valid(DATA,HPaux,f_train,f_class);
     cv_metric = PresequentialOut.Ds + lambda * PresequentialOut.err;
 
     % Define new optimum HP
 
     if (cv_metric < min_metric),
-        HPoptimum = HPauxiliary;
+        HPoptm = HPaux;
+        min_metric = cv_metric;
     end
 
     % Update indexes of HP
@@ -92,7 +95,7 @@ while 1,
      for j = 1:NumberOfHyperParameters,
          HyperParameterName = HyperParameterNames{j};
          HpValuesVector = HPgs.(HyperParameterName);
-         HPauxiliary.(HyperParameterName) = ...
+         HPaux.(HyperParameterName) = ...
                         HpValuesVector(IndexOfHyperParameters(i));
      end
 

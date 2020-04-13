@@ -1,18 +1,18 @@
-function [CVout] = cross_valid2(DATA,HP,CVp,f_train,f_class)
+function [CVout] = cross_valid2(DATA,HP,f_train,f_class,CVp)
 
 % --- Cross Validation Function ---
 %
-%   [accuracy] = cross_valid2(DATA,HP,CVp,f_train,f_class)
+%   [CVout] = cross_valid2(DATA,HP,f_train,f_class,CVp)
 %
 %   Input:
 %       DATA.
 %           input = Matrix of training attributes             	[p x N]
 %           output = Matrix of training labels                 	[Nc x N]
 %       HP = set of HyperParameters to be tested
-%       CVp.
-%           Nfold = number of partitions                       	[cte]
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's classification function       
+%       CVp.
+%           Nfold = number of partitions                       	[cte]
 %   Output:
 %       CVout.
 %           err = mean error for data set and parameters
@@ -23,13 +23,13 @@ function [CVout] = cross_valid2(DATA,HP,CVp,f_train,f_class)
 X = DATA.input;                 % Attributes Matrix [pxN]
 Y = DATA.output;             	% labels Matriz [cxN]
 
-[~, Ntrain] = size(X);          % Number of samples
+[~,N] = size(X);                % Number of samples
 
 Nfold = CVp.fold;               % Number of folds
-part = floor(Ntrain/Nfold);     % Size of each data partition
+part = floor(N/Nfold);          % Size of each data partition
 
 accuracy = 0;                   % Init accurary
-Ds = 0;                         % Init no of prototypes (dictionary size)
+Ds = 0;                         % Init # prototypes (dictionary size)
 
 %% ALGORITHM
 
@@ -78,9 +78,9 @@ for fold = 1:Nfold;
 
 end
 
-accuracy = accuracy / Nfold;        % Mean Accuracy
-error = 1 - accuracy;             	% Mean Error
-Ds = (Ds)/(Ntrain * Nfold);         % Mean number of prototypes
+accuracy = accuracy / Nfold;	% Mean Accuracy
+error = 1 - accuracy;           % Mean Error
+Ds = (Ds)/(N * Nfold);       	% Mean number of prototypes
 
 %% FILL OUTPUT STRUCTURE
 

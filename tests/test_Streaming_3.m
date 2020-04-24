@@ -148,7 +148,7 @@ for n = 2:Nttt,
     
     % Video Function
     
-    if (HP.Von),
+    if (HP_gs.Von),
         VID(n) = prototypes_frame(PAR.Cx,DATAn);
     end
     

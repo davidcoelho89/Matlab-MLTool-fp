@@ -14,6 +14,9 @@ function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
 %       f_class = handler for classifier's classification function       
 %       GSp.
 %           lambda = trade-off between error and dictionary size   	[0 - 1]
+%           preseq_type = typé of presenquential validation
+%               1: k2nn 
+%               2: isk2nn
 %   Output:
 %       HP_o = optimum hyperparameters of classifier for data set
 
@@ -23,10 +26,14 @@ function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
 
 if (nargin == 4),
     GSp.lambda = 0.5;
+    GSp.preseq_type = 2;
 end
 
 % trade-off between error and dictionary size
 lambda = GSp.lambda;
+
+% type of presenquential test
+preseq_type = GSp.preseq_type;
 
 % Get General Characteristics of Problem
 
@@ -45,7 +52,7 @@ end
 % Init Auxiliary Variables
 
 IndexOfHyperParameters = ones(NumberOfHyperParameters,1);
-end_flag = 0;           % Signalize end of grid search
+still_searching = 1;	% Signalize end of grid search
 min_metric = 2;         % minimum metric of an HP set (max value = 2)
 
 %% ALGORITHM
@@ -54,7 +61,11 @@ while 1,
 
     % "Interleaved Test-Then-Train" or "Prequential" Method
     
-    PresequentialOut = presequential_valid1(DATA,HPaux,f_train,f_class);
+    if (preseq_type == 1),
+        PresequentialOut = presequential_valid1(DATA,HPaux,f_train,f_class);
+    else
+        PresequentialOut = presequential_valid2(DATA,HPaux,f_train);
+    end
     cv_metric = PresequentialOut.Ds + lambda * PresequentialOut.err;
 
     % Define new optimum HP
@@ -73,7 +84,7 @@ while 1,
         number_of_values = length(HPgs.(HyperParameterNames{i}));
         if (IndexOfHyperParameters(i) > number_of_values)
             if i == NumberOfHyperParameters,
-                end_flag = 1;
+                still_searching = 0;
             end
             IndexOfHyperParameters(i) = 1;
             i = i + 1;
@@ -85,7 +96,7 @@ while 1,
     
     % if all HP sets were tested, finish the grid search
     
-    if end_flag == 1,
+    if still_searching == 0,
         break;
     end
     

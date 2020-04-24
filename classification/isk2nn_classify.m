@@ -1,8 +1,8 @@
-function [OUT] = k2nn_classify(DATA,PAR)
+function [OUT] = isk2nn_classify(DATA,PAR)
 
-% --- Kernel KNN Prototype-Based Classify Function ---
+% --- Incremental Sparse Kernel KNN Prototype-Based Classify Function ---
 %
-%   [OUT] = k2nn_classify(DATA,PAR)
+%   [OUT] = isk2nn_classify(DATA,PAR)
 % 
 %   Input:
 %       DATA.
@@ -20,7 +20,6 @@ function [OUT] = k2nn_classify(DATA,PAR)
 %               2: Euclidean distance
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
-%           order = kernel hyperparameter ( see kernel_func() ) [cte]
 %           alpha = kernel hyperparameter ( see kernel_func() ) [cte]
 %           theta = kernel hyperparameter ( see kernel_func() ) [cte]
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]

@@ -6,12 +6,13 @@ function [OUT] = prototypes_class(DATA,PAR)
 % 
 %   Input:
 %       DATA.
-%           input = input matrix                  	[p x N]
+%           input = input matrix                                [p x N]
 %       PAR.
-%           Cx = prototypes' attributes            	[p x Nk(1) x ... x Nk(Nd)]
-%           Cy = prototypes' labels                 [Nc x Nk(1) x ... x Nk(Nd)]
-%           K = number of nearest neighbors        	[cte]
-%           dist = type of distance (if Ktype = 0) 	[cte]
+%           Cx = prototypes' attributes                         [p x Nk]
+%           Cy = prototypes' labels                             [Nc x Nk]
+%           K = number of nearest neighbors                     [cte]
+%           knn_type = type of knn aproximation                 [cte]
+%           dist = type of distance (if Ktype = 0)              [cte]
 %               0: Dot product
 %               inf: Chebyshev distance
 %               -inf: Minimum Minkowski distance
@@ -25,10 +26,20 @@ function [OUT] = prototypes_class(DATA,PAR)
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
 %   Output:
 %       OUT.
-%           y_h = classifier's output                       [Nc x N]
-%           win = closest prototype to each sample          [1 x N]
+%           y_h = classifier's output                           [Nc x N]
+%           win = closest prototype to each sample              [1 x N]
+%           dist = distance of sample from each prototype       [Nk x N]
 
-%% INITIALIZATION
+%% SET DEFAULT HYPERPARAMETERS
+
+if (~(isfield(PAR,'K'))),
+    PAR.K = 1;
+end
+if (~(isfield(PAR,'knn_type'))),
+    PAR.knn_type = 1;
+end
+
+%% INITIALIZATIONS
 
 % Data Initialization
 X = DATA.input;                 % Input matrix
@@ -36,17 +47,8 @@ X = DATA.input;                 % Input matrix
 
 % Get Hyperparameters
 
-if(isfield(PAR,'K'))            % Number of nearest neighbors
-    K = PAR.K;                      
-else
-    K = 1;
-end
-
-if(isfield(PAR,'knn_type'))
-    knn_type = PAR.knn_type;
-else
-    knn_type = 1;
-end
+K = PAR.K;                      % Number of nearest neighbors
+knn_type = PAR.knn_type;        % Type of knn aproximation
 
 % Prototypes and its labels
 Cx = PAR.Cx;                 	% Prototype attributes
@@ -61,21 +63,22 @@ Cy = prototypes_vect(Cy);
 
 % Init outputs
 y_h = -1*ones(Nc,N);            % One output for each sample
-win = zeros(1,N);               % One closest prototype for each sample
+winners = zeros(1,N);        	% One closest prototype for each sample
+distances = zeros(Nk,N);        % Distance from prototypes to each sample
 
 %% ALGORITHM
 
 if (K == 1),        % if it is a nearest neighbor case
     
-    for i = 1:N,
+    for n = 1:N,
         
         % Display classification iteration (for debug)
-        if(mod(i,1000) == 0)
-            display(i);
+        if(mod(n,1000) == 0)
+            display(n);
         end
         
         % Get test sample
-        sample = X(:,i);
+        sample = X(:,n);
         
         % Get closest prototype and min distance from sample to each class
         d_min = -1*ones(Nc,1);
@@ -84,13 +87,14 @@ if (K == 1),        % if it is a nearest neighbor case
             prot = Cx(:,k);                         % Get prototype
             [~,class] = max(Cy(:,k));               % Get prototype label
             d = vectors_dist(prot,sample,PAR);      % Calculate distance
+            distances(k,n) = d;                     % hold distance
             if(d_min(class) == -1 || d < d_min(class)),
                 d_min(class) = d;
             end
             % Get closest prototype
             if(d_min_all == -1 || d < d_min_all),
                 d_min_all = d;
-                win(i) = k;
+                winners(n) = k;
             end
         end
         
@@ -108,9 +112,9 @@ if (K == 1),        % if it is a nearest neighbor case
             
             % Get minimum distance from class
             dp = d_min(class);
-            % no prototypes from this class
+            % There is no prototypes from this class
             if (dp == -1),
-                y_h(class,i) = -1;
+                y_h(class,n) = -1;
             else
                 % get minimum distance from other classes
                 dm = -1;        
@@ -124,9 +128,9 @@ if (K == 1),        % if it is a nearest neighbor case
                     end
                 end
                 if (dm == -1),  % no prototypes from other classes
-                    y_h(class,i) = 1;
+                    y_h(class,n) = 1;
                 else
-                    y_h(class,i) = (dm - dp) / (dm + dp);
+                    y_h(class,n) = (dm - dp) / (dm + dp);
                end
             end
         end
@@ -135,15 +139,15 @@ if (K == 1),        % if it is a nearest neighbor case
     
 elseif (K > 1),    % if it is a knn case
     
-    for i = 1:N,
+    for n = 1:N,
         
         % Display classification iteration (for debug)
-        if(mod(i,1000) == 0)
-            display(i);
+        if(mod(n,1000) == 0)
+            display(n);
         end
         
         % Get test sample
-        sample = X(:,i);
+        sample = X(:,n);
         
         % Measure distance from sample to each prototype
         Vdist = zeros(1,Nk);
@@ -151,12 +155,13 @@ elseif (K > 1),    % if it is a knn case
             prot = Cx(:,k);
             Vdist(k) = vectors_dist(prot,sample,PAR);
         end
+        distances(:,n) = Vdist';    % hold distances
         
         % Sort distances and get nearest neighbors
         out = bubble_sort(Vdist,1);
         
         % Get closest prototype
-        win(i) = out.ind(1);
+        winners(n) = out.ind(1);
         
         % Verify number of prototypes and neighbors
         if(Nk <= K),
@@ -170,7 +175,7 @@ elseif (K > 1),    % if it is a knn case
         % Get labels of nearest neighbors
         lbls_near = Cy(:,nearest_indexes);
         
-        if (knn_type == 1), % majority voting method
+        if (knn_type == 1), % Majority voting method
             
             % Compute votes
             votes = zeros(1,Nc);
@@ -181,9 +186,9 @@ elseif (K > 1),    % if it is a knn case
             
             % Update class
             [~,class] = max(votes);
-            y_h(class,i) = 1;
+            y_h(class,n) = 1;
 
-        else % weighted knn
+        else % Weighted knn
             
             % Avoid weights of 0
             epsilon = 0.001;
@@ -207,7 +212,7 @@ elseif (K > 1),    % if it is a knn case
                 y_aux = y_aux + w*lbls_near(:,k);
 
             end
-            y_h(:,i) = y_aux / w_sum;
+            y_h(:,n) = y_aux / w_sum;
             
         end
         
@@ -218,6 +223,7 @@ end
 %% FILL OUTPUT STRUCTURE
 
 OUT.y_h = y_h;
-OUT.win = win;
+OUT.win = winners;
+OUT.dist = distances;
 
 %% END

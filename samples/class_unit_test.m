@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 39;              % Which problem will be solved / used
+OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
@@ -60,6 +60,10 @@ HP.theta = 0.1;     % Dot product adding (poly 1 / sigm 0.1)
 
 DATA = data_class_loading(OPT);     % Load Data Set
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
+
+%% DATA VISUALIZATION
+
+figure; plot_data_pairplot(DATA)
 
 %% ACCUMULATORS
 

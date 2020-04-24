@@ -22,21 +22,19 @@ function [d] = vectors_dist(x,y,PAR)
 %   Output:
 %       d = distance between prototype and sample               [cte]
 
+%% SET DEFAULT HYPERPARAMETERS
+
+if (~(isfield(PAR,'dist'))),
+    PAR.dist = 2;
+end
+if (~(isfield(PAR,'Ktype'))),
+    PAR.Ktype = 0;
+end
+
 %% INITIALIZATION
 
-% If the algorithm is kernelized
-if(isfield(PAR,'Ktype')),
-	Ktype = PAR.Ktype;        	% Kernel type
-else
-	Ktype = 0;
-end
-
-% If the algorithm is not kernelized
-if (Ktype == 0 && isfield(PAR,'dist')),            	
-    dist = PAR.dist;        	% Choose distance
-else
-	dist = 2;					% Euclidean distance
-end
+Ktype = PAR.Ktype;        	% Kernel type
+dist = PAR.dist;        	% Choose distance
 
 %% ALGORITHM
 

@@ -40,7 +40,7 @@ for i = 1:N_HP,
 end
 
 index_HP = ones(N_HP,1);        % Index for each HP in grid search
-end_flag = 0;                   % Signalize end of grid search
+still_searching = 1;            % Signalize end of grid search
 max_accuracy = 0;              	% maximum accuracy of an HP set
 
 %% ALGORITHM
@@ -67,7 +67,7 @@ while 1,
         HP_name = HP_names{i};
         if index_HP(i) > length(HP_gs.(HP_name)),
             if i == N_HP
-                end_flag = 1;
+                still_searching = 0;
             end
             index_HP(i) = 1;
             i = i + 1;
@@ -78,7 +78,7 @@ while 1,
 
     % if all HP sets were tested, finish the grid search
 
-    if end_flag == 1,
+    if still_searching == 0,
         break;
     end
 

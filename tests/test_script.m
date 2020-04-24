@@ -788,16 +788,24 @@ format long e;
 % figure; pairplot(DATA,label);
 % figure; pairplot(DATA,label,'histogram');
 
-%% Results Analysis
+%% Results Analysis (Ps - 1, Hpo - 0, Norm - 0, Class - nn )
 
-Nprots = zeros(1,OPT.Nr);
+% Analysis measures
+
+Analysis = zeros(8,OPT.Nr);
+
 Accs = zeros(1,OPT.Nr);
+Nprots = zeros(1,OPT.Nr);
 v1s = zeros(1,OPT.Nr);
+Ktypes = zeros(1,OPT.Nr);
 sigmas = zeros(1,OPT.Nr);
 alphas = zeros(1,OPT.Nr);
+thetas = zeros(1,OPT.Nr);
+gammas = zeros(1,OPT.Nr);
+
+% Get measures
 
 for r = 1:OPT.Nr,
-%     display(r);
     
     acc_vect = accuracy_vector_acc{r};
     Accs(r) = acc_vect(end);
@@ -805,17 +813,56 @@ for r = 1:OPT.Nr,
     param = PAR_acc{r};
     [~,Nprots(r)] = size(param.Cx);
     v1s(r) = param.v1;
-%     sigmas(r) = param.sigma;
+    Ktypes = param.Ktype;
+    sigmas(r) = param.sigma;
     alphas(r) = param.alpha;
-%     display(Accs(r));
-%     display(Nprots(r));
+    thetas(r) = param.theta;
+    gammas(r) = param.gamma;
 end
+
+% Hold analysis
+
+Analysis(1,:) = Accs;
+Analysis(2,:) = Nprots;
+Analysis(3,:) = v1s;
+Analysis(4,:) = Ktypes;
+Analysis(5,:) = sigmas;
+Analysis(6,:) = alphas;
+Analysis(7,:) = thetas;
+Analysis(8,:) = gammas;
+
+% Plot Graphics
 
 plot(Nprots,Accs,'k.');
 
-indexes = find(Accs == max(Accs));
-v1s(indexes),
+% Verify best accuracies
+
+indexes = find(Accs == max(Accs)),
+% v1s(indexes),
+% Nprots(indexes),
+% Ktypes(indexes),
 % sigmas(indexes),
+% alphas(indexes),
+% thetas(indexes),
+% gammas(indexes),
+
+%% Results Analysis (Ps - 1, Hpo - 1, Norm - 0, Class - nn )
+
+Acc = no_of_correct(end)/17159,
+[~,Nprot] = size(PAR.Cx),
+v1 = PAR.v1,
+sigma = PAR.sigma,
+gamma = PAR.gamma,
+alpha = PAR.alpha,
+theta = PAR.theta,
+
+%% Polynomial
+
+Accs = zeros(1,OPT.Nr);
+
+for r = 1:OPT.Nr,
+    Accs(r) = accuracy_vector_acc{r}(1,end);
+end
 
 %% Weighted Knn
 
@@ -826,6 +873,30 @@ votes = zeros(1,Nc);
 for k = 1:K,
 	[~,class] = max(lbls_near(:,k));
 	votes(class) = votes(class) + 1;
+end
+
+%% Recursive Calculate Average and Variance
+
+x = [2,4,5,7,13,2.5,8,4.5];
+% x = [4,6,12,9];
+N = length(x);
+
+% Calculate with function
+
+Xmean = mean(x);
+Xvar = var(x,1);
+Xstd = std(x,1);
+
+% Calculate recursively
+
+Xmean_rec = x(1);
+Xvar_rec = 0;
+Xstd_rec = 0;
+
+for t = 2:N,
+    Xmean_rec = ((t-1)/t)*Xmean_rec + x(t)/t;
+    Xvar_rec = ((t-1)/t)*Xvar_rec + (1/(t-1))*(x(t)-Xmean_rec)^2;
+    Xstd_rec = sqrt(Xvar_rec);
 end
 
 %% Eigenfaces and FisherFaces Test

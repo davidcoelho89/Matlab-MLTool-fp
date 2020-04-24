@@ -1,8 +1,8 @@
- function [PAR] = k2nn_train(DATA,HP)
-
-% --- Kernel KNN Prototype-Based Training Function ---
+ function [PAR] = isk2nn_train(DATA,HP)
+ 
+ % --- Incremental Sparse Kernel KNN Prototype-Based Training Function ---
 %
-%   PAR = k2nn_train(DATA,HP)
+%   [PAR] = isk2nn_train(DATA,HP)
 % 
 %   Input:
 %       DATA.
@@ -19,6 +19,11 @@
 %               = 4 -> Surprise
 %           v1 = Sparseness parameter 1                         [cte]
 %           v2 = Sparseness parameter 2                         [cte]
+%           Us = Update strategy                                [cte]
+%               = 0 -> do not update prototypes
+%               = 1 -> wta (lms, unsupervised)
+%               = 2 -> lvq (supervised)
+%           eta = Update rate                                   [cte]
 %           Ps = Prunning strategy                              [cte]
 %               = 0 -> do not remove prototypes
 %               = 1 -> score-based method 1
@@ -27,11 +32,6 @@
 %               = 3 -> Penalization (build lssvm, rem prot)
 %               = 4 -> FBS - forward-backward
 %           min_score = score that leads to prune prototype     [cte]
-%           Us = Update strategy                                [cte]
-%               = 0 -> do not update prototypes
-%               = 1 -> wta (lms, unsupervised)
-%               = 2 -> lvq (supervised)
-%           eta = Update rate                                   [cte]
 %           max_prot = max number of prototypes ("Budget")      [cte]
 %           Von = enable or disable video                       [cte]
 %           K = number of nearest neighbors (classify)        	[cte]
@@ -50,8 +50,8 @@
 %           score = used for prunning method                    [1 x Nk]
 %           class_hist = used for prunning method               [1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
-%           ind = cluster index for each sample                 [1 x N]
 %           VID = frame struct (played by 'video function')     [1 x Nep]
+%           y_h = class prediction                              [Nc x N]
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -141,108 +141,92 @@ Y = DATA.output;        % Output Matrix
 
 % Get Hyperparameters
 
-Von = HP.Von;
+% Von = HP.Von;
 max_prot = HP.max_prot;
 
 % Problem Initialization
 
-[~,N] = size(X);       	% Total of samples
+[Nc,N] = size(Y);       % Total of classes and samples
 
 % Init Outputs
 
-if (isfield(HP,'Cx'))
-    D.x = HP.Cx;
-    D.y = HP.Cy;
-else
-    D.x = [];
-    D.y = [];
-end
+PAR = HP;
 
-if (isfield(HP,'Km'))
-    D.Km = HP.Km;
-    D.Kinv = HP.Kinv;
-else
-    D.Km = [];
-    D.Kinv = [];
+if (~isfield(PAR,'Cx'))
+    PAR.Cx = [];
+    PAR.Cy = [];
+    PAR.Km = [];
+    PAR.Kinv = [];
+    PAR.score = [];
+    PAR.class_hist = [];
+    PAR.times_selected = [];
 end
-
-if (isfield(HP,'score'))
-    D.score = HP.score;
-    D.class_hist = HP.class_hist;
-    D.times_selected = HP.times_selected;
-else
-    D.score = [];
-    D.class_hist = [];
-    D.times_selected = [];
-end
-
-ind = zeros(1,N);
 
 VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
 
+yh = -1*ones(Nc,N);
+
 %% ALGORITHM
 
+% Update Dictionary
+
 for t = 1:N,
-    
-    % Display samples (for debug)
+
+%     % Display samples (for debug)
 %     if(mod(t,10000) == 0)
 %         display(t);
 %     end
-
-    % Save frame of the current epoch
-    if (Von),
-        VID(t) = prototypes_frame(D.x,DATA);
-    end
     
-    % Get sample
-    xt = X(:,t);
-    yt = Y(:,t);
+%     % Save frame of the current epoch
+%     if (Von),
+%         VID(t) = prototypes_frame(D.x,DATA);
+%     end
+    
+	% Get sample
+    DATAn.input = X(:,t);
+    DATAn.output = Y(:,t);
 
-    % Get the size of the dictionary
-    [~,mt1] = size(D.x);
+    % Get dictionary size
+    [~,mt1] = size(PAR.Cx);
     
     % Dont Add if number of prototypes is too high
     if (mt1 > max_prot),
         break;
     end
-
-    % Apply sparsification strategy
-    [D] = k2nn_dict_grow(xt,yt,D,HP);
     
-    % Get the new size of the dictionary
-    [~,mt2] = size(D.x);
+    % Init Dictionary (if it is the first sample)
+    if (mt1 == 0),
+        PAR = isk2nn_dict_grow(DATAn,PAR);
+        yh(:,t) = Y(:,t);
+        continue;
+    end
     
-    % Apply prunning strategy
-    [D] = k2nn_dict_prun(D,HP);
-
-    % Verify number of prototypes
-    if ((mt2 - mt1) ~= 1)
-     	% Apply update strategy
-        [D] = k2nn_dict_updt(xt,yt,D,HP);
+    % Predict Output
+    OUTn = prototypes_class(DATAn,PAR);
+    yh(:,t) = OUTn.y_h;
+    
+    % Growing Strategy
+    PAR = isk2nn_dict_grow(DATAn,PAR);
+    
+	% Get dictionary size
+    [~,mt2] = size(PAR.Cx);
+    
+    % Update Strategy
+    if(mt2-mt1 == 0),
+        PAR = isk2nn_dict_updt(DATAn,PAR);
     else
-     	display(mt2); % Debug
-     end
+        display(mt2);
+    end
+    
+    % Prunning Strategy
+    PAR = isk2nn_score_updt(DATAn,OUTn,PAR);
+    PAR = isk2nn_dict_prun(PAR);
     
 end
 
-% Assign indexes (the algorithm becomes slow with the following lines)
-% for i = 1:N,
-%     xn = DATA.input(:,i);               % not shuffled data
-%     win = prototypes_win(D.x,xn,PAR);  	% Winner Neuron index
-%     ind(:,i) = win;                   	% save index for sample
-% end
-
 %% FILL OUTPUT STRUCTURE
 
-PAR = HP;
-PAR.Cx = D.x;
-PAR.Cy = D.y;
-PAR.Km = D.Km;
-PAR.Kinv = D.Kinv;
-PAR.score = D.score;
-PAR.class_hist = D.class_hist;
-PAR.times_selected = D.times_selected;
-PAR.ind = ind;
 PAR.VID = VID;
+PAR.y_h = yh;
 
 %% END

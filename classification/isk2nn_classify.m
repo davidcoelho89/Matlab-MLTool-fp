@@ -6,13 +6,15 @@ function [OUT] = isk2nn_classify(DATA,PAR)
 % 
 %   Input:
 %       DATA.
-%           input = input matrix                    [p x N]
+%           input = input matrix                                [p x N]
 %       PAR.
-%           Cx = prototypes' attributes             [p x Nk]
-%           Cy = prototypes' labels                 [Nc x Nk]
-%           K = number of nearest neighbors      	[cte]
-%           knn_type = type of knn aproximation    	[cte]
-%           dist = type of distance (if Ktype = 0) 	[cte]
+%           Cx = prototypes' attributes                         [p x Nk]
+%           Cy = prototypes' labels                             [Nc x Nk]
+%           K = number of nearest neighbors                     [cte]
+%           knn_type = type of knn aproximation                 [cte]
+%               1: Majority Voting
+%               2: Weighted KNN
+%           dist = type of distance (if Ktype = 0)              [cte]
 %               0: Dot product
 %               inf: Chebyshev distance
 %               -inf: Minimum Minkowski distance
@@ -25,7 +27,9 @@ function [OUT] = isk2nn_classify(DATA,PAR)
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
 %   Output:
 %       OUT.
-%           y_h = classifier's output               [Nc x N]
+%           y_h = classifier's output                           [Nc x N]
+%           win = closest prototype to each sample              [1 x N]
+%           dist = distance of sample from each prototype       [Nk x N]
 
 %% ALGORITHM
 

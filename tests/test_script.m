@@ -68,7 +68,7 @@ format long e;
 % 
 % labels = cell(2,1);
 % labels(1) = {'ALG-1'};
-% labels(2) = {'ALG-2'};
+% labels{2} = 'ALG-2';
 
 %% Cross Validation - Hyperparameters
 
@@ -94,23 +94,23 @@ format long e;
 % 
 % LVQcv.Nk = 2:20;
 
-%% Cross Validation - Functions
+%% Hyperparameters Optimization Functions
 
-% With Grid Search Method
-% [BAYp] = cross_valid_gs2(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
+% With Grid Search Method and Cross Validation
+% [BAYp] = grid_search_cv1(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
 
-% With Optimization Method
-% [BAYp] = cross_valid_opt(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
+% With Optimization Method and Cross Validation
+% [BAYp] = hp_optm_cv1(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
 
 %% Classify - Plots
 
-% Plot Decision boundary (for linear classifiers)
+% % Plot Decision boundary (for linear classifiers)
 % figure;
-% plot_lin_boundary(DATA,PAR);
-
-% Plot Decision boundary (of any classifier)
+% plot_class_boundary_lin(DATA,PAR);
+% 
+% % Plot Decision boundary (of any classifier)
 % figure;
-% plot_class_boundary(DATA,PAR,class_test);
+% plot_class_boundary_all(DATA,PAR,class_test);
 
 %% Inverse Test - update one element (Sherman-Morrison 1950)
 

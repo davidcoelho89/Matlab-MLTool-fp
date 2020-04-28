@@ -33,6 +33,7 @@
 %               = 4 -> FBS - forward-backward
 %           min_score = score that leads to prune prototype     [cte]
 %           max_prot = max number of prototypes ("Budget")      [cte]
+%           min_prot = min number of prototypes ("restriction") [cte]
 %           Von = enable or disable video                       [cte]
 %           K = number of nearest neighbors (classify)        	[cte]
 %           Ktype = kernel type ( see kernel_func() )           [cte]
@@ -48,7 +49,7 @@
 %           Km = Kernel Matrix of Dictionary                    [Nk x Nk]
 %           Kinv = Inverse Kernel Matrix of Dictionary          [Nk x Nk]
 %           score = used for prunning method                    [1 x Nk]
-%           class_hist = used for prunning method               [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
 %           VID = frame struct (played by 'video function')     [1 x Nep]
 %           y_h = class prediction                              [Nc x N]
@@ -60,12 +61,13 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.Ss = 1;          % Sparsification strategy
     PARaux.v1 = 0.1;        % Sparseness parameter 1 
     PARaux.v2 = 0.9;        % Sparseness parameter 2
-    PARaux.Ps = 0;          % Prunning strategy
-    PARaux.min_score = -10; % Score that leads to prune prototype
     PARaux.Us = 0;          % Update strategy
     PARaux.eta = 0.01;      % Update Rate
+    PARaux.Ps = 0;          % Prunning strategy
+    PARaux.min_score = -10; % Score that leads to prune prototype
     PARaux.max_prot = Inf;  % Max number of prototypes
-    PARaux.Von = 0;         % enable / disable video
+    PARaux.min_prot = 1;    % Min number of prototypes
+    PARaux.Von = 0;         % Enable / disable video
     PARaux.K = 1;           % Number of nearest neighbors (classify)
     PARaux.knn_type = 1;    % Majority voting for knn
     PARaux.Ktype = 2;       % Kernel Type (gaussian)
@@ -158,7 +160,7 @@ if (~isfield(PAR,'Cx'))
     PAR.Km = [];
     PAR.Kinv = [];
     PAR.score = [];
-    PAR.class_hist = [];
+    PAR.class_history = [];
     PAR.times_selected = [];
 end
 
@@ -186,7 +188,7 @@ for t = 1:N,
     DATAn.input = X(:,t);
     DATAn.output = Y(:,t);
 
-    % Get dictionary size
+    % Get dictionary size (cardinality)
     [~,mt1] = size(PAR.Cx);
     
     % Dont Add if number of prototypes is too high

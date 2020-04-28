@@ -12,6 +12,8 @@ function [OUT] = prototypes_class(DATA,PAR)
 %           Cy = prototypes' labels                             [Nc x Nk]
 %           K = number of nearest neighbors                     [cte]
 %           knn_type = type of knn aproximation                 [cte]
+%               1: Majority Voting
+%               2: Weighted KNN
 %           dist = type of distance (if Ktype = 0)              [cte]
 %               0: Dot product
 %               inf: Chebyshev distance

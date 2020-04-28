@@ -25,32 +25,33 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 %% HYPERPARAMETERS - DEFAULT
 
-% Kernel Functions: 1 lin / 2 gauss / 3 poly / 5 cauchy / 6 log / 7 sigm /
-
 HP.Dm = 2;          % Design Method
 HP.Ss = 1;          % Sparsification strategy
-HP.v1 = 0.9;        % Sparseness parameter 1 
+HP.v1 = 0.8;        % Sparseness parameter 1 
 HP.v2 = 0.9;        % Sparseness parameter 2
-HP.Us = 1;          % Update strategy
+HP.Us = 0;          % Update strategy
 HP.eta = 0.01;      % Update rate
-HP.Ps = 2;          % Prunning strategy
+HP.Ps = 0;          % Prunning strategy
 HP.min_score = -10; % Score that leads the sample to be pruned
-HP.max_prot = 800;  % Max number of prototypes
-HP.Von = 0;         % Enable / disable video 
+HP.max_prot = Inf;  % Max number of prototypes
+HP.min_prot = 1;    % Min number of prototypes
+HP.Von = 1;         % Enable / disable video 
 HP.K = 1;           % Number of nearest neighbors (classify)
-HP.Ktype = 1;       % Kernel Type ( 2 Gauss / 3 poly / 5 cauc / 7 sigm)
+HP.knn_type = 2;    % Type of knn aproximation
+HP.Ktype = 2;       % Kernel Type
 HP.sig2n = 0.001;   % Kernel Regularization parameter
-HP.sigma = 10;    	% Kernel width (gaussian)
+HP.sigma = 2;    	% Kernel width (gauss, exp, cauchy, log, kmod)
 HP.gamma = 2;       % polynomial order (poly 2 or 3)
-HP.alpha = 1;       % Dot product multiplier (poly 1 / sigm 0.1)
-HP.theta = 1;       % Dot product add cte (lin 0 / poly 1 / sigm 0.1)
+HP.alpha = 0.1;     % Dot product multiplier (poly 1 / sigm 0.1)
+HP.theta = 0.1;     % Dot product adding (poly 1 / sigm 0.1)
 
 %% HYPERPARAMETERS - FOR GRID SEARCH
 
 HP_gs = HP;
 HP_gs.v1 = 2.^linspace(-10,10,21);
 
-% Kernel Functions: 1 lin / 2 gauss / 3 poly / 5 cauchy / 6 log / 7 sigm /
+% Kernel Functions: 1 lin    / 2 gauss / 3 poly / 4 exp  /
+%                   5 cauchy / 6 log   / 7 sigm / 8 kmod /
 
 % % linear 1
 % HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -60,6 +61,9 @@ HP_gs.v1 = 2.^linspace(-10,10,21);
 % % Polynomial 3
 % HP_gs.v1 = 2.^linspace(-13,6,20);
 % HP_gs.gamma = [2,3];
+% % Exponential 4
+% HP_gs.v1 = 2.^linspace(-4,3,8);
+% HP_gs.sigma = 2.^linspace(-10,9,20);
 % % Cauchy 5
 % HP_gs.v1 = 2.^linspace(-4,3,8);
 % HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -80,8 +84,7 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 [Nc,N] = size(DATA.output);        	% get number of classes and samples
 
-% Set data for the cross validation step
-% min (0.2 * N, 1000)
+% Set data for the cross validation step: min (0.2 * N, 1000)
 
 if (N < 5000),
     Nhpo = floor(0.2 * N);
@@ -141,7 +144,6 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 display('begin grid search')
 
 HPo = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_test);
-% HPo = HP_gs;
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
@@ -152,7 +154,7 @@ display('begin Test-than-train')
 DATAn.input = DATA.input(:,1);      % First element input
 DATAn.output = DATA.output(:,1);    % First element output
 [~,max_y] = max(DATAn.output);      % Get sample's class
-no_of_samples(max_y,1) = 1;         % Update number of samples per class
+samples_per_class(max_y,1) = 1;     % Update number of samples per class
 PAR = k2nn_train(DATAn,HPo);     	% Add element
 
 for n = 2:Nttt,

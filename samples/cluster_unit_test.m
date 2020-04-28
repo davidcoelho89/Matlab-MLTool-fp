@@ -2,7 +2,7 @@
 
 % Clustering Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2019/11/12
+% Last Update: 2020/02/02
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -49,7 +49,7 @@ HP.Von = 1;         % enable/disable video
 HP.K = 1;           % Number of nearest neighbors
 HP.Ktype = 0;       % Non-kernelized Algorithm
 
-%% DATA LOADING AND PRE-PROCESSING
+%% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
 DATA = data_class_loading(OPT);     % Load Data Set
 
@@ -57,10 +57,12 @@ DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-DATA.Xmax = max(DATA.input,[],2);  % max value
-DATA.Xmin = min(DATA.input,[],2);  % min value
-DATA.Xmed = mean(DATA.input,2);    % mean value
-DATA.Xdp = std(DATA.input,[],2);   % std value
+DATA.Xmax = max(DATA.input,[],2);	% max value
+DATA.Xmin = min(DATA.input,[],2);	% min value
+DATA.Xmed = mean(DATA.input,2);     % mean value
+DATA.Xdp = std(DATA.input,[],2);	% std value
+
+figure; plot_data_pairplot(DATA)
 
 %% ACCUMULATORS
 
@@ -78,6 +80,13 @@ for r = 1:OPT.Nr,
 
 display(r);
 display(datestr(now));
+
+% %%%%%%%%%%%%%%%%%% SHUFFLE DATA %%%%%%%%%%%%%%%%%%%%%%%%
+
+I = randperm(size(DATA.input,2));
+DATA.input = DATA.input(:,I);
+DATA.output = DATA.output(:,I);
+DATA.lbl = DATA.lbl(:,I);
 
 % %%%%%%%%%%%% CLUSTERING AND LABELING %%%%%%%%%%%%%%%%%%%
 

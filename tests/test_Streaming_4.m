@@ -33,7 +33,7 @@ HP.Us = 0;                  % Update strategy
 HP.eta = 0.01;              % Update rate
 HP.Ps = 0;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
-HP.max_prot = 500;          % Max number of prototypes
+HP.max_prot = 600;          % Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
@@ -80,6 +80,7 @@ HP_gs.v1 = 2.^linspace(-10,10,21);
 % Load Dataset and Adjust its Labels
 
 DATA = data_class_loading(OPT);     % Load Data Set
+
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 [Nc,N] = size(DATA.output);        	% get number of classes and samples

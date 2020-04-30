@@ -78,9 +78,18 @@ times_selected = HP.times_selected; % Prototypes # of selection
 xt = DATA.input;
 yt = DATA.output;
 
+% Get number of classes and class of sample
+
+[Nc,~] = size(yt);
+[~,c] = max(yt);
+
 % Get problem parameters
 
-[~,m] = size(Dx);   % hold dictionary size
+[~,m] = size(Dx);       % hold dictionary size
+
+[~,Dy_seq] = max(Dy);	% get sequential classes of dictionary
+
+mc = sum(Dy_seq == c);	% hold number of prototypes from samples' class
 
 %% 1 DICTIONARY FOR ALL DATA SET
 
@@ -288,24 +297,20 @@ if Dm == 2,
         % Add samples to dictionary
         Dx_out = xt;
         Dy_out = yt;
-        % Get number of classes and class of sample
-        [Nc,~] = size(yt);
-        [~,c] = max(yt);
+        % Build Kernel matrix and its inverse of dataset
+        Km_out = kernel_func(xt,xt,HP) + sig2n;
+        Kinv_out = 1/Km_out;
         % Build Kernel matrix and its inverse of class
-        Km_out = cell(Nc,1);
-        Km_out{c} = kernel_func(xt,xt,HP) + sig2n;
-        Kinv_out = cell(Nc,1);
-        Kinv_out{c} = 1/Km_out{c};
+        Kmc_out = cell(Nc,1);
+        Kmc_out{c} = kernel_func(xt,xt,HP) + sig2n;
+        Kinvc_out = cell(Nc,1);
+        Kinvc_out{c} = 1/Kmc_out{c};
         % Init Scores
         score_out = 0;
         class_history_out = 0;
         times_selected_out = 0;
-    else
         
-        % Get sample class and dictionary labels in sequential pattern
-        [~,c] = max(yt);           	% get sequential class of sample
-        [~,Dy_seq] = max(Dy);   	% get sequential classes of dictionary
-        mc = sum(Dy_seq == c);      % number of prototypes from class c
+    else
         
         % First Element of a class dictionary
         if (mc == 0),
@@ -313,15 +318,27 @@ if Dm == 2,
             % Add sample to dictionary
             Dx_out = [Dx, xt];
             Dy_out = [Dy, yt];
-            % Build Kernel matrix and its inverse of class
-            Km{c} = kernel_func(xt,xt,HP) + sig2n;
-            Km_out = Km;
-            Kinv{c} = 1/Km{c};
-            Kinv_out = Kinv;
-            % Add score
+            % Build kernel matrix and its inverse of class
+            Kmc{c} = kernel_func(xt,xt,HP) + sig2n;
+            Kmc_out = Kmc;
+            Kinvc{c} = 1/Kmc{c};
+            Kinvc_out = Kinvc;
+            % Update kernel matrix and its inverse of dataset
+            ktt = kernel_func(xt,xt,HP);
+           	kt = zeros(m,1);
+            for i = 1:m,
+                kt(i) = kernel_func(Dx(:,i),xt,HP);
+            end
+            at = Kinv*kt;
+            delta = ktt - kt'*at;
+            delta = delta + sig2n;
+            Km_out = [Km, kt; kt', ktt + sig2n];
+            Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
+            % Add prunning elements
             score_out = [score,0];
             class_history_out = [class_history,0];
             times_selected_out = [times_selected,0];
+        
         else
             
             % Get inputs and outputs from class c
@@ -348,14 +365,14 @@ if Dm == 2,
                 at_c = Kinv_c*kt_c;
                 
                 % Calculate delta
-                delta = ktt - kt_c'*at_c;
+                delta_c = ktt - kt_c'*at_c;
                 
                 % "Normalized delta" => avoid conditioning problems
-                delta = delta + sig2n;
-%                 display(delta); % debug
+                delta_c = delta_c + sig2n;
+%                 display(delta_c); % debug
 
                 % Expand dictionary
-                if (delta > v1),
+                if (delta_c > v1),
                     % Add sample to dictionary
                     Dx_out = [Dx, xt];
                     Dy_out = [Dy, yt];
@@ -363,8 +380,8 @@ if Dm == 2,
                     Km{c} = [Km_c, kt_c; kt_c', ktt + sig2n];
                     Km_out = Km;
                     % Inverse Kernel Matrix of class
-                    Kinv{c} = (1/delta)* ...
-                              [delta*Kinv_c + at_c*at_c',-at_c;-at_c',1];
+                    Kinv{c} = (1/delta_c)* ...
+                              [delta_c*Kinv_c + at_c*at_c',-at_c;-at_c',1];
                     Kinv_out = Kinv;
                     % Add score of new prototype
                     score_out = [score,0];
@@ -375,7 +392,9 @@ if Dm == 2,
                     Dx_out = Dx;
                     Dy_out = Dy;
                     Km_out = Km;
+                    Kmc_out = Kmc;
                     Kinv_out = Kinv;
+                    Kinvc_out = Kinvc;
                     score_out = score;
                     class_history_out = class_history;
                     times_selected_out = times_selected;
@@ -418,7 +437,9 @@ if Dm == 2,
                     Dx_out = Dx;
                     Dy_out = Dy;
                     Km_out = Km;
+                    Kmc_out = Kmc;
                     Kinv_out = Kinv;
+                    Kinvc_out = Kinvc;
                     score_out = score;
                     class_history_out = class_history;
                     times_selected_out = times_selected;
@@ -470,7 +491,9 @@ if Dm == 2,
                     Dx_out = Dx;
                     Dy_out = Dy;
                     Km_out = Km;
+                    Kmc_out = Kmc;
                     Kinv_out = Kinv;
+                    Kinvc_out = Kinvc;
                     score_out = score;
                     class_history_out = class_history;
                     times_selected_out = times_selected;
@@ -538,9 +561,9 @@ PAR = HP;
 PAR.Cx = Dx_out;
 PAR.Cy = Dy_out;
 PAR.Km = Km_out;
-PAR.Kmc = Kmc;
+PAR.Kmc = Kmc_out;
 PAR.Kinv = Kinv_out;
-PAR.Kinvc = Kinvc;
+PAR.Kinvc = Kinvc_out;
 PAR.score = score_out;
 PAR.class_history = class_history_out;
 PAR.times_selected = times_selected_out;

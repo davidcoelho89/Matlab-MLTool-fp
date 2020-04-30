@@ -183,11 +183,6 @@ yh = -1*ones(Nc,N);
 % Update Dictionary
 
 for t = 1:N,
-
-%     % Display samples (for debug)
-%     if(mod(t,10000) == 0)
-%         display(t);
-%     end
     
     % Save frame of the current epoch
     if (Von),
@@ -201,15 +196,11 @@ for t = 1:N,
     % Get dictionary size (cardinality)
     [~,mt1] = size(PAR.Cx);
     
-    % Dont Add if number of prototypes is too high
-    if (mt1 > max_prot),
-        break;
-    end
-    
     % Init Dictionary (if it is the first sample)
     if (mt1 == 0),
+        % Add sample to dictionary
         PAR = isk2nn_dict_grow(DATAn,PAR);
-        % make a guess (yh = 1 => first class)
+        % Make a guess (yh = 1 => first class)
         yh(1,t) = 1;
         continue;
     end
@@ -218,20 +209,27 @@ for t = 1:N,
     OUTn = prototypes_class(DATAn,PAR);
     yh(:,t) = OUTn.y_h;
     
-    % Growing Strategy
-    PAR = isk2nn_dict_grow(DATAn,PAR);
+    % Update Number of times a prototype has been selected
+    win = OUTn.win;
+    PAR.times_selected(win) = PAR.times_selected(win) + 1;
     
-	% Get dictionary size
+    % Growing Strategy (dont add if number of prototypes is too high)
+    if (mt1 < max_prot),
+        PAR = isk2nn_dict_grow(DATAn,PAR);
+    end
+    
+	% Get dictionary size (cardinality)
     [~,mt2] = size(PAR.Cx);
     
-    % Update Strategy
+    % Update Strategy (just update if prototype was not added)
     if(mt2-mt1 == 0),
         PAR = isk2nn_dict_updt(DATAn,PAR);
     else
+        % For debug. Display dictionary size when it grows.
         display(mt2);
     end
     
-    % Prunning Strategy
+    % Prunning Strategy (heuristic based)
     PAR = isk2nn_score_updt(DATAn,OUTn,PAR);
     PAR = isk2nn_dict_prun(PAR);
     

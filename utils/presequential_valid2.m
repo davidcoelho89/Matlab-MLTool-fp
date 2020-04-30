@@ -27,6 +27,8 @@ function [PSout] = presequential_valid2(DATA,HP,f_train,GSp)
 
 lambda = GSp.lambda;            % trade-off between error and dict size
 
+max_prot = HP.max_prot;         % max number of prototypes
+
 accuracy = 0;                   % Init accurary
 Ds = 0;                         % Init # prototypes (dictionary size)
 
@@ -72,7 +74,7 @@ Ds = Ds + Nk/N;
 
 % Generate Metric (value to be minimized)
 
-if (Nk <= Nc || Nk > 500),
+if (Nk <= Nc || Nk > max_prot),
     metric = 1 + lambda;
 else
     metric = Ds + lambda * error;

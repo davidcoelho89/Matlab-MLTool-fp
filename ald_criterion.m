@@ -1,4 +1,4 @@
-function [ALDout] = ald_criterion(Dx,xt,Kinv,HP)
+function [ALDout] = ald_criterion(Dx,xt,HP,Kinv)
 
 % --- Apply the ald criterion between a dictionary and a sample ---
 %
@@ -7,21 +7,25 @@ function [ALDout] = ald_criterion(Dx,xt,Kinv,HP)
 %   Input:
 %       Dx = dictionary prototypes' inputs                      [p x Nk]
 %       xt = sample to be tested                                [p x 1]
+%       HP.
+%           v1 = Sparseness parameter 1                         [cte]
+%           sig2n = Kernel regularization parameter             [cte]
 %       Kinv = inverse kernel matrix                            [Nk x Nk]
-%
 %   Output:
 %       ALDout.
 %           result = if a sample fulfill the test               [0 or 1]
 %           ktt = kernel function between sample and itself     [cte]
 %           kt = kernel function between sample and dict prot   [Nk x 1]
 %           at = ald coefficients                               [Nk x 1]
-%           delta = constant compared with ald constant         [cte]
+%           delta = ald measure                                 [cte]
 
 %% INITIALIZATIONS
 
 [~,m] = size(Dx);               % Dictionary size
-sig2n = HP.sig2n;           	% Kernel regularization parameter
+
 v1 = HP.v1;                 	% Sparsification parameter
+
+sig2n = HP.sig2n;           	% Kernel regularization parameter
 
 %% ALGORITHM
 

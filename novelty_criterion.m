@@ -12,11 +12,13 @@ function [NOVout] = novelty_criterion(Dx,Dy,xt,yt,HP)
 %       HP.
 %           v1 = Sparseness parameter 1                         [cte]
 %           v2 = Sparseness parameter 2                         [cte]
-%
 %   Output:
 %       ALDout.
 %           result = if a sample fulfill the test               [0 or 1]
-%           ktt = kernel function between sample and itself     [cte]
+%           result1 = novelty test 1                            [cte]
+%           result2 = novelty test 2                            [cte]
+%           dist1 = novelty measure 1                           [cte]
+%           dist2 = novelty measure 2                           [cte]
 %           kt = kernel function between sample and dict prot   [Nk x 1]
 %           at = ald coefficients                               [Nk x 1]
 %           delta = constant compared with ald constant         [cte]
@@ -53,6 +55,7 @@ result1 = (dist1 > v1);
 % was misclassified)
 [~,yh_seq] = max(yh);
 [~,yt_seq] = max(yt);
+dist2 = yh_seq;
 result2 = (yt_seq ~= yh_seq);
 
 % Calculate Criterion
@@ -67,9 +70,3 @@ NOVout.dist1 = dist1;
 NOVout.dist2 = dist2;
 
 %% END
-
-
-
-
-
-

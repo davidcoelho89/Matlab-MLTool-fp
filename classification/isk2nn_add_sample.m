@@ -112,7 +112,8 @@ else
             Kmc_out = Kmc;
             Kinvc{c} = 1/Kmc{c};
             Kinvc_out = Kinvc;
-            % Update kernel matrix and its inverse for the class
+        
+        % Update kernel matrix and its inverse for the class
         else
             % Get inputs from class c
             Dx_c = Dx(:,Dy_seq == c);

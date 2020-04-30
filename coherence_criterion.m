@@ -7,7 +7,8 @@ function [COEHout] = coherence_criterion(Dx,xt,HP)
 %   Input:
 %       Dx = dictionary prototypes' inputs                      [p x Nk]
 %       xt = sample to be tested                                [p x 1]
-%       
+%       HP.
+%           v1 = Sparseness parameter 1                         [cte]
 %   Output:
 %       COEHout.
 %           result = if a sample fulfill the test               [0 or 1]
@@ -16,6 +17,7 @@ function [COEHout] = coherence_criterion(Dx,xt,HP)
 %% INITIALIZATIONS
 
 [~,m] = size(Dx);               % Dictionary size
+
 v1 = HP.v1;                 	% Sparsification parameter
 
 %% ALGORITHM

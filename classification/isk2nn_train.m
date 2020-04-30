@@ -193,7 +193,7 @@ for t = 1:N,
     DATAn.input = X(:,t);
     DATAn.output = Y(:,t);
 
-    % Get dictionary size (cardinality)
+    % Get dictionary size (cardinality, number of prototypes)
     [~,mt1] = size(PAR.Cx);
     
     % Init Dictionary (if it is the first sample)

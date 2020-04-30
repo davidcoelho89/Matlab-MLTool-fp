@@ -12,21 +12,25 @@ function [SURout] = surprise_criterion(Dx,Dy,xt,yt,Kinv,HP)
 %       HP.
 %           v1 = Sparseness parameter 1                         [cte]
 %           v2 = Sparseness parameter 2                         [cte]
-%
+%           sig2n = Kernel regularization parameter             [cte]
 %   Output:
 %       ALDout.
 %           result = if a sample fulfill the test               [0 or 1]
 %           ktt = kernel function between sample and itself     [cte]
 %           kt = kernel function between sample and dict prot   [Nk x 1]
 %           at = ald coefficients                               [Nk x 1]
-%           delta = constant compared with ald constant         [cte]
+%           Si = Surprise measure                               [cte]
+%           sig2 = estimated variance of input                  [cte]
+%           y_dist = distance between outputs                   [cte]
 
 %% INITIALIZATIONS
 
 [~,m] = size(Dx);               % Dictionary size
-sig2n = HP.sig2n;           	% Kernel regularization parameter
+
 v1 = HP.v1;                 	% Sparsification parameter
 % v2 = HP.v2;                     % Sparseness parameter 2
+
+sig2n = HP.sig2n;           	% Kernel regularization parameter
 
 %% ALGORITHM
 
@@ -63,5 +67,7 @@ SURout.ktt = ktt;
 SURout.kt = ht;
 SURout.at = at;
 SURout.Si = Si;
+SURout.sig2 = sig2;
+SURout.y_dist = y_dist;
 
 %% END

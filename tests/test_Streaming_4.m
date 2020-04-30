@@ -16,7 +16,7 @@ format long e;  % Output data style (float)
 
 OPT.prob = 25;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
-OPT.norm = 0;               % Normalization definition
+OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
 OPT.Nr = 50;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method

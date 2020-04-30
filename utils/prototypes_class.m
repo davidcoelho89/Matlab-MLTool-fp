@@ -56,10 +56,6 @@ knn_type = PAR.knn_type;        % Type of knn aproximation
 Cx = PAR.Cx;                 	% Prototype attributes
 Cy = PAR.Cy;                 	% Prototype labels
 
-% Vectorize prototypes and labels
-Cx = prototypes_vect(Cx);
-Cy = prototypes_vect(Cy);
-
 % Problem Initilization
 [Nc,Nk] = size(Cy);             % Number of prototypes and classes
 

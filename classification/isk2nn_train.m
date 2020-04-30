@@ -198,10 +198,12 @@ for t = 1:N,
     
     % Init Dictionary (if it is the first sample)
     if (mt1 == 0),
-        % Add sample to dictionary
-        PAR = isk2nn_dict_grow(DATAn,PAR);
         % Make a guess (yh = 1 => first class)
         yh(1,t) = 1;
+        % Add sample to dictionary
+        PAR = isk2nn_dict_grow(DATAn,PAR);
+        % Update number of times a prototype has been selected
+        PAR.times_selected = 1;
         continue;
     end
     
@@ -209,7 +211,7 @@ for t = 1:N,
     OUTn = prototypes_class(DATAn,PAR);
     yh(:,t) = OUTn.y_h;
     
-    % Update Number of times a prototype has been selected
+    % Update number of times a prototype has been selected
     win = OUTn.win;
     PAR.times_selected(win) = PAR.times_selected(win) + 1;
     

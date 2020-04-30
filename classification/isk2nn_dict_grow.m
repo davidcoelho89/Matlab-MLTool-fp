@@ -1,6 +1,6 @@
 function [PAR] = isk2nn_dict_grow(DATA,HP)
 
-% --- Sparsification Procedure for Dictionary Grow ---
+% --- Sparsification Procedure for Increasing the Dictionary ---
 %
 %   [PAR] = isk2nn_dict_grow(DATA,HP)
 %
@@ -55,517 +55,98 @@ function [PAR] = isk2nn_dict_grow(DATA,HP)
 
 % Get Hyperparameters
 
-Dm = HP.Dm;                         % Design method
-Ss = HP.Ss;                         % Sparsification Strategy
-v1 = HP.v1;                         % Sparsification parameter 1
-% v2 = PAR.v2;                      % Sparsification parameter 2
-sig2n = HP.sig2n;                   % Kernel regularization parameter
+Dm = HP.Dm;           	% Design method
+Ss = HP.Ss;            	% Sparsification Strategy
 
-% Get Parameters
+% Get Dictionary Parameters
 
-Dx = HP.Cx;                         % Attributes of dictionary
-Dy = HP.Cy;                         % Classes of dictionary
-Km = HP.Km;                         % Dictionary Kernel Matrix (total)
-Kmc = HP.Kmc;                       % Dictionary Kernel Matrix (class)
-Kinv = HP.Kinv;                     % Dictionary Inv Kernel Matrix (total)
-Kinvc = HP.Kinvc;                   % Dictionary Inv Kernel Matrix (class)
-score = HP.score;                   % Prototypes score for prunning
-class_history = HP.class_history;	% Prototypes last classification
-times_selected = HP.times_selected; % Prototypes # of selection
+Dx = HP.Cx;           	% Attributes of dictionary
+Dy = HP.Cy;           	% Classes of dictionary
+Kinv = HP.Kinv;       	% Dictionary Inv Kernel Matrix (total)
+Kinvc = HP.Kinvc;      	% Dictionary Inv Kernel Matrix (class)
 
 % Get Data
 
 xt = DATA.input;
 yt = DATA.output;
 
-% Get number of classes and class of sample
-
-[Nc,~] = size(yt);
-[~,c] = max(yt);
-
 % Get problem parameters
 
-[~,m] = size(Dx);       % hold dictionary size
+[~,m] = size(Dx);       % Dictionary size
 
-[~,Dy_seq] = max(Dy);	% get sequential classes of dictionary
+[~,c] = max(yt);        % Class of sample
 
-mc = sum(Dy_seq == c);	% hold number of prototypes from samples' class
+[~,Dy_seq] = max(Dy);	% Sequential classes of dictionary
+
+mc = sum(Dy_seq == c);	% Number of prototypes from samples' class
 
 %% 1 DICTIONARY FOR ALL DATA SET
 
 if Dm == 1, 
     
-    % First Element of dictionary
+    % Add first element to dictionary
     if (m == 0),
-        
-        Dx_out = xt;
-        Dy_out = yt;
-        Km_out = kernel_func(xt,xt,HP) + sig2n;
-        Kinv_out = 1/Km_out;
-        score_out = 0;
-        class_history_out = 0;
-        times_selected_out = 0;
-        
-	% ALD Criterion
-    elseif Ss == 1,
-        
-        % Calculate kt
-        kt_c = zeros(m,1);
-        for i = 1:m,
-            kt_c(i) = kernel_func(Dx(:,i),xt,HP);
+        D = isk2nn_add_sample(DATA,HP,1);
+    else
+        % Get criterion result
+        if Ss == 1,
+            OUTcrit = ald_criterion(Dx,xt,Kinv,HP);
+        elseif Ss == 2,
+            OUTcrit = coherence_criterion(Dx,xt,HP);
+        elseif Ss == 3,
+            OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
+        elseif Ss == 4,
+            OUTcrit = surprise_criterion(Dx,Dy,xt,yt,Kinv,HP);
         end
+        criterion_result = OUTcrit.result;
         
-        % Calculate ktt
-        ktt = kernel_func(xt,xt,HP);
-        
-        % Calculate ald coefficients
-        at = Kinv*kt_c;
-        
-        % Calculate delta
-        delta = ktt - kt_c'*at;
-        
-        % "Normalized delta" => Avoid Conditioning problems
-        delta = delta + sig2n;
-        
-        % Expand dictionary
-        if (delta > v1),
-            Dx_out = [Dx, xt];
-            Dy_out = [Dy, yt];
-            Km_out = [Km, kt_c; kt_c', ktt + sig2n];
-            Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
-            score_out = [score,0];
-            class_history_out = [class_history,0];
-            times_selected_out = [times_selected,0];
-        % Do not expand dictionary
-        else
-            Dx_out = Dx;
-            Dy_out = Dy;
-            Km_out = Km;
-            Kinv_out = Kinv;
-            score_out = score;
-            class_history_out = class_history;
-            times_selected_out = times_selected;
-        end
-        
-	% Coherence Criterion
-    elseif Ss == 2,
-        
-        % Init coherence measure (first element of dictionary)
-        u = kernel_func(Dx(:,1),xt,HP) / ...
-            (sqrt(kernel_func(Dx(:,1),Dx(:,1),HP) * ...
-            kernel_func(xt,xt,HP)));
-        u_max = abs(u);
-        
-        % get coherence measure
-        if (m >= 2),
-            for i = 2:m,
-                % Calculate kernel
-                u = kernel_func(Dx(:,i),xt,HP) / ...
-                    (sqrt(kernel_func(Dx(:,i),Dx(:,i),HP) * ...
-                    kernel_func(xt,xt,HP)));
-                % Calculate Coherence
-                if (abs(u) > u_max),
-                    u_max = abs(u);
-                end
-            end
-        end
-        
-        % Expand dictionary
-        if (u_max <= v1),
-            Dx_out = [Dx, xt];
-            Dy_out = [Dy, yt];
-            Km_out = Km;            % ToDo - Update if used to
-            Kinv_out = Kinv;        % build other models!
-            score_out = [score,0];
-            class_history_out = [class_history,0];
-            times_selected_out = [times_selected,0];
-        % Do not expand dictionary
-        else
-            Dx_out = Dx;
-            Dy_out = Dy;
-            Km_out = Km;
-            Kinv_out = Kinv;
-            score_out = score;
-            class_history_out = class_history;
-            times_selected_out = times_selected;
-        end
-        
-	% Novelty Criterion
-    elseif Ss == 3,
-        
-        % Find nearest prototype
-        win = prototypes_win(Dx,xt,HP);
-        
-        % Calculate distance from nearest prototype
-        dist1 = vectors_dist(Dx(:,win),xt,HP);
-        
-        % Novelty conditions
-        if(dist1 > v1),
-            HP.Cx = Dx; HP.Cy = Dy;               % get current dict
-            DATA.input = xt;                        % get current input
-            OUT = prototypes_class(DATA,HP);       % estimate output
-
-%             % Expand dictionary if estimation and real output are very
-%             % diferrent from each other
-%             dist2 = vectors_dist(yt,OUT.y_h,PAR);
-%             if (dist2 > v2),
-
-            % Expand dictionary if the sample was missclassified 
-            [~,yh_seq] = max(OUT.y_h); 
-            [~,yt_seq] = max(yt);
-            if (yt_seq ~= yh_seq),
-                Dx_out = [Dx, xt];
-                Dy_out = [Dy, yt];
-                Km_out = Km;            % ToDo - Update if used to 
-                Kinv_out = Kinv;        % build other models!
-                score_out = [score,0];
-                class_history_out = [class_history,0];
-                times_selected_out = [times_selected,0];
-            % Do not expand dictionary
-            else
-                Dx_out = Dx;
-                Dy_out = Dy;
-                Km_out = Km;
-                Kinv_out = Kinv;
-                score_out = score;
-                class_history_out = class_history;
-                times_selected_out = times_selected;
-            end
-        else
-            Dx_out = Dx;
-            Dy_out = Dy;
-            Km_out = Km;
-            Kinv_out = Kinv;
-            score_out = score;
-            class_history_out = class_history;
-            times_selected_out = times_selected;
-        end
-        
-	% Surprise Criterion
-    elseif Ss == 4,
-        
-        % Calculate h(t) (same as k(t) from ALD)
-        ht_c = zeros(m,1);
-        for i = 1:m,
-            ht_c(i) = kernel_func(Dx(:,i),xt,HP);
-        end
-        
-        % Estimated output ( y_h = ( ht' / Gt ) * Dy' ) (from GP)
-        y_h = (ht_c' * Kinv) * Dy';
-        
-        % Calculate ktt
-        ktt = kernel_func(xt,xt,HP);
-        
-        % Estimated variance ( sig2 = sig2n + ktt - ( ht' / Gt ) * ht )
-        at = Kinv * ht_c;
-        sig2 = sig2n + ktt -  ht_c' * at;
-
-        % Surprise measure
-        Si = log(sqrt(sig2)) + (norm(y_h' - yt,2)^2) / (2 * sig2);
-
-        % Expand dictionary
-        if (Si >= v1),
-            Dx_out = [Dx, xt];
-            Dy_out = [Dy, yt];
-            Km_out = [Km, ht_c; ht_c', ktt + sig2n];
-            Kinv_out = (1/sig2)*[sig2*Kinv + at*at', -at; -at', 1];
-            score_out = [score,0];
-            class_history_out = [class_history,0];
-            times_selected_out = [times_selected,0];
-        % Do not expand dictionary
-        else
-            Dx_out = Dx;
-            Dy_out = Dy;
-            Km_out = Km;
-            Kinv_out = Kinv;
-            score_out = score;
-            class_history_out = class_history;
-            times_selected_out = times_selected;
-        end
-        
+        % Expand or not Dictionary
+        D = isk2nn_add_sample(DATA,HP,criterion_result);
     end
-    
 end
 
 %% 1 DICTIONARY FOR EACH CLASS
 
 if Dm == 2,
     
-    % First Element of all dictionaries
-    if (m == 0),
-
-        % Add samples to dictionary
-        Dx_out = xt;
-        Dy_out = yt;
-        % Build Kernel matrix and its inverse of dataset
-        Km_out = kernel_func(xt,xt,HP) + sig2n;
-        Kinv_out = 1/Km_out;
-        % Build Kernel matrix and its inverse of class
-        Kmc_out = cell(Nc,1);
-        Kmc_out{c} = kernel_func(xt,xt,HP) + sig2n;
-        Kinvc_out = cell(Nc,1);
-        Kinvc_out{c} = 1/Kmc_out{c};
-        % Init Scores
-        score_out = 0;
-        class_history_out = 0;
-        times_selected_out = 0;
-        
+    % First Element of all dictionaries or of a class dictionary
+    if (m == 0 || mc == 0),
+        D = isk2nn_add_sample(DATA,HP,1);
     else
+        % Get inputs and outputs from class c
+        Dx_c = Dx(:,Dy_seq == c);
+        Dy_c = Dy(:,Dy_seq == c);
         
-        % First Element of a class dictionary
-        if (mc == 0),
-
-            % Add sample to dictionary
-            Dx_out = [Dx, xt];
-            Dy_out = [Dy, yt];
-            % Build kernel matrix and its inverse of class
-            Kmc{c} = kernel_func(xt,xt,HP) + sig2n;
-            Kmc_out = Kmc;
-            Kinvc{c} = 1/Kmc{c};
-            Kinvc_out = Kinvc;
-            % Update kernel matrix and its inverse of dataset
-            ktt = kernel_func(xt,xt,HP);
-           	kt = zeros(m,1);
-            for i = 1:m,
-                kt(i) = kernel_func(Dx(:,i),xt,HP);
-            end
-            at = Kinv*kt;
-            delta = ktt - kt'*at;
-            delta = delta + sig2n;
-            Km_out = [Km, kt; kt', ktt + sig2n];
-            Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
-            % Add prunning elements
-            score_out = [score,0];
-            class_history_out = [class_history,0];
-            times_selected_out = [times_selected,0];
+        % Get criterion result
+        if Ss == 1,
+            OUTcrit = ald_criterion(Dx_c,xt,Kinvc{c},HP);
+        elseif Ss == 2,
+            OUTcrit = coherence_criterion(Dx_c,xt,HP);
+        elseif Ss == 3,
+            OUTcrit = novelty_criterion(Dx_c,Dy_c,xt,yt,HP);
+        % Surprise
+        elseif Ss == 4,
+            OUTcrit = surprise_criterion(Dx_c,Dy_c,xt,yt,Kinvc{c},HP);
+        end % end of Ss
+        criterion_result = OUTcrit.result;
         
-        else
-            
-            % Get inputs and outputs from class c
-            Dx_c = Dx(:,Dy_seq == c);
-            Dy_c = Dy(:,Dy_seq == c);
-            
-            % Get Kernel and Inverse Kernel Matrix
-            Km_c = Km{c};
-            Kinv_c = Kinv{c};
-            
-            % ALD Method
-            if Ss == 1,
-                
-                % Calculate kt
-                kt_c = zeros(mc,1);
-                for i = 1:mc,
-                    kt_c(i) = kernel_func(Dx_c(:,i),xt,HP);
-                end
-                
-                % Calculate ktt
-                ktt = kernel_func(xt,xt,HP);
-                
-                % Calculate coefficients
-                at_c = Kinv_c*kt_c;
-                
-                % Calculate delta
-                delta_c = ktt - kt_c'*at_c;
-                
-                % "Normalized delta" => avoid conditioning problems
-                delta_c = delta_c + sig2n;
-%                 display(delta_c); % debug
-
-                % Expand dictionary
-                if (delta_c > v1),
-                    % Add sample to dictionary
-                    Dx_out = [Dx, xt];
-                    Dy_out = [Dy, yt];
-                    % Kernel Matrix of class
-                    Km{c} = [Km_c, kt_c; kt_c', ktt + sig2n];
-                    Km_out = Km;
-                    % Inverse Kernel Matrix of class
-                    Kinv{c} = (1/delta_c)* ...
-                              [delta_c*Kinv_c + at_c*at_c',-at_c;-at_c',1];
-                    Kinv_out = Kinv;
-                    % Add score of new prototype
-                    score_out = [score,0];
-                    class_history_out = [class_history,0];
-                    times_selected_out = [times_selected,0];
-                % Do not expand dictionary
-                else
-                    Dx_out = Dx;
-                    Dy_out = Dy;
-                    Km_out = Km;
-                    Kmc_out = Kmc;
-                    Kinv_out = Kinv;
-                    Kinvc_out = Kinvc;
-                    score_out = score;
-                    class_history_out = class_history;
-                    times_selected_out = times_selected;
-                end
-                
-            % Coherence Method
-            elseif Ss == 2,
-                
-                % init coherence measure
-                u = kernel_func(Dx_c(:,1),xt,HP) / ...
-                    (sqrt(kernel_func(Dx_c(:,1),Dx_c(:,1),HP) * ...
-                    kernel_func(xt,xt,HP)));
-                u_max = abs(u);
-                
-                % get coherence measure
-                if (mc >= 2),
-                    for i = 2:mc,
-                        % Calculate kernel
-                        u = kernel_func(Dx_c(:,i),xt,HP) / ...
-                            (sqrt(kernel_func(Dx_c(:,i),Dx_c(:,i),HP) * ...
-                             kernel_func(xt,xt,HP)));
-                        % Calculate Coherence
-                        if (abs(u) > u_max),
-                            u_max = abs(u);
-                        end
-                    end
-                end
-                
-                % Expand dictionary
-                if (u_max <= v1),
-                    Dx_out = [Dx, xt];
-                    Dy_out = [Dy, yt];
-                    Km_out = Km;            % ToDo - Update if used to 
-                    Kinv_out = Kinv;        % build other models!
-                    score_out = [score,0];
-                    class_history_out = [class_history,0];
-                    times_selected_out = [times_selected,0];
-               % Do not expand dictionary
-               else
-                    Dx_out = Dx;
-                    Dy_out = Dy;
-                    Km_out = Km;
-                    Kmc_out = Kmc;
-                    Kinv_out = Kinv;
-                    Kinvc_out = Kinvc;
-                    score_out = score;
-                    class_history_out = class_history;
-                    times_selected_out = times_selected;
-                end
-                
-            % Novelty
-            elseif Ss == 3,
-                
-                % Find nearest prototype of class
-                win = prototypes_win(Dx_c,xt,HP);
-                
-                % Calculate distance from nearest prototype
-                dist1 = vectors_dist(Dx_c(:,win),xt,HP);
-                
-                % Novelty conditions
-                if(dist1 > v1),
-                    HP.Cx = Dx; HP.Cy = Dy;         % get current dict
-                    DATA.input = xt;                  % get current input
-                    OUT = prototypes_class(DATA,HP); % get class output
-
-%                     % Expand dictionary if estimation and real output
-%                     % are very diferrent from each other
-%                     dist2 = vectors_dist(yt,OUT.y_h,PAR);
-%                     if (dist2 > v2),
-                    
-                    % Expand dictionary if the sample was missclassified
-                    [~,yt_seq] = max(yt);
-                    [~,yh_seq] = max(OUT.y_h);
-                    if (yt_seq ~= yh_seq),
-                        Dx_out = [Dx, xt];
-                        Dy_out = [Dy, yt];
-                        Km_out = Km;            % ToDo - Update if used to 
-                        Kinv_out = Kinv;        % build other models!
-                        score_out = [score,0];
-                        class_history_out = [class_history,0];
-                        times_selected_out = [times_selected,0];
-                    % Do not expand dictionary
-                    else
-                        Dx_out = Dx;
-                        Dy_out = Dy;
-                        Km_out = Km;
-                        Kinv_out = Kinv;
-                        score_out = score;
-                        class_history_out = class_history;
-                        times_selected_out = times_selected;
-                    end
-                % Do not expand dictionary
-                else
-                    Dx_out = Dx;
-                    Dy_out = Dy;
-                    Km_out = Km;
-                    Kmc_out = Kmc;
-                    Kinv_out = Kinv;
-                    Kinvc_out = Kinvc;
-                    score_out = score;
-                    class_history_out = class_history;
-                    times_selected_out = times_selected;
-                end
-                
-            % Surprise
-            elseif Ss == 4,
-                
-                % Calculate h(t) (same as k(t) from ALD)
-                ht_c = zeros(mc,1);
-                for i = 1:mc,
-                    ht_c(i) = kernel_func(Dx_c(:,i),xt,HP);
-                end
-                
-                % Estimated output ( y_h = ( ht' / Gt ) * Dy' ) (from GP)
-                y_h = ( ht_c' * Kinv_c ) * Dy_c';
-                
-                % Calculate ktt
-                ktt = kernel_func(xt,xt,HP);
-                
-                % Estimated variance (sig2 = sig2n + ktt - (ht' / Gt )* ht)
-                at_c = Kinv_c * ht_c;
-                sig2 = sig2n + ktt - ht_c' * at_c;
-
-                % Surprise measure
-                Si = log(sqrt(sig2)) + (norm(y_h' - yt,2)^2) / (2 * sig2);
-                
-                % Expand dictionary
-                if (Si >= v1),
-                    % Add sample to dictionary
-                    Dx_out = [Dx, xt];
-                    Dy_out = [Dy, yt];
-                    % Kernel Matrix of class
-                    Km{c} = [Km_c, ht_c; ht_c', ktt + sig2n];
-                    Km_out = Km;
-                    % Inverse Kernel Matrix of class
-                    Kinv{c} = (1/sig2)*[sig2*Kinv_c + at_c*at_c',-at_c;-at_c',1];
-                    Kinv_out = Kinv;
-                    % Add score of new prototype
-                    score_out = [score,0];
-                    class_history_out = [class_history,0];
-                    times_selected_out = [times_selected,0];
-                % Do not expand dictionary
-                else
-                    Dx_out = Dx;
-                    Dy_out = Dy;
-                    Km_out = Km;
-                    Kinv_out = Kinv;
-                    score_out = score;
-                    class_history_out = class_history;
-                    times_selected_out = [times_selected,0];
-                end
-                
-            end % end of Ss
-            
-        end % end of mc == 0
-        
-    end % end of m == 0
+        % Expand or not dictionary
+        D = isk2nn_add_sample(DATA,HP,criterion_result);
+    end
     
 end % end of Dm == 2
     
 %% FILL OUTPUT STRUCTURE
 
 PAR = HP;
-PAR.Cx = Dx_out;
-PAR.Cy = Dy_out;
-PAR.Km = Km_out;
-PAR.Kmc = Kmc_out;
-PAR.Kinv = Kinv_out;
-PAR.Kinvc = Kinvc_out;
-PAR.score = score_out;
-PAR.class_history = class_history_out;
-PAR.times_selected = times_selected_out;
+PAR.Cx = D.Cx;
+PAR.Cy = D.Cy;
+PAR.Km = D.Km;
+PAR.Kmc = D.Kmc;
+PAR.Kinv = D.Kinv;
+PAR.Kinvc = D.Kinvc;
+PAR.score = D.score;
+PAR.class_history = D.class_history;
+PAR.times_selected = D.times_selected;
 
 %% END

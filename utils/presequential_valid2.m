@@ -1,4 +1,4 @@
-function [PSout] = presequential_valid2(DATA,HP,f_train)
+function [PSout] = presequential_valid2(DATA,HP,f_train,GSp)
 
 % --- Presequential Validation Function ---
 %
@@ -10,15 +10,22 @@ function [PSout] = presequential_valid2(DATA,HP,f_train)
 %           output = Matrix of training labels                 	[Nc x N]
 %       HP = set of HyperParameters to be tested
 %       f_train = handler for classifier's training function
-%       f_class = handler for classifier's classification function       
+%       GSp.
+%           lambda = trade-off between error and dictionary size [0 - 1]
+%           preseq_type = type of presenquential validation
+%               1: k2nn 
+%               2: isk2nn      
 %   Output:
 %       CVout.
-%           err = mean error for data set and parameters
-%           np = percentage of prototypes compared to the dataset
+%           PAR = hold parameters of dictionary                 [struct]
+%           metric = value to be minimized                      [cte]
 
 %% INIT
 
 [~,N] = size(DATA.input);       % Number of samples
+[Nc,~] = size(DATA.output);     % Number of classes
+
+lambda = GSp.lambda;            % trade-off between error and dict size
 
 accuracy = 0;                   % Init accurary
 Ds = 0;                         % Init # prototypes (dictionary size)
@@ -29,7 +36,7 @@ Ds = 0;                         % Init # prototypes (dictionary size)
 
 DATAn.input = DATA.input(:,1);      % First element input
 DATAn.output = DATA.output(:,1);    % First element output
-PAR = k2nn_train(DATAn,HP);         % Add element
+PAR = f_train(DATAn,HP);            % Add element
 
 for n = 2:N,
     
@@ -63,9 +70,17 @@ error = 1 - accuracy;
 [~,Nk] = size(PAR.Cx);
 Ds = Ds + Nk/N;
 
+% Generate Metric (value to be minimized)
+
+if (Nk <= Nc || Nk > 500),
+    metric = 1 + lambda;
+else
+    metric = Ds + lambda * error;
+end
+
 %% FILL OUTPUT STRUCTURE
 
-PSout.err = error;
-PSout.Ds = Ds;
+PSout.PAR = PAR;
+PSout.metric = metric;
 
 %% END

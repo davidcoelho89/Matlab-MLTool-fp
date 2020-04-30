@@ -18,6 +18,10 @@ function [CVout] = cross_valid2(DATA,HP,f_train,f_class,CVp)
 %           err = mean error for data set and parameters
 %           np = percentage of prototypes compared to the dataset
 
+%% SET DEFAULT HYPERPARAMETERS
+
+
+
 %% INIT
 
 X = DATA.input;                 % Attributes Matrix [pxN]

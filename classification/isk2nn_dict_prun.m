@@ -9,9 +9,12 @@ function [PAR] = isk2nn_dict_prun(HP)
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
 %           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
 %           score = used for prunning method                    [1 x Nk]
-%           class_hist = used for prunning method               [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
+%           times_selected = used for prunning method           [1 x Nk]
 %           Dm = Design Method                                  [cte]
 %               = 1 -> all data set
 %               = 2 -> per class
@@ -26,25 +29,31 @@ function [PAR] = isk2nn_dict_prun(HP)
 %           min_score = score that leads to prune prototype     [cte]
 %   Output: 
 %       PAR.
-%           Cx = Attributes of output dictionary                [p x Nk]
-%           Cy = Classes of  output dictionary                  [Nc x Nk]
 %           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
-%           score = score of each prototype from dictionary     [1 x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
+%           score = used for prunning method                    [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
+%           times_selected = used for prunning method           [1 x Nk]
 
 %% INITIALIZATIONS
 
 % Get Hyperparameters
-Dx = HP.Cx;               	% Attributes of dictionary
-Dy = HP.Cy;              	% Classes of dictionary
-Km = HP.Km;                	% Dictionary Kernel Matrix
-Kinv = HP.Kinv;           	% Dictionary Inverse Kernel Matrix
-score = HP.score;         	% Score of each prototype
-class_hist = HP.class_hist;	% Classification history of each prototype
+
 Dm = HP.Dm;               	% Design Method
 Ss = HP.Ss;               	% Sparsification strategy
 Ps = HP.Ps;                	% Pruning Strategy
 min_score = HP.min_score; 	% Score that leads the prototype to be pruned
+
+% Get Parameters
+
+Dx = HP.Cx;                         % Attributes of dictionary
+Dy = HP.Cy;                         % Classes of dictionary
+Km = HP.Km;                         % Dictionary Kernel Matrix
+Kinv = HP.Kinv;                     % Dictionary Inverse Kernel Matrix
+score = HP.score;                   % Score of each prototype
+class_history = HP.class_history;	% Classification history of each prot
 
 % Get problem parameters
 [~,m] = size(Dx);           % hold dictionary size
@@ -81,7 +90,7 @@ if(Dm == 1),
                 Dx(:,k) = [];
                 Dy(:,k) = [];
                 score(k) = [];
-                class_hist(k) = [];
+                class_history(k) = [];
                 
                 % If ALD or Surprise method, update kernel matrix
                 if (Ss == 1 || Ss == 4),
@@ -118,7 +127,7 @@ if(Dm == 1),
                 Dx(:,k) = [];
                 Dy(:,k) = [];
                 score(k) = [];
-                class_hist(k) = [];
+                class_history(k) = [];
                 
                 % If ALD or Surprise method, update kernel matrix
                 if (Ss == 1 || Ss == 4),
@@ -185,7 +194,7 @@ if(Dm == 2),
                 Dx(:,k) = [];
                 Dy(:,k) = [];
                 score(k) = [];
-                class_hist(k) = [];
+                class_history(k) = [];
                 
              	% If ALD or Surprise method, update kernel matrix
                 if (Ss == 1 || Ss == 4),
@@ -241,7 +250,7 @@ if(Dm == 2),
                 Dx(:,k) = [];
                 Dy(:,k) = [];
                 score(k) = [];
-                class_hist(k) = [];
+                class_history(k) = [];
                 
              	% If ALD or Surprise method, update kernel matrix
                 if (Ss == 1 || Ss == 4),
@@ -279,6 +288,6 @@ PAR.Cy = Dy;
 PAR.Km = Km;
 PAR.Kinv = Kinv;
 PAR.score = score;
-PAR.class_hist = class_hist;
+PAR.class_history = class_history;
 
 %% END

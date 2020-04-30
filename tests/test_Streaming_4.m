@@ -25,25 +25,25 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 %% HYPERPARAMETERS - DEFAULT
 
-HP.Dm = 2;          % Design Method
-HP.Ss = 1;          % Sparsification strategy
-HP.v1 = 0.8;        % Sparseness parameter 1 
-HP.v2 = 0.9;        % Sparseness parameter 2
-HP.Us = 0;          % Update strategy
-HP.eta = 0.01;      % Update rate
-HP.Ps = 0;          % Prunning strategy
-HP.min_score = -10; % Score that leads the sample to be pruned
-HP.max_prot = Inf;  % Max number of prototypes
-HP.min_prot = 1;    % Min number of prototypes
-HP.Von = 1;         % Enable / disable video 
-HP.K = 1;           % Number of nearest neighbors (classify)
-HP.knn_type = 2;    % Type of knn aproximation
-HP.Ktype = 2;       % Kernel Type
-HP.sig2n = 0.001;   % Kernel Regularization parameter
-HP.sigma = 2;    	% Kernel width (gauss, exp, cauchy, log, kmod)
-HP.gamma = 2;       % polynomial order (poly 2 or 3)
-HP.alpha = 0.1;     % Dot product multiplier (poly 1 / sigm 0.1)
-HP.theta = 0.1;     % Dot product adding (poly 1 / sigm 0.1)
+HP.Dm = 2;                  % Design Method
+HP.Ss = 1;                  % Sparsification strategy
+HP.v1 = 0.8;                % Sparseness parameter 1 
+HP.v2 = 0.9;                % Sparseness parameter 2
+HP.Us = 0;                  % Update strategy
+HP.eta = 0.01;              % Update rate
+HP.Ps = 0;                  % Prunning strategy
+HP.min_score = -10;         % Score that leads the sample to be pruned
+HP.max_prot = 500;          % Max number of prototypes
+HP.min_prot = 1;            % Min number of prototypes
+HP.Von = 0;                 % Enable / disable video 
+HP.K = 1;                   % Number of nearest neighbors (classify)
+HP.knn_type = 2;            % Type of knn aproximation
+HP.Ktype = 1;               % Kernel Type
+HP.sig2n = 0.001;           % Kernel Regularization parameter
+HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
+HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
+HP.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
+HP.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% HYPERPARAMETERS - FOR GRID SEARCH
 
@@ -104,21 +104,23 @@ DATAttt.output = DATA.output(:,Nhpo+1:end);
 
 %% DATA NORMALIZATION
 
+% Get Normalization Parameters
+PARnorm = normalize_fit(DATAhpo,OPT);
+
+% Normalize all data
+DATA = normalize_transform(DATA,PARnorm);
+
 % Normalize hpo data
-DATAhpo = normalize(DATAhpo,OPT);
+DATAhpo = normalize_transform(DATAhpo,PARnorm);
 
 % Normalize ttt data
-DATAttt.Xmax = DATAhpo.Xmax;
-DATAttt.Xmin = DATAhpo.Xmin;
-DATAttt.Xmed = DATAhpo.Xmed;
-DATAttt.Xdp = DATAhpo.Xdp;
-DATAttt = normalize(DATAttt,OPT);
+DATAttt = normalize_transform(DATAttt,PARnorm);
 
 % Get statistics from data (For Video Function)
-DATAn.Xmax = max(DATAttt.input,[],2);
-DATAn.Xmin = min(DATAttt.input,[],2);
-DATAn.Xmed = mean(DATAttt.input,2);
-DATAn.Xdp = std(DATAttt.input,[],2);
+DATAn.Xmax = max(DATA.input,[],2);
+DATAn.Xmin = min(DATA.input,[],2);
+DATAn.Xmed = mean(DATA.input,2);
+DATAn.Xstd = std(DATA.input,[],2);
 
 %% DATA VISUALIZATION
 
@@ -128,11 +130,12 @@ figure; plot_data_pairplot(DATAttt);
 
 samples_per_class = zeros(Nc,Nttt);	% Hold number of samples per class
 
-accuracy_vector = zeros(1,Nttt);	% Hold Acc / (Acc + Err)
+predict_vector = zeros(Nc,Nttt);	% Hold predicted labels
+
 no_of_correct = zeros(1,Nttt);      % Hold # of correctly classified x
 no_of_errors = zeros(1,Nttt);       % Hold # of misclassified x
 
-predict_vector = zeros(Nc,Nttt);	% Hold predicted labels
+accuracy_vector = zeros(1,Nttt);	% Hold Acc / (Acc + Err)
 
 prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
                                     % Last is for the sum
@@ -143,21 +146,26 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 display('begin grid search')
 
-HPo = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_test);
+% Grid Search Parameters
+
+GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err
+GSp.preseq_type = 2;    % Uses directly test-than-train
+
+% Get Hyperparameters Optimized and the Prototypes Initialized
+
+HPo = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_test,GSp);
+
+% They Are also the Initial Parameters
+
+PAR = HPo;
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
 display('begin Test-than-train')
 
-% Add first element to dictionary
+figure; % new figure for video ploting
 
-DATAn.input = DATA.input(:,1);      % First element input
-DATAn.output = DATA.output(:,1);    % First element output
-[~,max_y] = max(DATAn.output);      % Get sample's class
-samples_per_class(max_y,1) = 1;     % Update number of samples per class
-PAR = k2nn_train(DATAn,HPo);     	% Add element
-
-for n = 2:Nttt,
+for n = 1:Nttt,
     
     % Display number of samples already seen (for debug)
     
@@ -172,32 +180,45 @@ for n = 2:Nttt,
     DATAn.output = DATA.output(:,n);
     [~,y_lbl] = max(DATAn.output);
     
-    % Test (classify arriving data with current model)
+    % Test  (classify arriving data with current model)
     % Train (update model with arriving data)
-        
+    
     PAR = isk2nn_train(DATAn,PAR);
-    predict_vector(:,n) = PAR.y_h;
-    [~,yh_lbl] = max(PAR.y_h);
     
     % Hold Number of Samples per Class 
     
-    for c = 1:Nc,
-        if (c == y_lbl),
-            samples_per_class(c,n) = samples_per_class(c,n-1) + 1;
+    if n == 1,
+        samples_per_class(y_lbl,n) = 1; % first element
+    else
+        samples_per_class(:,n) = samples_per_class(:,n-1);
+        samples_per_class(y_lbl,n) = samples_per_class(y_lbl,n-1) + 1;
+    end
+    
+    % Hold Predicted Labels
+    
+    predict_vector(:,n) = PAR.y_h;
+    [~,yh_lbl] = max(PAR.y_h);
+    
+    % Hold Number of Errors and Hits
+    
+    if n == 1,
+        if (y_lbl == yh_lbl),
+            no_of_correct(n) = 1;
         else
-            samples_per_class(c,n) = samples_per_class(c,n-1);
+            no_of_errors(n) = 1;
+        end
+    else
+        if (y_lbl == yh_lbl),
+            no_of_correct(n) = no_of_correct(n-1) + 1;
+            no_of_errors(n) = no_of_errors(n-1);
+        else
+            no_of_correct(n) = no_of_correct(n-1);
+            no_of_errors(n) = no_of_errors(n-1) + 1;
         end
     end
     
-    % Hold Number of Errors and Hits
-
-    if (y_lbl == yh_lbl),
-        no_of_correct(n) = no_of_correct(n-1) + 1;
-        no_of_errors(n) = no_of_errors(n-1);
-    else
-        no_of_correct(n) = no_of_correct(n-1);
-        no_of_errors(n) = no_of_errors(n-1) + 1;
-    end
+    % Hold Accuracy
+    
     accuracy_vector(n) = no_of_correct(n) / ...
                         (no_of_correct(n) + no_of_errors(n));
     
@@ -207,6 +228,7 @@ for n = 2:Nttt,
     for c = 1:Nc,
         prot_per_class(c,n) = sum(lbls == c);
     end
+    
     [~,Nprot] = size(PAR.Cy);
     prot_per_class(Nc+1,n) = Nprot;
     
@@ -225,8 +247,9 @@ x = 1:Nttt;
 % Data and Prototypes
 figure;
 hold on 
-plot(DATA.input(1,:),DATA.input(2,:),'r.');
+plot(DATAttt.input(1,:),DATAttt.input(2,:),'r.');
 plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
+title('Data and Prototypes')
 hold off
 
 % Number of samples per class
@@ -236,6 +259,7 @@ hold on
 for c = 1:Nc,
     plot(x,samples_per_class(c,:),'Color',colors(c,:));
 end
+title('Number of Samples Per Class')
 hold off
 
 % Number of Prototypes (Total and per class)
@@ -245,17 +269,24 @@ hold on
 for c = 1:Nc+1,
     plot(x,prot_per_class(c,:),'Color',colors(c,:));
 end
+title('Number of Prototypes')
+hold off
 
 % Number of hits x number of errors
 figure;
 hold on
 plot(x,no_of_errors,'r-');
 plot(x,no_of_correct,'b-');
+title('number of hits and errors')
 hold off
 
 % Percentage of Correct Classified
 figure;
+hold on
 plot(x,accuracy_vector,'r-');
+title('percentage of correct classified')
+axis([-1 length(x) -0.1 1.1])
+hold off
 
 %% SAVE FILE
 

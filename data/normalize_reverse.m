@@ -1,19 +1,23 @@
-function [DATAout] = denormalize(DATAin,OPTION)
+function [DATAout] = normalize_reverse(DATAin,PAR)
 
-% --- Denormalize the normalized data ---
+% --- Reverse the normalized data ---
 %
-%   [DATAout] = denormalize(DATAin,OPTION)
+%   [DATAout] = normalize_reverse(DATAin,PAR)
 %
 %   Input:
 %       DATAin.
 %           input = data matrix                     [p x N]
-%       OPTION.
+%       PAR.
+%           Xmin = Minimum value of attributes      [p x 1]
+%           Xmax = Maximum value of attributes      [p x 1]
+%           Xmed = Mean value of attributes         [p x 1]
+%           Xdp = Standard Deviation of attributes  [p x 1]
 %           norm = how will be the normalization
 %               0: input_out = input_in
 %               1: denormalize between [0, 1]
 %               2: denormalize between [-1, +1]
-%               3: denormalize by by z-score transformation
-%                  (empirical mean = 0 and standard deviation = 1)
+%               3: denormalize by z-score transformation
+%                  Empirical Mean = 0 and Standard Deviation = 1)
 %                  Xnorm = (X-Xmean)/(std)
 %   Output:
 %       DATAout.
@@ -21,14 +25,14 @@ function [DATAout] = denormalize(DATAin,OPTION)
 
 %% INITIALIZATIONS
 
-option = OPTION.norm;   % gets normalization option from structure
 X_norm = DATAin.input;	% gets data matrix from structure [p x N]
-
 [p,N] = size(X_norm); 	% number of samples and attributes
-Xmin = DATAin.Xmin;     % minimum value of each attribute
-Xmax = DATAin.Xmax;     % maximum value of each attribute
-Xmed = DATAin.Xmed;     % mean of each attribute
-dp = DATAin.dp;         % standard deviation of each attribute
+
+option = PAR.norm;      % gets normalization option from structure
+Xmin = PAR.Xmin;        % minimum value of each attribute
+Xmax = PAR.Xmax;        % maximum value of each attribute
+Xmed = PAR.Xmed;        % mean value of each attribute
+Xstd = PAR.Xstd;        % standard deviation of each attribute
 
 %% ALGORITHM
 
@@ -50,7 +54,7 @@ switch option
     case (3)    % denormalize by the mean and standard deviation
         for i = 1:p,
             for j = 1:N,
-                X(i,j) = X_norm(i,j)*dp(i) + Xmed(i);
+                X(i,j) = X_norm(i,j)*Xstd(i) + Xmed(i);
             end
         end
     otherwise
@@ -60,8 +64,7 @@ end
 
 %% FILL OUTPUT STRUCTURE
 
-DATAin.input = X;
-
 DATAout = DATAin;
+DATAout.input = X;
 
 %% END

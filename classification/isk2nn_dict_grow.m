@@ -12,9 +12,11 @@ function [PAR] = isk2nn_dict_grow(DATA,HP)
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
 %           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
 %           score = used for prunning method                    [1 x Nk]
-%           class_hist = used for prunning method               [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
 %           Dm = Design Method                                  [cte]
 %               = 1 -> all data set
@@ -42,26 +44,34 @@ function [PAR] = isk2nn_dict_grow(DATA,HP)
 %           Cx = Attributes of output dictionary                [p x Nk]
 %           Cy = Classes of  output dictionary                  [Nc x Nk]
 %           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
 %           score = used for prunning method                    [1 x Nk]
-%           class_hist = used for prunning method               [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
 
 %% INITIALIZATIONS
 
 % Get Hyperparameters
 
-Dm = HP.Dm;                     % Design method
-Ss = HP.Ss;                     % Sparsification Strategy
-v1 = HP.v1;                     % Sparsification parameter 1
-% v2 = PAR.v2;                  % Sparsification parameter 2
-sig2n = HP.sig2n;               % Kernel regularization parameter
-Dx = HP.Cx;                     % Attributes of dictionary
-Dy = HP.Cy;                     % Classes of dictionary
-Km = HP.Km;                     % Dictionary Kernel Matrix
-Kinv = HP.Kinv;                 % Dictionary Inverse Kernel Matrix
-score = HP.score;               % Prototypes score for prunning
-class_hist = HP.class_hist;     % Prototypes last classification
+Dm = HP.Dm;                         % Design method
+Ss = HP.Ss;                         % Sparsification Strategy
+v1 = HP.v1;                         % Sparsification parameter 1
+% v2 = PAR.v2;                      % Sparsification parameter 2
+sig2n = HP.sig2n;                   % Kernel regularization parameter
+
+% Get Parameters
+
+Dx = HP.Cx;                         % Attributes of dictionary
+Dy = HP.Cy;                         % Classes of dictionary
+Km = HP.Km;                         % Dictionary Kernel Matrix (total)
+Kmc = HP.Kmc;                       % Dictionary Kernel Matrix (class)
+Kinv = HP.Kinv;                     % Dictionary Inv Kernel Matrix (total)
+Kinvc = HP.Kinvc;                   % Dictionary Inv Kernel Matrix (class)
+score = HP.score;                   % Prototypes score for prunning
+class_history = HP.class_history;	% Prototypes last classification
+times_selected = HP.times_selected; % Prototypes # of selection
 
 % Get Data
 
@@ -84,7 +94,8 @@ if Dm == 1,
         Km_out = kernel_func(xt,xt,HP) + sig2n;
         Kinv_out = 1/Km_out;
         score_out = 0;
-        class_hist_out = 0;
+        class_history_out = 0;
+        times_selected_out = 0;
         
 	% ALD Criterion
     elseif Ss == 1,
@@ -114,7 +125,8 @@ if Dm == 1,
             Km_out = [Km, kt_c; kt_c', ktt + sig2n];
             Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
             score_out = [score,0];
-            class_hist_out = [class_hist,0];
+            class_history_out = [class_history,0];
+            times_selected_out = [times_selected,0];
         % Do not expand dictionary
         else
             Dx_out = Dx;
@@ -122,7 +134,8 @@ if Dm == 1,
             Km_out = Km;
             Kinv_out = Kinv;
             score_out = score;
-            class_hist_out = class_hist;
+            class_history_out = class_history;
+            times_selected_out = times_selected;
         end
         
 	% Coherence Criterion
@@ -155,7 +168,8 @@ if Dm == 1,
             Km_out = Km;            % ToDo - Update if used to
             Kinv_out = Kinv;        % build other models!
             score_out = [score,0];
-            class_hist_out = [class_hist,0];
+            class_history_out = [class_history,0];
+            times_selected_out = [times_selected,0];
         % Do not expand dictionary
         else
             Dx_out = Dx;
@@ -163,7 +177,8 @@ if Dm == 1,
             Km_out = Km;
             Kinv_out = Kinv;
             score_out = score;
-            class_hist_out = class_hist;
+            class_history_out = class_history;
+            times_selected_out = times_selected;
         end
         
 	% Novelty Criterion
@@ -195,7 +210,8 @@ if Dm == 1,
                 Km_out = Km;            % ToDo - Update if used to 
                 Kinv_out = Kinv;        % build other models!
                 score_out = [score,0];
-                class_hist_out = [class_hist,0];
+                class_history_out = [class_history,0];
+                times_selected_out = [times_selected,0];
             % Do not expand dictionary
             else
                 Dx_out = Dx;
@@ -203,7 +219,8 @@ if Dm == 1,
                 Km_out = Km;
                 Kinv_out = Kinv;
                 score_out = score;
-                class_hist_out = class_hist;
+                class_history_out = class_history;
+                times_selected_out = times_selected;
             end
         else
             Dx_out = Dx;
@@ -211,7 +228,8 @@ if Dm == 1,
             Km_out = Km;
             Kinv_out = Kinv;
             score_out = score;
-            class_hist_out = class_hist;
+            class_history_out = class_history;
+            times_selected_out = times_selected;
         end
         
 	% Surprise Criterion
@@ -243,7 +261,8 @@ if Dm == 1,
             Km_out = [Km, ht_c; ht_c', ktt + sig2n];
             Kinv_out = (1/sig2)*[sig2*Kinv + at*at', -at; -at', 1];
             score_out = [score,0];
-            class_hist_out = [class_hist,0];
+            class_history_out = [class_history,0];
+            times_selected_out = [times_selected,0];
         % Do not expand dictionary
         else
             Dx_out = Dx;
@@ -251,7 +270,8 @@ if Dm == 1,
             Km_out = Km;
             Kinv_out = Kinv;
             score_out = score;
-            class_hist_out = class_hist;
+            class_history_out = class_history;
+            times_selected_out = times_selected;
         end
         
     end
@@ -278,8 +298,8 @@ if Dm == 2,
         Kinv_out{c} = 1/Km_out{c};
         % Init Scores
         score_out = 0;
-        class_hist_out = 0;
-        
+        class_history_out = 0;
+        times_selected_out = 0;
     else
         
         % Get sample class and dictionary labels in sequential pattern
@@ -300,8 +320,8 @@ if Dm == 2,
             Kinv_out = Kinv;
             % Add score
             score_out = [score,0];
-            class_hist_out = [class_hist,0];
-            
+            class_history_out = [class_history,0];
+            times_selected_out = [times_selected,0];
         else
             
             % Get inputs and outputs from class c
@@ -348,7 +368,8 @@ if Dm == 2,
                     Kinv_out = Kinv;
                     % Add score of new prototype
                     score_out = [score,0];
-                    class_hist_out = [class_hist,0];
+                    class_history_out = [class_history,0];
+                    times_selected_out = [times_selected,0];
                 % Do not expand dictionary
                 else
                     Dx_out = Dx;
@@ -356,7 +377,8 @@ if Dm == 2,
                     Km_out = Km;
                     Kinv_out = Kinv;
                     score_out = score;
-                    class_hist_out = class_hist;
+                    class_history_out = class_history;
+                    times_selected_out = times_selected;
                 end
                 
             % Coherence Method
@@ -389,7 +411,8 @@ if Dm == 2,
                     Km_out = Km;            % ToDo - Update if used to 
                     Kinv_out = Kinv;        % build other models!
                     score_out = [score,0];
-                    class_hist_out = [class_hist,0];
+                    class_history_out = [class_history,0];
+                    times_selected_out = [times_selected,0];
                % Do not expand dictionary
                else
                     Dx_out = Dx;
@@ -397,7 +420,8 @@ if Dm == 2,
                     Km_out = Km;
                     Kinv_out = Kinv;
                     score_out = score;
-                    class_hist_out = class_hist;
+                    class_history_out = class_history;
+                    times_selected_out = times_selected;
                 end
                 
             % Novelty
@@ -429,7 +453,8 @@ if Dm == 2,
                         Km_out = Km;            % ToDo - Update if used to 
                         Kinv_out = Kinv;        % build other models!
                         score_out = [score,0];
-                        class_hist_out = [class_hist,0];
+                        class_history_out = [class_history,0];
+                        times_selected_out = [times_selected,0];
                     % Do not expand dictionary
                     else
                         Dx_out = Dx;
@@ -437,7 +462,8 @@ if Dm == 2,
                         Km_out = Km;
                         Kinv_out = Kinv;
                         score_out = score;
-                        class_hist_out = class_hist;
+                        class_history_out = class_history;
+                        times_selected_out = times_selected;
                     end
                 % Do not expand dictionary
                 else
@@ -446,7 +472,8 @@ if Dm == 2,
                     Km_out = Km;
                     Kinv_out = Kinv;
                     score_out = score;
-                    class_hist_out = class_hist;
+                    class_history_out = class_history;
+                    times_selected_out = times_selected;
                 end
                 
             % Surprise
@@ -484,7 +511,8 @@ if Dm == 2,
                     Kinv_out = Kinv;
                     % Add score of new prototype
                     score_out = [score,0];
-                    class_hist_out = [class_hist,0];
+                    class_history_out = [class_history,0];
+                    times_selected_out = [times_selected,0];
                 % Do not expand dictionary
                 else
                     Dx_out = Dx;
@@ -492,7 +520,8 @@ if Dm == 2,
                     Km_out = Km;
                     Kinv_out = Kinv;
                     score_out = score;
-                    class_hist_out = class_hist;
+                    class_history_out = class_history;
+                    times_selected_out = [times_selected,0];
                 end
                 
             end % end of Ss
@@ -509,8 +538,11 @@ PAR = HP;
 PAR.Cx = Dx_out;
 PAR.Cy = Dy_out;
 PAR.Km = Km_out;
+PAR.Kmc = Kmc;
 PAR.Kinv = Kinv_out;
+PAR.Kinvc = Kinvc;
 PAR.score = score_out;
-PAR.class_hist = class_hist_out;
+PAR.class_history = class_history_out;
+PAR.times_selected = times_selected_out;
 
 %% END

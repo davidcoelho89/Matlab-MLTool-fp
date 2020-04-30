@@ -899,6 +899,13 @@ for t = 2:N,
     Xstd_rec = sqrt(Xvar_rec);
 end
 
+%% Debug
+
+DATAn.Xmax = max(DATAttt.input,[],2);
+DATAn.Xmin = min(DATAttt.input,[],2);
+DATAn.Xmed = mean(DATAttt.input,2);
+DATAn.Xdp = std(DATAttt.input,[],2);
+
 %% Eigenfaces and FisherFaces Test
 
 % ToDo - All

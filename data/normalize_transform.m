@@ -1,13 +1,17 @@
-function [DATAout] = normalize(DATAin,OPTION)
+function [DATAout] = normalize_transform(DATAin,PAR)
 
 % --- Normalize the raw data ---
 %
-%   [DATAout] = normalize(DATAin,OPTION)
+%   [DATAout] = normalize_transform(DATAin,PAR)
 %
 %   Input:
 %       DATAin.
 %           input = data matrix                     [p x N]
-%       OPTION.
+%       PAR.
+%           Xmin = Minimum value of attributes      [p x 1]
+%           Xmax = Maximum value of attributes      [p x 1]
+%           Xmed = Mean value of attributes         [p x 1]
+%           Xdp = Standard Deviation of attributes  [p x 1]
 %           norm = how will be the normalization
 %               0: input_out = input_in
 %               1: normalize between [0, 1]
@@ -18,16 +22,12 @@ function [DATAout] = normalize(DATAin,OPTION)
 %   Output:
 %       DATAout.
 %           input = normalized matrix               [p x N]
-%           Xmin = Minimum value of attributes      [p x 1]
-%           Xmax = Maximum value of attributes      [p x 1]
-%           Xmed = Mean value of attributes         [p x 1]
-%           Xdp = Standard Deviation of attributes  [p x 1]
 
 %% INITIALIZATIONS
 
 % Get normalization option and data matrix [N x p]
 
-option = OPTION.norm;   
+normalization_option = PAR.norm;   
 X = DATAin.input';      
 
 % Get number of samples and attributes
@@ -36,35 +36,16 @@ X = DATAin.input';
 
 % Get min, max, mean and standard deviation measures
 
-if (~(isfield(DATAin,'Xmin'))),
-    Xmin = min(X)';
-else
-    Xmin = DATAin.Xmin;
-end
-
-if (~(isfield(DATAin,'Xmax'))),
-    Xmax = max(X)';
-else
-    Xmax = DATAin.Xmax;
-end
-
-if (~(isfield(DATAin,'Xmed'))),
-    Xmed = mean(X)';
-else
-    Xmed = DATAin.Xmed;
-end
-
-if (~(isfield(DATAin,'Xdp'))),
-    Xdp = std(X)';
-else
-    Xdp = DATAin.Xdp;
-end
+Xmin = PAR.Xmin;
+Xmax = PAR.Xmax;
+Xmed = PAR.Xmed;
+Xstd = PAR.Xstd;
 
 %% ALGORITHM
 
 X_norm = zeros(N,p); % initialize data
 
-switch option
+switch normalization_option
     case (0)
         X_norm = X;
     case (1)    % normalize between [0 e 1]
@@ -82,7 +63,7 @@ switch option
     case (3)    % normalize by z-score transform (by mean and std)
         for i = 1:N,
             for j = 1:p,
-                X_norm(i,j) = (X(i,j) - Xmed(j))/Xdp(j); 
+                X_norm(i,j) = (X(i,j) - Xmed(j))/Xstd(j); 
             end
         end
     otherwise
@@ -94,12 +75,7 @@ X_norm = X_norm'; % transpose data for [p x N] pattern
 
 %% FILL OUTPUT STRUCTURE
 
-DATAin.input = X_norm;
-DATAin.Xmin = Xmin;
-DATAin.Xmax = Xmax;
-DATAin.Xmed = Xmed;
-DATAin.Xdp = Xdp;
-
 DATAout = DATAin;
+DATAout.input = X_norm;
 
 %% END

@@ -1,8 +1,8 @@
-function [Dout] = isk2nn_dict_updt(DATA,HP)
+function [PAR] = isk2nn_dict_updt(DATA,HP)
 
 % --- Procedure for Dictionary Prunning ---
 %
-%   [Dout] = k2nn_dict_updt(xt,yt,Din,PAR)
+%   [PAR] = isk2nn_dict_updt(DATA,HP)
 %
 %   Input:
 %       DATA.
@@ -12,9 +12,12 @@ function [Dout] = isk2nn_dict_updt(DATA,HP)
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
 %           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
 %           score = used for prunning method                    [1 x Nk]
-%           class_hist = used for prunning method               [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
+%           times_selected = used for prunning method           [1 x Nk]
 %           Dm = Design Method                                  [cte]
 %               = 1 -> all data set
 %               = 2 -> per class
@@ -33,27 +36,37 @@ function [Dout] = isk2nn_dict_updt(DATA,HP)
 %           theta = kernel hyperparameter ( see kernel_func() ) [cte]
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
 %   Output: 
-%       Dout.
-%           x = Attributes of output dictionary                 [p x Nk]
-%           y = Classes of  output dictionary                   [Nc x Nk]
+%       PAR.
+%           Cx = Attributes of output dictionary                [p x Nk]
+%           Cy = Classes of  output dictionary                  [Nc x Nk]
 %           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
 %           score = used for prunning method                    [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
+%           times_selected = used for prunning method           [1 x Nk]
 
 %% INITIALIZATIONS
 
 % Get Hyperparameters
 
-Dx = HP.Cx;                     % Attributes of dictionary
-Dy = HP.Cy;                     % Classes of dictionary
-Km = HP.Km;                     % Dictionary Kernel Matrix
-Kinv = HP.Kinv;                 % Dictionary Inverse Kernel Matrix
-score = HP.score;               % Score of each prototype
-class_hist = HP.class_hist;     % Classification history of each prototype
-Dm = HP.Dm;                     % Design Method
-Us = HP.Us;                     % Update Strategy
-sig2n = HP.sig2n;               % Kernel Regularization parameter
-eta = HP.eta;                   % Update rate
+Dm = HP.Dm;                         % Design Method
+Us = HP.Us;                         % Update Strategy
+sig2n = HP.sig2n;                   % Kernel Regularization parameter
+eta = HP.eta;                       % Update rate
+
+% Get Parameters
+
+Dx = HP.Cx;                         % Attributes of dictionary
+Dy = HP.Cy;                         % Classes of dictionary
+Km = HP.Km;                         % Dictionary Kernel Matrix
+Kmc = HP.Kmc;                       % Dictionary Kernel Matrix (class)
+Kinv = HP.Kinv;                     % Dictionary Inverse Kernel Matrix
+Kinvc = HP.Kinvc;                   % Dictionary Inv Kernel Matrix (class)
+score = HP.score;                   % Score of each prototype
+class_history = HP.class_history; 	% Classification history of each prototype
+times_selected = HP.times_selected; % Prototypes # of selection
 
 % Get Data
 
@@ -193,7 +206,8 @@ if (Dm == 2 && Us ~= 0),
     Dx(:,[win,m]) = Dx(:,[m,win]);
     Dy(:,[win,m]) = Dy(:,[m,win]);
     score(:,[win,m]) = score(:,[m,win]);
-    class_hist(:,[win,m]) = class_hist(:,[m,win]);
+    class_history(:,[win,m]) = class_history(:,[m,win]);
+    times_selected(:,[win,m]) = times_selected(:,[m,win]);
     
     % Remove line and column from kernel matrix
     
@@ -247,12 +261,15 @@ end
 
 %% FILL OUTPUT STRUCTURE
 
-Dout = HP;
-Dout.Cx = Dx;
-Dout.Cy = Dy;
-Dout.Km = Km;
-Dout.Kinv = Kinv;
-Dout.score = score;
-Dout.class_hist = class_hist;
+PAR = HP;
+PAR.Cx = Dx;
+PAR.Cy = Dy;
+PAR.Km = Km;
+PAR.Kmc = Kmc;
+PAR.Kinv = Kinv;
+PAR.Kinvc = Kinvc;
+PAR.score = score;
+PAR.class_history = class_history;
+PAR.times_selected = times_selected;
 
 %% END

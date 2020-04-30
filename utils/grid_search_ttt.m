@@ -14,7 +14,7 @@ function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
 %       f_class = handler for classifier's classification function       
 %       GSp.
 %           lambda = trade-off between error and dictionary size   	[0 - 1]
-%           preseq_type = typé of presenquential validation
+%           preseq_type = type of presenquential validation
 %               1: k2nn 
 %               2: isk2nn
 %   Output:
@@ -52,8 +52,8 @@ end
 % Init Auxiliary Variables
 
 IndexOfHyperParameters = ones(NumberOfHyperParameters,1);
-still_searching = 1;	% Signalize end of grid search
-min_metric = 2;         % minimum metric of an HP set (max value = 2)
+still_searching = 1;        % Signalize end of grid search
+min_metric = 1.1 + lambda;  % start min metric of an HP set with max value
 
 %% ALGORITHM
 
@@ -64,15 +64,14 @@ while 1,
     if (preseq_type == 1),
         PresequentialOut = presequential_valid1(DATA,HPaux,f_train,f_class);
     else
-        PresequentialOut = presequential_valid2(DATA,HPaux,f_train);
+        PresequentialOut = presequential_valid2(DATA,HPaux,f_train,GSp);
     end
-    cv_metric = PresequentialOut.Ds + lambda * PresequentialOut.err;
 
     % Define new optimum HP
 
-    if (cv_metric < min_metric),
-        HPoptm = HPaux;
-        min_metric = cv_metric;
+    if (PresequentialOut.metric < min_metric),
+        HPoptm = PresequentialOut.PAR;
+        min_metric = PresequentialOut.metric;
     end
 
     % Update indexes of HP
@@ -94,7 +93,7 @@ while 1,
         
     end
     
-    % if all HP sets were tested, finish the grid search
+    % If all HP sets were tested, finish the grid search
     
     if still_searching == 0,
         break;

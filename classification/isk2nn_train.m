@@ -26,16 +26,19 @@
 %           eta = Update rate                                   [cte]
 %           Ps = Prunning strategy                              [cte]
 %               = 0 -> do not remove prototypes
-%               = 1 -> score-based method 1
-%               = 2 -> score-based method 2
-%               = 2 -> Matching-pursuit (rem prot, verify error)
-%               = 3 -> Penalization (build lssvm, rem prot)
-%               = 4 -> FBS - forward-backward
+%               = 1 -> score-based method 1 (drift based)
+%               = 2 -> score-based method 2 (hits and errors)
+%               = 3 -> Matching-pursuit (rem prot, verify error) - ToDo
+%               = 4 -> Penalization (build lssvm, rem prot) - ToDo
+%               = 5 -> FBS - forward-backward - ToDo
 %           min_score = score that leads to prune prototype     [cte]
 %           max_prot = max number of prototypes ("Budget")      [cte]
 %           min_prot = min number of prototypes ("restriction") [cte]
 %           Von = enable or disable video                       [cte]
 %           K = number of nearest neighbors (classify)        	[cte]
+%           knn_type = type of knn aproximation                 [cte]
+%               1: Majority Voting
+%               2: Weighted KNN
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sig2n = kernel regularization parameter             [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
@@ -46,8 +49,10 @@
 %       PAR.
 %       	Cx = clusters' centroids (prototypes)               [p x Nk]
 %           Cy = clusters' labels                               [Nc x Nk]
-%           Km = Kernel Matrix of Dictionary                    [Nk x Nk]
+%           Km = Kernel Matrix of Entire Dictionary             [Nk x Nk]
+%           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
 %           Kinv = Inverse Kernel Matrix of Dictionary          [Nk x Nk]
+%           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
 %           score = used for prunning method                    [1 x Nk]
 %           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
@@ -73,9 +78,9 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.Ktype = 2;       % Kernel Type (gaussian)
     PARaux.sig2n = 0.001;   % Kernel regularization parameter
     PARaux.sigma = 2;       % Kernel width (gaussian)
-    PARaux.gamma = 2;       % Polynomial order
     PARaux.alpha = 1;       % Dot product multiplier
     PARaux.theta = 1;       % Dot product add cte 
+    PARaux.gamma = 2;       % Polynomial order
 	HP = PARaux;
 else
     if (~(isfield(HP,'Dm'))),
@@ -90,20 +95,23 @@ else
     if (~(isfield(HP,'v2'))),
         HP.v2 = 0.9;
     end
-    if (~(isfield(HP,'Ps'))),
-        HP.Ps = 0;
-    end
-    if (~(isfield(HP,'min_score'))),
-        HP.min_score = -10;
-    end
     if (~(isfield(HP,'Us'))),
         HP.Us = 0;
     end
     if (~(isfield(HP,'eta'))),
         HP.eta = 0.01;
     end
+    if (~(isfield(HP,'Ps'))),
+        HP.Ps = 0;
+    end
+    if (~(isfield(HP,'min_score'))),
+        HP.min_score = -10;
+    end
     if (~(isfield(HP,'max_prot'))),
         HP.max_prot = Inf;
+    end
+    if (~(isfield(HP,'min_prot'))),
+        HP.min_prot = 1;
     end
     if (~(isfield(HP,'Von'))),
         HP.Von = 0;
@@ -123,14 +131,14 @@ else
     if (~(isfield(HP,'sigma'))),
         HP.sigma = 2;
     end
-    if (~(isfield(HP,'gamma'))),
-        HP.gamma = 2;
-    end
     if (~(isfield(HP,'alpha'))),
         HP.alpha = 1;
     end
     if (~(isfield(HP,'theta'))),
         HP.theta = 1;
+    end
+    if (~(isfield(HP,'gamma'))),
+        HP.gamma = 2;
     end
 end
 
@@ -143,7 +151,7 @@ Y = DATA.output;        % Output Matrix
 
 % Get Hyperparameters
 
-% Von = HP.Von;
+Von = HP.Von;
 max_prot = HP.max_prot;
 
 % Problem Initialization
@@ -158,7 +166,9 @@ if (~isfield(PAR,'Cx'))
     PAR.Cx = [];
     PAR.Cy = [];
     PAR.Km = [];
+    PAR.Kmc = [];
     PAR.Kinv = [];
+    PAR.Kinvc = [];
     PAR.score = [];
     PAR.class_history = [];
     PAR.times_selected = [];
@@ -179,10 +189,10 @@ for t = 1:N,
 %         display(t);
 %     end
     
-%     % Save frame of the current epoch
-%     if (Von),
-%         VID(t) = prototypes_frame(D.x,DATA);
-%     end
+    % Save frame of the current epoch
+    if (Von),
+        VID(t) = prototypes_frame(PAR.Cx,DATA);
+    end
     
 	% Get sample
     DATAn.input = X(:,t);
@@ -199,7 +209,8 @@ for t = 1:N,
     % Init Dictionary (if it is the first sample)
     if (mt1 == 0),
         PAR = isk2nn_dict_grow(DATAn,PAR);
-        yh(:,t) = Y(:,t);
+        % make a guess (yh = 1 => first class)
+        yh(1,t) = 1;
         continue;
     end
     

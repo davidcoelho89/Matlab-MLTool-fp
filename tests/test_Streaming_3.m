@@ -68,6 +68,13 @@ figure; VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 display('begin grid search')
 
+% Grid Search Parameters
+
+GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err
+GSp.preseq_type = 1;    % Uses directly test-than-train
+
+% Get Hyperparameters Optimized
+
 HPo = grid_search_ttt(DATAhpo,HP_gs,class_train,class_test);
 
 %% ADD FIRST ELEMENT TO DICTIONARY

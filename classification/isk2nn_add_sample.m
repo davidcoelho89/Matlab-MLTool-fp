@@ -1,8 +1,8 @@
-function [D] = isk2nn_add_sample(DATA,HP,criterion_result)
+function [PAR] = isk2nn_add_sample(DATA,HP,criterion_result)
 
 % --- Add a Sample to Dictionary and Update its Variables ---
 %
-%   [D] = isk2nn_add_sample(DATA,HP,criterion_result)
+%   [PAR] = isk2nn_add_sample(DATA,HP,criterion_result)
 %
 %   Input:
 %       DATA.
@@ -152,14 +152,15 @@ end
 
 %% FILL OUTPUT STRUCTURE
 
-D.Cx = Cx_out;
-D.Cy = Cy_out;
-D.Km = Km_out;
-D.Kmc = Kmc_out;
-D.Kinv = Kinv_out;
-D.Kinvc = Kinvc_out;
-D.score = score_out;
-D.class_history = class_history_out;
-D.times_selected = times_selected_out;
+PAR = HP;
+PAR.Cx = Cx_out;
+PAR.Cy = Cy_out;
+PAR.Km = Km_out;
+PAR.Kmc = Kmc_out;
+PAR.Kinv = Kinv_out;
+PAR.Kinvc = Kinvc_out;
+PAR.score = score_out;
+PAR.class_history = class_history_out;
+PAR.times_selected = times_selected_out;
 
 %% END

@@ -78,83 +78,46 @@ yt = DATA.output;
 
 mc = sum(Cy_seq == c);	% Number of prototypes from samples' class
 
-%% 1 DICTIONARY FOR ALL DATA SET
+%% ALGORITHM
 
-if Dm == 1, 
+% Add first element to dictionary (total or from class)
+if (m == 0 || (Dm == 2 && mc == 0)),
     
-    % Add first element to dictionary
-    if (m == 0),
-        D = isk2nn_add_sample(DATA,HP,1);
-    else
-        % Get Dictionary (total)
+    HP = isk2nn_add_sample(DATA,HP);
+    
+else
+    
+    % Get Dictionary Samples and Inverse Kernel Matrix
+    if (Dm == 1),
         Dx = Cx;
         Dy = Cy;
-        
-        % Get Inverse Kernel Matrix (total)
         Kinv = HP.Kinv;
-        
-        % Get criterion result
-        if Ss == 1,
-            OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
-        elseif Ss == 2,
-            OUTcrit = coherence_criterion(Dx,xt,HP);
-        elseif Ss == 3,
-            OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
-        elseif Ss == 4,
-            OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
-        end
-        criterion_result = OUTcrit.result;
-        
-        % Expand or not Dictionary
-        D = isk2nn_add_sample(DATA,HP,criterion_result);
+    elseif (Dm == 2),
+        Dx = Cx(:,Cy_seq == c);
+        Dy = Cy(:,Cy_seq == c);
+        Kinv = HP.Kinvc{c};
+    end
+    
+    % Get criterion result
+    if Ss == 1,
+        OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
+    elseif Ss == 2,
+        OUTcrit = coherence_criterion(Dx,xt,HP);
+    elseif Ss == 3,
+        OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
+    elseif Ss == 4,
+        OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
+    end
+    
+    % Expand or not Dictionary
+    if(OUTcrit.result == 1),
+    	HP = isk2nn_add_sample(DATA,HP);
     end
 end
 
-%% 1 DICTIONARY FOR EACH CLASS
 
-if Dm == 2,
-    
-    % First Element of all dictionaries or of a class dictionary
-    if (m == 0 || mc == 0),
-        D = isk2nn_add_sample(DATA,HP,1);
-    else
-        % Get Dictionary (of class c)
-        Dx = Cx(:,Cy_seq == c);
-        Dy = Cy(:,Cy_seq == c);
-        
-        % Get Inverse Kernel Matrix (of class c)
-        Kinv = HP.Kinvc{c};
-        
-        % Get criterion result
-        if Ss == 1,
-            OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
-        elseif Ss == 2,
-            OUTcrit = coherence_criterion(Dx,xt,HP);
-        elseif Ss == 3,
-            OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
-        % Surprise
-        elseif Ss == 4,
-            OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
-        end % end of Ss
-        criterion_result = OUTcrit.result;
-        
-        % Expand or not dictionary
-        D = isk2nn_add_sample(DATA,HP,criterion_result);
-    end
-    
-end % end of Dm == 2
-    
 %% FILL OUTPUT STRUCTURE
 
 PAR = HP;
-PAR.Cx = D.Cx;
-PAR.Cy = D.Cy;
-PAR.Km = D.Km;
-PAR.Kmc = D.Kmc;
-PAR.Kinv = D.Kinv;
-PAR.Kinvc = D.Kinvc;
-PAR.score = D.score;
-PAR.class_history = D.class_history;
-PAR.times_selected = D.times_selected;
 
 %% END

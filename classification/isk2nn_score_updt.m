@@ -2,7 +2,7 @@ function [PAR] = isk2nn_score_updt(DATAn,OUTn,HP)
 
 % --- Update Score of each prototype from Dictionary ---
 %
-%   [PAR] = isk2nn_score_updt(xt,yt,OUTn,Din,HP)
+%   [PAR] = isk2nn_score_updt(DATAn,OUTn,HP)
 %
 %   Input:
 %       DATAn.
@@ -11,12 +11,13 @@ function [PAR] = isk2nn_score_updt(DATAn,OUTn,HP)
 %       HP.
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
-%           score = used for prunning method                    [1 x Nk]
-%           class_history = used for prunning method           	[1 x Nk]
 %           Ps = Prunning strategy                              [cte]
 %               = 0 -> do not remove prototypes
 %               = 1 -> score-based method 1
 %               = 2 -> score-based method 2
+%           score = used for prunning method                    [1 x Nk]
+%           class_history = used for prunning method           	[1 x Nk]
+%           times_selected = used for prunning method           [1 x Nk]
 %       OUT.
 %           y_h = classifier's output                           [Nc x 1]
 %           win = closest prototype to each sample              [1 x 1]
@@ -40,19 +41,19 @@ yt = DATAn.output;
 
 % Get Hyperparameters
 Ps = HP.Ps;                         % Pruning Strategy
-score = HP.score;                   % Score of each prototype from dictionary
+score = HP.score;                   % Score of each prototype
 class_history = HP.class_history;	% Verify if last time that was chosen,
                                     % it classified correctly.
 
 % Get Parameters
-Dy = HP.Cy;        % Classes of dictionary
+Cy = HP.Cy;                         % Classes of dictionary
 
 % Get predicted output
 yh = OUTn.y_h;
 win = OUTn.win;
 
 % Get problem parameters
-[~,Nk] = size(Dy);   % hold dictionary size
+[~,Nk] = size(Cy);                  % hold dictionary size
 
 % Init Outputs
 score_out = score;
@@ -69,7 +70,7 @@ else
     % Get current data class, predicted class and prototypes classes
     [~,yt_class] = max(yt);
     [~,yh_class] = max(yh);
-    [~,Dy_class] = max(Dy);
+    [~,Dy_class] = max(Cy);
     
     % number of elements, in the dictionary, of the same class as yt
     mc = sum(Dy_class == yt_class); 
@@ -105,7 +106,7 @@ else
     elseif (Ps == 2),
         
         if(Dy_class(win) == yt_class)
-            % Update class_hist
+            % Update class_history
             class_hist_out(win) = 1;
             % Update score of winner
             if((score(win) < 0) && (class_history(win) == 1)),

@@ -1,4 +1,4 @@
-function [PAR] = isk2nn_add_sample(DATA,HP,criterion_result)
+function [PAR] = isk2nn_add_sample(DATA,HP)
 
 % --- Add a Sample to Dictionary and Update its Variables ---
 %
@@ -19,8 +19,6 @@ function [PAR] = isk2nn_add_sample(DATA,HP,criterion_result)
 %           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
 %           sig2n = kernel regularization parameter             [cte]
-%       criterion_result = indicates if the sample should 
-%                          be added or not to the dictionary    [0 or 1]
 %   Output: 
 %       PAR.
 %           Cx = Attributes of output dictionary                [p x Nk]
@@ -67,87 +65,71 @@ ktt = kernel_func(xt,xt,HP);    % Kernel function of sample
 
 %% ALGORITHM
 
-if (criterion_result == 0),
+% Add sample to dictionary
+Cx_out = [Dx, xt];
+Cy_out = [Dy, yt];
 
-    Cx_out = Dx;
-    Cy_out = Dy;
-    Km_out = Km;
-    Kmc_out = Kmc;
-    Kinv_out = Kinv;
-    Kinvc_out = Kinvc;
-    score_out = score;
-    class_history_out = class_history;
-    times_selected_out = times_selected;
+% Add variables used to prunning
+score_out = [score,0];
+class_history_out = [class_history,0];
+times_selected_out = [times_selected,0];
+
+% Update Kernel Matrices
+
+if (m == 0),
+
+    % Build Kernel matrix and its inverse for each class
+    Kmc_out = cell(Nc,1);
+    Kmc_out{c} = ktt + sig2n;
+    Kinvc_out = cell(Nc,1);
+    Kinvc_out{c} = 1/Kmc_out{c};
+
+    % Build Kernel matrix and its inverse for dataset
+    Km_out = ktt + sig2n;
+    Kinv_out = 1/Km_out;
 
 else
 
-    % Add sample to dictionary
-    Cx_out = [Dx, xt];
-    Cy_out = [Dy, yt];
-    
-    % Add variables used to prunning
-    score_out = [score,0];
-    class_history_out = [class_history,0];
-    times_selected_out = [times_selected,0];
-    
-    % Update Kernel Matrices
-    
-    if (m == 0),
-        
-        % Build Kernel matrix and its inverse for each class
-        Kmc_out = cell(Nc,1);
-        Kmc_out{c} = ktt + sig2n;
-        Kinvc_out = cell(Nc,1);
-        Kinvc_out{c} = 1/Kmc_out{c};
-        
-        % Build Kernel matrix and its inverse for dataset
-        Km_out = ktt + sig2n;
-        Kinv_out = 1/Km_out;
-        
+    % Build kernel matrix and its inverse of samples' class
+    if (mc == 0),
+        Kmc{c} = ktt + sig2n;
+        Kmc_out = Kmc;
+        Kinvc{c} = 1/Kmc{c};
+        Kinvc_out = Kinvc;
+
+    % Update kernel matrix and its inverse of samples' class
     else
-        
-        % Build kernel matrix and its inverse for the class
-        if (mc == 0),
-            Kmc{c} = ktt + sig2n;
-            Kmc_out = Kmc;
-            Kinvc{c} = 1/Kmc{c};
-            Kinvc_out = Kinvc;
-        
-        % Update kernel matrix and its inverse for the class
-        else
-            % Get inputs from class c
-            Dx_c = Dx(:,Dy_seq == c);
-            % Get auxiliary variables
-            kt_c = zeros(mc,1);
-            for i = 1:mc,
-                kt_c(i) = kernel_func(Dx_c(:,i),xt,HP);
-            end
-            at_c = Kinvc{c}*kt_c;
-            delta_c = ktt - kt_c'*at_c;
-            delta_c = delta_c + sig2n;
-            % Update Kernel matrix
-            Kmc{c} = [Kmc{c}, kt_c; kt_c', ktt + sig2n];
-            Kmc_out = Kmc;
-            % Update Inverse Kernel matrix
-            Kinvc{c} = (1/delta_c)* ...
-                [delta_c*Kinvc{c} + at_c*at_c',-at_c;-at_c',1];
-            Kinvc_out = Kinvc;
-        end
-        
+        % Get inputs from class c
+        Dx_c = Dx(:,Dy_seq == c);
         % Get auxiliary variables
-        kt = zeros(m,1);
-        for i = 1:m,
-            kt(i) = kernel_func(Dx(:,i),xt,HP);
+        kt_c = zeros(mc,1);
+        for i = 1:mc,
+            kt_c(i) = kernel_func(Dx_c(:,i),xt,HP);
         end
-        at = Kinv*kt;
-        delta = ktt - kt'*at;
-        delta = delta + sig2n;
-        
-        % Update kernel matrix and its inverse for dataset
-        Km_out = [Km, kt; kt', ktt + sig2n];
-        Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
+        at_c = Kinvc{c}*kt_c;
+        delta_c = ktt - kt_c'*at_c;
+        delta_c = delta_c + sig2n;
+        % Update Kernel matrix
+        Kmc{c} = [Kmc{c}, kt_c; kt_c', ktt + sig2n];
+        Kmc_out = Kmc;
+        % Update Inverse Kernel matrix
+        Kinvc{c} = (1/delta_c)* ...
+            [delta_c*Kinvc{c} + at_c*at_c',-at_c;-at_c',1];
+        Kinvc_out = Kinvc;
     end
 
+    % Get auxiliary variables
+    kt = zeros(m,1);
+    for i = 1:m,
+        kt(i) = kernel_func(Dx(:,i),xt,HP);
+    end
+    at = Kinv*kt;
+    delta = ktt - kt'*at;
+    delta = delta + sig2n;
+
+    % Update kernel matrix and its inverse for dataset
+    Km_out = [Km, kt; kt', ktt + sig2n];
+    Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
 end
 
 %% FILL OUTPUT STRUCTURE

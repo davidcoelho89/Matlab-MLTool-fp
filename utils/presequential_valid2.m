@@ -60,6 +60,12 @@ for n = 2:N,
         accuracy = accuracy + 1;
     end
     
+    % Restriction: Max number of prototypes
+    [~,Nk] = size(PAR.Cx);
+    if (Nk >= PAR.max_prot),
+        break;
+    end
+    
 end
 
 % Get error

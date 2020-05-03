@@ -105,7 +105,7 @@ if (Us ~= 0),
     HP = isk2nn_rem_sample(HP,win);
     
     % Add Updated prototype to dictionary
-    HP = isk2nn_add_sample(DATAnew,HP,1);
+    HP = isk2nn_add_sample(DATAnew,HP);
 end
 
 %% FILL OUTPUT STRUCTURE

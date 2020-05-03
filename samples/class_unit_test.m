@@ -16,9 +16,9 @@ format long e;  % Output data style (float)
 
 OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
-OPT.norm = 0;               % Normalization definition
+OPT.norm = 2;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 05;              	% Number of repetitions of the algorithm
+OPT.Nr = 02;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
@@ -37,13 +37,13 @@ HP.Dm = 2;          % Design Method
 HP.Ss = 1;          % Sparsification strategy
 HP.v1 = 0.8;        % Sparseness parameter 1 
 HP.v2 = 0.9;        % Sparseness parameter 2
-HP.Us = 0;          % Update strategy
+HP.Us = 1;          % Update strategy
 HP.eta = 0.01;      % Update rate
-HP.Ps = 0;          % Prunning strategy
+HP.Ps = 1;          % Prunning strategy
 HP.min_score = -10; % Score that leads the sample to be pruned
 HP.max_prot = Inf;  % Max number of prototypes
 HP.min_prot = 1;    % Min number of prototypes
-HP.Von = 1;         % Enable / disable video 
+HP.Von = 0;         % Enable / disable video 
 HP.K = 1;           % Number of nearest neighbors (classify)
 HP.knn_type = 2;    % Type of knn aproximation
 HP.Ktype = 2;       % Kernel Type
@@ -59,7 +59,7 @@ DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-figure; plot_data_pairplot(DATA)
+% figure; plot_data_pairplot(DATA)
 
 %% ACCUMULATORS
 
@@ -89,25 +89,25 @@ DATAts = DATA_acc{r}.DATAts;      	% Test Data
 
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 
-% training data normalization
+% Get Normalization Parameters
 
-DATAtr = normalize(DATAtr,OPT);
+PARnorm = normalize_fit(DATAtr,OPT);
 
-% test data normalization
+% Training data normalization
 
-DATAts.Xmin = DATAtr.Xmin;
-DATAts.Xmax = DATAtr.Xmax;
-DATAts.Xmed = DATAtr.Xmed;
-DATAts.Xdp = DATAtr.Xdp;
+DATAtr = normalize_transform(DATAtr,PARnorm);
 
-DATAts = normalize(DATAts,OPT);
+% Test data normalization
+
+DATAts = normalize_transform(DATAts,PARnorm);
 
 % Adjust Values for video function
 
-DATAtr.Xmax = max(DATAtr.input,[],2);  % max value
-DATAtr.Xmin = min(DATAtr.input,[],2);  % min value
-DATAtr.Xmed = mean(DATAtr.input,2);    % mean value
-DATAtr.Xdp = std(DATAtr.input,[],2);   % std value
+DATA = normalize_transform(DATA,PARnorm);
+DATAtr.Xmax = max(DATA.input,[],2);  % max value
+DATAtr.Xmin = min(DATA.input,[],2);  % min value
+DATAtr.Xmed = mean(DATA.input,2);    % mean value
+DATAtr.Xdp = std(DATA.input,[],2);   % std value
 
 % %%%%%%%%%%%%%% SHUFFLE TRAINING DATA %%%%%%%%%%%%%%%%%%%
 

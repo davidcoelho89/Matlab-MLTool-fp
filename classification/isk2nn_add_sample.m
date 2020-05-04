@@ -2,7 +2,7 @@ function [PAR] = isk2nn_add_sample(DATA,HP)
 
 % --- Add a Sample to Dictionary and Update its Variables ---
 %
-%   [PAR] = isk2nn_add_sample(DATA,HP,criterion_result)
+%   [PAR] = isk2nn_add_sample(DATA,HP)
 %
 %   Input:
 %       DATA.

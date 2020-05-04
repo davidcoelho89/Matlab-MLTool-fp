@@ -4,12 +4,6 @@
 % Author: David Nascimento Coelho
 % Last Update: 2020/04/08
 
-%% CHOOSE ALGORITHM
-
-class_name = 'k2nn';
-class_train = @k2nn_train;
-class_test = @k2nn_classify;
-
 %% DATA LOADING AND PRE-PROCESSING
 
 % Load Dataset and Adjust its Labels
@@ -75,7 +69,7 @@ GSp.preseq_type = 1;    % Uses directly test-than-train
 
 % Get Hyperparameters Optimized
 
-HPo = grid_search_ttt(DATAhpo,HP_gs,class_train,class_test);
+HPo = grid_search_ttt(DATAhpo,HP_gs,@k2nn_train,@k2nn_classify);
 
 %% ADD FIRST ELEMENT TO DICTIONARY
 

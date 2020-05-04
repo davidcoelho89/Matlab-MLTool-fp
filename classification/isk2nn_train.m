@@ -202,7 +202,7 @@ for t = 1:N,
         yh(1,t) = 1;
         % Add sample to dictionary
         PAR = isk2nn_dict_grow(DATAn,PAR);
-        % Update number of times a prototype has been selected
+        % Update number of times this prototype has been selected
         PAR.times_selected = 1;
         continue;
     end

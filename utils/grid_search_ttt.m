@@ -18,7 +18,7 @@ function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
 %               1: k2nn 
 %               2: isk2nn
 %   Output:
-%       HP_o = optimum hyperparameters of classifier for data set
+%       HPoptm = optimum hyperparameters of classifier for data set
 
 %% INIT
 

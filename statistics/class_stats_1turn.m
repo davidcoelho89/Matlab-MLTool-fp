@@ -38,6 +38,7 @@ Yh = OUT.y_h;
 % Get number of samples and classes
 [Nc,N] = size(Y);
 
+% Convert Problem into Binary Problem
 if (nargin == 3),
     Y_aux = -1*ones(2,N);
     Yh_aux = -1*ones(2,N);
@@ -62,7 +63,7 @@ if (nargin == 3),
     % Update Estimated and Actual Labels
     Y = Y_aux;
     Yh = Yh_aux;
-    [Nc,N] = size(Y);
+    Nc = 2;
 end
 
 if Nc == 1, 

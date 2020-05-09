@@ -846,23 +846,66 @@ indexes = find(Accs == max(Accs)),
 % thetas(indexes),
 % gammas(indexes),
 
-%% Results Analysis (Ps - 1, Hpo - 1, Norm - 0, Class - nn )
+%% Results Analysis (Ps - 1, Hpo - 1, Norm - 3, Class - nn )
 
-Acc = no_of_correct(end)/17159,
+x = 1:Nttt;
+
+% Data and Prototypes
+figure;
+hold on 
+plot(DATAttt.input(1,:),DATAttt.input(2,:),'r.');
+plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
+title('Data and Prototypes')
+hold off
+
+% Number of samples per class
+figure;
+colors = lines(Nc);
+hold on
+for c = 1:Nc,
+    plot(x,samples_per_class(c,:),'Color',colors(c,:));
+end
+title('Number of Samples Per Class')
+hold off
+
+% Number of Prototypes (Total and per class)
+figure;
+colors = lines(Nc+1);
+hold on
+for c = 1:Nc+1,
+    plot(x,prot_per_class(c,:),'Color',colors(c,:));
+end
+title('Number of Prototypes')
+hold off
+
+% Number of hits x number of errors
+figure;
+hold on
+plot(x,no_of_errors,'r-');
+plot(x,no_of_correct,'b-');
+title('number of hits and errors')
+hold off
+
+% Percentage of Correct Classified
+figure;
+hold on
+plot(x,accuracy_vector,'r-');
+title('percentage of correct classified')
+axis([-1 length(x) -0.1 1.1])
+hold off
+
+Acc = accuracy_vector(end),
 [~,Nprot] = size(PAR.Cx),
 v1 = PAR.v1,
 sigma = PAR.sigma,
-gamma = PAR.gamma,
 alpha = PAR.alpha,
 theta = PAR.theta,
+gamma = PAR.gamma,
 
-%% Polynomial
+%% Results Analysis (Ps - 1, Hpo - 1, Norm - 3, Class - nn )
 
-Accs = zeros(1,OPT.Nr);
-
-for r = 1:OPT.Nr,
-    Accs(r) = accuracy_vector_acc{r}(1,end);
-end
+OUTttt.y_h = predict_vector;
+STATS = class_stats_1turn(DATAttt,OUTttt);
 
 %% Weighted Knn
 

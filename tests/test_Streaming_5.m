@@ -54,7 +54,7 @@ DATAn.Xstd = std(DATA.input,[],2);
 
 %% DATA VISUALIZATION
 
-figure; plot_data_pairplot(DATAttt);
+% figure; plot_data_pairplot(DATAttt);
 
 %% ACCUMULATORS
 
@@ -164,7 +164,7 @@ for n = 1:Nttt,
     
     % Video Function
     
-    if (HP.Von),
+    if (PAR.Von),
         VID(n) = prototypes_frame(PAR.Cx,DATAn);
     end
     

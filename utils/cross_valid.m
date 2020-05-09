@@ -1,4 +1,4 @@
-function [accuracy] = cross_valid1(DATA,HP,f_train,f_class,CVp)
+function [CVout] = cross_valid(DATA,HP,f_train,f_class,CVp)
 
 % --- Cross Validation Function ---
 %
@@ -12,9 +12,17 @@ function [accuracy] = cross_valid1(DATA,HP,f_train,f_class,CVp)
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's classification function       
 %       CVp.
-%           Nfold = number of data partitions                  	[cte]
+%           fold = number of data partitions                        [cte]
+%           type = type of cross validation                         [cte]
+%               1: takes into account just accurary
+%               2: takes into account also the dicitionary size
+%           lambda = trade-off between error and dictionary size   	[cte]
 %   Output:
-%       accuracy = mean accuracy for data set and parameters
+%       CVout.
+%           acc = mean accuracy for data set and parameters
+%           err = mean error for data set and parameters
+%           np = percentage of prototypes compared to the dataset
+%           metric = metric to be minimized
 
 %% INIT
 
@@ -24,14 +32,23 @@ X = DATA.input;     	% Attributes Matrix [p x N]
 Y = DATA.output;     	% labels Matriz [Nc x N]
 [~,N] = size(X);      	% Number of samples
 
-% Get HyperParameter
+% Get HyperParameters
 
-Nfold = CVp.Nfold;     	% Number of data partitions
+if (nargin == 4),
+    CVp.fold = 5;
+    CVp.type = 1;
+    CVp.lambda = 0.5;
+end
+
+Nfold = CVp.fold;     	% Number of data partitions
 part = floor(N/Nfold); 	% Size of each data partition
+type = CVp.type;        % If classifier is prototype-based or not
+lambda = CVp.lambda;    % trade-off between error and dictionary size
 
-% Init Outupt
+% Init Outupts
 
 accuracy = 0;          	% Init accurary
+Ds = 0;                 % Dictionary Size
 
 %% ALGORITHM
 
@@ -58,6 +75,13 @@ for fold = 1:Nfold;
 
     % Training of classifier
     [PAR] = f_train(DATAtr,HP);
+    
+    % Accumulate Number of Prototypes (for prototype-based classifiers)
+    if (type == 2),
+        size_Cx = size(PAR.Cx);
+        Ds_fold = prod(size_Cx(2:end));
+        Ds = Ds + Ds_fold;
+    end
 
     % Test of classifier
     [OUT] = f_class(DATAts,PAR);
@@ -70,6 +94,21 @@ for fold = 1:Nfold;
 
 end
 
-accuracy = accuracy/CVp.fold;
+accuracy = accuracy / Nfold;    % Mean Accuracy
+error = 1 - accuracy;           % Mean Error
+Ds = Ds / (N * Nfold);          % Mean Percentage of Prototypes
+
+if (type == 1),
+    metric = err;
+elseif (type == 2),
+    metric = Ds + lambda * err;
+end
+
+%% FILL OUTPUT STRUCTURE
+
+CVout.metric = metric;
+CVout.acc = accuracy;
+CVout.err = error;
+CVout.Ds = Ds;
 
 %% END

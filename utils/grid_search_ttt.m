@@ -1,80 +1,77 @@
-function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
+function [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,PSp)
 
 % --- Optm hyperparameters definition by Grid Search for Sequential Learn ---
 %
-%   [HP_o] = grid_search_ttt(DATA,HPgs,f_train,f_class,GSp)
+%   [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,PSp)
 %
 %   Input:
 %       DATA.
-%           input = training attributes                             [p x N]
-%           output = training labels                                [Nc x N]
+%           input = training attributes                            [p x N]
+%           output = training labels                               [Nc x N]
 %       HPgs = hyperparameters for grid searh of classifier
 %             (vectors containing values that will be tested)
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's classification function       
-%       GSp.
-%           lambda = trade-off between error and dictionary size   	[0 - 1]
-%           preseq_type = type of presenquential validation
-%               1: k2nn 
-%               2: isk2nn
+%       PSp.
+%           iterations = number of times the data is 
+%                        presented to the algorithm
+%           type = type of cross validation                         [cte]
+%               1: takes into account just accurary
+%               2: takes into account also the dicitionary size
+%           lambda = trade-off between error and dictionary size    [0 - 1]
 %   Output:
 %       HPoptm = optimum hyperparameters of classifier for data set
 
-%% INIT
-
-% Get Hyperparameters
-
-if (nargin == 4),
-    GSp.lambda = 0.5;
-    GSp.preseq_type = 2;
-end
-
-% trade-off between error and dictionary size
-lambda = GSp.lambda;
-
-% type of presenquential test
-preseq_type = GSp.preseq_type;
+%% INITIALIZATIONS
 
 % Get General Characteristics of Problem
 
 HyperParameterNames = fieldnames(HPgs);
 NumberOfHyperParameters = numel(HyperParameterNames);
 
-% Init Optimum and Auxiliary HyperParameters
+% Init Auxiliary HyperParameters
 
 for i = 1:NumberOfHyperParameters,
     HyperParameterName = HyperParameterNames{i};
     HpValuesVector = HPgs.(HyperParameterName);
     HPaux.(HyperParameterName) = HpValuesVector(1);
-    HPoptm.(HyperParameterName) = HpValuesVector(1);
 end
 
 % Init Auxiliary Variables
 
 IndexOfHyperParameters = ones(NumberOfHyperParameters,1);
 still_searching = 1;        % Signalize end of grid search
-min_metric = 1.1 + lambda;  % start min metric of an HP set with max value
+turn = 0;                 	% number of turns of grid search
 
 %% ALGORITHM
 
 while 1,
+    
+    % Update Turn of Grid Search
+    
+    turn = turn + 1;
 
     % "Interleaved Test-Then-Train" or "Prequential" Method
     
-    if (preseq_type == 1),
-        PresequentialOut = presequential_valid1(DATA,HPaux,f_train,f_class);
+    if (nargin == 4),
+        PSout = presequential_valid(DATA,HPaux,f_train,f_class);
     else
-        PresequentialOut = presequential_valid2(DATA,HPaux,f_train,GSp);
+        PSout = presequential_valid(DATA,HPaux,f_train,f_class,PSp);
     end
 
-    % Define new optimum HP
-
-    if (PresequentialOut.metric < min_metric),
-        HPoptm = PresequentialOut.PAR;
-        min_metric = PresequentialOut.metric;
+    % Define New Optimum HyperParameters
+    
+    if (turn == 1),
+        HPoptm = PSout.PAR;
+        min_metric = PSout.metric;
+    else
+        if (PSout.metric < min_metric),
+            HPoptm = PSout.PAR;
+            min_metric = PSout.metric;
+        end
     end
 
-    % Update indexes of HP
+    % Update indexes of HP (uses "digital clock logic")
     
     i = 1;
     while i <= NumberOfHyperParameters,

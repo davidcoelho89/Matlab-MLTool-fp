@@ -20,16 +20,21 @@ function plot_data_pairplot(DATA,label,mode)
 
 %% INITIALIZATIONS
 
-X = DATA.input';                    % input matrix
-[~,p] = size(X);                    % number of attributes
+X = DATA.input';                    % Input matrix
+[~,p] = size(X);                    % Number of attributes
+if (p > 10),                        % Restrict number of attributes
+    p = 10;
+end
+
 Y = DATA.output';                   % output matrix
 [~,Nc] = size(Y);
 if(Nc == 1),
-    Nclasses = length(unique(Y));      	% Number of Classes
+    Nclasses = length(unique(Y));	% Number of classes
 else
     Nclasses = Nc;
     [~,Y] = max(Y,[],2);
 end
+
 colors = lines(length(unique(Y)));  % colors for scatter plots
 
 %% ALGORITHM

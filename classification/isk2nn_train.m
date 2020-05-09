@@ -208,7 +208,7 @@ for t = 1:N,
     end
     
     % Predict Output
-    OUTn = prototypes_class(DATAn,PAR);
+    OUTn = isk2nn_classify(DATAn,PAR);
     yh(:,t) = OUTn.y_h;
     
     % Update number of times a prototype has been selected

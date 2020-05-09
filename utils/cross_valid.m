@@ -2,7 +2,7 @@ function [CVout] = cross_valid(DATA,HP,f_train,f_class,CVp)
 
 % --- Cross Validation Function ---
 %
-%   [accuracy] = cross_valid1(DATA,HP,f_train,f_class,CVp)
+%   [CVout] = cross_valid(DATA,HP,f_train,f_class,CVp)
 %
 %   Input:
 %       DATA.
@@ -19,10 +19,10 @@ function [CVout] = cross_valid(DATA,HP,f_train,f_class,CVp)
 %           lambda = trade-off between error and dictionary size   	[cte]
 %   Output:
 %       CVout.
+%           metric = metric to be minimized
 %           acc = mean accuracy for data set and parameters
 %           err = mean error for data set and parameters
-%           np = percentage of prototypes compared to the dataset
-%           metric = metric to be minimized
+%           Ds = percentage of prototypes compared to the dataset
 
 %% INIT
 

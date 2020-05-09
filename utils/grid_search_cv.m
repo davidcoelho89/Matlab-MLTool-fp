@@ -1,14 +1,14 @@
-function [HP_optm] = grid_search_cv(DATA,HP_gs,f_train,f_class,CVp)
+function [HPoptm] = grid_search_cv(DATA,HPgs,f_train,f_class,CVp)
 
 % --- Optm hyperparameters definition by Grid Search and Cross Validation ---
 %
-%   [HP_optm] = grid_search_cv1(DATA,HP_gs,f_train,f_class,CVp)
+%   [HPoptm] = grid_search_cv1(DATA,HP_gs,f_train,f_class,CVp)
 %
 %   Input:
 %       DATA.
 %           input = training attributes                            [p x N]
 %           output = training labels                               [Nc x N]
-%       HP_gs = hyperparameters for grid search                    [struct]
+%       HPgs = hyperparameters for grid search                     [struct]
 %               (vectors containing values that will be tested)
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's class function       
@@ -19,20 +19,20 @@ function [HP_optm] = grid_search_cv(DATA,HP_gs,f_train,f_class,CVp)
 %               2: takes into account also the dicitionary size
 %           lambda = trade-off between error and dictionary size   	[cte]
 %   Output:
-%       HP_o = optimum hyperparameters of classifier for data set  [struct]
+%       HPoptm = Optimum hyperparameters of classifier for dataset [struct]
 
 %% INITIALIZATIONS
 
 % Get General Characteristics of Problem
 
-HP_names = fieldnames(HP_gs);	% Names of HP
+HP_names = fieldnames(HPgs);	% Names of HP
 N_HP = numel(HP_names);         % Number of HP
 
 % Init Auxiliary HyperParameters
 
 for i = 1:N_HP,
     HP_name = HP_names{i};              % Get HP name
-    HP_values = HP_gs.(HP_name);        % Get HP values vector
+    HP_values = HPgs.(HP_name);         % Get HP values vector
     HP_aux.(HP_name) = HP_values(1);    % Init auxiliary HP value
 end
 
@@ -46,7 +46,7 @@ turn = 0;                       % number of turns of grid search
 
 while 1,
     
-    % Update Turn
+    % Update Turn of Grid Search
 
     turn = turn + 1;
 
@@ -61,11 +61,11 @@ while 1,
     % Define new optimum HP
     
     if (turn == 1),
-        HP_optm = HP_aux;
+        HPoptm = HP_aux;
         min_metric = CVout.metric;
     else
         if (CVout.metric < min_metric),
-            HP_optm = HP_aux;
+            HPoptm = HP_aux;
             min_metric = CVout.metric;
         end
     end
@@ -77,7 +77,7 @@ while 1,
         index_HP(i) = index_HP(i)+1;
         
         HP_name = HP_names{i};
-        if index_HP(i) > length(HP_gs.(HP_name)),
+        if index_HP(i) > length(HPgs.(HP_name)),
             if i == N_HP
                 still_searching = 0;
             end
@@ -98,7 +98,7 @@ while 1,
 
     for j = 1:N_HP,
         HP_name = HP_names{j};                     % get HP name
-        HP_values = HP_gs.(HP_name);               % get HP values vector
+        HP_values = HPgs.(HP_name);               % get HP values vector
         HP_aux.(HP_name) = HP_values(index_HP(j)); % get HP value
     end
 

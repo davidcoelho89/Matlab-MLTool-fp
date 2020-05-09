@@ -150,8 +150,9 @@ display('begin grid search')
 
 % Grid Search Parameters
 
-GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err
-GSp.preseq_type = 2;    % Uses directly test-than-train
+GSp.iterations = 1; % number of times data is presented to the algorithm
+GSp.type = 2;       % Takes into account also the dicitionary size
+GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 

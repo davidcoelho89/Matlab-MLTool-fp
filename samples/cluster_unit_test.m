@@ -45,24 +45,28 @@ HP.neig = 3;      	% type of neighborhood function
 HP.Vo = 0.8;      	% initial neighborhood constant
 HP.Vt = 0.3;      	% final neighborhood constant
 HP.lbl = 1;         % Neurons' labeling function
-HP.Von = 1;         % enable/disable video 
+HP.Von = 0;         % enable/disable video 
 HP.K = 1;           % Number of nearest neighbors
 HP.Ktype = 0;       % Non-kernelized Algorithm
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
-DATA = data_class_loading(OPT);     % Load Data Set
+DATA = data_class_loading(OPT);         % Load Data Set
 
-DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
+DATA = label_encode(DATA,OPT);          % adjust labels for the problem
 
-DATA = label_encode(DATA,OPT);      % adjust labels for the problem
+PARn = normalize_fit(DATA,OPT);         % Get Normalization Parameters
+
+DATA = normalize_transform(DATA,PARn);  % Normalize Data
+
+% Adjust Values for video function
 
 DATA.Xmax = max(DATA.input,[],2);	% max value
 DATA.Xmin = min(DATA.input,[],2);	% min value
 DATA.Xmed = mean(DATA.input,2);     % mean value
 DATA.Xdp = std(DATA.input,[],2);	% std value
 
-figure; plot_data_pairplot(DATA)
+% figure; plot_data_pairplot(DATA)
 
 %% ACCUMULATORS
 

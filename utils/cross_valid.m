@@ -99,9 +99,9 @@ error = 1 - accuracy;           % Mean Error
 Ds = Ds / (N * Nfold);          % Mean Percentage of Prototypes
 
 if (type == 1),
-    metric = err;
+    metric = error;
 elseif (type == 2),
-    metric = Ds + lambda * err;
+    metric = Ds + lambda * error;
 end
 
 %% FILL OUTPUT STRUCTURE

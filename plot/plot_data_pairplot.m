@@ -39,6 +39,11 @@ colors = lines(length(unique(Y)));  % colors for scatter plots
 
 %% ALGORITHM
 
+% Begin Figure
+
+figure;
+hold on
+
 if nargin < 3
     mode = 'bar';
 end
@@ -90,5 +95,9 @@ for i = 1:p
         end
     end
 end
+
+% Finish Figure
+
+hold off
 
 %% END

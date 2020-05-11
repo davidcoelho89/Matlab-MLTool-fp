@@ -70,7 +70,7 @@ xlabel(strcat(s1,s2));
 ylabel(strcat(s1,s3));
 title ('2D Voronoi Cells');
 
-% ----- Plot Data
+% Plot Data
 
 for i = 1:Nk,
 

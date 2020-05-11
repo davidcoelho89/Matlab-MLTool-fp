@@ -43,6 +43,12 @@ marker_array = {'.','*','o','x','+','s','d','v','^','<','>','p','h'};
 figure;
 hold on
 
+% Define figure properties
+
+title ('Prototypes Grid');
+
+% Plot Data
+
 if (isfield(PAR,'R')),
     R = PAR.R;
     [Ndim,~] = size(R);

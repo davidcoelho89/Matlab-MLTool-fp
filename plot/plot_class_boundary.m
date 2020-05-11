@@ -1,8 +1,8 @@
-function [frame] = plot_class_boundary_all(DATA,PAR,class_test,OPTION)
+function [frame] = plot_class_boundary(DATA,PAR,class_test,OPTION)
 
-% --- Save current frame for Any Classifiers functions ---
+% --- Save current frame of Boundary for Any Classifiers' functions ---
 %
-%   [frame] = plot_class_boundary_all(DATA,PAR,class_test)
+%   [frame] = plot_class_boundary(DATA,PAR,class_test,OPTION)
 %
 %   Input:
 %       DATA.
@@ -46,17 +46,10 @@ xn = zeros(p,1);           	% pattern to be used in function
 count = 0;                  % count number of points from hyperplane
 
 %% ALGORITHM
-    
+
 % Define grid
 xaxis_values = linspace(x1_min,x1_max,grid_len);
 yaxis_values = linspace(x2_min,x2_max,grid_len);
-
-% % Get previous classifier output
-% xn(p1) = xaxis_values(1);
-% xn(p2) = yaxis_values(1);
-% DATAts.input = xn;
-% OUTts = class_test(DATAts,PAR);
-% [~,class_prev] = max(OUTts.y_h);
 
 % Get points of hyperplane (horizontal)
 for i = 1:grid_len,
@@ -83,15 +76,24 @@ for i = 1:grid_len,
     end
 end
 
-% Clear current axis
-cla;
+% Begin new figure
+
+%cla;       % clear current axis
+figure;
+hold on
+
+% Define figure properties
+
+s1 = 'Attribute ';  s2 = int2str(p1);    s3 = int2str(p2);
+xlabel(strcat(s1,s2));
+ylabel(strcat(s1,s3));
+title('Model Boundary and Data')
 
 % Plot Hyperplane points
-hyperplane = hp(:,1:count);  % just get points that were saved
 
+hyperplane = hp(:,1:count);  % just get points that were saved
 plot(hyperplane(1,:),hyperplane(2,:),'k.')
-axis([x1_min-0.1 , x1_max+0.1 , x2_min - 0.1 , x2_max + 0.1])
-hold on
+axis([x1_min - 0.1 , x1_max + 0.1 , x2_min - 0.1 , x2_max + 0.1])
 
 % Plot Data points
 plot(X(p1,:),X(p2,:),'r.')

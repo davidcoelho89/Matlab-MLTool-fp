@@ -134,7 +134,7 @@ DATAn.Xstd = std(DATA.input,[],2);
 
 %% DATA VISUALIZATION
 
-figure; plot_data_pairplot(DATAhpo);
+plot_data_pairplot(DATAhpo);        % See pairplot of attributes
 
 %% ACCUMULATORS
 

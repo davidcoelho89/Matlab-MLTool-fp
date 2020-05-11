@@ -54,7 +54,7 @@ hold on
 s1 = 'Attribute ';  s2 = int2str(Xaxis);    s3 = int2str(Yaxis);
 xlabel(strcat(s1,s2));
 ylabel(strcat(s1,s3));
-title ('2D of Clusters Grid');
+title ('2D of Prototypes Neighborhood');
 
 % Plot Data
 

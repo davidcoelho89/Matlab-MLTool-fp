@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 06;              % Which problem will be solved / used
+OPT.prob = 11;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 2;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
@@ -22,6 +22,12 @@ OPT.Nr = 02;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
+
+% Grid Search Parameters
+
+GSp.fold = 5;       % number of data partitions for cross validation
+GSp.type = 1;       % Takes into account just accuracy
+GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE ALGORITHM
 
@@ -53,13 +59,20 @@ HP.gamma = 2;       % polynomial order (poly 2 or 3)
 HP.alpha = 0.1;     % Dot product multiplier (poly 1 / sigm 0.1)
 HP.theta = 0.1;     % Dot product adding (poly 1 / sigm 0.1)
 
+%% HYPERPARAMETERS - FOR OPTIMIZATION
+
+HPgs = HP;
+
+% Can put here vectors of hyperparameters to be optimized
+% Ex: HPgs.v1 = [0.2, 0.4, 0.6, 0.8, 1.0]
+
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
 DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-% figure; plot_data_pairplot(DATA)
+plot_data_pairplot(DATA);           % See pairplot of attributes
 
 %% ACCUMULATORS
 
@@ -116,6 +129,11 @@ DATAtr.input = DATAtr.input(:,I);
 DATAtr.output = DATAtr.output(:,I);
 DATAtr.lbl = DATAtr.lbl(:,I);
 
+% %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
+
+% Using Grid Search and Cross-Validation
+HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
+
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
 PAR_acc{r} = class_train(DATAtr,HP);	% Calculate parameters
@@ -145,48 +163,41 @@ nSTATS_ts = class_stats_nturns(STATS_ts_acc);
 nSTATS_all{1,1} = nSTATS_tr;
 nSTATS_all{2,1} = nSTATS_ts;
 
-%% GRAPHICS - DECISION BOUNDARY / ROC CURVE / PRECISION-RECALL
+% Boxplot of Training and Test Accuracies
 
-% [Nc,~] = size(DATA.output);
-% 
-% % Plot Decision boundary (of last test)
-% if (Nc == 2),
-%     figure;
-%     plot_class_boundary_all(DATA,PAR_acc{r},class_test);
-% end
-% 
-% % Plot Linear Decision boundary (of last test)
-% if (Nc == 2),
-%     figure;
-%     plot_class_boundary_lin(DATA,PAR_acc{r});
-% end
-% 
-% % Plot one ROC Curve (1 - spec x sens) for each class (of last turn)
-% for c = 1:Nc,
-%     figure;
-%     plot(STATS_ts_acc{r}.roc_fpr(c,:),STATS_ts_acc{r}.roc_tpr(c,:),'r.-');
-%     axis([-0.1 1.1 -0.1 1.1])
-%     hold on
-%     plot([0,0,1],[0,1,1],'k-');
-%     hold off
-% end
-% 
-% % Plot one Precision-Recall Curve for each class (of last turn)
-% for c = 1:Nc,
-%     figure;
-%     plot(STATS_ts_acc{r}.roc_prec(c,:),STATS_ts_acc{r}.roc_rec(c,:),'r.-');
-%     axis([-0.1 1.1 -0.1 1.1])
-%     hold on
-%     plot([0,0,1],[0,1,1],'k-');
-%     hold off
-% end
+class_stats_ncomp(nSTATS_all,NAMES); 
 
-%% BOXPLOT OF TRAINING AND TEST ACCURACIES
+%% GRAPHICS - OF LAST TURN
 
-class_stats_ncomp(nSTATS_all,NAMES);
+% Get Data
+DATAf.input = [DATAtr.input, DATAts.input];
+DATAf.output = [DATAtr.output, DATAts.output];
 
-%% SAVE DATA
+% Classifier Decision Boundaries
+plot_class_boundary(DATAf,PAR_acc{r},class_test);
 
+% ROC Curve (one for each class)
+plot_stats_roc_curve(STATS_ts_acc{r});
+
+% Precision-Recall (one for each class
+plot_stats_precision_recall(STATS_ts_acc{r})
+
+%% SAVE VARIABLES AND VIDEO
+
+% % Save All Variables
 % save(OPT.file);
+% 
+% % See Class Boundary Video (of last turn)
+% if (HP.Von == 1),
+%     figure;
+%     movie(PAR_acc{r}.VID)
+% end
+% 
+% % Save Class Boundary Video (of last turn)
+% v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
+% v.FrameRate = 1;
+% open(v);
+% writeVideo(v,PAR_acc{r}.VID);
+% close(v);
 
 %% END

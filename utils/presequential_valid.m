@@ -12,12 +12,12 @@ function [PVout] = presequential_valid(DATA,HP,f_train,f_class,PSp)
 %       f_train = handler for classifier's training function
 %       f_class = handler for classifier's classification function       
 %       PSp.
-%           iterations = number of times the data is 
+%           iterations = number of times the data is                [cte]
 %                        presented to the algorithm
 %           type = type of cross validation                         [cte]
 %               1: takes into account just accurary
 %               2: takes into account also the dicitionary size
-%           lambda = trade-off between error and dictionary size [0 - 1]
+%           lambda = trade-off between error and dictionary size    [0 - 1]
 %   Output:
 %       PSout.
 %           metric = metric to be minimized
@@ -30,6 +30,7 @@ function [PVout] = presequential_valid(DATA,HP,f_train,f_class,PSp)
 % Get Data 
 
 [~,N] = size(DATA.input);       % Number of samples
+[Nc,~] = size(DATA.output);     % Number of classes
 
 % Get Hyperparameters
 
@@ -49,12 +50,16 @@ if (~(isfield(HP,'max_prot'))),
     HP.max_prot = Inf;
 end
 
-PAR = HP;
-
 % Init Outupts
 
 accuracy = 0;                   % Init accurary
 Ds = 0;                         % Init # prototypes (dictionary size)
+
+% Add first Element to dictionary
+
+DATAn.input = DATA.input(:,1);
+DATAn.output = DATA.output(:,1);
+PAR = f_train(DATAn,HP);
 
 %% ALGORITHM
 
@@ -113,7 +118,7 @@ elseif(type == 2),
     [~,Nk] = size(PAR.Cx);
     Ds = Ds + Nk / N;
     
-    if (Nk <= Nc || Nk > PAR.max_prot),
+    if (Nk <= Nc || Nk >= PAR.max_prot),
         metric = 1 + lambda;    % Maximum value
     else
         metric = Ds + lambda * error;

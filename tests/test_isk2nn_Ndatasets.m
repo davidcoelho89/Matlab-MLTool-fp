@@ -1,27 +1,27 @@
 %% Machine Learning ToolBox
 
-% Online and Sequential Algorithms
+% isK2nn Model testing in various datasets
 % Author: David Nascimento Coelho
 % Last Update: 2020/04/08
 
 %% Weather Data Set
 
-test_Weather_k2nn_3;
+test_weather_isk2nn;
 
 %% Rialto Data Set
 
-test_Rialto_k2nn_3;
+test_rialto_isk2nn;
 
 %% Hyperplane
 
-test_hyper_k2nn_3;
+test_hyper_isk2nn;
 
 %% Sea
 
-test_sea_k2nn_3;
+test_sea_isk2nn;
 
 %% RBF Interchange
 
-test_rbfint_k2nn_3;
+test_rbfint_isk2nn;
 
 %% END

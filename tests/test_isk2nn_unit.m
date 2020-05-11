@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% Online and Sequential Algorithms
+% Sample used to run isk2nn and a DataSet
 % Author: David Nascimento Coelho
-% Last Update: 2020/04/08
+% Last Update: 2020/05/11
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -12,13 +12,21 @@ format long e;  % Output data style (float)
 
 %% GENERAL DEFINITIONS
 
+% General Datasets / Problems:
+
+% 6 - iris / 7 - motor failure / 10 - Vertebral Column / 
+% 19 - cervical cancer / 20 - Sensorless Drive / 22 - Wall Following /
+% 25 - sea / 26 - Hyper / 27 - RBFmov / 28 - RBFint / 29 - Squares /
+% 30 - chess / 31 - mixed / 32 - led / 33 - weather / 34 - electricity / 
+% 35 - cover / 36 - poker / 37 - outdoor / 38 - rialto / 39 - spam
+
 % General options' structure
 
-OPT.prob = 25;              % Which problem will be solved / used
+OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
-OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 50;              	% Number of repetitions of the algorithm
+OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
+OPT.Nr = 01;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
@@ -38,7 +46,7 @@ HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 2;               % Kernel Type
+HP.Ktype = 2;               % Kernel Type (2: Gaussian)
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
@@ -61,7 +69,7 @@ HP_gs.sigma = 2.^linspace(-10,9,20);
 % HP_gs.sigma = 2.^linspace(-10,9,20);
 % % Polynomial 3
 % HP_gs.v1 = 2.^linspace(-13,6,20);
-% HP_gs.gamma = [2,3];
+% HP_gs.gamma = [2,2.2,2.4,2.6,2.8,3];
 % % Exponential 4
 % HP_gs.v1 = 2.^linspace(-4,3,8);
 % HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -126,7 +134,7 @@ DATAn.Xstd = std(DATA.input,[],2);
 
 %% DATA VISUALIZATION
 
-figure; plot_data_pairplot(DATAttt);
+figure; plot_data_pairplot(DATAhpo);
 
 %% ACCUMULATORS
 
@@ -144,7 +152,7 @@ prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
                                     
 VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
-%% CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
+%% GRID SEARCH + CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
 
 display('begin grid search')
 
@@ -156,11 +164,7 @@ GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-HPo = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_test,GSp);
-
-% They Are also the Initial Parameters
-
-PAR = HPo;
+PAR = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_classify,GSp);
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
@@ -293,6 +297,6 @@ hold off
 
 %% SAVE FILE
 
-
+% save(OPT.file,'-v7.3')
 
 %% END

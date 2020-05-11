@@ -1,8 +1,26 @@
-%% Machine Learning ToolBox
+function [] = test_isk2nn_pipeline(OPT,HPgs,PSp)
 
-% Online and Sequential Algorithms
-% Author: David Nascimento Coelho
-% Last Update: 2020/04/08
+% --- Pipeline used to test isk2nn model with any dataset ---
+%
+%   [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,PSp)
+%
+%   Input:
+%       OPT.
+%           prob = which dataset will be used
+%           prob2 = a specification of the dataset
+%           norm = which normalization will be used
+%           lbl = which labeling strategy will be used
+%       HPgs = hyperparameters for grid searh of classifier
+%             (vectors containing values that will be tested)
+%       PSpar.
+%           iterations = number of times the data is 
+%                        presented to the algorithm
+%           type = type of cross validation                         [cte]
+%               1: takes into account just accurary
+%               2: takes into account also the dicitionary size
+%           lambda = trade-off between error and dictionary size    [0 - 1]
+%   Output:
+%       "Do not have. Just save structures into a file"
 
 %% DATA LOADING AND PRE-PROCESSING
 
@@ -14,7 +32,7 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 [Nc,N] = size(DATA.output);        	% get number of classes and samples
 
-% Set data for the cross validation step: min (0.2 * N, 1000)
+% Set data for the HyperParameter Optimization step: min (0.2 * N, 1000)
 
 if (N < 5000),
     Nhpo = floor(0.2 * N);
@@ -78,16 +96,19 @@ display('begin grid search')
 
 % Grid Search Parameters
 
-GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err
-GSp.preseq_type = 2;    % Uses directly test-than-train
+if (nargin == 2),
+    PSp.iterations = 1;
+    PSp.type = 1;
+    PSp.lambda = 0.5;
+end
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-HPo = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_test,GSp);
+PAR = grid_search_ttt(DATAhpo,HPgs,@isk2nn_train,@isk2nn_classify,PSp);
 
-% They Are also the Initial Parameters
+% Change maximum number of prototypes
 
-PAR = HPo;
+% PAR.max_prot = Inf;
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
@@ -106,8 +127,8 @@ for n = 1:Nttt,
     
     % Get current data
     
-    DATAn.input = DATA.input(:,n);
-    DATAn.output = DATA.output(:,n);
+    DATAn.input = DATAttt.input(:,n);
+    DATAn.output = DATAttt.output(:,n);
     [~,y_lbl] = max(DATAn.output);
     
     % Test  (classify arriving data with current model)

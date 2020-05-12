@@ -48,7 +48,7 @@ HP.Von = 0;         % disable video
 HPgs = HP;
 
 % Can put here vectors of hyperparameters to be optimized
-% Ex: HPgs.v1 = [0.2, 0.4, 0.6, 0.8, 1.0]
+% Ex: HPgs.eta = 0.01:0.01:0.1
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
@@ -120,15 +120,18 @@ HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
-PAR_acc{r} = class_train(DATAtr,HP);	% Calculate parameters
+% Calculate model's parameters
+PAR_acc{r} = class_train(DATAtr,HP);
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
-OUTtr = class_test(DATAtr,PAR_acc{r});          	% Outputs with training data
-STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);  % Results with training data
+% Results and Statistics with training data
+OUTtr = class_test(DATAtr,PAR_acc{r});
+STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
 
-OUTts = class_test(DATAts,PAR_acc{r});          	% Outputs with test data
-STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);  % Results with test data
+% Results and Statistics with test data
+OUTts = class_test(DATAts,PAR_acc{r});
+STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
 
@@ -147,7 +150,7 @@ nSTATS_ts = class_stats_nturns(STATS_ts_acc);
 nSTATS_all{1,1} = nSTATS_tr;
 nSTATS_all{2,1} = nSTATS_ts;
 
-% Boxplot of Training and Test Accuracies
+% Compare Training and Test Statistics
 
 class_stats_ncomp(nSTATS_all,NAMES); 
 

@@ -133,4 +133,15 @@ Ar = col2im(E,block,img_size,'distinct');
 figure; 
 imshow(Ar);
 
+%% OUTRAS
+
+imshow(a);
+
+%% OUTRAS
+
+% Im2col();
+% col2im();
+% fliplr();
+% flipud();
+
 %% END

@@ -1,3 +1,7 @@
+%%  GEOMETRIC FUNCTIONS
+
+%% LOVE
+
 % L (y = 1/x)
 figure;
 x = 0.01:0.01:1;
@@ -10,10 +14,7 @@ x1 = -3:0.01:3;
 y1 = (9-x1.^2).^0.5;
 x2 = -3:0.01:3;
 y2 = -(9-x2.^2).^0.5;
-plot(x1,y1);
-hold on
-plot(x2,y2);
-hold off
+plot(x1,y1,x2,y2);
 
 % V (y = |-2x|)
 figure;
@@ -27,3 +28,8 @@ y = -3.14:0.01:3.14;
 x = -3*abs(sin(y));
 plot(x,y);
 axis([-5 2 -3.2 3.2])
+
+%% FUNCTION X
+
+
+%% END

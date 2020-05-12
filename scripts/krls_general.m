@@ -1,21 +1,10 @@
-%%
-% ===================================================================
-%          DOUTORADO EM ENGENHARIA DE TELEINFORMÁTICA
-%   KERNEL RECURSIVE LEAST-SQUARES ALGORITHM EM PROBLEMAS DE
-% IDENTIFICAÇÃO DE SISTEMAS, PREDIÇÃO DE SÉRIES TEMPORAIS E REGRESSÃO
-%             Aluno: José Daniel de Alencar Santos
-%         
-%                            09/06/2015
-%                            KERNEL-RLS
-%
-% ===================================================================
+clear; close; clc;
 
-clear all; close all; clc;
-
-path(path,'../../../Funções_Dados') % caminho relativo para valida_modelos
-path(path,'../../../Funções_Dados/identificação') % caminho relativo para valida_modelos
-path(path,'../../../Funções_Dados/regressão') % caminho relativo para valida_modelos
-path(path,'../../LSSVR') % caminho relativo para valida_modelos
+% Localização dos Arquivos para Validação dos Modelos
+path(path,'../../../Funções_Dados') 
+path(path,'../../../Funções_Dados/identificação') 
+path(path,'../../../Funções_Dados/regressão') 
+path(path,'../../LSSVR')
 
 %% INICIALIZACOES
 
@@ -30,7 +19,7 @@ data = 5;
 % seleciona os hiperparâmetros ótimos para cada conjunto de dados
 
 kernel = 'GAUS';
-[ptr,C,sig2_aux,n_u,n_y,gamma]=lssvr_parameters(task,data,kernel);
+[ptr,C,sig2_aux,n_u,n_y,gamma] = lssvr_parameters(task,data,kernel);
 [ni_v,ni_v1,lambda_f,sig2] = os_lssvr_parameters(task,data);
 lambda_f = 1;
 
@@ -48,8 +37,8 @@ end
 
 % DEFINIÇÃO DOS DADOS DE TREINAMENTO E TESTE:
 
-[linD,colD] = size(u);
-J = round(ptr*linD);
+[N,p] = size(u);
+J = round(ptr*N);
 
 if data == 75,
    treino_u_aux = u(J+1:end,:); % 
@@ -86,7 +75,7 @@ teste_y = teste_y_aux;
 mi_y = 0;
 di_y = 1;
 
-[Ltr,Ctr] = size(treino_u);
+[Ntr,Ctr] = size(treino_u);
 [Lte,Cte] = size(teste_u);
 
 % Montar a matriz Reg_est_lssvr de regressores:
@@ -100,7 +89,7 @@ treino_y1_aux = treino_y(n_ord+1:end,:);
 teste_u1 = teste_u(n_ord+1:end,:);
 teste_y1_aux = teste_y(n_ord+1:end,:);
 
-[Ltr1,Ctr1]=size(vec_regres_tr);
+[Ntr1,Ctr1]=size(vec_regres_tr);
 
 % número de rodadas independentes
 Nr = 20;
@@ -112,7 +101,7 @@ for r = 1:Nr,
 
 display(r);
 
-S = randperm(Ltr1);
+S = randperm(Ntr1);
 vec_regres_tr = vec_regres_tr(S,:);
 treino_y1_aux = treino_y1_aux(S,:);
 
@@ -131,7 +120,7 @@ m_aux(r,1) = 1;
 t_aux(r,1) = 1;
 Y_tr_aux(1,1) = 0;
 
-for t = 2:Ltr1,
+for t = 2:Ntr1,
 
     vec = vec_regres_tr(t,:);
     y = treino_y1_aux(t,:);
@@ -272,6 +261,6 @@ mean_SV=mean(n_sv)
 
 MSE_final=mean(mean(MSE_train_total));
 MSE_final_aux=log(MSE_final);
-[aic,bic]=aicbic(MSE_final_aux,round(mean(n_sv)),Ltr1)
-%AIC=Ltr1*log(MSE_final/Ltr1)+2*mean(n_sv);
-%BIC=Ltr1*log(MSE_final/Ltr1)+mean(n_sv)*log(Ltr1);
+[aic,bic]=aicbic(MSE_final_aux,round(mean(n_sv)),Ntr1)
+%AIC=Ntr1*log(MSE_final/Ntr1)+2*mean(n_sv);
+%BIC=Ntr1*log(MSE_final/Ntr1)+mean(n_sv)*log(Ntr1);

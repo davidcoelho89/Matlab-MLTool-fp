@@ -33,31 +33,15 @@ GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err (prototype-based models)
 
 % Handlers for classification functions
 
-class_name = 'isk2nn';
-class_train = @isk2nn_train;
-class_test = @isk2nn_classify;
+class_name = 'Perceptron';
+class_train = @ps_train;
+class_test = @ps_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
-HP.Dm = 2;          % Design Method
-HP.Ss = 1;          % Sparsification strategy
-HP.v1 = 0.8;        % Sparseness parameter 1 
-HP.v2 = 0.9;        % Sparseness parameter 2
-HP.Us = 1;          % Update strategy
-HP.eta = 0.01;      % Update rate
-HP.Ps = 1;          % Prunning strategy
-HP.min_score = -10; % Score that leads the sample to be pruned
-HP.max_prot = Inf;  % Max number of prototypes
-HP.min_prot = 1;    % Min number of prototypes
-HP.Von = 0;         % Enable / disable video 
-HP.K = 1;           % Number of nearest neighbors (classify)
-HP.knn_type = 2;    % Type of knn aproximation
-HP.Ktype = 2;       % Kernel Type
-HP.sig2n = 0.001;   % Kernel Regularization parameter
-HP.sigma = 2;    	% Kernel width (gauss, exp, cauchy, log, kmod)
-HP.gamma = 2;       % polynomial order (poly 2 or 3)
-HP.alpha = 0.1;     % Dot product multiplier (poly 1 / sigm 0.1)
-HP.theta = 0.1;     % Dot product adding (poly 1 / sigm 0.1)
+HP.Ne = 200;       	% maximum number of training epochs
+HP.eta = 0.05;    	% Learning step
+HP.Von = 0;         % disable video 
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 

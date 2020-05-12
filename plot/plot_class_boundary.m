@@ -70,7 +70,7 @@ for i = 1:grid_len,
         [~,class] = max(OUTts.y_h);         % get current class
         if (class ~= class_prev)
             count = count + 1;
-            hp(:,count) = xn;               % hold point
+            hp(:,count) = xn([p1 p2]);      % hold point
         end
         class_prev = class;                 % update previous class
     end

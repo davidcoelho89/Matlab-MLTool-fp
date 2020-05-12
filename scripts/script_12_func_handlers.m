@@ -51,7 +51,13 @@ x = 1;
 y = 10;
 z = myfunction2(x,y),
 
-% With multiple outputs
+% With multiple outputs (1)
+
+m = [1 2;3 4;5 6];
+fcol = @(x) deal(x(:,1),x(:,2));
+[a,b] = fcol(m);
+
+% With multiple outputs (2)
 c = 10;
 myfunction3 = @(x,y) ndgrid((-x:x/c:x),(-y:y/c:y));
 [x,y] = myfunction3(pi,2*pi);
@@ -62,12 +68,11 @@ mesh(x,y,z)
 
 a = 0;
 b = 5;
+fun = @(x) (x./(exp(x)-1));
 
 q1 = integral(@log,a,b),
 q2 = integral(@sin,a,b),
 q3 = integral(@exp,a,b),
-
-fun = @(x)x./(exp(x)-1);
 q4 = integral(fun,0,Inf),
 
 %% String to Function Handle X Function Handle to String
@@ -84,7 +89,7 @@ fh2(3)
 
 % When you have to display the name or format of function handle
 
-fh = @(x,y)sqrt(x.^2+y.^2);
+fh = @(x,y) sqrt(x.^2+y.^2);
 str = func2str(fh);
 disp(['Anonymous function: ' str])
 

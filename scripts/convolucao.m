@@ -7,19 +7,19 @@ function [C] = convolucao(A, B)
 %   Saidas:
 %       - C: Resultado da convolução
 
-tam_A = length(A);  % tamanho do sinal A
-tam_B = length(B);  % tamanho do sinal B
-tam_C = max([tam_A+tam_B-1, tam_A, tam_B]); % sinal convoluido
+len_A = length(A);  % tamanho do sinal A
+len_B = length(B);  % tamanho do sinal B
+len_C = max([len_A+len_B-1, len_A, len_B]); % sinal convoluido
 
-C = zeros(1,tam_C); % inicializa o sinal C
+C = zeros(1,len_C); % inicializa o sinal C
 
-for x = 1:tam_C,
-    for j = 1:tam_C,
+for x = 1:len_C,
+    for j = 1:len_C,
 
         ind_A = j;      % indice do vetor A que será multiplicado
         ind_B = x-j+1;  % indice do vetor B que será multiplicado
         
-        if ((ind_A > 0) & (ind_A < tam_A) & (ind_B > 0) & (ind_B < tam_B)),
+        if ((ind_A > 0) & (ind_A < len_A) & (ind_B > 0) & (ind_B < len_B)),
             C(x) = C(x) + A(ind_A)*B(ind_B);
         else
             continue;

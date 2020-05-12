@@ -9,14 +9,20 @@ nfig = 0;       % contagem do numero de figuras
 
 %% APROXIMAR CURVAS E MODELOS MATEMATICOS (polyfit x polyval)
 
-x = 1:7;                            % entradas reais
-y = [1.2 1.6 2.3 2.8 3.9 4.5 5.6];  % saidas reais
+% Input and Outputs
+x = 1:7;                            
+y = [1.2 1.6 2.3 2.8 3.9 4.5 5.6];
 
-fpar = polyfit(x,y,1);      % encontra parametros para polinomio de ordem x
-faj = polyval(fpar,x);      % gera função aproximada
+% Calculates parameters of polynomial of degree d.
+d = 1;
+Ppar = polyfit(x,y,d);
 
-nfig = nfig + 1; figure(nfig)       % proxima figura
-plot(x,y,'+blue',x,faj,'black')     % plota curva aproxima e real
+% Generates values of polynomial Ppar evaluated at x.
+yh = polyval(Ppar,x);
+
+% Plot original and approximate curve
+nfig = nfig + 1; figure(nfig)	
+plot(x,y,'+blue',x,yh,'black')
 
 %% SIMPLIFICAR MODELO MATEMATICO
 

@@ -195,13 +195,11 @@ for j = 1:M,
 end
 
 %% CALCULANDO SAÍDAS E ERROS COM OS DADOS DE TREINAMENTO:
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Y_tr(:,r) = kernel_type(kernel,vec_regres_tr_min,vec_regres_tr,...
 alpha,b0,par_1,par_2);
 
 %% CALCULANDO SAÍDAS E ERROS COM OS DADOS DE TESTE:
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if strcmp(task,'regre'),
    vec_regres_te=regres_mat(teste_u,teste_y,n_u,n_y);

@@ -75,6 +75,9 @@ Nsv = cell(1,Nc);
 % The number of support vectors varies according to each class
 % For each class, one classifier (one vs all strategy)
 
+% Uses the "Interior-Point-Convex" algorithm to solve QP problem
+% Verify "Sequential-Minimal-Optimization" for big datasets
+
 for c = 1:Nc,
 
 % if it is a binary classifier, calculates the parameters only once

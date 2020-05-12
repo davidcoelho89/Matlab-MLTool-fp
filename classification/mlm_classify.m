@@ -48,16 +48,18 @@ end
 
 Dy_h = Dx*B;                                % [N x k]
 
-% Options for fsolve algorithm
+% Options and start vector for fsolve algorithm
 
 opts = optimoptions('fsolve','Algorithm','levenberg-marquardt', ...
           'Display', 'off', 'FunValCheck', 'on', 'TolFun', 10e-10);
 
-% fsolve = solve non-linear equations system
+x0 = zeros(1,Nc);
 
-for i = 1:N, 
-    y_h(i,:) = fsolve(@(x)(sum((Ty - repmat(x,K,1)).^2,2) - Dy_h(i,:)'.^2).^2, ...
-                      zeros(1,Nc), opts);
+% fsolve = solve non-linear equations system (F(x) = 0)
+
+for i = 1:N,
+    optm_func = @(x) (sum((Ty - repmat(x,K,1)).^2,2) - Dy_h(i,:)'.^2).^2 ;
+    y_h(i,:) = fsolve(optm_func, x0, opts);
 end
 
 % Adjust y_h for [Nc x N] pattern

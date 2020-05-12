@@ -1,8 +1,8 @@
-function [frame] = plot_class_boundary_lin(DATA,PAR,OPTION)
+function [] = plot_class_boundary_lin(DATA,PAR,OPTION)
 
-% --- Save current frame for Linear Classifiers functions ---
+% --- Plot Boundary for Linear Classifiers functions ---
 %
-%   [frame] = plot_class_boundary_lin(DATA,PAR)
+%   [] = plot_class_boundary_lin(DATA,PAR,OPTION)
 %
 %   Input:
 %       DATA.
@@ -14,7 +14,7 @@ function [frame] = plot_class_boundary_lin(DATA,PAR,OPTION)
 %           p1 = first attribute         	[cte]
 %           p2 = second attribute          	[cte]
 %   Output:
-%       frame = struct containing 'cdata' and 'colormap'
+%       "void" (print a graphic at screen)
 
 %% INITIALIZATION
 
@@ -45,24 +45,32 @@ b = PAR.W(prot, 1);
 
 %% ALGORITHM
 
+% Begin Figure
+figure;
+hold on
+
+% Define figure properties
+s1 = 'Attribute ';  s2 = int2str(p1);    s3 = int2str(p2);
+xlabel(strcat(s1,s2));
+ylabel(strcat(s1,s3));
+title('Model Boundary and Data')
 
 % Axis of hyperplane
 h_x1 = linspace(x1_min,x1_max,10);
 h_x2 = -(b + w(1).*h_x1)./(w(2));
 
-% Clear current axis
-cla;
-
 % Plot Hyperplane
 plot(h_x1,h_x2,'k-')
 axis([x1_min-0.1 , x1_max+0.1 , x2_min - 0.1 , x2_max + 0.1])
-hold on
 
 % Plot points
 plot(x(1,:),x(2,:),'r.')
+
+% Finish Figure
 hold off
 
-% Get frame
-frame = getframe;
+%% FILL OUTPUT STRUCTURE
+
+% Don't have output structure
 
 %% END

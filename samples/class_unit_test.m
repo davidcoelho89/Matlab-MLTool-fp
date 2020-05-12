@@ -2,7 +2,7 @@
 
 % Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2020/02/02
+% Last Update: 2020/05/11
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,34 +14,35 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 11;              % Which problem will be solved / used
-OPT.prob2 = 30;             % More details about a specific data set
-OPT.norm = 2;               % Normalization definition
-OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 02;              	% Number of repetitions of the algorithm
-OPT.hold = 2;               % Hold out method
-OPT.ptrn = 0.7;             % Percentage of samples for training
-OPT.file = 'fileX.mat';     % file where all the variables will be saved
+OPT.prob = 11;        	% Which problem will be solved / used
+OPT.prob2 = 30;       	% More details about a specific data set
+OPT.norm = 2;         	% Normalization definition
+OPT.lbl = 1;           	% Labeling definition
+OPT.Nr = 02;           	% Number of repetitions of the algorithm
+OPT.hold = 2;         	% Hold out method
+OPT.ptrn = 0.7;        	% Percentage of samples for training
+OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
 
-GSp.fold = 5;       % number of data partitions for cross validation
-GSp.type = 1;       % Takes into account just accuracy
-GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err (prototype-based models)
+GSp.fold = 5;           % number of data partitions for cross validation
+GSp.type = 1;           % Takes into account just accuracy
+GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE ALGORITHM
 
 % Handlers for classification functions
 
 class_name = 'Perceptron';
-class_train = @ps_train;
-class_test = @ps_classify;
+class_train = @mlp_train;
+class_test = @mlp_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
 HP.Ne = 200;       	% maximum number of training epochs
 HP.eta = 0.05;    	% Learning step
-HP.Von = 0;         % disable video 
+HP.Nh = 5;          % Number of hidden neurons
+HP.Von = 1;         % disable video 
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
@@ -56,7 +57,7 @@ DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-plot_data_pairplot(DATA);           % See pairplot of attributes
+% plot_data_pairplot(DATA);           % See pairplot of attributes
 
 %% ACCUMULATORS
 
@@ -156,35 +157,38 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 %% GRAPHICS - OF LAST TURN
 
-% Get Data
+% Get Data, Parameters, Statistics
 DATAf.input = [DATAtr.input, DATAts.input];
 DATAf.output = [DATAtr.output, DATAts.output];
+PAR = PAR_acc{r};
+STATS = STATS_ts_acc{r};
 
 % Classifier Decision Boundaries
-plot_class_boundary(DATAf,PAR_acc{r},class_test);
+plot_class_boundary(DATAf,PAR,class_test);
 
 % ROC Curve (one for each class)
-plot_stats_roc_curve(STATS_ts_acc{r});
+plot_stats_roc_curve(STATS);
 
-% Precision-Recall (one for each class
-plot_stats_precision_recall(STATS_ts_acc{r})
+% Precision-Recall (one for each class)
+plot_stats_precision_recall(STATS)
+
+% See Class Boundary Video (of last turn)
+% if (HP.Von == 1),
+%     VID = PAR_acc{r}.VID
+%     figure;
+%     movie(VID)
+% end
 
 %% SAVE VARIABLES AND VIDEO
 
 % % Save All Variables
 % save(OPT.file);
 % 
-% % See Class Boundary Video (of last turn)
-% if (HP.Von == 1),
-%     figure;
-%     movie(PAR_acc{r}.VID)
-% end
-% 
 % % Save Class Boundary Video (of last turn)
 % v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
 % v.FrameRate = 1;
 % open(v);
-% writeVideo(v,PAR_acc{r}.VID);
+% writeVideo(v,VID);
 % close(v);
 
 %% END

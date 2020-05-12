@@ -11,9 +11,9 @@ function [] = plot_stats_ssqe(ssqe_curve)
 %       PAR.
 %           W = weight's matrix             [c x p+1]
 %   Output:
-%       frame = struct containing 'cdata' and 'colormap'
+%       "void" (print a graphic at screen)
 
-%% INITIALIZATION
+%% INITIALIZATIONS
 
 % Get parameters
 
@@ -35,5 +35,9 @@ ylabel('SSQE');
 axis ([0 N min_ssqe-0.1 max_ssqe+0.1]);
 plot(xaxis,ssqe_curve);
 hold off
+
+%% FILL OUTPUT STRUCTURE
+
+% Don't have output structure
 
 %% END

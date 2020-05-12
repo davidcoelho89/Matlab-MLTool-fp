@@ -158,7 +158,7 @@ VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
 
 %% ALGORITHM
 
-% Assign grid positions
+% Assign grid positions (R)
 Nk_lenght = length(Nk);
 if (Nk_lenght == 1),
     R = 1:Nk;

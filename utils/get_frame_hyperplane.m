@@ -1,8 +1,8 @@
-function [] = plot_class_boundary(DATA,PAR,class_test,OPTION)
+function [frame] = get_frame_hyperplane(DATA,PAR,class_test,OPTION)
 
-% --- Plot Boundary for Any Classifiers functions ---
+% --- Get current frame for Any Classifiers functions ---
 %
-%   [] = plot_class_boundary(DATA,PAR,class_test,OPTION)
+%   [frame] = get_frame_hyperplane(DATA,PAR,class_test,OPTION)
 %
 %   Input:
 %       DATA.
@@ -14,7 +14,7 @@ function [] = plot_class_boundary(DATA,PAR,class_test,OPTION)
 %           p1 = first attribute                [cte]
 %           p2 = second attribute               [cte]
 %   Output:
-%       "void" (print a graphic at screen)
+%       frame = struct containing 'cdata' and 'colormap'
 
 %% INITIALIZATION
 
@@ -47,16 +47,6 @@ count = 0;                  % count number of points from hyperplane
 
 %% ALGORITHM
 
-% Begin Figure
-figure;
-hold on
-
-% Define figure properties
-s1 = 'Attribute ';  s2 = int2str(p1);    s3 = int2str(p2);
-xlabel(strcat(s1,s2));
-ylabel(strcat(s1,s3));
-title('Model Boundary and Data')
-
 % Define grid
 xaxis_values = linspace(x1_min,x1_max,grid_len);
 yaxis_values = linspace(x2_min,x2_max,grid_len);
@@ -86,19 +76,20 @@ for i = 1:grid_len,
     end
 end
 
-% Plot Hyperplane points
-hyperplane = hp(:,1:count);  % just get points that were saved
+% Clear current axis
+cla;
+
+% Plot Hyperplane points (just the saved ones)
+hyperplane = hp(:,1:count);
 plot(hyperplane(1,:),hyperplane(2,:),'k.')
+hold on
 axis([x1_min - 0.1 , x1_max + 0.1 , x2_min - 0.1 , x2_max + 0.1])
 
 % Plot Data points
 plot(X(p1,:),X(p2,:),'r.')
-
-% Finish Figure
 hold off
 
-%% FILL OUTPUT STRUCTURE
-
-% Don't have output structure
+% Get frame
+frame = getframe;
 
 %% END

@@ -8,14 +8,15 @@ function plot_data_pairplot(DATA,label,mode)
 %       DATA.
 %           input = input matrix                        [p x N]
 %           output = output matrix                      [1 x N]
-%
-%       label = cell with the names of the attributes   [1 x p]
-%       mode = how the pairplot will be
+%       label = cell with attributes' names             [1 x p]
+%       mode = how the pairplot will be                 [string]
 %           'histogram'
 %           'bar'
 %           'cdf'
 %           'both'
-%   
+%   Output:
+%       "void" (print a graphic at screen)
+%
 %   P.S.: Adapted from: Ryosuke Takeuchi 2016/12/22 - 2017-01-24
 
 %% INITIALIZATIONS
@@ -79,8 +80,8 @@ for i = 1:p
                         bar(bin, counts, 'BarWidth', 1, 'FaceColor', colors(c,:))
                         xlim([bin(1) bin(end)]);
                     case 'histogram'
-                        histogram(X(Y == c, i), bin, 'FaceColor', colors(c,:), ...
-                                  'Normalization', 'probability');
+                        histogram(X(Y == c, i), bin, 'FaceColor', ...
+                                  colors(c,:), 'Normalization', 'probability');
                         xlim([bin(1) bin(end)])
                     case 'cdf'
                         [f, x] = ecdf(X(Y == c, i));
@@ -99,5 +100,9 @@ end
 % Finish Figure
 
 hold off
+
+%% FILL OUTPUT STRUCTURE
+
+% Don't have output structure
 
 %% END

@@ -1,22 +1,30 @@
-function [frame] = hyperplane_frame(W,DATA)
+function [frame] = get_frame_hyperplane_lin(DATA,W,OPTION)
 
-% --- Save current frame for Linear Classifiers functions ---
+% --- Get current frame for Linear Classifiers functions ---
 %
-%   [frame] = save_frame(C,DATA)
+%   [frame] = get_frame_hyperplane_lin(DATA,W,OPTION)
 %
 %   Input:
-%       W = weight's matrix [c x p+1]
 %       DATA.
 %           input = input matrix [p x N]
 %           output = output matrix [c x N]
+%       W = weight's matrix [c x p+1]
+%       OPTION.
+%           p1 = first attribute         	[cte]
+%           p2 = second attribute          	[cte]
 %   Output:
 %       frame = struct containing 'cdata' and 'colormap'
 
 %% INITIALIZATION
 
 % chosen attributes
-p1 = 1;
-p2 = 2;
+if(nargin == 2),
+    p1 = 1;
+    p2 = 2;
+else
+    p1 = OPTION.p1;
+    p2 = OPTION.p2;
+end
 
 % Get the 2 attributes of input data
 x = DATA.input([p1 p2],:);
@@ -28,14 +36,13 @@ x2_min = min(x(2,:));
 x2_max = max(x(2,:));
 
 % chosen neuron
-neu = 1;
+prot = 1;
 
 % Get neuron and bias
-w = W(neu, [p1+1 p2+1]);
-b = W(neu, 1);
+w = W(prot, [p1+1 p2+1]);
+b = W(prot, 1);
 
 %% ALGORITHM
-
 
 % Axis of hyperplane
 h_x1 = linspace(x1_min,x1_max,10);

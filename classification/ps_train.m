@@ -60,7 +60,7 @@ else
     W = 0.01*rand(Nc,p+1);  % else, initialize with small random numbers
 end
 
-% add bias to input matrix [x0 = +1]
+% Add bias to input matrix [x0 = +1]
 X = [ones(1,N);X];          
 
 % Initialize Video Structure
@@ -72,7 +72,7 @@ for ep = 1:Nep,
 
     % Save frame of the current epoch
     if (Von),
-        VID(ep) = hyperplane_frame(W,DATA);
+        VID(ep) = get_frame_hyperplane_lin(DATA,W);
     end
     
     % Shuffle Data

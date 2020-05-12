@@ -23,12 +23,12 @@
 
 %% Sea Concepts
 
-test_sea_isk2nn;
-
 % 25: 200k x 03 x 02
 % label noise (10%)
 % f1 + f2 = b; b is changing each 5000 samples.
 % Abrupt drift
+
+test_sea_isk2nn;
 
 %% Rotating Hyperplane
 

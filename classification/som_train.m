@@ -48,8 +48,8 @@ function [PARout] = som_train(DATA,PAR)
 %               = 0 -> non-kernelized algorithm
 %   Output:
 %       PARout.
-%       	Cx = clusters centroids (prototypes)            [p x Nk(1) x ... x Nk(Nd)]
-%           Cy = class of each prototype/neuron             [Nc x Nk(1) x ... x Nk(Nd)]
+%       	Cx = clusters centroids (prototypes)            [p x Nk]
+%           Cy = class of each prototype/neuron             [Nc x Nk]
 %           ind = cluster index for each sample             [Nd x Ntr]
 %           SSE = Sum of Squared Errors for each epoch      [1 x Nep]
 %           VID = frame struct (played by 'video function')	[1 x Nep]

@@ -16,11 +16,13 @@ function [PARout] = mlp_train(DATA,PAR)
 %           Nlin = non-linearity           	                    [cte]
 %               1 -> Sigmoid                                    [0 e 1]
 %               2 -> Hyperbolic Tangent                         [-1 e +1]
+%           Von = enable or disable video                       [cte]
 %   Output:
 %       PARout.
 %           W{1} = Weight Matrix: Inputs to Hidden Layer        [Nh x p+1]
 %           W{2} = Weight Matrix: Hidden layer to output layer 	[No x Nh+1]
 %           MQEtr = Mean Quantization Error (learning curve)	[Ne x 1]
+%           VID = frame structure (can be played with 'video function')
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -30,6 +32,7 @@ if ((nargin == 1) || (isempty(PAR))),
     PARaux.eta = 0.05;     	% Learning Step
     PARaux.mom = 0.75;    	% Moment Factor
     PARaux.Nlin = 2;       	% Non-linearity
+    PARaux.Von = 0;         % disable video 
     PAR = PARaux;
     
 else
@@ -48,6 +51,9 @@ else
     if (~(isfield(PAR,'Nlin'))),
         PAR.Nlin = 2;
     end
+    if (~(isfield(PAR,'Von'))),
+        PAR.Von = 0;
+    end
 end
 
 %% INITIALIZATIONS
@@ -57,16 +63,16 @@ X = DATA.input;             % Input Matrix
 D = DATA.output;            % Output Matrix
 
 % Hyperparameters Initialization
-Ne = PAR.Ne;                % Number of training epochs
+Nep = PAR.Ne;           	% Number of training epochs
 Nh = PAR.Nh;                % Number of hidden neurons
 eta = PAR.eta;              % learning rate 
 mom = PAR.mom;              % Moment Factor
 Nlin = PAR.Nlin;            % Non-linearity
-
+Von = PAR.Von;              % Enable or disable video
 % Problem Initialization
 [No,~] = size(D);           % Number of Classes and Output Neurons
 [p,N] = size(X);            % attributes and samples
-MQEtr = zeros(1,Ne);        % Mean Quantization Error
+MQEtr = zeros(1,Nep);     	% Mean Quantization Error
 
 % Weight Matrices Initialization
 
@@ -87,10 +93,21 @@ W_old{2} = W{2};             	% necessary for moment factor
 % Add bias to input matrix
 X = [ones(1,N);X];              % x0 = +1
 
+% Initialize Video Structure
+VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
+
 %% ALGORITHM
 
-for ep = 1:Ne,   % for each epoch
+for ep = 1:Nep,   % for each epoch
 
+    % Update Parameters
+    PAR.W = W;
+    
+    % Save frame of the current epoch
+    if (Von),
+        VID(ep) = get_frame_hyperplane(DATA,PAR,@mlp_classify);
+    end
+    
     % Shuffle Data
     I = randperm(N);        
     X = X(:,I);     
@@ -134,9 +151,9 @@ for ep = 1:Ne,   % for each epoch
         
     end   % end of epoch
         
-        % Mean Squared Error of epoch
-        MQEtr(ep) = SQE/N;
-        
+    % Mean Squared Error of epoch
+    MQEtr(ep) = SQE/N;
+    
 end   % end of all epochs
 
 %% FILL OUTPUT STRUCTURE
@@ -144,5 +161,6 @@ end   % end of all epochs
 PARout = PAR;
 PARout.W = W;
 PARout.MQEtr = MQEtr;
+PARout.VID = VID;
 
 %% END

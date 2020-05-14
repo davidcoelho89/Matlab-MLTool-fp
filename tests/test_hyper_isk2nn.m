@@ -12,9 +12,9 @@ clc;            % Clear command window
 
 %% OPTIONS AND HYPERPARAMETERS - DEFAULT
 
-% DATASET: 26 (Rotating Hyperplane) / NORM: 3 (x-mean)/std / LBL: 1 [-1 +1]
+% DATASET: 26 (Rotating Hyperplane) / NORM: 0 (x-mean)/std / LBL: 1 [-1 +1]
 
-DATAopt =  struct('prob',26,'prob2',1,'norm',3,'lbl',1);
+DATAopt =  struct('prob',26,'prob2',1,'norm',0,'lbl',1);
 
 % HPO: 2 (accuracy and dictionary size)
 
@@ -40,9 +40,10 @@ HP_gs.sig2n = 0.001;
 
 %% KERNEL = LINEAR
 
-DATAopt.file = 'hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat';
+DATAopt.file = 'hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat';
           
-HHP_gs.v1 = 2.^linspace(-10,10,21);
+HP_gs.v1 = 2.^linspace(-10,10,21);
+HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 1;       
 HP_gs.sigma = 2;       
 HP_gs.gamma = 2;       
@@ -53,9 +54,10 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = GAUSSIAN
 
-DATAopt.file = 'hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';
+DATAopt.file = 'hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-4,3,8);
+HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 2;       
 HP_gs.sigma = 2.^linspace(-10,9,20);
 HP_gs.gamma = 2;       
@@ -66,9 +68,10 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = POLYNOMIAL
 
-DATAopt.file = 'hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat';
+DATAopt.file = 'hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-13,6,20);
+HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 3;       
 HP_gs.sigma = 2;
 HP_gs.gamma = [2,2.2,2.4,2.6,2.8,3];
@@ -79,9 +82,10 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = CAUCHY
 
-DATAopt.file = 'hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat';
+DATAopt.file = 'hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-4,3,8);
+HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 5;       
 HP_gs.sigma = 2.^linspace(-10,9,20);
 HP_gs.gamma = 2;
@@ -92,9 +96,10 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = SIGMOID
 
-DATAopt.file = 'hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat';
+DATAopt.file = 'hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-13,6,20);
+HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 7;       
 HP_gs.sigma = 2;
 HP_gs.gamma = 2;

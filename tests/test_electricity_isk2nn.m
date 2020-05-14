@@ -1,6 +1,6 @@
 %% Machine Learning ToolBox
 
-% Rialto and isk2nn classifier (using isk2nn pipeline)
+% Electricity and isk2nn classifier (using isk2nn pipeline)
 % Author: David Nascimento Coelho
 % Last Update: 2020/05/11
 
@@ -12,9 +12,9 @@ clc;            % Clear command window
 
 %% OPTIONS AND HYPERPARAMETERS - DEFAULT
 
-% DATASET: 38 (Rialto) / NORM: 0 (x-mean)/std / LBL: 1 [-1 +1]
+% DATASET: 34 (Electricity) / NORM: 3 (x-mean)/std / LBL: 1 [-1 +1]
 
-DATAopt =  struct('prob',38,'prob2',1,'norm',0,'lbl',1);
+DATAopt =  struct('prob',34,'prob2',1,'norm',3,'lbl',1);
 
 % HPO: 2 (accuracy and dictionary size)
 
@@ -40,7 +40,7 @@ HP_gs.sig2n = 0.001;
 
 %% KERNEL = LINEAR
 
-DATAopt.file = 'rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat';
+DATAopt.file = 'electricity_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat';
           
 HP_gs.v1 = 2.^linspace(-10,10,21);
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
@@ -54,7 +54,7 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = GAUSSIAN
 
-DATAopt.file = 'rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat';
+DATAopt.file = 'electricity_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-4,3,8);
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
@@ -68,7 +68,7 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = POLYNOMIAL
 
-DATAopt.file = 'rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat';
+DATAopt.file = 'electricity_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-13,6,20);
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
@@ -82,7 +82,7 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = CAUCHY
 
-DATAopt.file = 'rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat';
+DATAopt.file = 'electricity_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-4,3,8);
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
@@ -96,7 +96,7 @@ test_isk2nn_pipeline(DATAopt,HP_gs,PSpar);
 
 %% KERNEL = SIGMOID
 
-DATAopt.file = 'rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat';
+DATAopt.file = 'electricity_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat';
 
 HP_gs.v1 = 2.^linspace(-13,6,20);
 HP_gs.v2 = HP_gs.v1(end) + 0.001;

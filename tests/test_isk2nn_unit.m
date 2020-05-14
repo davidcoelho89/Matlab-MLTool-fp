@@ -57,6 +57,7 @@ HP.gamma = 2;               % polynomial order (poly 2 or 3)
 
 HP_gs = HP;
 HP_gs.v1 = 2.^linspace(-4,3,8);
+HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.sigma = 2.^linspace(-10,9,20);
 
 % Kernel Functions: 1 lin    / 2 gauss / 3 poly / 4 exp  /
@@ -183,8 +184,8 @@ for n = 1:Nttt,
     
     % Get current data
     
-    DATAn.input = DATA.input(:,n);
-    DATAn.output = DATA.output(:,n);
+    DATAn.input = DATAttt.input(:,n);
+    DATAn.output = DATAttt.output(:,n);
     [~,y_lbl] = max(DATAn.output);
     
     % Test  (classify arriving data with current model)

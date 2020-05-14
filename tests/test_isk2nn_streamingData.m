@@ -9,14 +9,7 @@
 % # code: # samples / # attributes / # classes
 % Brief Description
 
-%% LED
-
-% 32: 200k / 24 / 10
-% Atributes = 0 or 1. Represents a 7 segments display.
-% 17 Irrelevant Attributes. Which attribute is irrelevant: changes.
-% Incremental Drift.
-
-% test_led_isk2nn
+norm = 3;   % Normalization
 
 %% Sea Concepts
 
@@ -25,95 +18,121 @@
 % f1 + f2 = b; b is changing each 5000 samples.
 % Abrupt drift
 
-test_sea_isk2nn;
+OPT =  struct('prob',25,'prob2',1,'norm',norm,'lbl',1);
+test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Rotating Hyperplane
 
-% 200k x 10 x 02. 
+% 26: 200k / 10 / 02. 
 % Moving Hyperplane. Gradual Drift.
 
-test_hyper_isk2nn;
+OPT =  struct('prob',26,'prob2',1,'norm',norm,'lbl',1);
+test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% RBF Moving
 
-% 200k x 10 x 05. 
-% Moving RBFs. Different Mean. Gradual drift.
-
-% test_rbfmov_isk2nn;
+% % 27: 200k / 10 / 05. 
+% % Moving RBFs. Different Mean. Gradual drift.
+% 
+% OPT =  struct('prob',27,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% RBF Interchange
 
-% 200k x 02 x 15. 
+% 28: 200k / 02 / 15. 
 % Interchanging RBFs. Change Means. Abrupt drift.
 
-test_rbfint_isk2nn;
+OPT =  struct('prob',28,'prob2',1,'norm',norm,'lbl',1);
+test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Moving Squares
 
-% 200k x 02 x 04. 
-% Moving Squares. Gradual/Incremental drift.
-
-% test_squmov_isk2nn;
+% % 29: 200k / 02 / 04. 
+% % Moving Squares. Gradual/Incremental drift.
+% 
+% OPT =  struct('prob',29,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Transient Chessboard
 
-% 200k x 02 x 08. 
-% Virtual Reocurring drifts.
-
-% test_chess_isk2nn
+% % 30: 200k / 02 / 08. 
+% % Virtual Reocurring drifts.
+% 
+% OPT =  struct('prob',30,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Mixed Drift
 
-% 600k x 02 x 15. 
-% Various drifts.
+% % 31: 600k / 02 / 15. 
+% % Various drifts.
+% 
+% OPT =  struct('prob',31,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
-% test_mixed_isk2nn;
+%% LED
+
+% % 32: 200k / 24 / 10
+% % Atributes = 0 or 1. Represents a 7 segments display.
+% % 17 Irrelevant Attributes. Which attribute is irrelevant: changes.
+% % Incremental Drift.
+% 
+% OPT =  struct('prob',32,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Weather
 
-% 18159 x 08 x 02
+% 33: 18159 / 08 / 02
 % Virtual Drift
 
-test_weather_isk2nn;
+OPT =  struct('prob',33,'prob2',1,'norm',norm,'lbl',1);
+test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Electricity
 
-% 45312 x 08 x 02
-% Real Drift
-
-% test_electricity_isk2nn;
+% % 34: 45312 / 08 / 02
+% % Real Drift
+% 
+% OPT =  struct('prob',34,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Cover Type
 
-% 581012 x 54 x 07
-% Real Drift
-
-% test_covertype_isk2nn;
+% % 35: 581012 / 54 / 07
+% % Real Drift
+% 
+% OPT =  struct('prob',35,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Poker Hand
 
-% 829201 x 10 x 10
-% Virtual Drift
-
-% test_poker_isk2nn;
+% % 36: 829201 / 10 / 10
+% % Virtual Drift
+% 
+% OPT =  struct('prob',36,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Outdoor
 
-% 4000 x 21 x 40
-% Virtual Drift
-
-% test_outdoor_isk2nn;
+% % 37: 4000 / 21 / 40
+% % Virtual Drift
+% 
+% OPT =  struct('prob',37,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Rialto
 
-% 82250 x 27 x 10
+% 38: 82250 / 27 / 10
 % Virtual Drift
 
-test_rialto_isk2nn;
+OPT =  struct('prob',38,'prob2',1,'norm',norm,'lbl',1);
+test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Spam
 
+% % 39: 
+% % Real Drift
 % 
-% 
+% OPT =  struct('prob',39,'prob2',1,'norm',norm,'lbl',1);
+% test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% END

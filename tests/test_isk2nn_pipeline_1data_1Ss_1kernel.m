@@ -1,10 +1,13 @@
-function [] = test_isk2nn_pipeline(OPT,HPgs,PSp)
+function [] = test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
 
-% --- Pipeline used to test isk2nn model with any dataset ---
+% --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
 %
-%   [HPoptm] = grid_search_ttt(DATA,HPgs,f_train,f_class,PSp)
+%   [] = test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
 %
 %   Input:
+%       DATA.
+%           input = attributes matrix                   [p x N]
+%           output = labels matrix                      [Nc x N]
 %       OPT.
 %           prob = which dataset will be used
 %           prob2 = a specification of the dataset
@@ -12,7 +15,7 @@ function [] = test_isk2nn_pipeline(OPT,HPgs,PSp)
 %           lbl = which labeling strategy will be used
 %       HPgs = hyperparameters for grid searh of classifier
 %             (vectors containing values that will be tested)
-%       PSpar.
+%       PSp.
 %           iterations = number of times the data is 
 %                        presented to the algorithm
 %           type = type of cross validation                         [cte]
@@ -22,11 +25,9 @@ function [] = test_isk2nn_pipeline(OPT,HPgs,PSp)
 %   Output:
 %       "Do not have. Just save structures into a file"
 
-%% DATA LOADING AND PRE-PROCESSING
+%% DATA PRE-PROCESSING AND HOLD OUT
 
-% Load Dataset and Adjust its Labels
-
-DATA = data_class_loading(OPT);     % Load Data Set
+% Adjust Dataset Labels and Get its Dimensions
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 

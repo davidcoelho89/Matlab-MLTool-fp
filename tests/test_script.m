@@ -35,15 +35,6 @@ format long e;
 
 % testNargin(1,[],3)
 
-%% Save a Video (from structure)
-
-% Video
-% v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
-% v.FrameRate = 2;
-% open(v);
-% writeVideo(v,PAR_acc{r}.VID);
-% close(v);
-
 %% Permute and Reshape Matrices
 
 % if (length(size(C)) == 3),
@@ -101,16 +92,6 @@ format long e;
 
 % With Optimization Method and Cross Validation
 % [BAYp] = hp_optm_cv1(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
-
-%% Classify - Plots
-
-% % Plot Decision boundary (for linear classifiers)
-% figure;
-% plot_class_boundary_lin(DATA,PAR);
-% 
-% % Plot Decision boundary (of any classifier)
-% figure;
-% plot_class_boundary_all(DATA,PAR,class_test);
 
 %% Inverse Test - update one element (Sherman-Morrison 1950)
 

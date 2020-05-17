@@ -126,7 +126,8 @@ format long e;
 %         elseif (j == R),
 %             B1(r,R) = b(r,R) / (1 + b(S,R)*delta_ars);
 %         else
-%             B1(r,j) = b(r,j) - (b(r,R)*b(S,j)*delta_ars)/(1 + b(S,R)*delta_ars);
+%             B1(r,j) = b(r,j) - ...
+%                      (b(r,R)*b(S,j)*delta_ars)/(1 + b(S,R)*delta_ars);
 %         end
 %     end
 % end
@@ -134,10 +135,6 @@ format long e;
 % % Calculate inverse of A directly
 % 
 % B2 = inv(A);
-
-%% Inverse Test - Update one line and one column ()
-
-% ToDo - All
 
 %% Inverse Test - Remove one line and one column (Juarez-Ruiz 2016)
 
@@ -240,6 +237,11 @@ format long e;
 %     Km1 = kernel_mat(Dx,PAR);
 %     Kinv1 = pinv(Km1);
 % end
+
+%% Inverse Test - Update one line and one column ()
+
+% ToDo - All
+% Now: remove "old line and old column" and add "new line and new column"
 
 %% Write to Excel or Text Software
 
@@ -829,31 +831,34 @@ plot(Nprots,Accs,'k.');
 
 %% Results Analysis (Ps - 1, Hpo - 1, Norm - 3, Class - nn )
 
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn2.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn2.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn2.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn2.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn2.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn2.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn2.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn2.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn2.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn2.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn2.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn2.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn2.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn2.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn2.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn2.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn2.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn2.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn2.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn2.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn2.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn2.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn2.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn2.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn2.mat');
+clear;
+clc;
+
+% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
 
 % x = 1:Nttt;
 % 

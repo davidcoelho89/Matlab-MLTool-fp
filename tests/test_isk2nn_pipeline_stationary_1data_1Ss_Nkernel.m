@@ -1,8 +1,8 @@
-function [] = test_isk2nn_pipeline_1data_1Ss_Nkernel(OPT)
+function [] = test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT)
 
 % --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
 %
-%   [] = test_isk2nn_pipeline_1data_1Ss_1kernel(OPT,HPgs,PSp)
+%   [] = test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT,HPgs,PSp)
 %
 %   Input:
 %       OPT.
@@ -19,9 +19,9 @@ DATA = data_class_loading(OPT);
 
 %% CROSS VALIDATION OPTIONS
 
-PSpar.iterations = 1;  % number of times data is presented to the algorithm
-PSpar.type = 2;        % Takes into account also the dicitionary size
-PSpar.lambda = 0.5;    % Jpbc = Ds + lambda * Err
+CVp.fold = 5;       % number of data partitions for cross validation
+CVp.type = 2;       % Takes into account also the dicitionary size
+CVp.lambda = 2; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
@@ -71,7 +71,7 @@ HP_gs.theta = 1;
 OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
-test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = GAUSSIAN
 
@@ -89,7 +89,7 @@ OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
 
-test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = POLYNOMIAL
 
@@ -106,7 +106,7 @@ HP_gs.theta = 1;
 OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
-test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = EXPONENTIAL
 
@@ -124,7 +124,7 @@ test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 %                   str9,str10,str11,str12,str13,str14);
 % 
 % 
-% test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = CAUCHY
 
@@ -141,7 +141,7 @@ HP_gs.theta = 1;
 OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
-test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = LOG
 
@@ -158,7 +158,7 @@ test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 % OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
 %                   str9,str10,str11,str12,str13,str14);
 % 
-% test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = SIGMOID
 
@@ -176,7 +176,7 @@ HP_gs.theta = 0.1;
 OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
-test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% KERNEL = KMOD
 
@@ -193,6 +193,6 @@ test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 % OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
 %                   str9,str10,str11,str12,str13,str14);
 % 
-% test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% test_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
 %% END

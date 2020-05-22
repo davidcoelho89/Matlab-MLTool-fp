@@ -88,10 +88,10 @@ format long e;
 %% Hyperparameters Optimization Functions
 
 % With Grid Search Method and Cross Validation
-% [BAYp] = grid_search_cv1(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
+% [HP] = grid_search_cv(DATAtr,HPcv,@gauss_train,@gauss_classify,CVp);
 
 % With Optimization Method and Cross Validation
-% [BAYp] = hp_optm_cv1(DATAtr,CVp,BAYcv,@gauss_train,@gauss_classify);
+% [HP] = hp_optm_cv(DATAtr,HPcv,@gauss_train,@gauss_classify,CVp);
 
 %% Inverse Test - update one element (Sherman-Morrison 1950)
 
@@ -477,10 +477,14 @@ format long e;
 
 %% SUBPLOT
 
-% subplot(2,2,1), plot(Validation.FPE_index,'x-'), title('FPE'), xlabel('K'), ylabel('Critério')
-% subplot(2,2,2), plot(Validation.AIC_index,'x-'), title('AIC'), xlabel('K'), ylabel('Critério')
-% subplot(2,2,3), plot(Validation.BIC_index,'x-'), title('BIC'), xlabel('K'), ylabel('Critério')
-% subplot(2,2,4), plot(Validation.MDL_index,'x-'), title('MDL'), xlabel('K'), ylabel('Critério')
+% subplot(2,2,1), plot(Validation.FPE_index,'x-'), ...
+% title('FPE'), xlabel('K'), ylabel('Critério')
+% subplot(2,2,2), plot(Validation.AIC_index,'x-'), ...
+% title('AIC'), xlabel('K'), ylabel('Critério')
+% subplot(2,2,3), plot(Validation.BIC_index,'x-'), ... 
+% title('BIC'), xlabel('K'), ylabel('Critério')
+% subplot(2,2,4), plot(Validation.MDL_index,'x-'), ...
+% title('MDL'), xlabel('K'), ylabel('Critério')
 
 %% Distance Between Samples (for novelty criterion)
 
@@ -771,7 +775,7 @@ format long e;
 % figure; pairplot(DATA,label);
 % figure; pairplot(DATA,label,'histogram');
 
-%% Results Analysis (Ps - 1, Hpo - 0, Norm - 0, Class - nn )
+%% Results Analysis - Streaming Data - HPO: 0
 
 % Analysis measures
 
@@ -829,36 +833,68 @@ plot(Nprots,Accs,'k.');
 % thetas(indexes),
 % gammas(indexes),
 
-%% Results Analysis (Ps - 1, Hpo - 1, Norm - 3, Class - nn )
+%% Results Analysis - Streaming Data - HPO: 1
 
 clear;
 clc;
 
-% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('sea_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('hyper_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('rialto_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('weather_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% Dm - 2 Hpo - 1, Norm - 3, Class - nn, Ss - 1, Us - 1, Ps - 2
+
+% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
+% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
+% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
+% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
+% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
 
 % x = 1:Nttt;
 % 
@@ -921,6 +957,10 @@ vetor = [Ktype,Acc,Nprot,v1,sigma,alpha,theta,gamma];
 % OUTttt.y_h = predict_vector;
 % STATS = class_stats_1turn(DATAttt,OUTttt);
 
+%% Results Analysis - Stationary Data - HPO: 1
+
+
+
 %% Weighted Knn
 
 K = 5;
@@ -965,6 +1005,10 @@ end
 % ToDo - All
 
 %% Mixture of Gaussians (MOG)
+
+% ToDo - All
+
+%% Decision Trees - Info Theory Based
 
 % ToDo - All
 

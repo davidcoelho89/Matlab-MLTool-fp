@@ -1,8 +1,8 @@
-function [] = test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
+function [] = test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
 
 % --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
 %
-%   [] = test_isk2nn_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
+%   [] = test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
 %
 %   Input:
 %       DATA.

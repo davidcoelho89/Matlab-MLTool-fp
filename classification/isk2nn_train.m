@@ -28,9 +28,6 @@
 %               = 0 -> do not remove prototypes
 %               = 1 -> score-based method 1 (drift based)
 %               = 2 -> score-based method 2 (hits and errors)
-%               = 3 -> Matching-pursuit (rem prot, verify error) - ToDo
-%               = 4 -> Penalization (build lssvm, rem prot) - ToDo
-%               = 5 -> FBS - forward-backward - ToDo
 %           min_score = score that leads to prune prototype     [cte]
 %           max_prot = max number of prototypes ("Budget")      [cte]
 %           min_prot = min number of prototypes ("restriction") [cte]
@@ -226,9 +223,9 @@ for t = 1:N,
     % Update Strategy (just update if prototype was not added)
     if(mt2-mt1 == 0),
         PAR = isk2nn_dict_updt(DATAn,PAR);
-    else
-        % For debug. Display dictionary size when it grows.
-        display(mt2);
+%     else
+%         % For debug. Display dictionary size when it grows.
+%         display(mt2);
     end
     
     % Prunning Strategy (heuristic based)

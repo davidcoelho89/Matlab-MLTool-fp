@@ -1,6 +1,6 @@
 %% Machine Learning ToolBox
 
-% Sample used to run isk2nn and a DataSet
+% Sample used to run isk2nn and a Streaming DataSet
 % Author: David Nascimento Coelho
 % Last Update: 2020/05/11
 
@@ -14,8 +14,6 @@ format long e;  % Output data style (float)
 
 % General Datasets / Problems:
 
-% 6 - iris / 7 - motor failure / 10 - Vertebral Column / 
-% 19 - cervical cancer / 20 - Sensorless Drive / 22 - Wall Following /
 % 25 - sea / 26 - Hyper / 27 - RBFmov / 28 - RBFint / 29 - Squares /
 % 30 - chess / 31 - mixed / 32 - led / 33 - weather / 34 - electricity / 
 % 35 - cover / 36 - poker / 37 - outdoor / 38 - rialto / 39 - spam
@@ -53,7 +51,7 @@ HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
 HP.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
 HP.gamma = 2;               % polynomial order (poly 2 or 3)
 
-%% HYPERPARAMETERS - FOR GRID SEARCH
+%% HYPERPARAMETERS - FOR OPTIMIZATION
 
 HP_gs = HP;
 HP_gs.v1 = 2.^linspace(-4,3,8);
@@ -128,7 +126,7 @@ prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
                                     
 VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
-%% GRID SEARCH + CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
+%% GRID SEARCH FOR HYPERPARAMETERS OPTIMIZATION
 
 display('begin grid search')
 

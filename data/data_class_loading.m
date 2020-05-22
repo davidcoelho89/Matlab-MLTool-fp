@@ -129,7 +129,7 @@ switch (choice),
         DATA.output = spine(:,7:9)';
         DATA.lbl = DATA.output;
         OPT.lbl = 3;
-        DATA = label_adjust(DATA,OPT);
+        DATA = label_encode(DATA,OPT);
         if OPTION.prob2 == 2,
             DATA.output(1:210) = 2;
             DATA.output(211:end) = 1;

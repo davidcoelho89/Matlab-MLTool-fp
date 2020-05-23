@@ -1,6 +1,6 @@
  function [PAR] = isk2nn_train(DATA,HP)
  
- % --- Incremental Sparse Kernel KNN Prototype-Based Training Function ---
+% --- Incremental Sparse Kernel KNN Prototype-Based Training Function ---
 %
 %   [PAR] = isk2nn_train(DATA,HP)
 % 
@@ -179,16 +179,16 @@ yh = -1*ones(Nc,N);
 
 % Update Dictionary
 
-for t = 1:N,
+for n = 1:N,
     
     % Save frame of the current epoch
     if (Von),
-        VID(t) = prototypes_frame(PAR.Cx,DATA);
+        VID(n) = prototypes_frame(PAR.Cx,DATA);
     end
     
 	% Get sample
-    DATAn.input = X(:,t);
-    DATAn.output = Y(:,t);
+    DATAn.input = X(:,n);
+    DATAn.output = Y(:,n);
 
     % Get dictionary size (cardinality, number of prototypes)
     [~,mt1] = size(PAR.Cx);
@@ -196,7 +196,7 @@ for t = 1:N,
     % Init Dictionary (if it is the first sample)
     if (mt1 == 0),
         % Make a guess (yh = 1 => first class)
-        yh(1,t) = 1;
+        yh(1,n) = 1;
         % Add sample to dictionary
         PAR = isk2nn_dict_grow(DATAn,PAR);
         % Update number of times this prototype has been selected
@@ -206,7 +206,7 @@ for t = 1:N,
     
     % Predict Output
     OUTn = isk2nn_classify(DATAn,PAR);
-    yh(:,t) = OUTn.y_h;
+    yh(:,n) = OUTn.y_h;
     
     % Update number of times a prototype has been selected
     win = OUTn.win;

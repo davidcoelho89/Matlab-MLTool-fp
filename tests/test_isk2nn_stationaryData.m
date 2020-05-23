@@ -26,21 +26,21 @@ ptrn = 0.7;	% Percentage of samples for training
 
 %% Motor Failure
 
-% 07: 504 / 06 / 02
-% Motor Failure: Short-circuit
-
-OPT =  struct('prob',07,'prob2',2,'norm',norm,'lbl',lbl, ...
-              'Nr',Nr,'hold',hold,'ptrn',ptrn);
-test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% % 07: 504 / 06 / 02
+% % Motor Failure: Short-circuit
+% 
+% OPT =  struct('prob',07,'prob2',2,'norm',norm,'lbl',lbl, ...
+%               'Nr',Nr,'hold',hold,'ptrn',ptrn);
+% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
 
 %% Vertebral Column
 
-% % 10: xx / xx / xx
-% % Images of Vertebral Columns in order to find deseases
-% 
-% OPT =  struct('prob',10,'prob2',2,'norm',norm,'lbl',lbl, ...
-%               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% 10: xx / xx / xx
+% Images of Vertebral Columns in order to find deseases
+
+OPT =  struct('prob',10,'prob2',2,'norm',norm,'lbl',lbl, ...
+              'Nr',Nr,'hold',hold,'ptrn',ptrn);
+test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
 
 %% Cervical Cancer
 

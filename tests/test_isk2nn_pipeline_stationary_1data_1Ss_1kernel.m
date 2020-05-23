@@ -120,7 +120,7 @@ nSTATS_all{2,1} = nSTATS_ts;
 
 % Compare Training and Test Statistics
 
-class_stats_ncomp(nSTATS_all,NAMES);
+% class_stats_ncomp(nSTATS_all,NAMES);
 
 %% SAVE FILE
 

@@ -35,9 +35,9 @@ Y = DATA.output;     	% labels Matriz [Nc x N]
 % Get HyperParameters
 
 if (nargin == 4),
-    CVp.fold = 5;
-    CVp.type = 1;
-    CVp.lambda = 0.5;
+    CVp.fold = 5;       % 5-fold cross-validation
+    CVp.type = 1;       % just takes into account accuracy
+    CVp.lambda = 0.5;   % More weight for dictionary size
 end
 
 Nfold = CVp.fold;     	% Number of data partitions
@@ -78,9 +78,8 @@ for fold = 1:Nfold;
     
     % Accumulate Number of Prototypes (for prototype-based classifiers)
     if (type == 2),
-        size_Cx = size(PAR.Cx);
-        Ds_fold = prod(size_Cx(2:end));
-        Ds = Ds + Ds_fold;
+        [~,Nk] = size(PAR.Cx);
+        Ds = Ds + Nk;
     end
 
     % Test of classifier

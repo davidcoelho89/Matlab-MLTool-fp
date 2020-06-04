@@ -57,6 +57,14 @@
 
 DATA = struct('input',[],'output',[],'lbl',[]);
 
+if(nargin == 0),
+    OPTION.prob = 6;
+else
+    if (~(isfield(OPTION,'prob'))),
+        OPTION.prob = 6;
+    end
+end
+
 choice = OPTION.prob;
 
 %% ALGORITHM

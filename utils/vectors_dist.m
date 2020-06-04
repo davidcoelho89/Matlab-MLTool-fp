@@ -24,12 +24,19 @@ function [d] = vectors_dist(x,y,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if (~(isfield(PAR,'dist'))),
-    PAR.dist = 2;
+if ((nargin == 2) || (isempty(PAR))),
+    PARaux.dist = 2;
+    PARaux.Ktype = 0;
+    PAR = PARaux;
+else
+    if (~(isfield(PAR,'dist'))),
+        PAR.dist = 2;
+    end
+    if (~(isfield(PAR,'Ktype'))),
+        PAR.Ktype = 0;
+    end
 end
-if (~(isfield(PAR,'Ktype'))),
-    PAR.Ktype = 0;
-end
+    
 
 %% INITIALIZATION
 
@@ -47,7 +54,7 @@ if(Ktype == 0),
     elseif (dist == 1), 	% Manhattam (City-block)
         d = sum(abs(x - y));
     elseif (dist == 2),     % Euclidean
-        d = sum((x - y).^2);
+        d = sqrt(sum((x - y).^2));
     elseif (dist == inf),   % Maximum Minkowski (Chebyshev)
         d = max(abs(x - y));
     elseif (dist == -inf),  % Minimum Minkowski

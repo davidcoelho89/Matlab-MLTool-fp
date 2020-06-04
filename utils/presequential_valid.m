@@ -115,9 +115,9 @@ restriction3 = gs_restriction_par_final(DATA,PAR,f_train);
 if (type == 1),
     
     if(restriction1 || restriction2 || restriction3),
-        metric = 1;         % Maximum Error
+        measure = 1;         % Maximum Error
     else
-        metric = error;     % Error Measure
+        measure = error;     % Error Measure
     end;
     
 elseif(type == 2),
@@ -126,20 +126,24 @@ elseif(type == 2),
     [~,Nk] = size(PAR.Cx);
     Ds = Ds + Nk / N;
     
+    % Display Restrictions (debug)
+%     fprintf('Restrictions: 1: %d / 2: %d / 3: %d \n',restriction1,...
+%             restriction2,restriction3);
+%     pause(5);
     if(restriction1 || restriction2 || restriction3),
-        metric = 1 + lambda;            % Maximum value
+        measure = 1 + lambda;            % Maximum value
     else
-        metric = Ds + lambda * error;   % Measure
+        measure = Ds + lambda * error;   % Measure
     end
     
 end
 
 %% FILL OUTPUT STRUCTURE
 
-PVout.PAR = PAR;        % Model parameters
-PVout.metric = metric;  % Metric using chosen hyperparemeters
-PVout.acc = accuracy;   % Accuracy of trained model
-PVout.err = error;      % Error of trained model
-PVout.Ds = Ds;          % 
+PVout.PAR = PAR;            % Model parameters
+PVout.measure = measure;    % Metric using chosen hyperparemeters
+PVout.acc = accuracy;       % Accuracy of trained model
+PVout.err = error;          % Error of trained model
+PVout.Ds = Ds;              % Dictionary Size
 
 %% END

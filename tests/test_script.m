@@ -840,11 +840,11 @@ clc;
 
 % Dm - 2 Hpo - 1, Norm - 3, Class - nn, Ss - 1, Us - 1, Ps - 2
 
-% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('chess_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
 % load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
 % load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
 % load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
@@ -855,11 +855,11 @@ clc;
 % load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
 % load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
 % load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
 % load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
 % load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
 % load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
@@ -870,11 +870,11 @@ clc;
 % load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
 % load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
 % load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
 % load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
 % load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
 % load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
@@ -885,11 +885,11 @@ clc;
 % load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
 % load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
 % load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
+% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
 % load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
 % load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
 % load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
@@ -944,6 +944,7 @@ clc;
 
 Ktype = PAR.Ktype;
 Acc = accuracy_vector(end);
+Err = 1 - Acc;
 [~,Nprot] = size(PAR.Cx);
 v1 = PAR.v1;
 sigma = PAR.sigma;
@@ -951,7 +952,7 @@ alpha = PAR.alpha;
 theta = PAR.theta;
 gamma = PAR.gamma;
 
-vetor = [Ktype,Acc,Nprot,v1,sigma,alpha,theta,gamma];
+vetor = [Ktype,Acc,Err,Nprot,v1,sigma,alpha,theta,gamma];
 % display(vetor);
 
 % OUTttt.y_h = predict_vector;
@@ -959,7 +960,19 @@ vetor = [Ktype,Acc,Nprot,v1,sigma,alpha,theta,gamma];
 
 %% Results Analysis - Stationary Data - HPO: 1
 
+[~,A] = max(DATAhpo.output);
+edges = unique(A);
+counts = histc(A(:), edges);
 
+DATA = DATAhpo;
+HPgs = HP_gs;
+f_train = @isk2nn_train;
+f_class = @isk2nn_classify;
+PSp = GSp;
+nargin = 5;
+
+[~,test] = max(PAR.Cy);
+he = sum(test == 1)
 
 %% Weighted Knn
 

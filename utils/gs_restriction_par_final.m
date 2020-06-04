@@ -24,12 +24,11 @@ restriction = 0;
 % Restrictions for isk2nn
 if (strcmp(algorithm_name,'isk2nn_train')),
     % Get Data
-    [~,Nc] = size(DATA.output);
+    [Nc,~] = size(DATA.output);
     % Get parameters
     [~,Nk] = size(PAR.Cx);
-    max_prot = PAR.max_prot;
-    % Verify Maximum number of prototypes
-    if (Nk <= Nc || Nk >= max_prot),
+    % Verify Minimum number of prototypes
+    if (Nk <= Nc),
         restriction = 1;
     end
 end

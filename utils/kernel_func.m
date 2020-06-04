@@ -36,6 +36,7 @@ else
     if (~(isfield(PAR,'Ktype'))),
         PAR.Ktype = 2;
     end
+    % Sigma
     if (~(isfield(PAR,'sigma'))),
         if (PAR.Ktype == 2),
             PAR.sigma = 0.1;
@@ -51,6 +52,7 @@ else
             PAR.sigma = 0.1;
         end
     end
+    % Gamma
     if (~(isfield(PAR,'gamma'))),
         if(PAR.Ktype == 3),
             PAR.gamma = 2;
@@ -60,6 +62,7 @@ else
             PAR.gamma = 3.5;
         end
     end
+    % alpha
     if (~(isfield(PAR,'alpha'))),
         if(PAR.Ktype == 3),
             PAR.alpha = 1;
@@ -68,6 +71,7 @@ else
         end
     else
     end
+    % theta
     if (~(isfield(PAR,'theta'))),
         if(PAR.Ktype == 1),
             PAR.theta = 0;

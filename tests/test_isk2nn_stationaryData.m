@@ -35,21 +35,21 @@ ptrn = 0.7;	% Percentage of samples for training
 
 %% Vertebral Column
 
-% 10: xx / xx / xx
-% Images of Vertebral Columns in order to find deseases
-
-OPT =  struct('prob',10,'prob2',2,'norm',norm,'lbl',lbl, ...
-              'Nr',Nr,'hold',hold,'ptrn',ptrn);
-test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% % 10: xx / xx / xx
+% % Images of Vertebral Columns in order to find deseases
+% 
+% OPT =  struct('prob',10,'prob2',2,'norm',norm,'lbl',lbl, ...
+%               'Nr',Nr,'hold',hold,'ptrn',ptrn);
+% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
 
 %% Cervical Cancer
 
-% % 19: 917 / 20 / 02
-% % Image of Pap-Smear Cells used to detect Cervical Cancer
-% 
-% OPT =  struct('prob',19,'prob2',2,'norm',norm,'lbl',lbl, ...
-%               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% 19: 917 / 20 / 02
+% Image of Pap-Smear Cells used to detect Cervical Cancer
+
+OPT =  struct('prob',19,'prob2',2,'norm',norm,'lbl',lbl, ...
+              'Nr',Nr,'hold',hold,'ptrn',ptrn);
+test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
 
 %% Wall-Following
 

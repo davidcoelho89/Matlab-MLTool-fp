@@ -2,7 +2,7 @@ function [STATS] = class_stats_1turn(DATA,OUT,BIN)
 
 % --- Provide Statistics of 1 turn of Classification ---
 %
-%   [STATS] = class_stats_1turn(OUT,OUT_h)
+%   [STATS] = class_stats_1turn(DATA,OUT,bin)
 % 
 %   Input:
 %    	DATA.

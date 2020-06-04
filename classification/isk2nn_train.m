@@ -223,9 +223,9 @@ for n = 1:N,
     % Update Strategy (just update if prototype was not added)
     if(mt2-mt1 == 0),
         PAR = isk2nn_dict_updt(DATAn,PAR);
-%     else
-%         % For debug. Display dictionary size when it grows.
-%         display(mt2);
+    else
+        % For debug. Display dictionary size when it grows.
+        display(mt2);
     end
     
     % Prunning Strategy (heuristic based)

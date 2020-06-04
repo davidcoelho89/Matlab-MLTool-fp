@@ -20,9 +20,9 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 06;              % Which problem will be solved / used
+OPT.prob = 38;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
-OPT.norm = 3;               % Normalization definition
+OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
 OPT.Nr = 01;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
@@ -36,7 +36,7 @@ HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.8;                % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
 HP.Us = 1;                  % Update strategy
-HP.eta = 0.01;              % Update rate
+HP.eta = 0.10;              % Update rate
 HP.Ps = 2;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
 HP.max_prot = 600;          % Max number of prototypes
@@ -54,6 +54,7 @@ HP.gamma = 2;               % polynomial order (poly 2 or 3)
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
 HP_gs = HP;
+
 HP_gs.v1 = 2.^linspace(-4,3,8);
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -108,7 +109,11 @@ DATAn.Xstd = std(DATA.input,[],2);
 
 %% DATA VISUALIZATION
 
-plot_data_pairplot(DATAhpo);        % See pairplot of attributes
+% plot_data_pairplot(DATAhpo);        % See pairplot of attributes
+
+% DATA1.input = DATA.input(:,4001:5000);
+% DATA1.output = DATA.output(:,4001:5000);
+% plot_data_pairplot(DATA1);
 
 %% ACCUMULATORS
 
@@ -132,13 +137,15 @@ display('begin grid search')
 
 % Grid Search Parameters
 
-GSp.iterations = 1; % number of times data is presented to the algorithm
-GSp.type = 2;       % Takes into account also the dicitionary size
-GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err
+GSp.iterations = 01; % number of times data is presented to the algorithm
+GSp.type = 2;        % Takes into account also the dicitionary size
+GSp.lambda = 2; 	 % Jpbc = Ds + lambda * Err
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
 PAR = grid_search_ttt(DATAhpo,HP_gs,@isk2nn_train,@isk2nn_classify,GSp);
+
+% PAR.max_prot = 1000;
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
@@ -220,6 +227,11 @@ for n = 1:Nttt,
     end
     
 end
+
+%% STATS
+
+OUT.y_h = predict_vector;
+STATS = class_stats_1turn(DATAttt,OUT);
 
 %% PLOTS
 

@@ -52,37 +52,37 @@ if (Ps == 0),
 
     % Does nothing
 
-elseif (Ps == 1),
+elseif (Ps == 1 || Ps == 2),
 
     [~,Dy_seq] = max(Dy);	% get sequential label of dictionary
 
     for k = 1:m,
-
-        % number of elements from the same class as the prototypes'
-        c = Dy_seq(k);
-        mc = sum(Dy_seq == c);
-
-        % dont rem element if it is the only element of its class
-        if (mc == 1),
-            continue;
-        end
-
-        % Remove Prototype from dictionary (just one per loop)
         if (score(k) < min_score),
+            
+            % number of elements from the same class as the prototypes'
+            c = Dy_seq(k);
+            mc = sum(Dy_seq == c);
+
+            % dont rem element if it is the only element of its class
+            if (mc == 1),
+                continue;
+            end
+            
+            % Remove Prototype from dictionary (just one per loop)
             HP = isk2nn_rem_sample(HP,k);
             break;
         end
     end
 
-elseif(Ps == 2),
-
-    for k = 1:m,
-        % Remove Prototype from dictionary (just one per loop)
-        if (score(k) < min_score),
-            HP = isk2nn_rem_sample(HP,k);
-            break;
-        end
-    end
+% elseif(Ps == 2),
+% 
+%     for k = 1:m,
+%         % Remove Prototype from dictionary (just one per loop)
+%         if (score(k) < min_score),
+%             HP = isk2nn_rem_sample(HP,k);
+%             break;
+%         end
+%     end
 
 end
 

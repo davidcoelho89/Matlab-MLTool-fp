@@ -960,9 +960,13 @@ vetor = [Ktype,Acc,Err,Nprot,v1,sigma,alpha,theta,gamma];
 
 %% Results Analysis - Stationary Data - HPO: 1
 
+[~,A] = max(DATA.output);
+edges = unique(A);
+counts1 = histc(A(:), edges);
+
 [~,A] = max(DATAhpo.output);
 edges = unique(A);
-counts = histc(A(:), edges);
+counts2 = histc(A(:), edges);
 
 DATA = DATAhpo;
 HPgs = HP_gs;
@@ -972,7 +976,7 @@ PSp = GSp;
 nargin = 5;
 
 [~,test] = max(PAR.Cy);
-he = sum(test == 1)
+he = sum(test == 1);
 
 %% Weighted Knn
 
@@ -1008,6 +1012,12 @@ for t = 2:N,
     Xvar_rec = ((t-1)/t)*Xvar_rec + (1/(t-1))*(x(t)-Xmean_rec)^2;
     Xstd_rec = sqrt(Xvar_rec);
 end
+
+%% Bar graph
+
+x = categorical({'C','E'});
+y = [1 3];
+bar(x,y,0.5)
 
 %% Eigenfaces and FisherFaces Test
 

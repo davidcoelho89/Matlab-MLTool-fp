@@ -28,6 +28,7 @@ function [PAR] = isk2nn_dict_grow(DATA,HP)
 %               = 4 -> Surprise
 %           v1 = Sparseness parameter 1                         [cte]
 %           v2 = Sparseness parameter 2                         [cte]
+%           max_prot = max number of prototypes ("Budget")      [cte]
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sig2n = kernel regularization parameter             [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
@@ -57,6 +58,7 @@ function [PAR] = isk2nn_dict_grow(DATA,HP)
 
 Dm = HP.Dm;           	% Design method
 Ss = HP.Ss;            	% Sparsification Strategy
+max_prot = HP.max_prot; % Max number of prototypes
 
 % Get Dictionary Prototypes
 
@@ -84,34 +86,39 @@ mc = sum(Cy_seq == c);	% Number of prototypes from samples' class
 if (m == 0 || (Dm == 2 && mc == 0)),
     
     HP = isk2nn_add_sample(DATA,HP);
+    fprintf('1o prototipo de uma classe...\n');
     
 else
-    
-    % Get Dictionary Samples and Inverse Kernel Matrix
-    if (Dm == 1),
-        Dx = Cx;
-        Dy = Cy;
-        Kinv = HP.Kinv;
-    elseif (Dm == 2),
-        Dx = Cx(:,Cy_seq == c);
-        Dy = Cy(:,Cy_seq == c);
-        Kinv = HP.Kinvc{c};
-    end
-    
-    % Get criterion result
-    if Ss == 1,
-        OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
-    elseif Ss == 2,
-        OUTcrit = coherence_criterion(Dx,xt,HP);
-    elseif Ss == 3,
-        OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
-    elseif Ss == 4,
-        OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
-    end
-    
-    % Expand or not Dictionary
-    if(OUTcrit.result == 1),
-    	HP = isk2nn_add_sample(DATA,HP);
+    % Dont add if number of prototypes is too high
+    if (m < max_prot),
+    	
+        % Get Dictionary Samples and Inverse Kernel Matrix
+        if (Dm == 1),
+            Dx = Cx;
+            Dy = Cy;
+            Kinv = HP.Kinv;
+        elseif (Dm == 2),
+            Dx = Cx(:,Cy_seq == c);
+            Dy = Cy(:,Cy_seq == c);
+            Kinv = HP.Kinvc{c};
+        end
+
+        % Get criterion result
+        if Ss == 1,
+            OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
+        elseif Ss == 2,
+            OUTcrit = coherence_criterion(Dx,xt,HP);
+        elseif Ss == 3,
+            OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
+        elseif Ss == 4,
+            OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
+        end
+
+        % Expand or not Dictionary
+        if(OUTcrit.result == 1),
+            HP = isk2nn_add_sample(DATA,HP);
+        end
+        
     end
 end
 

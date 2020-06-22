@@ -115,23 +115,26 @@ end
 %% ALGORITHM
 
 if (Ktype == 1),        % Linear
-    Kdiff = (x - w);
+    Kdiff = 2*(x - w);
 elseif (Ktype == 2),    % Gaussian
-    Kdiff = (1/(2*sigma^2))*exp(-sum((x-w).^2)/(2*sigma^2))*(x - w);
+    Kdiff = (2/(sigma^2))*exp(-(norm(x-w)^2)/(2*(sigma^2)))*(x-w);
 elseif (Ktype == 3),    % Polynomial
-    Kdiff = (x - w); % ToDo!!!!
+    Kdiff = 2*alpha*order*(x*(alpha*(w'*x)+theta)^(order-1) - ...
+                           w*(alpha*(w'*w)+theta)^(order-1));
 elseif (Ktype == 4),    % Exponencial / Laplacian
-    Kdiff = (x - w); % ToDo!!!!
+    Kdiff = (2/(sigma*norm(x-w)))*exp(-norm(x-w)/sigma)*(x-w);
 elseif (Ktype == 5),    % Cauchy
-    Kdiff = 2*(sigma^2)*(x - w)/((sigma^2 + sum((x - w).^2))^2);
+    Kdiff = (4*(sigma^2))*(x-w)/((sigma^2 + norm(x-w)^2)^2);
 elseif (Ktype == 6),    % Log
-    Kdiff = 4*(x - w)/(sigma^2 + sum((x - w).^2));
+    Kdiff = 4*(x-w)/(sigma^2 + norm(x-w)^2);
 elseif (Ktype == 7),    % Sigmoid
-    Kdiff = (x - w); % ToDo!!!!
+    Kdiff = 2*alpha*((x-w) - ...
+              (x*tanh(alpha*(w'*x)+theta)^2 - w*tanh(alpha*(w'*w)+theta)^2));
 elseif (Ktype == 8),    % Kmod
-    Kdiff = (x - w); % ToDo!!!!
+    Kdiff = 4*a*gamma*exp(gamma/(norm(x-w)^2+sigma^2))*(x-w) / ...
+            (norm(x-w)^2+sigma^2)^2;
 else                    % Use dot product as default
-    Kdiff = (x - w);
+    Kdiff = 2*(x - w);
 end
 
 %% END

@@ -49,20 +49,20 @@ dist = PAR.dist;        	% Choose distance
 
 if(Ktype == 0),
     
-    if (dist == 0),         % Dot product
+    if (dist == 0),                 % Dot product
         d = (x')*y;
-    elseif (dist == 1), 	% Manhattam (City-block)
+    elseif (dist == 1),             % Manhattam (City-block)
         d = sum(abs(x - y));
-    elseif (dist == 2),     % Euclidean
+    elseif (dist == 2),             % Euclidean
         d = sqrt(sum((x - y).^2));
-    elseif (dist == inf),   % Maximum Minkowski (Chebyshev)
+    elseif (dist == inf),           % Maximum Minkowski (Chebyshev)
         d = max(abs(x - y));
-    elseif (dist == -inf),  % Minimum Minkowski
+    elseif (dist == -inf),          % Minimum Minkowski
         d = min(abs(x - y));
-    elseif (dist > 2),      % Minkowski Distance
+    elseif (dist > 2),              % Minkowski Distance
         d = sum(abs(x - y)^dist)^(1/dist);
     else
-        d = sum((x - y).^2); % Euclidean as default
+        d = sqrt(sum((x - y).^2));  % Euclidean as default
     end
     
 % Calculate distance for kernelized algorithms

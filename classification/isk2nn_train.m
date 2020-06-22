@@ -148,8 +148,7 @@ Y = DATA.output;        % Output Matrix
 
 % Get Hyperparameters
 
-Von = HP.Von;
-max_prot = HP.max_prot;
+Von = HP.Von;           % Enable or not Video
 
 % Problem Initialization
 
@@ -212,15 +211,13 @@ for n = 1:N,
     win = OUTn.win;
     PAR.times_selected(win) = PAR.times_selected(win) + 1;
     
-    % Growing Strategy (dont add if number of prototypes is too high)
-    if (mt1 < max_prot),
-        PAR = isk2nn_dict_grow(DATAn,PAR);
-    end
-    
-	% Get dictionary size (cardinality)
+    % Growing Strategy
+	PAR = isk2nn_dict_grow(DATAn,PAR);
+
+	% Get dictionary size (cardinality, number of prototypes)
     [~,mt2] = size(PAR.Cx);
     
-    % Update Strategy (just update if prototype was not added)
+    % Update Strategy (if prototype was not added)
     if(mt2-mt1 == 0),
         PAR = isk2nn_dict_updt(DATAn,PAR);
     else

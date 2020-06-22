@@ -126,10 +126,6 @@ elseif(type == 2),
     [~,Nk] = size(PAR.Cx);
     Ds = Ds + Nk / N;
     
-    % Display Restrictions (debug)
-%     fprintf('Restrictions: 1: %d / 2: %d / 3: %d \n',restriction1,...
-%             restriction2,restriction3);
-%     pause(5);
     if(restriction1 || restriction2 || restriction3),
         measure = 1 + lambda;            % Maximum value
     else

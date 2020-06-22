@@ -20,7 +20,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 38;              % Which problem will be solved / used
+OPT.prob = 36;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
@@ -283,6 +283,6 @@ hold off
 
 %% SAVE FILE
 
-% save(OPT.file,'-v7.3')
+% save(OPT.file,'-v7.3')/
 
 %% END

@@ -68,14 +68,8 @@ while 1,
         if (PSout.measure < min_measure),
             HPoptm = PSout.PAR;
             min_measure = PSout.measure;
-%             fprintf('new min measure: v1: %.5f / sigma: %.5f / measure: %.5f \n',...
-%                     HPoptm.v1,HPoptm.sigma,min_measure);
-%             pause;
         end
     end
-%     fprintf('Debug: v1: %.5f / sigma: %.5f / measure: %.5f / min: %.5f \n',...
-%                 HPoptm.v1,HPoptm.sigma,PSout.measure,min_measure);
-%     pause(5);
 
     % Update indexes of HP (uses "digital clock logic")
     

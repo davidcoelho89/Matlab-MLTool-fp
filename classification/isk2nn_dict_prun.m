@@ -74,16 +74,6 @@ elseif (Ps == 1 || Ps == 2),
         end
     end
 
-% elseif(Ps == 2),
-% 
-%     for k = 1:m,
-%         % Remove Prototype from dictionary (just one per loop)
-%         if (score(k) < min_score),
-%             HP = isk2nn_rem_sample(HP,k);
-%             break;
-%         end
-%     end
-
 end
 
 %% FILL OUTPUT STRUCTURE

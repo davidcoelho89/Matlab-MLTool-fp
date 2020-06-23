@@ -86,7 +86,6 @@ mc = sum(Cy_seq == c);	% Number of prototypes from samples' class
 if (m == 0 || (Dm == 2 && mc == 0)),
     
     HP = isk2nn_add_sample(DATA,HP);
-    fprintf('1o prototipo de uma classe...\n');
     
 else
     % Dont add if number of prototypes is too high

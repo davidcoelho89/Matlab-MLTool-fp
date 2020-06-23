@@ -222,7 +222,7 @@ for n = 1:N,
         PAR = isk2nn_dict_updt(DATAn,PAR);
     else
         % For debug. Display dictionary size when it grows.
-        display(mt2);
+        % display(mt2);
     end
     
     % Prunning Strategy (heuristic based)

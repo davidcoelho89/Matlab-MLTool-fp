@@ -14,18 +14,19 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 
 %% Sea Concepts
 
-% % 25: 200k / 03 / 02
-% % label noise (10%)
-% % f1 + f2 = b; b is changing each 5000 samples.
-% % Abrupt drift
-% 
-% OPT =  struct('prob',25,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% 25: 200k / 03 / 02
+% label noise (10%)
+% f1 + f2 = b; b is changing each 5000 samples.
+% Abrupt drift
+
+OPT =  struct('prob',25,'prob2',1,'norm',norm,'lbl',lbl);
+test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 
 %% Rotating Hyperplane
 
 % % 26: 200k / 10 / 02. 
-% % Moving Hyperplane. Gradual Drift.
+% % Moving Hyperplane. 
+% % Gradual Drift.
 % 
 % OPT =  struct('prob',26,'prob2',1,'norm',norm,'lbl',lbl);
 % test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
@@ -33,7 +34,8 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 %% RBF Moving
 
 % % 27: 200k / 10 / 05. 
-% % Moving RBFs. Different Mean. Gradual drift.
+% % Moving RBFs. Different Mean. 
+% % Gradual drift.
 % 
 % OPT =  struct('prob',27,'prob2',1,'norm',norm,'lbl',lbl);
 % test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
@@ -98,19 +100,19 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 
 %% Cover Type
 
-% 35: 581012 / 54 / 07
-% Real Drift
-
-OPT =  struct('prob',35,'prob2',1,'norm',norm,'lbl',lbl);
-test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% % 35: 581012 / 54 / 07
+% % Real Drift
+% 
+% OPT =  struct('prob',35,'prob2',1,'norm',norm,'lbl',lbl);
+% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 
 %% Poker Hand
 
-% 36: 829201 / 10 / 10
-% Virtual Drift
-
-OPT =  struct('prob',36,'prob2',1,'norm',norm,'lbl',lbl);
-test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% % 36: 829201 / 10 / 10
+% % Virtual Drift
+% 
+% OPT =  struct('prob',36,'prob2',1,'norm',norm,'lbl',lbl);
+% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 
 %% Outdoor
 

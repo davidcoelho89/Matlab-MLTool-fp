@@ -19,9 +19,9 @@ DATA = data_class_loading(OPT);
 
 %% CROSS VALIDATION OPTIONS
 
-PSpar.iterations = 1;  % number of times data is presented to the algorithm
-PSpar.type = 2;        % Takes into account also the dicitionary size
-PSpar.lambda = 0.5;    % Jpbc = Ds + lambda * Err
+PSpar.iterations = 1;	% number of times data is presented to the algorithm
+PSpar.type = 2;         % Takes into account also the dicitionary size
+PSpar.lambda = 2;       % Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
@@ -30,7 +30,7 @@ HP_gs.Ss = 1;
 HP_gs.v1 = 0.8;
 HP_gs.v2 = 0.9;
 HP_gs.Us = 1;
-HP_gs.eta = 0.01;
+HP_gs.eta = 0.1;
 HP_gs.Ps = 2;
 HP_gs.min_score = -10;
 HP_gs.max_prot = 600;
@@ -93,20 +93,20 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = POLYNOMIAL
 
-str12 = '_pol_';
-
-HP_gs.v1 = 2.^linspace(-13,6,20);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 3;
-HP_gs.sigma = 2;
-HP_gs.gamma = [2,2.2,2.4,2.6,2.8,3];
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
-
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
-
-test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% str12 = '_pol_';
+% 
+% HP_gs.v1 = 2.^linspace(-13,6,20);
+% HP_gs.v2 = HP_gs.v1(end) + 0.001;
+% HP_gs.Ktype = 3;
+% HP_gs.sigma = 2;
+% HP_gs.gamma = [2,2.2,2.4,2.6,2.8,3];
+% HP_gs.alpha = 1;
+% HP_gs.theta = 1;
+% 
+% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+%                   str9,str10,str11,str12,str13,str14);
+% 
+% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = EXPONENTIAL
 
@@ -162,21 +162,21 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = SIGMOID
 
-str12 = '_sig_';
-
-HP_gs.v1 = 2.^linspace(-13,6,20);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 7;
-HP_gs.sigma = 2;
-HP_gs.gamma = 2;
-HP_gs.alpha = 2.^linspace(-8,2,11);       
-% HP_gs.theta = 2.^linspace(-8,2,11);
-HP_gs.theta = 0.1;
-
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
-
-test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% str12 = '_sig_';
+% 
+% HP_gs.v1 = 2.^linspace(-13,6,20);
+% HP_gs.v2 = HP_gs.v1(end) + 0.001;
+% HP_gs.Ktype = 7;
+% HP_gs.sigma = 2;
+% HP_gs.gamma = 2;
+% HP_gs.alpha = 2.^linspace(-8,2,11);       
+% % HP_gs.theta = 2.^linspace(-8,2,11);
+% HP_gs.theta = 0.1;
+% 
+% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+%                   str9,str10,str11,str12,str13,str14);
+% 
+% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = KMOD
 

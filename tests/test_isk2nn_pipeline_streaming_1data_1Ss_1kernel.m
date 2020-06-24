@@ -94,6 +94,7 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 %% CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
 
 display('begin grid search')
+disp(datestr(now));
 
 % Grid Search Parameters
 

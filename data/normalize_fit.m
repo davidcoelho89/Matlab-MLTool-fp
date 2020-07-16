@@ -12,7 +12,7 @@ function [PAR] = normalize_fit(DATA,OPTION)
 %               0: input_out = input_in
 %               1: normalize between [0, 1]
 %               2: normalize between [-1, +1]
-%               3: normalize by z-score transformation
+%               3: normalize by z-score transformation (standardzation)
 %                  (empirical mean = 0 and standard deviation = 1)
 %                  Xnorm = (X-Xmean)/(std)
 %   Output:

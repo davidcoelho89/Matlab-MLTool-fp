@@ -63,9 +63,9 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.Ss = 1;          % Sparsification strategy
     PARaux.v1 = 0.1;        % Sparseness parameter 1 
     PARaux.v2 = 0.9;        % Sparseness parameter 2
-    PARaux.Us = 0;          % Update strategy
-    PARaux.eta = 0.01;      % Update Rate
-    PARaux.Ps = 0;          % Prunning strategy
+    PARaux.Us = 1;          % Update strategy
+    PARaux.eta = 0.1;       % Update Rate
+    PARaux.Ps = 2;          % Prunning strategy
     PARaux.min_score = -10; % Score that leads to prune prototype
     PARaux.max_prot = Inf;  % Max number of prototypes
     PARaux.min_prot = 1;    % Min number of prototypes

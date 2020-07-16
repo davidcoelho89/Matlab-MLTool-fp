@@ -239,10 +239,12 @@ x = 1:Nttt;
 
 % Data and Prototypes
 figure;
-hold on 
+hold on
 plot(DATAttt.input(1,:),DATAttt.input(2,:),'r.');
 plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
-title('Data and Prototypes')
+title('Prototypes and Data')
+xlabel('Attribute 1')
+ylabel('Attribute 2')
 hold off
 
 % Number of samples per class
@@ -259,10 +261,13 @@ hold off
 figure;
 colors = lines(Nc+1);
 hold on
-for c = 1:Nc+1,
-    plot(x,prot_per_class(c,:),'Color',colors(c,:));
-end
-title('Number of Prototypes')
+% for c = 1:Nc+1,
+%     plot(x,prot_per_class(c,:),'Color',colors(c,:));
+% end
+plot(x,prot_per_class(Nc+1,:),'Color',colors(Nc+1,:));
+title('Number of Prototypes per step')
+xlabel('Steps')
+ylabel('Number of Prototypes')
 hold off
 
 % Number of hits x number of errors
@@ -273,11 +278,13 @@ plot(x,no_of_correct,'b-');
 title('number of hits and errors')
 hold off
 
-% Percentage of Correct Classified
+% Percentage of Misclassified
 figure;
 hold on
-plot(x,accuracy_vector,'r-');
-title('percentage of correct classified')
+plot(x,1-accuracy_vector,'r-');
+title('Percentage of samples misclassified')
+xlabel('Time step')
+ylabel('Error Rate')
 axis([-1 length(x) -0.1 1.1])
 hold off
 

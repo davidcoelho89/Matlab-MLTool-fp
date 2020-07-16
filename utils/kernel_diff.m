@@ -2,7 +2,7 @@ function [Kdiff] = kernel_diff(x,w,PAR)
 
 % --- Derivative Measure of kernel distance between two vectors  ---
 %
-%   [d] = kernel_diff(x,y,PAR)
+%   [d] = kernel_diff(x,w,PAR)
 % 
 %   Input:
 %       x = vector in original (work) space	[p x 1]

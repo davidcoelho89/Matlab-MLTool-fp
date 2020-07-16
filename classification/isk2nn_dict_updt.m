@@ -95,6 +95,8 @@ if (Us ~= 0),
         else
             x_new = Dx(:,win) - eta * (xt - Dx(:,win));
         end
+    elseif (Us == 3),   % (Derivative of kernel cost funtion)
+        x_new = Dx(:,win) + eta * kernel_diff(xt,Dx(:,win),HP);
     end
     
     % New data to be added

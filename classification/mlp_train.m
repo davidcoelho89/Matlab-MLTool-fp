@@ -69,6 +69,7 @@ eta = PAR.eta;              % learning rate
 mom = PAR.mom;              % Moment Factor
 Nlin = PAR.Nlin;            % Non-linearity
 Von = PAR.Von;              % Enable or disable video
+
 % Problem Initialization
 [No,~] = size(D);           % Number of Classes and Output Neurons
 [p,N] = size(X);            % attributes and samples

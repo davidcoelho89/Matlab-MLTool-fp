@@ -21,11 +21,8 @@ function [ALDout] = ald_criterion(Dx,xt,HP,Kinv)
 
 %% INITIALIZATIONS
 
-[~,m] = size(Dx);               % Dictionary size
-
-v1 = HP.v1;                 	% Sparsification parameter
-
-sig2n = HP.sig2n;           	% Kernel regularization parameter
+v1 = HP.v1;         % Sparseness parameter 1
+sig2n = HP.sig2n;	% Kernel regularization parameter
 
 %% ALGORITHM
 
@@ -33,10 +30,7 @@ sig2n = HP.sig2n;           	% Kernel regularization parameter
 ktt = kernel_func(xt,xt,HP);
 
 % Calculate kt
-kt = zeros(m,1);
-for i = 1:m,
-    kt(i) = kernel_func(Dx(:,i),xt,HP);
-end
+kt = kernel_vect(Dx,xt,HP);
 
 % Calculate ald coefficients
 at = Kinv*kt;
@@ -47,7 +41,7 @@ delta = ktt - kt'*at;
 % "Normalized delta"
 delta = delta + sig2n;
 
-% Calculate Criterion
+% Calculate Criterion (boolean)
 result = (delta > v1);
 
 %% FILL OUTPUT STRUCTURE

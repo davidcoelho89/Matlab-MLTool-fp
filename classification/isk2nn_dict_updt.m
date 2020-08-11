@@ -23,10 +23,12 @@ function [PAR] = isk2nn_dict_updt(DATA,HP)
 %               = 2 -> per class
 %           Us = Update strategy                                [cte]
 %               = 0 -> do not update prototypes
-%               = 1 -> lms (wta)
-%               = 2 -> lvq (supervised)
-%               = 3 -> ng (neural gas - neigborhood)
-%               = 4 -> som (self-organizing maps - neigborhood)
+%               = 1 -> lms  (wta)
+%               = 2 -> lvq  (supervised)
+%               = 3 -> klms (wta)
+%               = 4 -> klvq (supervised)
+%               = 5 -> ng (neural gas - neigborhood)
+%               = 6 -> som (self-organizing maps - neigborhood)
 %           eta = Update rate                                   [cte]
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sig2n = kernel regularization parameter             [cte]
@@ -95,8 +97,14 @@ if (Us ~= 0),
         else
             x_new = Dx(:,win) - eta * (xt - Dx(:,win));
         end
-    elseif (Us == 3),   % (Derivative of kernel cost funtion)
+    elseif (Us == 3),   % (WTA + Derivative of kernel cost funtion)
         x_new = Dx(:,win) + eta * kernel_diff(xt,Dx(:,win),HP);
+    elseif (Us == 4),   % (LVQ + Derivative of kernel cost funtion)
+        if(yt_seq == y_new_seq),
+            x_new = Dx(:,win) + eta * kernel_diff(xt,Dx(:,win),HP);
+        else
+            x_new = Dx(:,win) - eta * kernel_diff(xt,Dx(:,win),HP);
+        end
     end
     
     % New data to be added

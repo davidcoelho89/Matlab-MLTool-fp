@@ -1,11 +1,12 @@
-function [Km] = kernel_mat(X,PAR)
+function [kt] = kernel_vect(X,xt,PAR)
 
-% --- Calculate the Kernel Matrix of a data matrix ---
+% --- Calculate the kernel vector of a data matrix and a sample ---
 %
-%   [Km] = kernel_mat(X,PAR)
+%   [Kt] = kernel_vect(X,xi,PAR)
 %
 %   Input:
 %       X = matrix with samples                                 [p x N]
+%       xt = specific data sample                               [p x 1]
 %       PAR.
 %           Ktype = kernel type                                 [cte]
 %               1 -> Linear 
@@ -22,32 +23,20 @@ function [Km] = kernel_mat(X,PAR)
 %           alpha   (poly / sigmoid)                            [cte]
 %           theta   (lin / poly / sigmoid)                      [cte]
 %   Output:
-%       Km = kernel matrix, where Kij = K(X(:,i),X((:,j))       [N x N]
+%       kt = kernel vector, where kt(j) = K(X(:,j),xt)          [N x 1]
 
 %% INITIALIZATIONS
 
 % Get number of samples
 [~,N] = size(X);
 
-% Used to avoid inverse problems
-if (~(isfield(PAR,'sig2n'))),
-    PAR.sig2n = 0.001;
-else
-    sig2n = PAR.sig2n;
-end
-
 % Initialize Kernel Matrix
-Km = zeros(N,N);
+kt = zeros(N,1);
 
 %% ALGORITHM
 
-for i = 1:N,
-    for j = i:N,
-        Km(i,j) = kernel_func(X(:,i),X(:,j),PAR);
-      	Km(j,i) = Km(i,j);
-    end
+for j = 1:N,
+    kt(j) = kernel_func(X(:,j),xt,PAR);
 end
-
-Km = Km + sig2n*eye(N,N);
 
 %% END

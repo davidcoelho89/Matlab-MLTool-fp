@@ -9,7 +9,7 @@ function [Kxy] = kernel_func(x,y,PAR)
 %       y = vector in original (work) space                     [p x 1]
 %       PAR.
 %           Ktype = kernel type                                 [cte]
-%               1 -> Linear
+%               1 -> Linear 
 %               2 -> Gaussian (default)
 %               3 -> Polynomial
 %               4 -> Exponencial / Laplacian
@@ -32,11 +32,10 @@ if ((nargin == 2) || (isempty(PAR))),
     PARaux.sigma = 0.1;   	% Kernel Std (gaussian)
     PAR = PARaux;
 else
-    % The default values are define by the kernel type
+    % The default values are defined by the kernel type
     if (~(isfield(PAR,'Ktype'))),
         PAR.Ktype = 2;
     end
-    % Sigma
     if (~(isfield(PAR,'sigma'))),
         if (PAR.Ktype == 2),
             PAR.sigma = 0.1;
@@ -52,7 +51,6 @@ else
             PAR.sigma = 0.1;
         end
     end
-    % Gamma
     if (~(isfield(PAR,'gamma'))),
         if(PAR.Ktype == 3),
             PAR.gamma = 2;
@@ -62,7 +60,6 @@ else
             PAR.gamma = 3.5;
         end
     end
-    % alpha
     if (~(isfield(PAR,'alpha'))),
         if(PAR.Ktype == 3),
             PAR.alpha = 1;
@@ -71,7 +68,6 @@ else
         end
     else
     end
-    % theta
     if (~(isfield(PAR,'theta'))),
         if(PAR.Ktype == 1),
             PAR.theta = 0;
@@ -133,7 +129,7 @@ elseif (Ktype == 7),    % Sigmoid (hyperbolic tangent)
     Kxy = tanh(alpha * x' * y + theta);
 elseif (Ktype == 8),    % Kmod
     Kxy = a*(exp(gamma/(norm(x-y)^2+sigma^2))-1);
-else                    % Use dot product as default
+else                    % Use dot product if a wrong option was chosen
     Kxy = (x' * y);
 end
 

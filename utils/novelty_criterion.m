@@ -13,15 +13,12 @@ function [NOVout] = novelty_criterion(Dx,Dy,xt,yt,HP)
 %           v1 = Sparseness parameter 1                         [cte]
 %           v2 = Sparseness parameter 2                         [cte]
 %   Output:
-%       ALDout.
+%       NOVout.
 %           result = if a sample fulfill the test               [0 or 1]
 %           result1 = novelty test 1                            [cte]
 %           result2 = novelty test 2                            [cte]
 %           dist1 = novelty measure 1                           [cte]
 %           dist2 = novelty measure 2                           [cte]
-%           kt = kernel function between sample and dict prot   [Nk x 1]
-%           at = ald coefficients                               [Nk x 1]
-%           delta = constant compared with ald constant         [cte]
 
 %% INITIALIZATIONS
 

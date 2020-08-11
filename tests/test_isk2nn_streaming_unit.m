@@ -14,9 +14,9 @@ format long e;  % Output data style (float)
 
 % General Datasets / Problems:
 
-% 25 - sea / 26 - Hyper / 27 - RBFmov / 28 - RBFint / 29 - Squares /
-% 30 - chess / 31 - mixed / 32 - led / 33 - weather / 34 - electricity / 
-% 35 - cover / 36 - poker / 37 - outdoor / 38 - rialto / 39 - spam
+% 25 - sea / 26 - Hyperplane / 27 - RBFmov / 28 - RBFint / 29 - Squares /
+% 30 - Chess / 31 - MixDrift / 32 - led / 33 - weather / 34 - Electricity / 
+% 35 - CoverType / 36 - Poker / 37 - Outdoor / 38 - Rialto / 39 - Spam /
 
 % General options' structure
 

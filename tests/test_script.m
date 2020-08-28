@@ -765,15 +765,15 @@ format long e;
 
 %% Pairplot Test
 
-% clear; clc;
-% 
-% OPT.prob = 6;
-% DATA = data_class_loading(OPT);
-% label = {'SL','SW','PL','PW'};
-% 
-% figure; pairplot(DATA);
-% figure; pairplot(DATA,label);
-% figure; pairplot(DATA,label,'histogram');
+clear; clc;
+
+OPT.prob = 6;
+DATA = data_class_loading(OPT);
+label = {'SL','SW','PL','PW'};
+
+figure; plot_data_pairplot(DATA);
+figure; plot_data_pairplot(DATA,label);
+figure; plot_data_pairplot(DATA,label,'histogram');
 
 %% Results Analysis - Streaming Data - HPO: 0
 
@@ -835,8 +835,8 @@ plot(Nprots,Accs,'k.');
 
 %% Results Analysis - Streaming Data - HPO: 1
 
-clear;
-clc;
+% clear;
+% clc;
 
 % Dm - 2 Hpo - 1, Norm - 3, Class - nn, Ss - 1, Us - 1, Ps - 2
 
@@ -896,51 +896,51 @@ clc;
 % load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
 % load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
 
-% x = 1:Nttt;
-% 
-% % Data and Prototypes
-% figure;
-% hold on 
-% plot(DATAttt.input(1,:),DATAttt.input(2,:),'r.');
-% plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
-% title('Data and Prototypes')
-% hold off
-% 
-% % Number of samples per class
-% figure;
-% colors = lines(Nc);
-% hold on
-% for c = 1:Nc,
-%     plot(x,samples_per_class(c,:),'Color',colors(c,:));
-% end
-% title('Number of Samples Per Class')
-% hold off
-% 
-% % Number of Prototypes (Total and per class)
-% figure;
-% colors = lines(Nc+1);
-% hold on
-% for c = 1:Nc+1,
-%     plot(x,prot_per_class(c,:),'Color',colors(c,:));
-% end
-% title('Number of Prototypes')
-% hold off
-% 
-% % Number of hits x number of errors
-% figure;
-% hold on
-% plot(x,no_of_errors,'r-');
-% plot(x,no_of_correct,'b-');
-% title('number of hits and errors')
-% hold off
-% 
-% % Percentage of Correct Classified
-% figure;
-% hold on
-% plot(x,accuracy_vector,'r-');
-% title('percentage of correct classified')
-% axis([-1 length(x) -0.1 1.1])
-% hold off
+x = 1:Nttt;
+
+% Data and Prototypes
+figure;
+hold on 
+plot(DATAttt.input(1,:),DATAttt.input(2,:),'r.');
+plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
+title('Data and Prototypes')
+hold off
+
+% Number of samples per class
+figure;
+colors = lines(Nc);
+hold on
+for c = 1:Nc,
+    plot(x,samples_per_class(c,:),'Color',colors(c,:));
+end
+title('Number of Samples Per Class')
+hold off
+
+% Number of Prototypes (Total and per class)
+figure;
+colors = lines(Nc+1);
+hold on
+for c = 1:Nc+1,
+    plot(x,prot_per_class(c,:),'Color',colors(c,:));
+end
+title('Number of Prototypes')
+hold off
+
+% Number of hits x number of errors
+figure;
+hold on
+plot(x,no_of_errors,'r-');
+plot(x,no_of_correct,'b-');
+title('number of hits and errors')
+hold off
+
+% Percentage of Correct Classified
+figure;
+hold on
+plot(x,accuracy_vector,'r-');
+title('percentage of correct classified')
+axis([-1 length(x) -0.1 1.1])
+hold off
 
 Ktype = PAR.Ktype;
 Acc = accuracy_vector(end);

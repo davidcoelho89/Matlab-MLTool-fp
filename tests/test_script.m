@@ -4,6 +4,14 @@ clear;
 clc;
 format long e;
 
+%% Add a path to find functions
+
+% addpath('Func/');
+
+%% Seed for aleatory numbers
+
+% rng(0);
+
 %% Get Number of samples, attributes, classes
 
 % Nc = length(unique(DATA.output));	% get number of classes
@@ -1034,5 +1042,49 @@ bar(x,y,0.5)
 %% Decision Trees - Info Theory Based
 
 % ToDo - All
+
+%% Order and Cutoff frequency for Butterworth filter
+
+freq_p = 0.2*pi;
+freq_s = 0.3*pi;
+abs_p = 0.89125;
+abs_s = 0.177783;
+
+x0 = ones(2,1);
+
+opts = optimoptions('fsolve','Algorithm','levenberg-marquardt', ...
+          'Display', 'off', 'FunValCheck', 'on', 'TolFun', 10e-10);
+
+optm_func = @(x) ( abs(2*x(2)*(log(freq_p)-log(x(1))) - log((1/abs_p)^2-1)) + ...
+                   abs(2*x(2)*(log(freq_s)-log(x(1))) - log((1/abs_s)^2-1)) );
+
+x_h = fsolve(optm_func, x0, opts);
+
+freq_c = x_h(1);
+order = x_h(2);
+
+%% Naive Bayes Classifier
+
+% model = fitcnb(X,Y)
+
+%% Kc House Data
+
+lambda = 0.01;
+
+y = kchousedata(:,1);
+
+X = kchousedata(:,2:end);
+[N,p] = size(X);
+X = [ones(N,1),X];
+
+beta = (X'*X + lambda*eye(p+1))\X'*y;
+
+yh = X*beta;
+
+MSE = sqrt((1/N) * (y-yh)'*(y-yh));
+
+%% Aerogerador
+
+
 
 %% END

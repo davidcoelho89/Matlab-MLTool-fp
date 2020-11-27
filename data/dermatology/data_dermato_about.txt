@@ -1,10 +1,7 @@
 1. Title: Dermatology Database
 
-
-
 2. Source Information:
    
-
 (a) Original owners:
        
 -- 1. Nilsel Ilter, M.D., Ph.D., 
@@ -54,7 +51,7 @@ Class code:	Class:                  Number of instances:
 
 
 3. Number of Instances: 366
-4. Number of Attributes: 3
+4. Number of Attributes: 34
 5. Missing Attribute Values: 8 (in Age attribute). Distinguished with '?'
 
 6. Attribute Information:

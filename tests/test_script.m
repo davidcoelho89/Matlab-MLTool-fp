@@ -1,4 +1,4 @@
-%% test script
+%% Test Script
 
 clear;
 clc;
@@ -11,11 +11,6 @@ format long e;
 %% Seed for aleatory numbers
 
 % rng(0);
-
-%% Get Number of samples, attributes, classes
-
-% Nc = length(unique(DATA.output));	% get number of classes
-% [p,N] = size(DATA.input);        	% get number of attributes and samples
 
 %% Pause loop
 
@@ -69,6 +64,34 @@ format long e;
 % labels(1) = {'ALG-1'};
 % labels{2} = 'ALG-2';
 
+%% Write to Excel or Text Software
+
+% load patients.mat
+% T = table(LastName,Age,Weight,Smoker);
+% T(1:5,:)
+% 
+% filename = 'patientdata.xlsx';
+% writetable(T,filename,'Sheet',1,'Range','D1');
+% writetable(T,filename,'Sheet','MyNewSheet','WriteVariableNames',false);
+% 
+% A = magic(5);
+% C = {'Time', 'Temp'; 12 98; 13 'x'; 14 97};
+% 
+% filename = 'testdata.xlsx';
+% writematrix(A,filename,'Sheet',1,'Range','E1:I5');
+% writecell(C,filename,'Sheet','Temperatures','Range','B2');
+% 
+% filename = 'testdata.xlsx';
+% A = {'Time','Temperature'; 12,98; 13,99; 14,97};
+% sheet = 'testsheet';
+% xlRange = 'E1';
+% xlswrite(filename,A,sheet,xlRange);
+
+%% Get Number of samples, attributes, classes
+
+% Nc = length(unique(DATA.output));	% get number of classes
+% [p,N] = size(DATA.input);        	% get number of attributes and samples
+
 %% Cross Validation - Hyperparameters
 
 % ELMcv.Nh = 10:30;
@@ -100,179 +123,6 @@ format long e;
 
 % With Optimization Method and Cross Validation
 % [HP] = hp_optm_cv(DATAtr,HPcv,@gauss_train,@gauss_classify,CVp);
-
-%% Inverse Test - update one element (Sherman-Morrison 1950)
-
-% % Original matrix and its inverse
-% 
-% a = [2.384 1.238 0.861 2.413; ...
-%      0.648 1.113 0.761 0.137; ...
-%      1.119 0.643 3.172 1.139; ...
-%      0.745 2.137 1.268 0.542];
-% 
-% [n,~] = size(a);
-% 
-% b = inv(a);
-% 
-% % Create perturbed matrix
-% 
-% R = 2;
-% S = 4;
-% delta_ars = 0.4;
-% 
-% A = a;
-% A(R,S) = A(R,S) + delta_ars;
-% 
-% % Calculate inverse of A iteratively
-% 
-% B1 = zeros(n,n);
-% 
-% for r = 1:n,
-%     for j = 1:n,
-%         if(r == S),
-%             B1(S,j) = b(S,j) / (1 + b(S,R)*delta_ars);
-%         elseif (j == R),
-%             B1(r,R) = b(r,R) / (1 + b(S,R)*delta_ars);
-%         else
-%             B1(r,j) = b(r,j) - ...
-%                      (b(r,R)*b(S,j)*delta_ars)/(1 + b(S,R)*delta_ars);
-%         end
-%     end
-% end
-% 
-% % Calculate inverse of A directly
-% 
-% B2 = inv(A);
-
-%% Inverse Test - Remove one line and one column (Juarez-Ruiz 2016)
-
-% % Original matrix
-% 
-% A = [1  4 6; ...
-%      2 -1 3; ...
-%      3  2 5];
-% 
-% [n,~] = size(A);
-% 
-% % Inverse matrix
-% 
-% A_inv = pinv(A);
-% 
-% % Get line and column to be removed
-% 
-% p = 2;
-% q = 3;
-% 
-% % Calculate inverse of Apq directly
-% 
-% Apq = A;
-% Apq(p,:) = [];
-% Apq(:,q) = [];
-% 
-% Apq_inv_batch = pinv(Apq);
-% 
-% % Calculate inverse of Apq iteratively
-% 
-% ep = zeros(n,1);
-% ep(p) = 1;
-% 
-% u = A(:,q) - ep;
-% 
-% eq = zeros(n,1);
-% eq(q) = 1;
-% 
-% v = eq;
-% 
-% Apq_inv_online = A_inv + (A_inv * u)*(v' * A_inv) / (1 - v' * A_inv * u);
-% Apq_inv_online(q,:) = [];
-% Apq_inv_online(:,p) = [];
-
-%% Inverse Test - Add one line and one column (Vaerenbergh 2014)
-
-% close;                              % Close all windows
-% clear;                              % Clear all variables
-% clc;                                % Clear command window
-% format long e;                      % Output data style (float)
-% 
-% OPT.prob = 6;                       % Which problem will be solved
-% OPT.norm = 3;                       % Normalization definition
-% OPT.lbl = 1;                        % Labeling definition
-% 
-% DATA = data_class_loading(OPT);     % Load Data Set
-% DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
-% DATA = label_encode(DATA,OPT);      % adjust labels for the problem
-% 
-% PAR.Ktype = 2;
-% PAR.sigma = 2;
-% PAR.sig2n = 0.001;
-% 
-% c = PAR.sig2n;
-% 
-% X = DATA.input;
-% [~,N] = size(X);
-% 
-% Km1 = [];
-% Kinv1 = [];
-% Km2 = [];
-% Kinv2 = [];
-% Dx = [];
-% 
-% for j = 1:N,
-%     % Get new sample and size of dictionary
-%     xt = X(:,j);
-%     [~,m] = size(Dx);
-%     % Calculate ktt
-%     ktt = kernel_func(xt,xt,PAR);
-%     % Calculate Inverse Kernel Matrix Recursively
-%     if(m == 0),
-%         Km2 = ktt + c;
-%         Kinv2 = 1/Km2;
-%     else
-%         kx = zeros(m,1);
-%         for i = 1:m,
-%             kx(i) = kernel_func(Dx(:,i),xt,PAR);
-%         end
-%         Km2_aux = [Km2, kx; kx', ktt+c];
-%         Km2 = Km2_aux;
-%         at = Kinv2*kx;
-%         gamma = ktt - kx'*at + c;
-%         Kinv2 = (1/gamma)* [gamma*Kinv2 + at*at', -at; -at', 1];
-%    end
-%     % Update Dictionary
-%     Dx_aux = [Dx,xt];
-%     Dx = Dx_aux;
-%     % Calculate Inverse Kernel Matrix Directly
-%     Km1 = kernel_mat(Dx,PAR);
-%     Kinv1 = pinv(Km1);
-% end
-
-%% Inverse Test - Update one line and one column ()
-
-% ToDo - All
-% Now: remove "old line and old column" and add "new line and new column"
-
-%% Write to Excel or Text Software
-
-% load patients.mat
-% T = table(LastName,Age,Weight,Smoker);
-% T(1:5,:)
-% 
-% filename = 'patientdata.xlsx';
-% writetable(T,filename,'Sheet',1,'Range','D1');
-% writetable(T,filename,'Sheet','MyNewSheet','WriteVariableNames',false);
-% 
-% A = magic(5);
-% C = {'Time', 'Temp'; 12 98; 13 'x'; 14 97};
-% 
-% filename = 'testdata.xlsx';
-% writematrix(A,filename,'Sheet',1,'Range','E1:I5');
-% writecell(C,filename,'Sheet','Temperatures','Range','B2');
-% 
-% filename = 'testdata.xlsx';
-% A = {'Time','Temperature'; 12,98; 13,99; 14,97};
-% sheet = 'testsheet';
-% xlRange = 'E1';
-% xlswrite(filename,A,sheet,xlRange);
 
 %% Image table - Write to Excel
 
@@ -437,31 +287,46 @@ format long e;
 
 %% Scatter Matrices and Separability Measurements
 
+% % Get data structure
+% 
 % OPT.prob = 6;
 % OPT.norm = 3;
 % OPT.lbl = 1;
 % 
 % DATA = data_class_loading(OPT);
-% DATA = normalize(DATA,OPT);
+% 
+% PARnorm = normalize_fit(DATA,OPT);
+% DATA = normalize_transform(DATA,PARnorm);
+% 
 % DATA = label_encode(DATA,OPT);
+% 
+% % Get input and output (Number of samples, attributes and classes)
 % 
 % X = DATA.input;
 % [p,N] = size(X);
 % [~,Y] = max(DATA.output);
 % Nc = length(unique(Y));
-% 
 % m = mean(X,2);
-% M = repmat(m,1,N);
 % 
-% Xi = cell(Nc,1);
-% mi = cell(Nc,1);
-% Ni = cell(Nc,1);
-% Pi = cell(Nc,1);
-% Si = cell(Nc,1);
+% % Calculate Total Scatter Matrix
+% 
+% M = repmat(m,1,N);
+% St = (X - M) * (X - M)' / N;    % Total covariance matrix
+% 
+% % Measures of individual classes
+% 
+% Xi = cell(Nc,1);    % Samples from each class
+% mi = cell(Nc,1);    % Mean of each class
+% Ni = cell(Nc,1);    % Number of samples from each class
+% Pi = cell(Nc,1);    % A priori probability of each class
+% Si = cell(Nc,1);    % Covariacen matrix of each class
+% 
+% % Initialize within and between scatter matrices
 % 
 % Sw = zeros(p,p);
 % Sb = zeros(p,p);
-% St = (X - M) * (X - M)' / N;
+% 
+% % Calculate Individula Measures and Scatter Matrices
 % 
 % for j = 1:Nc,
 %     Xi{j} = X(:,(Y == j));
@@ -475,12 +340,14 @@ format long e;
 % end
 % 
 % % Total Scatter should be the sum of between scatter and within scatter.
+% 
 % Stest = St - (Sw + Sb);
 % 
 % % Separability measures
 % 
 % Ja = det(Sw\Sb);        % For multiclass problems
 % Jb = trace(Sw\Sb);      % For multiclass problems
+% Nk = 3;                 % Number of clusters (hyperparameter)
 % Jc = trace(Sw\Sb)/ Nk;  % For number of clusters decision
 
 %% SUBPLOT
@@ -771,261 +638,74 @@ format long e;
 % 
 % save('mnist.mat');
 
-%% Pairplot Test
+%% Pairplot and Boxplot Tests
 
-clear; clc;
-
-OPT.prob = 6;
-DATA = data_class_loading(OPT);
-label = {'SL','SW','PL','PW'};
-
-figure; plot_data_pairplot(DATA);
-figure; plot_data_pairplot(DATA,label);
-figure; plot_data_pairplot(DATA,label,'histogram');
-
-%% Results Analysis - Streaming Data - HPO: 0
-
-% Analysis measures
-
-Analysis = zeros(8,OPT.Nr);
-
-Accs = zeros(1,OPT.Nr);
-Nprots = zeros(1,OPT.Nr);
-v1s = zeros(1,OPT.Nr);
-Ktypes = zeros(1,OPT.Nr);
-sigmas = zeros(1,OPT.Nr);
-alphas = zeros(1,OPT.Nr);
-thetas = zeros(1,OPT.Nr);
-gammas = zeros(1,OPT.Nr);
-
-% Get measures
-
-for r = 1:OPT.Nr,
-    
-    acc_vect = accuracy_vector_acc{r};
-    Accs(r) = acc_vect(end);
-    
-    param = PAR_acc{r};
-    [~,Nprots(r)] = size(param.Cx);
-    v1s(r) = param.v1;
-    Ktypes = param.Ktype;
-    sigmas(r) = param.sigma;
-    alphas(r) = param.alpha;
-    thetas(r) = param.theta;
-    gammas(r) = param.gamma;
-end
-
-% Hold analysis
-
-Analysis(1,:) = Accs;
-Analysis(2,:) = Nprots;
-Analysis(3,:) = v1s;
-Analysis(4,:) = Ktypes;
-Analysis(5,:) = sigmas;
-Analysis(6,:) = alphas;
-Analysis(7,:) = thetas;
-Analysis(8,:) = gammas;
-
-% Plot Graphics
-
-plot(Nprots,Accs,'k.');
-
-% Verify best accuracies
-
-% indexes = find(Accs == max(Accs)),
-% v1s(indexes),
-% Nprots(indexes),
-% Ktypes(indexes),
-% sigmas(indexes),
-% alphas(indexes),
-% thetas(indexes),
-% gammas(indexes),
-
-%% Results Analysis - Streaming Data - HPO: 1
-
-% clear;
-% clc;
-
-% Dm - 2 Hpo - 1, Norm - 3, Class - nn, Ss - 1, Us - 1, Ps - 2
-
-% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('chess_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
-% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('coverType_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('hyper_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('outdoor_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
-% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('poker_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('rbfint_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('rbfMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('rialto_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('sea_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_lin_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_gau_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_pol_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_cau_1nn.mat');
-% load('squaresMov_isk2nn_hpo1_norm0_Dm2_Ss1_Us1_Ps2_sig_1nn.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_lin_nn.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_pol_nn.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_cau_nn.mat');
-% load('weather_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_sig_nn.mat');
-
-x = 1:Nttt;
-
-% Data and Prototypes
-figure;
-hold on 
-plot(DATAttt.input(1,:),DATAttt.input(2,:),'r.');
-plot(PAR.Cx(1,:),PAR.Cx(2,:),'k*');
-title('Data and Prototypes')
-hold off
-
-% Number of samples per class
-figure;
-colors = lines(Nc);
-hold on
-for c = 1:Nc,
-    plot(x,samples_per_class(c,:),'Color',colors(c,:));
-end
-title('Number of Samples Per Class')
-hold off
-
-% Number of Prototypes (Total and per class)
-figure;
-colors = lines(Nc+1);
-hold on
-for c = 1:Nc+1,
-    plot(x,prot_per_class(c,:),'Color',colors(c,:));
-end
-title('Number of Prototypes')
-hold off
-
-% Number of hits x number of errors
-figure;
-hold on
-plot(x,no_of_errors,'r-');
-plot(x,no_of_correct,'b-');
-title('number of hits and errors')
-hold off
-
-% Percentage of Correct Classified
-figure;
-hold on
-plot(x,accuracy_vector,'r-');
-title('percentage of correct classified')
-axis([-1 length(x) -0.1 1.1])
-hold off
-
-Ktype = PAR.Ktype;
-Acc = accuracy_vector(end);
-Err = 1 - Acc;
-[~,Nprot] = size(PAR.Cx);
-v1 = PAR.v1;
-sigma = PAR.sigma;
-alpha = PAR.alpha;
-theta = PAR.theta;
-gamma = PAR.gamma;
-
-vetor = [Ktype,Acc,Err,Nprot,v1,sigma,alpha,theta,gamma];
-% display(vetor);
-
-% OUTttt.y_h = predict_vector;
-% STATS = class_stats_1turn(DATAttt,OUTttt);
-
-%% Results Analysis - Stationary Data - HPO: 1
-
-[~,A] = max(DATA.output);
-edges = unique(A);
-counts1 = histc(A(:), edges);
-
-[~,A] = max(DATAhpo.output);
-edges = unique(A);
-counts2 = histc(A(:), edges);
-
-DATA = DATAhpo;
-HPgs = HP_gs;
-f_train = @isk2nn_train;
-f_class = @isk2nn_classify;
-PSp = GSp;
-nargin = 5;
-
-[~,test] = max(PAR.Cy);
-he = sum(test == 1);
+% % Clean variables, workspace and figures
+% 
+% clear; clc; close all;
+% 
+% % Pairplot of iris dataset (3 ways of doing)
+% 
+% OPT.prob = 6;
+% DATA = data_class_loading(OPT);
+% label = {'SL','SW','PL','PW'};
+% 
+% plot_data_pairplot(DATA);
+% plot_data_pairplot(DATA,label);
+% plot_data_pairplot(DATA,label,'histogram');
+% 
+% % Boxplot of Comparison of results
+% 
+% x1 = [85.3 92.4 76.7 93.2 88.1]';
+% x2 = [88.3 92.4 92.7 93.2 88.1]';
+% x3 = [58.3 52.4 52.7 43.2 48.1]';
+% 
+% X = [x1,x2,x3];
+% classifier_names = {'Classifier 1','Classifier 2','Classifier 3'};
+% figure; boxplot(X,'labels',classifier_names)
+% ylabel('Accuracy')
+% title('Classifers Results')
 
 %% Weighted Knn
 
-K = 5;
-Nc = 3;
-lbls_near = [[-1;-1;1], [-1;1;-1], [-1;1;-1] [1;-1;-1] [1;-1;-1]];
-votes = zeros(1,Nc);
-for k = 1:K,
-	[~,class] = max(lbls_near(:,k));
-	votes(class) = votes(class) + 1;
-end
+% K = 5;
+% Nc = 3;
+% lbls_near = [[-1;-1;1], [-1;1;-1], [-1;1;-1] [1;-1;-1] [1;-1;-1]];
+% votes = zeros(1,Nc);
+% for k = 1:K,
+% 	[~,class] = max(lbls_near(:,k));
+% 	votes(class) = votes(class) + 1;
+% end
 
 %% Recursive Calculate Average and Variance
 
-x = [2,4,5,7,13,2.5,8,4.5];
-% x = [4,6,12,9];
-N = length(x);
-
-% Calculate with function
-
-Xmean = mean(x);
-Xvar = var(x,1);
-Xstd = std(x,1);
-
-% Calculate recursively
-
-Xmean_rec = x(1);
-Xvar_rec = 0;
-Xstd_rec = 0;
-
-for t = 2:N,
-    Xmean_rec = ((t-1)/t)*Xmean_rec + x(t)/t;
-    Xvar_rec = ((t-1)/t)*Xvar_rec + (1/(t-1))*(x(t)-Xmean_rec)^2;
-    Xstd_rec = sqrt(Xvar_rec);
-end
+% x = [2,4,5,7,13,2.5,8,4.5];
+% % x = [4,6,12,9];
+% N = length(x);
+% 
+% % Calculate with function
+% 
+% Xmean = mean(x);
+% Xvar = var(x,1);
+% Xstd = std(x,1);
+% 
+% % Calculate recursively
+% 
+% Xmean_rec = x(1);
+% Xvar_rec = 0;
+% Xstd_rec = 0;
+% 
+% for t = 2:N,
+%     Xmean_rec = ((t-1)/t)*Xmean_rec + x(t)/t;
+%     Xvar_rec = ((t-1)/t)*Xvar_rec + (1/(t-1))*(x(t)-Xmean_rec)^2;
+%     Xstd_rec = sqrt(Xvar_rec);
+% end
 
 %% Bar graph
 
-x = categorical({'C','E'});
-y = [1 3];
-bar(x,y,0.5)
+% x = categorical({'C','E'});
+% y = [1 3];
+% bar(x,y,0.5)
 
 %% Eigenfaces and FisherFaces Test
 
@@ -1043,48 +723,82 @@ bar(x,y,0.5)
 
 % ToDo - All
 
-%% Order and Cutoff frequency for Butterworth filter
-
-freq_p = 0.2*pi;
-freq_s = 0.3*pi;
-abs_p = 0.89125;
-abs_s = 0.177783;
-
-x0 = ones(2,1);
-
-opts = optimoptions('fsolve','Algorithm','levenberg-marquardt', ...
-          'Display', 'off', 'FunValCheck', 'on', 'TolFun', 10e-10);
-
-optm_func = @(x) ( abs(2*x(2)*(log(freq_p)-log(x(1))) - log((1/abs_p)^2-1)) + ...
-                   abs(2*x(2)*(log(freq_s)-log(x(1))) - log((1/abs_s)^2-1)) );
-
-x_h = fsolve(optm_func, x0, opts);
-
-freq_c = x_h(1);
-order = x_h(2);
-
 %% Naive Bayes Classifier
 
 % model = fitcnb(X,Y)
 
 %% Kc House Data
 
-lambda = 0.01;
+% lambda = 0.01;
+% 
+% y = kchousedata(:,1);
+% 
+% X = kchousedata(:,2:end);
+% [N,p] = size(X);
+% X = [ones(N,1),X];
+% 
+% beta = (X'*X + lambda*eye(p+1))\X'*y;
+% 
+% yh = X*beta;
+% 
+% MSE = sqrt((1/N) * (y-yh)'*(y-yh));
 
-y = kchousedata(:,1);
+%% KNN e MDC
 
-X = kchousedata(:,2:end);
-[N,p] = size(X);
-X = [ones(N,1),X];
+% Minimum Distance to Centroid (MDC) = Nearest Prototype Classifier (NPC)
 
-beta = (X'*X + lambda*eye(p+1))\X'*y;
+% xlswrite('classe1.xlsx',Classe1)
+% xlswrite('classe2.xlsx',Classe2)
 
-yh = X*beta;
+%% Pi with Monte Carlo Simulation!
 
-MSE = sqrt((1/N) * (y-yh)'*(y-yh));
+% % Number of samples
+% N = 100;
+% 
+% x = -1 + 2.*rand(2,N);
+% 
+% % Number of points inside circle
+% np = 0;
+% for i = 1:N,
+%     if (x(1,i)^2+x(2,i)^2 < 1)
+%         np = np +1;
+%     end
+% end
+% 
+% % Estimated pi
+% pi_h = 4*np/N;
+% error = pi - pi_h;
 
-%% Aerogerador
+%% Random Walk
 
-
+% % Number of steps
+% N = 20;
+% 
+% % Positions
+% x = zeros(N+1,1);
+% y = zeros(N+1,1);
+% 
+% % Walk
+% for i = 2:N+1,
+%     step = rand(1,1);
+%     if (step <= 0.25),      % Left
+%         x(i) = x(i-1) - 1;
+%         y(i) = y(i-1);
+%     elseif (step <= 0.5),   % Right
+%         x(i) = x(i-1) + 1;
+%         y(i) = y(i-1);
+%     elseif (step <= 0.75),  % Up
+%         x(i) = x(i-1);
+%         y(i) = y(i-1) + 1;
+%     else                    % Down
+%         x(i) = x(i-1);
+%         y(i) = y(i-1) - 1;
+%     end
+% end
+% 
+% % See walk
+% figure,
+% plot(x,y,'b-')
+% axis([-N/2 N/2 -N/2 N/2])
 
 %% END

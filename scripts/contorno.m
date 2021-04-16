@@ -1,4 +1,5 @@
 function [Vet_xy] = contorno(d,x0,y0)
+
 % Determina as curvas de contorno (1, 3, 5) para uma determinada norma, dada
 % as coordenadas centrais.
 %   entradas:
@@ -8,10 +9,14 @@ function [Vet_xy] = contorno(d,x0,y0)
 %   Saidas:
 %       - Vet_xy = pontos pertencentes ao lugar geométrico
 
+%% INITIALIZATIONS
+
 C = 1;          % Contorno 1
 err = 0.001;    % error
 step = 0.001;   % step
 Vet_xy = [];    % init vector
+
+%% ALGORITHM
 
 for i = -abs(C-x0):step:abs(C-x0),
     for j = -abs(C-y0):step:abs(C-y0),
@@ -33,3 +38,5 @@ for i = -abs(C-x0):step:abs(C-x0),
         end
     end
 end
+
+%% END

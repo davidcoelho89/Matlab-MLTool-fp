@@ -1,10 +1,7 @@
-%% Machine Learning ToolBox
-
-% Sample used to run isk2nn and a Stationary DataSet
-%% SPOK-NN: With stationary data
+%% BAYES CLASSIFIER: With Stationary data
 
 % Author: David Nascimento Coelho
-% Last Update: 2020/05/11
+% Last Update: 2021/03/03
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,54 +11,41 @@ format long e;  % Output data style (float)
 
 %% GENERAL DEFINITIONS
 
-% 6 - iris / 7 - motor failure / 10 - Vertebral Column / 
-% 19 - cervical cancer / 20 - Sensorless Drive / 22 - Wall Following /
-
 % General options' structure
 
-OPT.prob = 19;              % Which problem will be solved / used
-OPT.prob2 = 02;             % More details about a specific data set
-OPT.norm = 3;               % Normalization definition
-OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
-OPT.Nr = 10;              	% Number of repetitions of the algorithm
-OPT.hold = 2;               % Hold out method
-OPT.ptrn = 0.7;             % Percentage of samples for training
-OPT.file = 'cervical_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';     
+OPT.prob = 02;        	% Which problem will be solved / used
+OPT.prob2 = 30;       	% More details about a specific data set
+OPT.norm = 2;         	% Normalization definition
+OPT.lbl = 1;           	% Labeling definition
+OPT.Nr = 10;           	% Number of repetitions of the algorithm
+OPT.hold = 2;         	% Hold out method
+OPT.ptrn = 0.7;        	% Percentage of samples for training
+OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
 
-GSp.fold = 5;       % number of data partitions for cross validation
-GSp.type = 2;       % Takes into account also the dicitionary size
-GSp.lambda = 2; 	% Jpbc = Ds + lambda * Err
+GSp.fold = 5;           % number of data partitions for cross validation
+GSp.type = 1;           % Takes into account just accuracy
+GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
-%% HYPERPARAMETERS - DEFAULT
+%% CHOOSE ALGORITHM
 
-HP.Dm = 2;                  % Design Method
-HP.Ss = 1;                  % Sparsification strategy
-HP.v1 = 0.8;                % Sparseness parameter 1 
-HP.v2 = 0.9;                % Sparseness parameter 2
-HP.Us = 1;                  % Update strategy
-HP.eta = 0.1;               % Update rate
-HP.Ps = 2;                  % Prunning strategy
-HP.min_score = -10;         % Score that leads the sample to be pruned
-HP.max_prot = 600;          % Max number of prototypes
-HP.min_prot = 1;            % Min number of prototypes
-HP.Von = 0;                 % Enable / disable video 
-HP.K = 1;                   % Number of nearest neighbors (classify)
-HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
-HP.sig2n = 0.001;           % Kernel Regularization parameter
-HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
-HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
-HP.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
-HP.gamma = 2;               % polynomial order (poly 2 or 3)
+% Handlers for classification functions
+
+class_name = 'Bayes';
+class_train = @gauss_train;
+class_test = @gauss_classify;
+
+%% CHOOSE HYPERPARAMETERS
+
+HP.type = 5;       % Type of gaussian classifier 
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
 HPgs = HP;
-HPgs.v1 = 2.^linspace(-4,3,8);
-HPgs.v2 = HPgs.v1(end) + 0.001;
-HPgs.sigma = 2.^linspace(-10,9,20);
+
+% Can put here vectors of hyperparameters to be optimized
+% Ex: HPgs.type = 1:5;
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
@@ -69,7 +53,7 @@ DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-% plot_data_pairplot(DATA);           % See pairplot of attributes
+plot_data_pairplot(DATA);           % See pairplot of attributes
 
 %% ACCUMULATORS
 
@@ -129,21 +113,21 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@isk2nn_train,@isk2nn_classify,GSp);
+HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
 % Calculate model's parameters
-PAR_acc{r} = isk2nn_train(DATAtr,HP);
+PAR_acc{r} = class_train(DATAtr,HP);
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
 % Results and Statistics with training data
-OUTtr = isk2nn_classify(DATAtr,PAR_acc{r});
+OUTtr = class_test(DATAtr,PAR_acc{r});
 STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
 
 % Results and Statistics with test data
-OUTts = isk2nn_classify(DATAts,PAR_acc{r});
+OUTts = class_test(DATAts,PAR_acc{r});
 STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
@@ -165,28 +149,28 @@ nSTATS_all{2,1} = nSTATS_ts;
 
 % Compare Training and Test Statistics
 
-class_stats_ncomp(nSTATS_all,NAMES);
+class_stats_ncomp(nSTATS_all,NAMES); 
 
 %% GRAPHICS - OF LAST TURN
 
-% Get Data, Parameters, Statistics
-DATAf.input = [DATAtr.input, DATAts.input];
-DATAf.output = [DATAtr.output, DATAts.output];
-PAR = PAR_acc{r};
-STATS = STATS_ts_acc{r};
-
-% Classifier Decision Boundaries
-plot_class_boundary(DATAf,PAR,@isk2nn_classify);
-
-% ROC Curve (one for each class)
-plot_stats_roc_curve(STATS);
-
-% Precision-Recall (one for each class)
-plot_stats_precision_recall(STATS)
-
-% See Class Boundary Video (of last turn)
+% % Get Data, Parameters, Statistics
+% DATAf.input = [DATAtr.input, DATAts.input];
+% DATAf.output = [DATAtr.output, DATAts.output];
+% PAR = PAR_acc{r};
+% STATS = STATS_ts_acc{r};
+% 
+% % Classifier Decision Boundaries
+% plot_class_boundary(DATAf,PAR,class_test);
+% 
+% % ROC Curve (one for each class)
+% plot_stats_roc_curve(STATS);
+% 
+% % Precision-Recall (one for each class)
+% plot_stats_precision_recall(STATS)
+% 
+% % See Class Boundary Video (of last turn)
 % if (HP.Von == 1),
-%     VID = PAR_acc{r}.VID
+%     VID = PAR_acc{r}.VID;
 %     figure;
 %     movie(VID)
 % end

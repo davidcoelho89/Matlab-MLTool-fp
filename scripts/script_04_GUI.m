@@ -7,7 +7,11 @@ clear all; close all; clc;
 
 nfig = 0;       % contagem do numero de figuras
 
-%% Função Principal
+%% Função Principal (nova)
+
+appdesigner;
+
+%% Função Principal (antiga)
 
 guide;
 

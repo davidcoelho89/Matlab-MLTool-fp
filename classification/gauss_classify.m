@@ -12,11 +12,12 @@ function [OUT] = gauss_classify(DATA,PAR)
 %           mu_i = centroid of each class                       [Nc x p]
 %           Ci = covariance matrix of each class                [Nc x p x p]
 %           type = type of gaussian classifier                  [cte]
-%               1: gi(x) = -0.5Qi(x) - 0.5ln(det(Ci)) + ln(p(Ci))
-%               2: gi(x) = -0.5Qi(x) - 0.5ln(det(Ci))
-%               3: gi(x) = -0.5Qi(x) (mahalanobis distance)
-%            	   (covariance matrix is the pooled covariance matrix)
-%               4: gi(x) = -0.5||x-mi||^2 (euclidean distance)
+%               1: gi(x) = Qi(x) + ln(det(Ci)) - 2ln(p(Ci))
+%               2: gi(x) = Qi(x) + ln(det(Ci))
+%               3: gi(x) = Qi(x) (mahalanobis distance)
+%            	        (covariance matrix is the pooled covariance matrix)
+%               4: gi(x) = ||x-mi||^2 (euclidean distance)
+%               5: gi(x) = naive bayes (uncorrelated data)
 %   Output:
 %       OUT.
 %           y_h = classifier's output matrix                    [Nc x N]
@@ -47,7 +48,7 @@ y_h = zeros(Nc,N);
 
 %% ALGORITHM
 
-if type == 1,  % Complete Classifier
+if type == 1 || type == 5,  % Complete Classifier (QDA or Naive Bayes)
 
 % Inverse of Covariance Matrix
 Ci_inv = cell(1,Nc);
@@ -67,7 +68,7 @@ for i = 1:N,
         % mahalanobis distance for each class
         MDc = (xi - mu_i(c,:))*Ci_inv{c}*(xi - mu_i(c,:))';
         % discriminant function for each class
-        gi(c) = - 0.5*MDc -0.5*log(det(Ci{c})) + log(Ni(c)/Ntr);
+        gi(c) = -MDc -log(det(Ci{c})) + 2*log(Ni(c)/Ntr);
     end
     
     % Fill estimated output matrix for this sample

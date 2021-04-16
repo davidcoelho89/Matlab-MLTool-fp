@@ -8,21 +8,16 @@
 Gazi University, School of Medicine,
  06510 Ankara, Turkey, Phone: +90 (312) 214 1080
 
-
 -- 2. H. Altay Guvenir, PhD., Bilkent University,
  Department of Computer Engineering and Information Science,
  06533 Ankara, Turkey
  Phone: +90 (312) 2664133 Email: guvenir@cs.bilkent.edu.tr
 
-
-
 (b) Donor: 
 H. Altay Guvenir, Bilkent University,
  Department of Computer Engineering and Information Science,
  06533 Ankara, Turkey
-, Phone: +90 (312) 2664133 Email: guvenir@cs.bilkent.edu.tr
-
-
+ Phone: +90 (312) 2664133 Email: guvenir@cs.bilkent.edu.tr
 
 (c) Date:  January, 1998
 
@@ -32,30 +27,27 @@ H. Altay Guvenir, Bilkent University,
 
 Class code:	Class:                  Number of instances:
 
-
-1		psoriasis			112
+1		psoriasis			     112
        
-2		seboreic dermatitis		61
+2		seboreic dermatitis		 61
       
-3		lichen planus			72
+3		lichen planus			 72
     
-4		pityriasis rosea		49
+4		pityriasis rosea		 49
     
-5		cronic dermatitis		52    
+5		cronic dermatitis		 52    
   
-6		pityriasis rubra pilaris	20
+6		pityriasis rubra pilaris 20
 
 1. Classification Problem: Determine the type of Eryhemato-Squamous Disease.
 
 2. 34 attributes (33 linear and 1 nominal)
-
 
 3. Number of Instances: 366
 4. Number of Attributes: 34
 5. Missing Attribute Values: 8 (in Age attribute). Distinguished with '?'
 
 6. Attribute Information:
-  
 
 Clinical Attributes: (take values 0, 1, 2, 3, unless otherwise indicated)
  
@@ -82,8 +74,6 @@ Clinical Attributes: (take values 0, 1, 2, 3, unless otherwise indicated)
 11: family history, (0 or 1)
      
 34: Age (linear)
-
- 
 
 Histopathological Attributes: (take values 0, 1, 2, 3)
      

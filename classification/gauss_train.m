@@ -10,11 +10,12 @@ function [PARout] = gauss_train(DATA,PAR)
 %           output = labels matrix                              [Nc x N]
 %       PAR. 
 %           type = type of gaussian classifier                  [cte]
-%               1: gi(x) = -0.5Qi(x) - 0.5ln(det(Ci)) + ln(p(Ci))
-%               2: gi(x) = -0.5Qi(x) - 0.5ln(det(Ci))
-%               3: gi(x) = -0.5Qi(x) (mahalanobis distance)
-%            	   (covariance matrix is the pooled covariance matrix)
+%               1: gi(x) = Qi(x) + ln(det(Ci)) - 2ln(p(Ci))
+%               2: gi(x) = Qi(x) + ln(det(Ci))
+%               3: gi(x) = Qi(x) (mahalanobis distance)
+%            	        (covariance matrix is the pooled covariance matrix)
 %               4: gi(x) = ||x-mi||^2 (euclidean distance)
+%               5: gi(x) = naive bayes (uncorrelated data)
 %   Output:
 %       PARout.
 %           Ni = number of "a priori samples" per class         [Nc x 1]
@@ -84,6 +85,10 @@ end
 % Divide by number of elements
 for i = 1:Nc,
     Ci{i} = Ci{i}/Ni(i);
+    % Decorrelates data (for naive bayes)
+    if PAR.type == 5,
+        Ci{i} = diag(diag(Ci{i}));
+    end
 end
 
 %% FILL OUTPUT STRUCTURE

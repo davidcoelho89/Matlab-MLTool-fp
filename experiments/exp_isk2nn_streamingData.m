@@ -1,27 +1,27 @@
 %% Machine Learning ToolBox
 
-% isK2nn Model testing in various streaming datasets
+% isk2nn with various streaming datasets
 % Author: David Nascimento Coelho
-% Last Update: 2020/04/08
+% Last Update: 2021/05/10
 
 %% Datasets:
 
 % # code: # samples / # attributes / # classes
 % Brief Description
 
-norm = 0;   % Normalization. 0: No normalization. 3: z-score normalization.
+norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.
 lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 
-%% Sea Concepts
-
+% %% Sea Concepts
+% 
 % % 25: 200k / 03 / 02
 % % label noise (10%)
 % % f1 + f2 = b; b is changing each 5000 samples.
 % % Abrupt drift
 % 
 % OPT =  struct('prob',25,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% 
 % %% Rotating Hyperplane
 % 
 % % 26: 200k / 10 / 02. 
@@ -29,7 +29,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % Gradual Drift.
 % 
 % OPT =  struct('prob',26,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% RBF Moving
 % 
@@ -38,7 +38,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % Gradual drift.
 % 
 % OPT =  struct('prob',27,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% RBF Interchange
 % 
@@ -46,23 +46,23 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % Interchanging RBFs. Change Means. Abrupt drift.
 % 
 % OPT =  struct('prob',28,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% Moving Squares
-% 
-% % 29: 200k / 02 / 04. 
-% % Moving Squares. Gradual/Incremental drift.
-% 
-% OPT =  struct('prob',29,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-% 
+
+% 29: 200k / 02 / 04. 
+% Moving Squares. Gradual/Incremental drift.
+
+OPT =  struct('prob',29,'prob2',1,'norm',norm,'lbl',lbl);
+exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+
 % %% Transient Chessboard
 % 
 % % 30: 200k / 02 / 08. 
 % % Virtual Reocurring drifts.
 % 
 % OPT =  struct('prob',30,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% Mixed Drift
 % 
@@ -70,7 +70,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % % Various drifts.
 % % 
 % % OPT =  struct('prob',31,'prob2',1,'norm',norm,'lbl',lbl);
-% % test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% % exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% LED
 % 
@@ -80,7 +80,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % % Incremental Drift.
 % % 
 % % OPT =  struct('prob',32,'prob2',1,'norm',norm,'lbl',lbl);
-% % test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% % exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% Weather
 % 
@@ -88,7 +88,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % Virtual Drift
 % 
 % OPT =  struct('prob',33,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% Electricity
 % 
@@ -96,7 +96,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % Real Drift
 % 
 % OPT =  struct('prob',34,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
 % %% Poker Hand
 % 
@@ -104,38 +104,38 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 % % Virtual Drift
 % 
 % OPT =  struct('prob',36,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 % 
-%% Outdoor
-
-% 37: 4000 / 21 / 40
-% Virtual Drift
-
-OPT =  struct('prob',37,'prob2',1,'norm',norm,'lbl',lbl);
-test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-
-%% Rialto
-
-% 38: 82250 / 27 / 10
-% Virtual Drift
-
-OPT =  struct('prob',38,'prob2',1,'norm',norm,'lbl',lbl);
-test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-
-%% Cover Type
-
-% 35: 581012 / 54 / 07
-% Real Drift
-
-OPT =  struct('prob',35,'prob2',1,'norm',norm,'lbl',lbl);
-test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-
-%% Spam
-
+% %% Outdoor
+% 
+% % 37: 4000 / 21 / 40
+% % Virtual Drift
+% 
+% OPT =  struct('prob',37,'prob2',1,'norm',norm,'lbl',lbl);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% 
+% %% Rialto
+% 
+% % 38: 82250 / 27 / 10
+% % Virtual Drift
+% 
+% OPT =  struct('prob',38,'prob2',1,'norm',norm,'lbl',lbl);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% 
+% %% Cover Type
+% 
+% % 35: 581012 / 54 / 07
+% % Real Drift
+% 
+% OPT =  struct('prob',35,'prob2',1,'norm',norm,'lbl',lbl);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% 
+% %% Spam
+% 
 % % 39: 
 % % Real Drift
 % 
 % OPT =  struct('prob',39,'prob2',1,'norm',norm,'lbl',lbl);
-% test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
 
 %% END

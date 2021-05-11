@@ -1,1 +1,12 @@
 https://github.com/vlosing/driftDatasets
+
+Amostras (N):  50.000
+Atributos (p): 3 (2 relevantes e 1 irrelevante para classificação)
+Classes (Nc):  2
+
+Two class decision boundary is given by f1 + f2 = b
+
+Abrupt drift: simulated with four different concepts. 
+              Value of b changed every 12500 samples
+
+10% of noise

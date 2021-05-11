@@ -1,6 +1,4 @@
-Experiments!
-
-class_test_1
+exp_MotFail_1
         \item Test for Motor Failure DataBase
         \item With Cross validation and Reject option
         \item OLS, Gauss, PS, MLP, ELM, SVM, LSSVM, MLM, GP, KNN
@@ -8,11 +6,11 @@ class_test_1
         \item Matthews Correlation for training, test and reject option
         \item Training and Tests results: for binary and multiclass
 
-class_test_2
+exp_MotFail_2
         \item defines 16 turns of tests, each one with different OPT, CVp and REJp
         \item for each turn, calls class\_test\_3
 
-class_test_3
+exp_MotFail_3
         \item Test for Motor Failure DataBase
         \item Used by class\_test\_2
         \item OLS, PS, BAY, MLP, ELM, SVM, LSSVM, MLM, GP algorithms
@@ -36,24 +34,26 @@ esann_test_1
 test_script
         \item General Drafts for algorithms
 
-WSOMconf_2017
+exp_WSOMconf_2017
         \item SOM2D / KSOM-GD-G / KSOM-GD-C / KSOM-GD-L / KSOM-EF-G / KSOM-EF-C / KSOM-EF-L
 
-WSOMJournal_2018_1
+exp_WSOMJournal_2018_1
         \item SOM2D / KSOM-GD / KSOM-EF / KSOM-PS-A / KSOM-PS-N / KSOM-PS-R
 
-WSOMJournal_2018_2
+exp_WSOMJournal_2018_2
         \item SOM2D / KSOM-GD / KSOM-EF / KSOM-GD + ALD / KSOM-EF + ALD
 
-WSOMJournal_2018_3
+exp_WSOMJournal_2018_3
         \item KSOM-ALD + GD test / KSOM-ALD + EF test
 
-YaleA_GenClass_1
+exp_YaleA_GenClass_1
         \item Test for Yale Image DataBase and others classifiers
         \item OLS, MLP, SVM, LSSVM
 
-YaleA_k2nn_1
+exp_YaleA_k2nn_1
         \item Test For Yale Images DataBase and K2NN classifier
         \item 8 types of k2nn
         \item Ss = 1 (ALD) / Us = x / Ps = x / Dm = 1,2 / 
         \item v = CV / Ktype = 1,2,3,4 / sig2 = CV /
+
+exp_YaleA_k2nn_2

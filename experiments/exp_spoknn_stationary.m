@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% spok-nn With stationary data
+% spok-nn with one stationary dataset
 % Author: David Nascimento Coelho
-% Last Update: 2020/05/10
+% Last Update: 2021/05/10
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 19;              % Which problem will be solved / used
+OPT.prob = 11;              % Which problem will be solved / used
 OPT.prob2 = 02;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
@@ -22,8 +22,8 @@ OPT.Nr = 10;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 
-OPT.filename = 'cervical_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';     
-OPT.videoname = 'isk2nn_iris.mp4';
+OPT.filename = 'twoMoons_spoknn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';     
+OPT.videoname = 'spoknn_iris.mp4';
 
 % Grid Search Parameters
 
@@ -33,20 +33,20 @@ GSp.lambda = 2; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
-HP.Ne = 01;             	% Maximum number of epochs
+HP.Ne = 10;             	% Maximum number of epochs
 HP.Dm = 2;                  % Design Method
 HP.Ss = 1;                  % Sparsification strategy
-HP.v1 = 0.8;                % Sparseness parameter 1 
+HP.v1 = 0.4;                % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
 HP.Us = 1;                  % Update strategy
 HP.eta = 0.1;               % Update rate
 HP.Ps = 2;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
-HP.max_prot = 600;          % Max number of prototypes
+HP.max_prot = 100;          % Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
-HP.knn_type = 2;            % Type of knn aproximation
+HP.knn_type = 1;            % Type of knn aproximation (classify)
 HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
@@ -59,9 +59,9 @@ HP.gamma = 2;               % polynomial order (poly 2 or 3)
 HPgs = HP;
 
 % Hiperparameters for ALD
-HPgs.v1 = 2.^linspace(-4,3,8);
-HPgs.v2 = HPgs.v1(end) + 0.001;
-HPgs.sigma = 2.^linspace(-10,9,20);
+% HPgs.v1 = 2.^linspace(-4,3,8);
+% HPgs.v2 = HPgs.v1(end) + 0.001;
+% HPgs.sigma = 2.^linspace(-10,9,20);
 
 % Hiperparameters for Coherence
 % HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
@@ -134,7 +134,7 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@isk2nn_train,@isk2nn_classify,GSp);
+% HP = grid_search_cv(DATAtr,HPgs,@isk2nn_train,@isk2nn_classify,GSp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
@@ -205,13 +205,13 @@ plot_stats_precision_recall(STATS)
 
 % % Save All Variables
 % save(OPT.filename);
-% 
-% % Save Class Boundary Video (of last turn)
-% v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
-% v.FrameRate = 1;
-% VID = PAR_acc{r}.VID;
-% open(v);
-% writeVideo(v,VID);
-% close(v);
+
+% Save Class Boundary Video (of last turn)
+v = VideoWriter(OPT.videoname,'MPEG-4'); % v = VideoWriter('video.avi');
+v.FrameRate = 10;
+VID = PAR_acc{r}.VID;
+open(v);
+writeVideo(v,VID);
+close(v);
 
 %% END

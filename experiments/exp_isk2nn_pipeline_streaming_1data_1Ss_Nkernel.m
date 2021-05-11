@@ -1,8 +1,8 @@
-function [] = test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT)
+function [] = exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT)
 
 % --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
 %
-%   [] = test_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HPgs,PSp)
+%   [] = exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HPgs,PSp)
 %
 %   Input:
 %       OPT.
@@ -25,9 +25,10 @@ PSpar.lambda = 2;       % Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
+HP_gs.Ne = 01;
 HP_gs.Dm = 2;
-HP_gs.Ss = 1;
-HP_gs.v1 = 0.8;
+HP_gs.Ss = 2;
+HP_gs.v1 = 0.4;
 HP_gs.v2 = 0.9;
 HP_gs.Us = 3;
 HP_gs.eta = 0.3;
@@ -37,6 +38,8 @@ HP_gs.max_prot = 600;
 HP_gs.min_prot = 1;
 HP_gs.Von = 0;
 HP_gs.K = 1;
+HP_gs.knn_type = 1;
+HP_gs.Ktype = 1;
 HP_gs.sig2n = 0.001;
 
 %% FILE NAME - STRINGS
@@ -60,7 +63,8 @@ str14 = 'nn.mat';
 
 str12 = '_lin_';
 
-HP_gs.v1 = 2.^linspace(-10,10,21);
+% HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
+HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 1;
 HP_gs.sigma = 2;
@@ -71,13 +75,14 @@ HP_gs.theta = 1;
 OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
-test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = GAUSSIAN
 
 str12 = '_gau_';
 
-HP_gs.v1 = 2.^linspace(-4,3,8);
+% HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 2;
 HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -89,7 +94,7 @@ OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
 
-test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = POLYNOMIAL
 
@@ -106,7 +111,7 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 % OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
 %                   str9,str10,str11,str12,str13,str14);
 % 
-% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = EXPONENTIAL
 
@@ -124,13 +129,14 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 %                   str9,str10,str11,str12,str13,str14);
 % 
 % 
-% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = CAUCHY
 
 str12 = '_cau_';
 
-HP_gs.v1 = 2.^linspace(-4,3,8);
+% HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 5;
 HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -141,7 +147,7 @@ HP_gs.theta = 1;
 OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                   str9,str10,str11,str12,str13,str14);
 
-test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = LOG
 
@@ -158,7 +164,7 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 % OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
 %                   str9,str10,str11,str12,str13,str14);
 % 
-% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = SIGMOID
 
@@ -176,7 +182,7 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 % OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
 %                   str9,str10,str11,str12,str13,str14);
 % 
-% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% KERNEL = KMOD
 
@@ -193,6 +199,6 @@ test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 % OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
 %                   str9,str10,str11,str12,str13,str14);
 % 
-% test_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 %% END

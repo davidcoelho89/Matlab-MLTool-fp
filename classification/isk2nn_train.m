@@ -9,6 +9,7 @@
 %           input = input matrix                                [p x N]
 %           output = output matrix                              [Nc x N]
 %       HP.
+%           Ne = maximum number of epochs	                    [cte]
 %           Dm = Design Method                                  [cte]
 %               = 1 -> all data set
 %               = 2 -> per class
@@ -59,6 +60,7 @@
 %% SET DEFAULT HYPERPARAMETERS
 
 if ((nargin == 1) || (isempty(HP))),
+    PARaux.Ne = 1;          % Maximum number of epochs
     PARaux.Dm = 2;          % Design Method
     PARaux.Ss = 1;          % Sparsification strategy
     PARaux.v1 = 0.1;        % Sparseness parameter 1 
@@ -80,6 +82,9 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.gamma = 2;       % Polynomial order
 	HP = PARaux;
 else
+    if (~(isfield(HP,'Ne'))),
+        HP.Ne = 1;
+    end
     if (~(isfield(HP,'Dm'))),
         HP.Dm = 2;
     end
@@ -148,6 +153,7 @@ Y = DATA.output;        % Output Matrix
 
 % Get Hyperparameters
 
+Ne = HP.Ne;             % Maximum number of epochs
 Von = HP.Von;           % Enable or not Video
 
 % Problem Initialization
@@ -170,7 +176,14 @@ if (~isfield(PAR,'Cx'))
     PAR.times_selected = [];
 end
 
-VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
+% if (Ne == 1),
+%     VID = struct('cdata',cell(1,Ne),'colormap', cell(1,Ne));
+% else
+%     VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
+% end
+
+VID = struct('cdata',cell(1,N*Ne),'colormap', cell(1,N*Ne));
+it = 0;
 
 yh = -1*ones(Nc,N);
 
@@ -178,57 +191,72 @@ yh = -1*ones(Nc,N);
 
 % Update Dictionary
 
-for n = 1:N,
-    
-    % Save frame of the current epoch
-    if (Von),
-        VID(n) = prototypes_frame(PAR.Cx,DATA);
-    end
-    
-	% Get sample
-    DATAn.input = X(:,n);
-    DATAn.output = Y(:,n);
+for ep = 1:Ne,
 
-    % Get dictionary size (cardinality, number of prototypes)
-    [~,mt1] = size(PAR.Cx);
-    
-    % Init Dictionary (if it is the first sample)
-    if (mt1 == 0),
-        % Make a guess (yh = 1 => first class)
-        yh(1,n) = 1;
-        % Add sample to dictionary
+    for n = 1:N,
+
+        % Save frame of the current iteration
+%         if (Von && Ne == 1),
+%             VID(n) = prototypes_frame(PAR.Cx,DATA);
+%         end
+
+        % Save frame of the current iteration
+        if (Von),
+            it = it+1;
+            VID(it) = prototypes_frame(PAR.Cx,DATA);
+        end
+
+        % Get sample
+        DATAn.input = X(:,n);
+        DATAn.output = Y(:,n);
+
+        % Get dictionary size (cardinality, number of prototypes)
+        [~,mt1] = size(PAR.Cx);
+
+        % Init Dictionary (if it is the first sample)
+        if (mt1 == 0),
+            % Make a guess (yh = 1 => first class)
+            yh(1,n) = 1;
+            % Add sample to dictionary
+            PAR = isk2nn_dict_grow(DATAn,PAR);
+            % Update number of times this prototype has been selected
+            PAR.times_selected = 1;
+            continue;
+        end
+
+        % Predict Output
+        OUTn = isk2nn_classify(DATAn,PAR);
+        yh(:,n) = OUTn.y_h;
+
+        % Update number of times a prototype has been selected
+        win = OUTn.win;
+        PAR.times_selected(win) = PAR.times_selected(win) + 1;
+
+        % Growing Strategy
         PAR = isk2nn_dict_grow(DATAn,PAR);
-        % Update number of times this prototype has been selected
-        PAR.times_selected = 1;
-        continue;
-    end
-    
-    % Predict Output
-    OUTn = isk2nn_classify(DATAn,PAR);
-    yh(:,n) = OUTn.y_h;
-    
-    % Update number of times a prototype has been selected
-    win = OUTn.win;
-    PAR.times_selected(win) = PAR.times_selected(win) + 1;
-    
-    % Growing Strategy
-	PAR = isk2nn_dict_grow(DATAn,PAR);
 
-	% Get dictionary size (cardinality, number of prototypes)
-    [~,mt2] = size(PAR.Cx);
-    
-    % Update Strategy (if prototype was not added)
-    if(mt2-mt1 == 0),
-        PAR = isk2nn_dict_updt(DATAn,PAR);
-    else
-        % For debug. Display dictionary size when it grows.
-        % display(mt2);
+        % Get dictionary size (cardinality, number of prototypes)
+        [~,mt2] = size(PAR.Cx);
+
+        % Update Strategy (if prototype was not added)
+        if(mt2-mt1 == 0),
+            PAR = isk2nn_dict_updt(DATAn,PAR);
+        else
+            % For debug. Display dictionary size when it grows.
+            % display(mt2);
+        end
+
+        % Prunning Strategy (heuristic based)
+        PAR = isk2nn_score_updt(DATAn,OUTn,PAR);
+        PAR = isk2nn_dict_prun(PAR);
+
     end
     
-    % Prunning Strategy (heuristic based)
-    PAR = isk2nn_score_updt(DATAn,OUTn,PAR);
-    PAR = isk2nn_dict_prun(PAR);
-    
+% 	% Save frame of the current iteration
+% 	if (Von && Ne > 1),
+%         VID(ep) = prototypes_frame(PAR.Cx,DATA);
+% 	end
+
 end
 
 %% FILL OUTPUT STRUCTURE

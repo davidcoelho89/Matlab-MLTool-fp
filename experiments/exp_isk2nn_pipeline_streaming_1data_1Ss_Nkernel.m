@@ -21,24 +21,24 @@ DATA = data_class_loading(OPT);
 
 PSpar.iterations = 1;	% number of times data is presented to the algorithm
 PSpar.type = 2;         % Takes into account also the dicitionary size
-PSpar.lambda = 2;       % Jpbc = Ds + lambda * Err
+PSpar.lambda = 2;   	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
 HP_gs.Ne = 01;
 HP_gs.Dm = 2;
-HP_gs.Ss = 2;
+HP_gs.Ss = 1;
 HP_gs.v1 = 0.4;
 HP_gs.v2 = 0.9;
-HP_gs.Us = 3;
-HP_gs.eta = 0.3;
+HP_gs.Us = 1;
+HP_gs.eta = 0.1;
 HP_gs.Ps = 2;
 HP_gs.min_score = -10;
-HP_gs.max_prot = 600;
+HP_gs.max_prot = 500;
 HP_gs.min_prot = 1;
 HP_gs.Von = 0;
 HP_gs.K = 1;
-HP_gs.knn_type = 1;
+HP_gs.knn_type = 2;
 HP_gs.Ktype = 1;
 HP_gs.sig2n = 0.001;
 
@@ -63,8 +63,8 @@ str14 = 'nn.mat';
 
 str12 = '_lin_';
 
-% HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
-HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
+HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
+% HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 1;
 HP_gs.sigma = 2;
@@ -81,8 +81,8 @@ exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 str12 = '_gau_';
 
-% HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
-HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+% HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 2;
 HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -135,8 +135,8 @@ exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
 
 str12 = '_cau_';
 
-% HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
-HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+% HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
 HP_gs.v2 = HP_gs.v1(end) + 0.001;
 HP_gs.Ktype = 5;
 HP_gs.sigma = 2.^linspace(-10,9,20);

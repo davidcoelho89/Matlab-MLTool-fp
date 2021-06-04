@@ -24,11 +24,11 @@ t = 0:0.01:20;
 w0 = 3;
 x = cos(w0*t);
 
-y = lsim(sys,x,t); % Saida para uma entrada senoidal
+y1 = lsim(sys,x,t); % Saida para uma entrada senoidal
 
 figure;
 set(gca,'FontSize',18)
-plot(t(1:500),x(1:500),'b',t(1:500),y(1:500),'r')
+plot(t(1:500),x(1:500),'b',t(1:500),y1(1:500),'r')
 grid on
 ylabel('x(t) e y(t)')
 xlabel('t (s)')
@@ -41,16 +41,19 @@ k = 1:1000;
 w0 = pi/10;
 x = cos(w0*k);
 
-y = zeros(1,length(k));
-for n = 3:length(k);
-    y(n) = (3/4)*y(n-1) - (1/8)*y(n-2) + 2*x(n);
+y1 = zeros(1,length(k));
+y2 = zeros(1,length(k));
+for n = 3:length(k)
+    y1(n) = (3/4)*y1(n-1) - (1/8)*y1(n-2) + 2*x(n);
+    y2(n) = (3/4)*y2(n-1) - (1/8)*y2(n-2) + (1/4)*x(n-1) + (1/4)*x(n-2);
 end
 
 figure;
 set(gca,'FontSize',18)
 stem(k(1:50),x(1:50),'b');
 hold on
-stem(k(1:50),y(1:50),'r');
+stem(k(1:50),y1(1:50),'r');
+stem(k(1:50),y2(1:50),'k');
 hold off
 
 %% Experiment 2:

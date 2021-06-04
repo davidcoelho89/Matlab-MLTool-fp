@@ -22,6 +22,7 @@ function [PAR] = isk2nn_score_updt(DATAn,OUTn,HP)
 %           y_h = classifier's output                           [Nc x 1]
 %           win = closest prototype to each sample              [1 x 1]
 %           dist = distance from sample to each prototype       [Nk x 1]
+%           near_ind = indexes for nearest prototypes           [K x N]
 %   Output: 
 %       PAR.
 %           Cx = Attributes of output dictionary                [p x Nk]
@@ -51,6 +52,8 @@ Cy = HP.Cy;                         % Classes of dictionary
 % Get predicted output
 yh = OUTn.y_h;
 win = OUTn.win;
+near_ind = OUTn.near_ind;
+[K,~] = size(near_ind);
 
 % Get problem parameters
 [~,Nk] = size(Cy);                  % hold dictionary size
@@ -61,7 +64,7 @@ class_hist_out = class_history;
 
 %% ALGORITHM
 
-if(Ps == 0),
+if(Ps == 0)
     
     % Does nothing
     
@@ -76,16 +79,17 @@ else
     mc = sum(Dy_class == yt_class); 
     
     % if there are no prototypes from yt class
-    if (mc == 0),
+    if (mc == 0)
+
         % Does nothing
         
     % Update all scores
-    elseif (Ps == 1),
+    elseif (Ps == 1)
         
-        for k = 1:Nk,
+        for k = 1:Nk
             % if it was a hit
-            if (yt_class == yh_class),
-                if (k == win),
+            if (yt_class == yh_class)
+                if (k == win)
                     score_out(k) = score(k) + 1;
                 elseif (Dy_class(k) == yh_class)
                     score_out(k) = score(k) - 0.1;
@@ -94,7 +98,7 @@ else
                 end
             % if it was an error
             else
-                if (k == win),
+                if (k == win)
                     score_out(k) = score(k) - 1;
                 else
                     score_out(k) = score(k);
@@ -103,26 +107,71 @@ else
         end
         
     % Update score of winner
-    elseif (Ps == 2),
+    elseif (Ps == 2)
         
-        if(Dy_class(win) == yt_class)
-            % Update class_history
-            class_hist_out(win) = 1;
-            % Update score of winner
-            if((score(win) < 0) && (class_history(win) == 1)),
-                score_out(win) = score(win) + 1;
+        if (K == 1) % nn strategy
+
+            if(Dy_class(win) == yt_class)
+                % Update score of winner
+                if((score(win) < 0) && (class_history(win) == 1))
+                    score_out(win) = score(win) + 1;
+                end
+                % Update class_history
+                class_hist_out(win) = 1;
+            else
+                % Update score of winner
+                if (class_history(win) == -1)
+                    score_out(win) = score(win) - 1;
+                end
+                % Update class_history
+                class_hist_out(win) = -1;
             end
-        else
-            % Update class_hist
-            class_hist_out(win) = -1;
-            % Update score of winner
-            if (class_history(win) == -1),
-                score_out(win) = score(win) - 1;
-            end
-        end
+            
+        else % knn strategy
+            
+            for k = 1:K
+                
+                % get class of prototype
+                c = Dy_class(near_ind(k));
+                
+                % if it was a hit
+                if (yt_class == yh_class)
+                    % prototype has the same class as sample?
+                    if (c == yt_class)
+                        % Update score
+                        if((score(c) < 0) && (class_history(c) == 1))
+                            score_out(c) = score(c) + 1;
+                        end
+                        % Update class_history
+                        class_hist_out(c) = 1;
+                        % Stop search
+                        break;
+                    else
+                        continue;
+                    end
+                    
+                % if it was an error
+                else
+                    % prototype and sample are from different classes?
+                    if (c ~= yt_class)
+                        % Update score
+                        if (class_history(c) == -1)
+                            score_out(c) = score(c) - 1;
+                        end
+                        % Update class_history
+                        class_hist_out(c) = -1;
+                        % Stop search
+                        break;
+                    else
+                        continue;
+                    end
+                end
+                
+            end % end for k = 1:K
+
+        end % end if (K == 1)
         
     end
-    
     
 end
 

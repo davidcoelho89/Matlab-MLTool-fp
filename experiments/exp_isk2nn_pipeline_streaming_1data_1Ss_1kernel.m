@@ -35,7 +35,7 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 % Set data for the HyperParameter Optimization step: min (0.2 * N, 1000)
 
-if (N < 5000),
+if (N < 5000)
     Nhpo = floor(0.2 * N);
 else
     Nhpo = 1000;
@@ -93,12 +93,12 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 %% CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
 
-display('begin grid search')
+disp('begin grid search')
 disp(datestr(now));
 
 % Grid Search Parameters
 
-if (nargin == 2),
+if (nargin == 2)
     PSp.iterations = 1;
     PSp.type = 1;
     PSp.lambda = 0.5;
@@ -110,19 +110,19 @@ PAR = grid_search_ttt(DATAhpo,HPgs,@isk2nn_train,@isk2nn_classify,PSp);
 
 % Change maximum number of prototypes
 
-% PAR.max_prot = Inf;
+PAR.max_prot = 1000;
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
-display('begin Test-than-train')
+disp('begin Test-than-train')
 
 figure; % new figure for video ploting
 
-for n = 1:Nttt,
+for n = 1:Nttt
     
     % Display number of samples already seen (for debug)
     
-    if(mod(n,1000) == 0),
+    if(mod(n,1000) == 0)
         disp(n);
         disp(datestr(now));
     end
@@ -140,7 +140,7 @@ for n = 1:Nttt,
     
     % Hold Number of Samples per Class 
     
-    if n == 1,
+    if n == 1
         samples_per_class(y_lbl,n) = 1; % first element
     else
         samples_per_class(:,n) = samples_per_class(:,n-1);
@@ -154,14 +154,14 @@ for n = 1:Nttt,
     
     % Hold Number of Errors and Hits
     
-    if n == 1,
-        if (y_lbl == yh_lbl),
+    if n == 1
+        if (y_lbl == yh_lbl)
             no_of_correct(n) = 1;
         else
             no_of_errors(n) = 1;
         end
     else
-        if (y_lbl == yh_lbl),
+        if (y_lbl == yh_lbl)
             no_of_correct(n) = no_of_correct(n-1) + 1;
             no_of_errors(n) = no_of_errors(n-1);
         else
@@ -178,7 +178,7 @@ for n = 1:Nttt,
     % Hold Number of prototypes per Class
     
     [~,lbls] = max(PAR.Cy);
-    for c = 1:Nc,
+    for c = 1:Nc
         prot_per_class(c,n) = sum(lbls == c);
     end
     
@@ -187,7 +187,7 @@ for n = 1:Nttt,
     
     % Video Function
     
-    if (PAR.Von),
+    if (PAR.Von)
         VID(n) = prototypes_frame(PAR.Cx,DATAn);
     end
     

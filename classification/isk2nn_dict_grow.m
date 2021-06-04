@@ -83,38 +83,38 @@ mc = sum(Cy_seq == c);	% Number of prototypes from samples' class
 %% ALGORITHM
 
 % Add first element to dictionary (total or from class)
-if (m == 0 || (Dm == 2 && mc == 0)),
+if (m == 0 || (Dm == 2 && mc == 0))
     
     HP = isk2nn_add_sample(DATA,HP);
     
 else
     % Dont add if number of prototypes is too high
-    if (m < max_prot),
+    if (m < max_prot)
     	
         % Get Dictionary Samples and Inverse Kernel Matrix
-        if (Dm == 1),
+        if (Dm == 1)
             Dx = Cx;
             Dy = Cy;
             Kinv = HP.Kinv;
-        elseif (Dm == 2),
+        elseif (Dm == 2)
             Dx = Cx(:,Cy_seq == c);
             Dy = Cy(:,Cy_seq == c);
             Kinv = HP.Kinvc{c};
         end
 
         % Get criterion result
-        if Ss == 1,
+        if Ss == 1
             OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
-        elseif Ss == 2,
+        elseif Ss == 2
             OUTcrit = coherence_criterion(Dx,xt,HP);
-        elseif Ss == 3,
+        elseif Ss == 3
             OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
-        elseif Ss == 4,
+        elseif Ss == 4
             OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
         end
 
         % Expand or not Dictionary
-        if(OUTcrit.result == 1),
+        if(OUTcrit.result == 1)
             HP = isk2nn_add_sample(DATA,HP);
         end
         

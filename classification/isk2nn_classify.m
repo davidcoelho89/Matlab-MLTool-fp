@@ -30,6 +30,7 @@ function [OUT] = isk2nn_classify(DATA,PAR)
 %           y_h = classifier's output                           [Nc x N]
 %           win = closest prototype to each sample              [1 x N]
 %           dist = distance of sample from each prototype       [Nk x N]
+%           near_ind = indexes for nearest prototypes           [K x N]
 
 %% ALGORITHM
 

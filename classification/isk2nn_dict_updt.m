@@ -69,15 +69,15 @@ yt = DATA.output;   % Class of sample
 
 %% ALGORITHM
 
-if (Us ~= 0),
+if (Us ~= 0)
     
     % Get sequential class of sample
     [~,yt_seq] = max(yt);
     
     % Find nearest prototype input
-    if (Dm == 1),
+    if (Dm == 1)
         win = prototypes_win(Dx,xt,HP);
-    elseif (Dm == 2),
+    elseif (Dm == 2)
     	[~,Dy_seq] = max(Dy);
         Dx_c = Dx(:,Dy_seq == yt_seq);
         win_c = prototypes_win(Dx_c,xt,HP);
@@ -89,18 +89,18 @@ if (Us ~= 0),
     [~,y_new_seq] = max(y_new);
     
     % Update Closest prototype (new one)
-    if (Us == 1),       % (WTA)
+    if (Us == 1)       % (WTA)
         x_new = Dx(:,win) + eta * (xt - Dx(:,win));
-    elseif (Us == 2),	% (LVQ)
-        if(yt_seq == y_new_seq),
+    elseif (Us == 2)	% (LVQ)
+        if(yt_seq == y_new_seq)
             x_new = Dx(:,win) + eta * (xt - Dx(:,win));
         else
             x_new = Dx(:,win) - eta * (xt - Dx(:,win));
         end
-    elseif (Us == 3),   % (WTA + Derivative of kernel cost funtion)
+    elseif (Us == 3)   % (WTA + Derivative of kernel cost funtion)
         x_new = Dx(:,win) + eta * kernel_diff(xt,Dx(:,win),HP);
-    elseif (Us == 4),   % (LVQ + Derivative of kernel cost funtion)
-        if(yt_seq == y_new_seq),
+    elseif (Us == 4)   % (LVQ + Derivative of kernel cost funtion)
+        if(yt_seq == y_new_seq)
             x_new = Dx(:,win) + eta * kernel_diff(xt,Dx(:,win),HP);
         else
             x_new = Dx(:,win) - eta * kernel_diff(xt,Dx(:,win),HP);

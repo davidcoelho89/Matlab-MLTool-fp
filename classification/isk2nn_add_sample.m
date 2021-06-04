@@ -76,7 +76,7 @@ times_selected_out = [times_selected,0];
 
 % Update Kernel Matrices
 
-if (m == 0),
+if (m == 0)
 
     % Build Kernel matrix and its inverse for each class
     Kmc_out = cell(Nc,1);
@@ -91,7 +91,7 @@ if (m == 0),
 else
 
     % Build kernel matrix and its inverse of samples' class
-    if (mc == 0),
+    if (mc == 0)
         Kmc{c} = ktt + sig2n;
         Kmc_out = Kmc;
         Kinvc{c} = 1/Kmc{c};
@@ -103,7 +103,7 @@ else
         Dx_c = Dx(:,Dy_seq == c);
         % Get auxiliary variables
         kt_c = zeros(mc,1);
-        for i = 1:mc,
+        for i = 1:mc
             kt_c(i) = kernel_func(Dx_c(:,i),xt,HP);
         end
         at_c = Kinvc{c}*kt_c;
@@ -120,7 +120,7 @@ else
 
     % Get auxiliary variables
     kt = zeros(m,1);
-    for i = 1:m,
+    for i = 1:m
         kt(i) = kernel_func(Dx(:,i),xt,HP);
     end
     at = Kinv*kt;

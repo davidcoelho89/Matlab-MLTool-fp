@@ -59,7 +59,7 @@
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(HP))),
+if ((nargin == 1) || (isempty(HP)))
     PARaux.Ne = 1;          % Maximum number of epochs
     PARaux.Dm = 2;          % Design Method
     PARaux.Ss = 1;          % Sparsification strategy
@@ -82,64 +82,64 @@ if ((nargin == 1) || (isempty(HP))),
     PARaux.gamma = 2;       % Polynomial order
 	HP = PARaux;
 else
-    if (~(isfield(HP,'Ne'))),
+    if (~(isfield(HP,'Ne')))
         HP.Ne = 1;
     end
-    if (~(isfield(HP,'Dm'))),
+    if (~(isfield(HP,'Dm')))
         HP.Dm = 2;
     end
-    if (~(isfield(HP,'Ss'))),
+    if (~(isfield(HP,'Ss')))
         HP.Ss = 1;
     end
-    if (~(isfield(HP,'v1'))),
+    if (~(isfield(HP,'v1')))
         HP.v1 = 0.1;
     end
-    if (~(isfield(HP,'v2'))),
+    if (~(isfield(HP,'v2')))
         HP.v2 = 0.9;
     end
-    if (~(isfield(HP,'Us'))),
+    if (~(isfield(HP,'Us')))
         HP.Us = 0;
     end
-    if (~(isfield(HP,'eta'))),
+    if (~(isfield(HP,'eta')))
         HP.eta = 0.01;
     end
-    if (~(isfield(HP,'Ps'))),
+    if (~(isfield(HP,'Ps')))
         HP.Ps = 0;
     end
-    if (~(isfield(HP,'min_score'))),
+    if (~(isfield(HP,'min_score')))
         HP.min_score = -10;
     end
-    if (~(isfield(HP,'max_prot'))),
+    if (~(isfield(HP,'max_prot')))
         HP.max_prot = Inf;
     end
-    if (~(isfield(HP,'min_prot'))),
+    if (~(isfield(HP,'min_prot')))
         HP.min_prot = 1;
     end
-    if (~(isfield(HP,'Von'))),
+    if (~(isfield(HP,'Von')))
         HP.Von = 0;
     end
-    if (~(isfield(HP,'K'))),
+    if (~(isfield(HP,'K')))
         HP.K = 1;
     end
-    if (~(isfield(HP,'knn_type'))),
+    if (~(isfield(HP,'knn_type')))
         HP.knn_type = 1;
     end
-    if (~(isfield(HP,'Ktype'))),
+    if (~(isfield(HP,'Ktype')))
         HP.Ktype = 2;
     end
-    if (~(isfield(HP,'sig2n'))),
+    if (~(isfield(HP,'sig2n')))
         HP.sig2n = 0.001;
     end
-    if (~(isfield(HP,'sigma'))),
+    if (~(isfield(HP,'sigma')))
         HP.sigma = 2;
     end
-    if (~(isfield(HP,'alpha'))),
+    if (~(isfield(HP,'alpha')))
         HP.alpha = 1;
     end
-    if (~(isfield(HP,'theta'))),
+    if (~(isfield(HP,'theta')))
         HP.theta = 1;
     end
-    if (~(isfield(HP,'gamma'))),
+    if (~(isfield(HP,'gamma')))
         HP.gamma = 2;
     end
 end
@@ -176,12 +176,6 @@ if (~isfield(PAR,'Cx'))
     PAR.times_selected = [];
 end
 
-% if (Ne == 1),
-%     VID = struct('cdata',cell(1,Ne),'colormap', cell(1,Ne));
-% else
-%     VID = struct('cdata',cell(1,N),'colormap', cell(1,N));
-% end
-
 VID = struct('cdata',cell(1,N*Ne),'colormap', cell(1,N*Ne));
 it = 0;
 
@@ -191,17 +185,12 @@ yh = -1*ones(Nc,N);
 
 % Update Dictionary
 
-for ep = 1:Ne,
+for ep = 1:Ne
 
-    for n = 1:N,
-
-        % Save frame of the current iteration
-%         if (Von && Ne == 1),
-%             VID(n) = prototypes_frame(PAR.Cx,DATA);
-%         end
+    for n = 1:N
 
         % Save frame of the current iteration
-        if (Von),
+        if (Von)
             it = it+1;
             VID(it) = prototypes_frame(PAR.Cx,DATA);
         end
@@ -214,7 +203,7 @@ for ep = 1:Ne,
         [~,mt1] = size(PAR.Cx);
 
         % Init Dictionary (if it is the first sample)
-        if (mt1 == 0),
+        if (mt1 == 0)
             % Make a guess (yh = 1 => first class)
             yh(1,n) = 1;
             % Add sample to dictionary
@@ -229,6 +218,7 @@ for ep = 1:Ne,
         yh(:,n) = OUTn.y_h;
 
         % Update number of times a prototype has been selected
+        % (as the winner)
         win = OUTn.win;
         PAR.times_selected(win) = PAR.times_selected(win) + 1;
 
@@ -239,7 +229,7 @@ for ep = 1:Ne,
         [~,mt2] = size(PAR.Cx);
 
         % Update Strategy (if prototype was not added)
-        if(mt2-mt1 == 0),
+        if(mt2-mt1 == 0)
             PAR = isk2nn_dict_updt(DATAn,PAR);
         else
             % For debug. Display dictionary size when it grows.
@@ -251,11 +241,6 @@ for ep = 1:Ne,
         PAR = isk2nn_dict_prun(PAR);
 
     end
-    
-% 	% Save frame of the current iteration
-% 	if (Von && Ne > 1),
-%         VID(ep) = prototypes_frame(PAR.Cx,DATA);
-% 	end
 
 end
 

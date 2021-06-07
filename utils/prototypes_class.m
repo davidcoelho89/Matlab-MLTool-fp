@@ -67,10 +67,12 @@ distances = zeros(Nk,N);        % Distance from prototypes to each sample
 
 if (K == 1)
     nearest_indexes = zeros(1,N);
-elseif (Nk <= K)
-    nearest_indexes = zeros(Nk,N);
 else
-    nearest_indexes = zeros(K+1,N);
+    if (Nk <= K)
+        nearest_indexes = zeros(Nk,N);
+    else
+        nearest_indexes = zeros(K+1,N);
+    end
 end
 
 %% ALGORITHM

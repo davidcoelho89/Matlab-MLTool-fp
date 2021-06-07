@@ -139,11 +139,11 @@ else
                     % prototype has the same class as sample?
                     if (c == yt_class)
                         % Update score
-                        if((score(c) < 0) && (class_history(c) == 1))
-                            score_out(c) = score(c) + 1;
+                        if((score(k) < 0) && (class_history(k) == 1))
+                            score_out(k) = score(k) + 1;
                         end
                         % Update class_history
-                        class_hist_out(c) = 1;
+                        class_hist_out(k) = 1;
                         % Stop search
                         break;
                     else
@@ -155,11 +155,11 @@ else
                     % prototype and sample are from different classes?
                     if (c ~= yt_class)
                         % Update score
-                        if (class_history(c) == -1)
-                            score_out(c) = score(c) - 1;
+                        if (class_history(k) == -1)
+                            score_out(k) = score(k) - 1;
                         end
                         % Update class_history
-                        class_hist_out(c) = -1;
+                        class_hist_out(k) = -1;
                         % Stop search
                         break;
                     else

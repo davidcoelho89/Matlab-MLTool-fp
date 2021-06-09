@@ -1,9 +1,12 @@
 %% Machine Learning ToolBox
 
-% isk2nn with various streaming datasets
+% KNNs with various streaming datasets
 % Author: David Nascimento Coelho
 % Last Update: 2021/05/10
- 
+
+clear;
+clc;
+
 %% Labeling and Normalization Choice
 
 norm = 0;   % Normalization. 0: Dongi 't normalize. 3: z-score normalization.
@@ -75,82 +78,82 @@ datasets = [28,29,30,33,34,37,38];
 
 if any(datasets == 25)
     OPT = struct('prob',25,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 26)
     OPT = struct('prob',26,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 27)
     OPT = struct('prob',27,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 28)
     OPT = struct('prob',28,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 29)
     OPT = struct('prob',29,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);    
+    exp_knns_pipeline_streaming_1data(OPT);    
 end
 
 if any(datasets == 30)
     OPT = struct('prob',30,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 31)
     OPT = struct('prob',31,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 32)
     OPT = struct('prob',32,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 33)
     OPT = struct('prob',33,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 34)
     OPT = struct('prob',34,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 36)
     OPT = struct('prob',36,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 37)
     OPT = struct('prob',37,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 38)
     OPT = struct('prob',38,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 35)
     OPT = struct('prob',35,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 if any(datasets == 39)
     OPT = struct('prob',39,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    exp_knns_pipeline_streaming_1data(OPT);
 end
 
 %% FINISHED!
 
-load handel
-sound(y,Fs)
+% load handel
+% sound(y,Fs)
 
 %% END

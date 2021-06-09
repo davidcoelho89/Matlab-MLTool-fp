@@ -210,6 +210,7 @@ for ep = 1:Ne
             PAR = isk2nn_dict_grow(DATAn,PAR);
             % Update number of times this prototype has been selected
             PAR.times_selected = 1;
+            % Calls next sample
             continue;
         end
 

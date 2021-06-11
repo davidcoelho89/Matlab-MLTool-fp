@@ -87,13 +87,6 @@ for n = 1:N
     DATAn.input = X(:,n);
 	DATAn.output = Y(:,n);
     
-    clc;
-    disp('X(n):');
-    disp(X(:,n));
-    disp('Dictionary:');
-    disp(PAR.Cx);
-    pause();
-    
     % Get dictionary size (cardinality, number of prototypes)
 	[~,Nk] = size(PAR.Cx);
     

@@ -34,7 +34,7 @@ Y = DATA.output;     	% labels Matriz [Nc x N]
 
 % Get HyperParameters
 
-if (nargin == 4),
+if (nargin == 4)
     CVp.fold = 5;       % 5-fold cross-validation
     CVp.type = 1;       % just takes into account accuracy
     CVp.lambda = 0.5;   % More weight for dictionary size
@@ -52,16 +52,16 @@ Ds = 0;                 % Dictionary Size
 
 %% ALGORITHM
 
-for fold = 1:Nfold;
+for fold = 1:Nfold
 
     % Define Data division
 
-    if fold == 1,
+    if fold == 1
         DATAtr.input  = X(:,part+1:end);
         DATAtr.output = Y(:,part+1:end);
         DATAts.input  = X(:,1:part);
         DATAts.output = Y(:,1:part);
-    elseif fold == Nfold,
+    elseif fold == Nfold
         DATAtr.input  = X(:,1:(Nfold-1)*part);
         DATAtr.output = Y(:,1:(Nfold-1)*part);
         DATAts.input  = X(:,(Nfold-1)*part+1:end);
@@ -77,7 +77,7 @@ for fold = 1:Nfold;
     [PAR] = f_train(DATAtr,HP);
     
     % Accumulate Number of Prototypes (for prototype-based classifiers)
-    if (type == 2),
+    if (type == 2)
         [~,Nk] = size(PAR.Cx);
         Ds = Ds + Nk;
     end
@@ -97,9 +97,9 @@ accuracy = accuracy / Nfold;    % Mean Accuracy
 error = 1 - accuracy;           % Mean Error
 Ds = Ds / (N * Nfold);          % Mean Percentage of Prototypes
 
-if (type == 1),
+if (type == 1)
     metric = error;
-elseif (type == 2),
+elseif (type == 2)
     metric = Ds + lambda * error;
 end
 

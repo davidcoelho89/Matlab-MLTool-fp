@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 11;        	% Which problem will be solved / used
+OPT.prob = 02;        	% Which problem will be solved / used
 OPT.prob2 = 30;       	% More details about a specific data set
 OPT.norm = 2;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
-OPT.Nr = 02;           	% Number of repetitions of the algorithm
+OPT.Nr = 10;           	% Number of repetitions of the algorithm
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
@@ -33,16 +33,18 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 % Handlers for classification functions
 
-class_name = 'Perceptron';
-class_train = @mlp_train;
-class_test = @mlp_classify;
+class_name = 'Bayes';
+class_train = @gauss_train;
+class_test = @gauss_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
-HP.Ne = 200;       	% maximum number of training epochs
-HP.eta = 0.05;    	% Learning step
-HP.Nh = 5;          % Number of hidden neurons
-HP.Von = 1;         % disable video 
+HP.type = 1;
+
+% HP.Ne = 200;       	% maximum number of training epochs
+% HP.eta = 0.05;    	% Learning step
+% HP.Nh = 5;          % Number of hidden neurons
+% HP.Von = 1;         % disable video 
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
@@ -157,22 +159,22 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 %% GRAPHICS - OF LAST TURN
 
-% Get Data, Parameters, Statistics
-DATAf.input = [DATAtr.input, DATAts.input];
-DATAf.output = [DATAtr.output, DATAts.output];
-PAR = PAR_acc{r};
-STATS = STATS_ts_acc{r};
+% % Get Data, Parameters, Statistics
+% DATAf.input = [DATAtr.input, DATAts.input];
+% DATAf.output = [DATAtr.output, DATAts.output];
+% PAR = PAR_acc{r};
+% STATS = STATS_ts_acc{r};
+% 
+% % Classifier Decision Boundaries
+% plot_class_boundary(DATAf,PAR,class_test);
+% 
+% % ROC Curve (one for each class)
+% plot_stats_roc_curve(STATS);
+% 
+% % Precision-Recall (one for each class)
+% plot_stats_precision_recall(STATS)
 
-% Classifier Decision Boundaries
-plot_class_boundary(DATAf,PAR,class_test);
-
-% ROC Curve (one for each class)
-plot_stats_roc_curve(STATS);
-
-% Precision-Recall (one for each class)
-plot_stats_precision_recall(STATS)
-
-% See Class Boundary Video (of last turn)
+% % See Class Boundary Video (of last turn)
 % if (HP.Von == 1),
 %     VID = PAR_acc{r}.VID
 %     figure;

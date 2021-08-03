@@ -335,6 +335,11 @@ plot(t,Vel1,'g')
 title('Todas as Entradas')
 hold off
 
+%% Send to CSV
+
+% signals = [Cl1',Ia1',Va1',Vel1'];
+% csvwrite('signals.csv',signals)
+
 %% Define inputs and outputs
 
 % W / Va, Cl transfer function

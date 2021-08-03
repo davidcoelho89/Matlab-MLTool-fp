@@ -89,6 +89,7 @@ for i = 1:Nc,
     if PAR.type == 5,
         Ci{i} = diag(diag(Ci{i}));
     end
+    Ci{i} = Ci{i} + 0.0001*eye(p,p);
 end
 
 %% FILL OUTPUT STRUCTURE

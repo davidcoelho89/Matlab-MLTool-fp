@@ -36,6 +36,7 @@ for i = 1:N,
 end
 
 % Avoid conditioning problems
-K = K + (1e-10)*eye(N);   
+lambda = (1e-10);
+K = K + lambda*eye(N);
 
 %% END

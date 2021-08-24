@@ -21,12 +21,12 @@ restriction = 0;
 %% ALGORITHM
 
 % Restrictions for isk2nn
-if (strcmp(algorithm_name,'isk2nn_train')),
+if (strcmp(algorithm_name,'isk2nn_train'))
     % Get parameters
     [~,Nk] = size(PAR.Cx);
     max_prot = PAR.max_prot;
     % Verify Maximum number of prototypes
-    if (Nk >= max_prot),
+    if (Nk >= max_prot)
         restriction = 1;
     end
 end

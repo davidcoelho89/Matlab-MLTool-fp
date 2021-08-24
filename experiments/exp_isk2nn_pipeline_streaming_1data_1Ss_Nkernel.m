@@ -23,6 +23,14 @@ PSpar.iterations = 1;	% number of times data is presented to the algorithm
 PSpar.type = 2;         % Takes into account also the dicitionary size
 PSpar.lambda = 2;   	% Jpbc = Ds + lambda * Err
 
+%% WHICH KERNELS WILL BE USED
+
+% 1: linear | 2: rbf | 3: polynomial | 4: exp | 
+% 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
+
+kernels = 1;
+% kernels = [1,2,5];
+
 %% HYPERPARAMETERS - DEFAULT
 
 HP_gs.Ne = 01;
@@ -61,144 +69,176 @@ str14 = 'nn.mat';
 
 %% KERNEL = LINEAR
 
-str12 = '_lin_';
+if (any(kernels == 1))
 
-HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
-% HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 1;
-HP_gs.sigma = 2;
-HP_gs.gamma = 2;
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    str12 = '_lin_';
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
+    % HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 1;
+    HP_gs.sigma = 2;
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = GAUSSIAN
 
-str12 = '_gau_';
+if (any(kernels == 2))
+    
+    str12 = '_gau_';
 
-HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
-% HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 2;
-HP_gs.sigma = 2.^linspace(-10,9,20);
-HP_gs.gamma = 2;
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+    % HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 2;
+    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
 
 
-exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = POLYNOMIAL
 
-% str12 = '_pol_';
-% 
-% HP_gs.v1 = 2.^linspace(-13,6,20);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 3;
-% HP_gs.sigma = 2;
-% HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+if (any(kernels == 3))
+
+    str12 = '_pol_';
+
+    HP_gs.v1 = 2.^linspace(-13,6,20);
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 3;
+    HP_gs.sigma = 2;
+    HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = EXPONENTIAL
 
-% str12 = '_exp_';
-% 
-% HP_gs.v1 = 2.^linspace(-4,3,8);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 4;
-% HP_gs.sigma = 2.^linspace(-10,9,20);
-% HP_gs.gamma = 2;
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% 
-% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+if (any(kernels == 4))
+
+    str12 = '_exp_';
+
+    HP_gs.v1 = 2.^linspace(-4,3,8);
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 4;
+    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = CAUCHY
 
-str12 = '_cau_';
+if (any(kernels == 5))
 
-HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
-% HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 5;
-HP_gs.sigma = 2.^linspace(-10,9,20);
-HP_gs.gamma = 2;
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    str12 = '_cau_';
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+    % HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 5;
+    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = LOG
 
-% str12 = '_log_';
-% 
-% HP_gs.v1 = -2.^linspace(10,2,9);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 6;
-% HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
-% HP_gs.gamma = 2;
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+if (any(kernels == 6))
+
+    str12 = '_log_';
+
+    HP_gs.v1 = -2.^linspace(10,2,9);
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 6;
+    HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = SIGMOID
 
-% str12 = '_sig_';
-% 
-% HP_gs.v1 = 2.^linspace(-13,6,20);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 7;
-% HP_gs.sigma = 2;
-% HP_gs.gamma = 2;
-% HP_gs.alpha = 2.^linspace(-8,2,11);       
-% % HP_gs.theta = 2.^linspace(-8,2,11);
-% HP_gs.theta = 0.1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+if (any(kernels == 7))
+    
+    str12 = '_sig_';
+
+    HP_gs.v1 = 2.^linspace(-13,6,20);
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 7;
+    HP_gs.sigma = 2;
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 2.^linspace(-8,2,11);       
+    % HP_gs.theta = 2.^linspace(-8,2,11);
+    HP_gs.theta = 0.1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% KERNEL = KMOD
 
-% str12 = '_kmod_';
-% 
-% HP_gs.v1 = 2.^linspace(-13,6,20);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 8;
-% HP_gs.sigma = 2.^linspace(-8,2,11);
-% HP_gs.gamma = 2.^linspace(-8,2,11);
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+if (any(kernels == 8))
+
+    str12 = '_kmod_';
+
+    HP_gs.v1 = 2.^linspace(-13,6,20);
+    HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    HP_gs.Ktype = 8;
+    HP_gs.sigma = 2.^linspace(-8,2,11);
+    HP_gs.gamma = 2.^linspace(-8,2,11);
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+
+end
 
 %% END

@@ -2,23 +2,26 @@
 
 % isk2nn with various streaming datasets
 % Author: David Nascimento Coelho
-% Last Update: 2021/05/10
+% Last Update: 2021/08/24
  
 %% Labeling and Normalization Choice
 
-norm = 0;   % Normalization. 0: Dongi 't normalize. 3: z-score normalization.
+norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.
 lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 
-%% Datasets Choice:
-
-% # code: # samples / # attributes / # classes
-% Brief Description
+%% Datasets Choice
 
 % Vector with chosen datasets
 
+datasets = 30; % just Chessboard
 % datasets = 38; % just Rialto Dataset
 % datasets = [28,29,30,33,34,37];
-datasets = [28,29,30,33,34,37,38];
+% datasets = [28,29,30,33,34,37,38];
+
+%% Datasets List
+
+% # code: # samples / # attributes / # classes
+% Brief Description
 
 % Sea Concepts              => 25: 200k / 03 / 02
 % label noise (10%)
@@ -150,7 +153,7 @@ end
 
 %% FINISHED!
 
-load handel
-sound(y,Fs)
+% load handel
+% sound(y,Fs)
 
 %% END

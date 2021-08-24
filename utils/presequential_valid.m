@@ -33,7 +33,7 @@ function [PVout] = presequential_valid(DATA,HP,f_train,f_class,PSp)
 
 % Get Hyperparameters
 
-if (nargin == 4),
+if (nargin == 4)
     PSp.iterations = 1;         % 1 repetition
     PSp.type = 1;               % Not prototype-based algorithm
     PSp.lambda = 0.5;           % More weight for dictionary size
@@ -61,17 +61,17 @@ for it = 1:iterations
     % Restrictions 1: About combination of hyperparameters
     
     restriction1 = gs_restricion_hp(PAR,f_train);
-    if(restriction1),
+    if(restriction1)
         break;
     end
     
-    for n = 1:N,
+    for n = 1:N
         
         % Restrictions 2: About combination of parameters during training
 
         restriction2 = gs_restriction_par_training(PAR,f_train);
-        if (type == 2),
-            if (restriction2),
+        if (type == 2)
+            if (restriction2)
                 break;
             end
         end
@@ -89,7 +89,7 @@ for it = 1:iterations
         
         % Update Classification Accuracy
         
-        if(y_lbl == yh_lbl),
+        if(y_lbl == yh_lbl)
             accuracy = accuracy + 1;
         end
         
@@ -112,21 +112,21 @@ restriction3 = gs_restriction_par_final(DATA,PAR,f_train);
 
 % Generate Metric (value to be minimized)
 
-if (type == 1),
+if (type == 1)
     
-    if(restriction1 || restriction2 || restriction3),
+    if(restriction1 || restriction2 || restriction3)
         measure = 1;         % Maximum Error
     else
         measure = error;     % Error Measure
-    end;
+    end
     
-elseif(type == 2),
+elseif(type == 2)
     
     % Get Dictionary Size
     [~,Nk] = size(PAR.Cx);
     Ds = Ds + Nk / N;
     
-    if(restriction1 || restriction2 || restriction3),
+    if(restriction1 || restriction2 || restriction3)
         measure = 1 + lambda;            % Maximum value
     else
         measure = Ds + lambda * error;   % Measure

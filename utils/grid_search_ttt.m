@@ -31,7 +31,7 @@ NumberOfHyperParameters = numel(HyperParameterNames);
 
 % Init Auxiliary HyperParameters
 
-for i = 1:NumberOfHyperParameters,
+for i = 1:NumberOfHyperParameters
     HyperParameterName = HyperParameterNames{i};
     HpValuesVector = HPgs.(HyperParameterName);
     HPaux.(HyperParameterName) = HpValuesVector(1);
@@ -45,7 +45,7 @@ turn = 0;                 	% number of turns of grid search
 
 %% ALGORITHM
 
-while 1,
+while 1
     
     % Update Turn of Grid Search
     
@@ -53,7 +53,7 @@ while 1,
 
     % "Interleaved Test-Then-Train" or "Prequential" Method
     
-    if (nargin == 4),
+    if (nargin == 4)
         PSout = presequential_valid(DATA,HPaux,f_train,f_class);
     else
         PSout = presequential_valid(DATA,HPaux,f_train,f_class,PSp);
@@ -61,11 +61,11 @@ while 1,
 
     % Define New Optimum HyperParameters
     
-    if (turn == 1),
+    if (turn == 1)
         HPoptm = PSout.PAR;
         min_measure = PSout.measure;
     else
-        if (PSout.measure < min_measure),
+        if (PSout.measure < min_measure)
             HPoptm = PSout.PAR;
             min_measure = PSout.measure;
         end
@@ -74,12 +74,12 @@ while 1,
     % Update indexes of HP (uses "digital clock logic")
     
     i = 1;
-    while i <= NumberOfHyperParameters,
+    while i <= NumberOfHyperParameters
         
         IndexOfHyperParameters(i) = IndexOfHyperParameters(i) + 1;
         number_of_values = length(HPgs.(HyperParameterNames{i}));
         if (IndexOfHyperParameters(i) > number_of_values)
-            if i == NumberOfHyperParameters,
+            if i == NumberOfHyperParameters
                 still_searching = 0;
             end
             IndexOfHyperParameters(i) = 1;
@@ -92,13 +92,13 @@ while 1,
     
     % If all HP sets were tested, finish the grid search
     
-    if still_searching == 0,
+    if still_searching == 0
         break;
     end
     
-     % update auxiliary HP
+     % Update auxiliary HP
      
-     for j = 1:NumberOfHyperParameters,
+     for j = 1:NumberOfHyperParameters
          HyperParameterName = HyperParameterNames{j};
          HpValuesVector = HPgs.(HyperParameterName);
          HPaux.(HyperParameterName) = ...

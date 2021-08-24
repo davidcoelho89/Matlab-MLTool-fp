@@ -22,13 +22,13 @@ restriction = 0;
 %% ALGORITHM
 
 % Restrictions for isk2nn
-if (strcmp(algorithm_name,'isk2nn_train')),
+if (strcmp(algorithm_name,'isk2nn_train'))
     % Get Data
     [Nc,~] = size(DATA.output);
     % Get parameters
     [~,Nk] = size(PAR.Cx);
     % Verify Minimum number of prototypes
-    if (Nk <= Nc),
+    if (Nk <= Nc)
         restriction = 1;
     end
 end

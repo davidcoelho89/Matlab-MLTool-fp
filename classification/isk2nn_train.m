@@ -186,7 +186,9 @@ yh = -1*ones(Nc,N);
 % Update Dictionary
 
 for ep = 1:Ne
-
+    
+    % ToDo - Shuflle data!
+    
     for n = 1:N
 
         % Save frame of the current iteration
@@ -204,12 +206,10 @@ for ep = 1:Ne
 
         % Init Dictionary (if it is the first sample)
         if (mt1 == 0)
-            % Make a guess (yh = 1 => first class)
+            % Make a guess (yh = 1 : first class)
             yh(1,n) = 1;
             % Add sample to dictionary
             PAR = isk2nn_dict_grow(DATAn,PAR);
-            % Update number of times this prototype has been selected
-            PAR.times_selected = 1;
             % Calls next sample
             continue;
         end

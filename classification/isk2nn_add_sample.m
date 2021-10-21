@@ -107,8 +107,7 @@ else
             kt_c(i) = kernel_func(Dx_c(:,i),xt,HP);
         end
         at_c = Kinvc{c}*kt_c;
-        delta_c = ktt - kt_c'*at_c;
-        delta_c = delta_c + sig2n;
+        delta_c = (ktt - kt_c'*at_c) + sig2n;
         % Update Kernel matrix
         Kmc{c} = [Kmc{c}, kt_c; kt_c', ktt + sig2n];
         Kmc_out = Kmc;
@@ -124,8 +123,7 @@ else
         kt(i) = kernel_func(Dx(:,i),xt,HP);
     end
     at = Kinv*kt;
-    delta = ktt - kt'*at;
-    delta = delta + sig2n;
+    delta = (ktt - kt'*at) + sig2n;
 
     % Update kernel matrix and its inverse for dataset
     Km_out = [Km, kt; kt', ktt + sig2n];

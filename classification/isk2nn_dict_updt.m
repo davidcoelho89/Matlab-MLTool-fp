@@ -74,9 +74,10 @@ if (Us ~= 0)
     % Get sequential class of sample
     [~,yt_seq] = max(yt);
     
-    % Find nearest prototype input
+    % Find nearest prototype from whole dictionary
     if (Dm == 1)
         win = prototypes_win(Dx,xt,HP);
+    % Find nearest prototype from class conditional dictionary
     elseif (Dm == 2)
     	[~,Dy_seq] = max(Dy);
         Dx_c = Dx(:,Dy_seq == yt_seq);
@@ -111,11 +112,20 @@ if (Us ~= 0)
     DATAnew.input = x_new;
     DATAnew.output = y_new;
     
-    % Remove prototype from dictionary
-    HP = isk2nn_rem_sample(HP,win);
+    % Hold varibles used for prunning
+    score_aux = HP.score(win);
+    class_hist_aux = HP.class_history(win);
+    times_selected_aux = HP.times_selected(win);
     
-    % Add Updated prototype to dictionary
+    % Remove "old" prototype and add "updated" one from dictionary
+    HP = isk2nn_rem_sample(HP,win);
     HP = isk2nn_add_sample(DATAnew,HP);
+    
+    % Get variables for prunning
+    HP.score_out(end) = score_aux;
+    HP.class_history(end) = class_hist_aux;
+    HP.times_selected(end) = times_selected_aux;
+    
 end
 
 %% FILL OUTPUT STRUCTURE

@@ -51,34 +51,34 @@ lbl_type = OUT_CL.lbl;
 % Get number of prototypes
 [~,Nk] = size(Cx);         	
 
-% Init other parameters
-counter = zeros(Nk,Nc);   	% for average distance and voronoi labeling
-mean_dist = zeros(Nk,Nc);	% for average distance labeling
-min_dist = 0;            	% for minimum distance labeling
+% Init auxiliary variables for different strategies
+counter = zeros(Nk,Nc);   	% Majority voting and Average distance
+mean_dist = zeros(Nk,Nc);	% Average distance
+min_dist = 0;            	% Minimum distance
 
 %% ALGORITHM 
 
 % init output
-label = zeros(1,Nk);
+labels = zeros(1,Nk);
 
-if lbl_type == 1,       % Majority Voting Method
+if lbl_type == 1      % Majority Voting Method
     
     % Fill voting matrix
-    for n = 1:N,
+    for n = 1:N
         xn = X(:,n);                                % data sample
         win = prototypes_win(Cx,xn,OUT_CL);         % winner neuron index
         counter(win,Y(n)) = counter(win,Y(n)) + 1;	% add to voting matrix
     end
     
     % Set Labels
-    for k = 1:Nk(1),
+    for k = 1:Nk(1)
         [~,class] = max(counter(k,:));	% Get class with max no of votes
-        label(k) = class;               % label prototypes
+        labels(k) = class;               % label prototypes
     end
     
-elseif lbl_type == 2,	% Average Distance Method
+elseif lbl_type == 2	% Average Distance Method
     
-	for n = 1:N,
+	for n = 1:N
         % Get sample
         xn = X(:,n);
         % Find winner prototype
@@ -92,38 +92,38 @@ elseif lbl_type == 2,	% Average Distance Method
 	end
     
     % Verify class with minimum mean distance
-    for k = 1:Nk,
+    for k = 1:Nk
         min_dist = 0;   % init minimum distance with 0
-        label(k) = 1;   % init class with 1
-        for c = 1:Nc,
-            if counter(k,c) ~= 0,
+        labels(k) = 1;   % init class with 1
+        for c = 1:Nc
+            if counter(k,c) ~= 0
                 % Calculate mean distance
                 mean_dist(k,c) = mean_dist(k,c) / counter(k,c);
                 % Update minimum mean distance
-                if(min_dist == 0 || mean_dist(k,c) < min_dist),
+                if(min_dist == 0 || mean_dist(k,c) < min_dist)
                     min_dist = mean_dist(k,c);
-                    label(k) = c;
+                    labels(k) = c;
                 end 
             end
         end
     end
     
-elseif lbl_type == 3,   % Minimum Distance Method
+elseif lbl_type == 3   % Minimum Distance Method
     
-    for k = 1:Nk,
-        for n = 1:N,
+    for k = 1:Nk
+        for n = 1:N
             % Get Sample, neuron and current distance
             xn = X(:,n);
             cx = Cx(:,k);                        
             dist_curr = vectors_dist(cx,xn,OUT_CL);
             % set label and minimal distance
-            if n == 1,
+            if n == 1
                 min_dist = dist_curr;
-                label(k) = Y(n);
+                labels(k) = Y(n);
             else
-                if dist_curr < min_dist,
+                if dist_curr < min_dist
                     min_dist = dist_curr;
-                    label(k) = Y(n);
+                    labels(k) = Y(n);
                 end
             end
         end
@@ -132,14 +132,14 @@ elseif lbl_type == 3,   % Minimum Distance Method
 end
 
 % Convert to [-1 +1 -1] pattern
-label_aux = -1*ones(Nc,Nk);
-for k = 1:Nk,
-    label_aux(label(k),k) = 1;
+Cy = -1*ones(Nc,Nk);
+for k = 1:Nk
+    Cy(labels(k),k) = 1;
 end
 
 %% FILL OUTPUT STRUCTURE
 
 PARout = OUT_CL;            % Get parameters from training data
-PARout.Cy = label_aux;      % Set neuron's labels
+PARout.Cy = Cy;      % Set neuron's labels
 
 %% END

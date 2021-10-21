@@ -3,7 +3,7 @@
 % isk2nn with various streaming datasets
 % Author: David Nascimento Coelho
 % Last Update: 2021/08/24
- 
+
 %% Labeling and Normalization Choice
 
 norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.

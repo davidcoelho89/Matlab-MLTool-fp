@@ -41,7 +41,7 @@ function [PARout] = wta_cluster(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Nep = 200;       % max number of epochs
     PARaux.Nk = 20;         % number of neurons (prototypes)
     PARaux.init = 02;   	% neurons' initialization
@@ -55,37 +55,37 @@ if ((nargin == 1) || (isempty(PAR))),
     PARaux.K = 1;           % Number of nearest neighbors
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'Nep'))),
+    if (~(isfield(PAR,'Nep')))
         PAR.Nep = 200;
     end
-    if (~(isfield(PAR,'Nk'))),
+    if (~(isfield(PAR,'Nk')))
         PAR.Nk = 20;
     end
-    if (~(isfield(PAR,'init'))),
+    if (~(isfield(PAR,'init')))
         PAR.init = 2;
     end
-    if (~(isfield(PAR,'dist'))),
+    if (~(isfield(PAR,'dist')))
         PAR.dist = 2;
     end
-    if (~(isfield(PAR,'learn'))),
+    if (~(isfield(PAR,'learn')))
         PAR.learn = 2;
     end
-    if (~(isfield(PAR,'No'))),
+    if (~(isfield(PAR,'No')))
         PAR.No = 0.7;
     end
-    if (~(isfield(PAR,'Nt'))),
+    if (~(isfield(PAR,'Nt')))
         PAR.Nt = 0.01;
     end
-    if (~(isfield(PAR,'lbl'))),
+    if (~(isfield(PAR,'lbl')))
         PAR.lbl = 1;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
-    if (~(isfield(PAR,'Ktype'))),
+    if (~(isfield(PAR,'Ktype')))
         PAR.Ktype = 0;
     end
-    if (~(isfield(PAR,'K'))),
+    if (~(isfield(PAR,'K')))
         PAR.K = 1;
     end
 end
@@ -112,7 +112,7 @@ t = 0;                 	% count iterations
 
 % Init Outputs
 
-if (isfield(PAR,'Cx')),
+if (isfield(PAR,'Cx'))
     C = PAR.Cx;
 else
     C = prototypes_init(DATA,PAR);
@@ -125,10 +125,10 @@ VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
 %% ALGORITHM
 
 % Update prototypes (just winner for each iteration)
-for ep = 1:Nep,
+for ep = 1:Nep
     
     % Save frame of the current epoch
-    if (Von),
+    if (Von)
         VID(ep) = prototypes_frame(C,DATA);
     end
     
@@ -137,7 +137,7 @@ for ep = 1:Nep,
     X = X(:,I);
     
     % Get Winner Neuron, update Learning Step, update prototypes
-    for i = 1:N,
+    for i = 1:N
 
         t = t+1;                                    % Uptade Iteration
         sample = X(:,i);                            % Get Sample
@@ -154,7 +154,7 @@ for ep = 1:Nep,
 end
 
 % Assign indexes
-for i = 1:N,
+for i = 1:N
     sample = DATA.input(:,i);               % not shuffled data
     win = prototypes_win(C,sample,PAR);     % Winner Neuron index
     ind(:,i) = win;                         % save index for sample

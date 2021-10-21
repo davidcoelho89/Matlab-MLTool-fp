@@ -100,8 +100,8 @@ disp(datestr(now));
 
 if (nargin == 2)
     PSp.iterations = 1;
-    PSp.type = 1;
-    PSp.lambda = 0.5;
+    PSp.type = 2;
+    PSp.lambda = 2;
 end
 
 % Get Hyperparameters Optimized and the Prototypes Initialized

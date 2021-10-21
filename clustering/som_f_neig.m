@@ -21,14 +21,14 @@ function [h] = som_f_neig (neig,r_k,r_win,Nn,t,tmax,Vo,Vt)
 
 %% ALGORITHM
 
-if neig == 1,
-    if max(abs(r_k - r_win)) > Nn,
+if neig == 1
+    if max(abs(r_k - r_win)) > Nn
         h = 0;
     else
         h = 1;
     end
 else
-    if max(abs(r_k - r_win)) > Nn,
+    if max(abs(r_k - r_win)) > Nn
         h = 0;
     else
         V = Vo*((Vt/Vo)^(t/tmax));

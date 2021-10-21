@@ -38,7 +38,7 @@ Lt = PAR.Lt;        % final value of lambda
 
 Vdist = zeros(1,Nk);
 
-for prot = 1:Nk,
+for prot = 1:Nk
     
     % Get prototype
     prototype = C(:,prot);
@@ -51,8 +51,8 @@ end
 % Calculate ranks
 
 rank = zeros(1,Nk);
-for prot = 1:Nk,
-    for j = 1:Nk,
+for prot = 1:Nk
+    for j = 1:Nk
         if (Vdist(prot) > Vdist(j))
             rank(prot) = rank(prot) + 1;
         end
@@ -61,9 +61,9 @@ end
 
 % Reverse rank if dot product
 
-if (dist == 0),
+if (dist == 0)
     rank_aux = zeros(1,Nk);
-    for i = 1:Nk,
+    for i = 1:Nk
         rank_aux(i) = rank(Nk - i + 1);
     end
     rank = rank_aux;
@@ -72,13 +72,13 @@ end
 % Calculate neighborhood function
 
 h = zeros(1,Nk);
-if neig == 1,
-    for i = 1:Nk,
+if neig == 1
+    for i = 1:Nk
         L = Lo;
         h(i) = exp(-rank(i)/L);
     end
-elseif neig == 2,
-    for i = 1:Nk,
+elseif neig == 2
+    for i = 1:Nk
         L = Lo*((Lt/Lo)^(t/tmax));
         h(i) = exp(-rank(i)/L);
     end

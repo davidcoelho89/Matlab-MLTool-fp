@@ -19,13 +19,13 @@ function [n] = prototypes_learn(learn,tmax,t,No,Nt)
 
 %% ALGORITHM
 
-if learn == 1,
+if learn == 1
     n = No;
-elseif learn == 2,
+elseif learn == 2
     n = No*(1-(t/tmax));
-elseif learn == 3,
+elseif learn == 3
     n = No/(1+t);
-elseif learn == 4,
+elseif learn == 4
     n = No*((Nt/No)^(t/tmax));
 end
 

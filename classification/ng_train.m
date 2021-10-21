@@ -69,46 +69,46 @@ if ((nargin == 1) || (isempty(PAR))),
     PARaux.K = 1;           % Number of nearest neighbors
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'Nep'))),
+    if (~(isfield(PAR,'Nep')))
         PAR.Nep = 200;
     end
-    if (~(isfield(PAR,'Nk'))),
+    if (~(isfield(PAR,'Nk')))
         PAR.Nk = 12;
     end
-    if (~(isfield(PAR,'init'))),
+    if (~(isfield(PAR,'init')))
         PAR.init = 2;
     end
-    if (~(isfield(PAR,'dist'))),
+    if (~(isfield(PAR,'dist')))
         PAR.dist = 2;
     end
-    if (~(isfield(PAR,'learn'))),
+    if (~(isfield(PAR,'learn')))
         PAR.learn = 2;
     end
-    if (~(isfield(PAR,'No'))),
+    if (~(isfield(PAR,'No')))
         PAR.No = 0.7;
     end
-    if (~(isfield(PAR,'Nt'))),
+    if (~(isfield(PAR,'Nt')))
         PAR.Nt = 0.01;
     end
-    if (~(isfield(PAR,'neig'))),
+    if (~(isfield(PAR,'neig')))
         PAR.neig = 2;
     end
-    if (~(isfield(PAR,'Lo'))),
+    if (~(isfield(PAR,'Lo')))
         PAR.Lo = 0.8;
     end
-    if (~(isfield(PAR,'Lt'))),
+    if (~(isfield(PAR,'Lt')))
         PAR.Lt = 0.3;
     end
-    if (~(isfield(PAR,'lbl'))),
+    if (~(isfield(PAR,'lbl')))
         PAR.lbl = 1;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
-    if (~(isfield(PAR,'Ktype'))),
+    if (~(isfield(PAR,'Ktype')))
         PAR.Ktype = 0;
     end
-    if (~(isfield(PAR,'K'))),
+    if (~(isfield(PAR,'K')))
         PAR.K = 1;
     end
 end

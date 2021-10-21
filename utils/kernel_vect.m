@@ -30,7 +30,7 @@ function [kt] = kernel_vect(X,xt,PAR)
 % Get number of samples
 [~,N] = size(X);
 
-% Initialize Kernel Matrix
+% Initialize Kernel Vector
 kt = zeros(N,1);
 
 %% ALGORITHM

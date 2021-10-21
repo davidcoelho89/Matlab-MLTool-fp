@@ -50,7 +50,7 @@ function [PARout] = ng_cluster(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Nep = 200;       % max number of epochs
     PARaux.Nk = 12;         % number of neurons (prototypes)
     PARaux.init = 02;   	% neurons' initialization
@@ -67,46 +67,46 @@ if ((nargin == 1) || (isempty(PAR))),
     PARaux.K = 1;           % Number of nearest neighbors
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'Nep'))),
+    if (~(isfield(PAR,'Nep')))
         PAR.Nep = 200;
     end
-    if (~(isfield(PAR,'Nk'))),
+    if (~(isfield(PAR,'Nk')))
         PAR.Nk = 12;
     end
-    if (~(isfield(PAR,'init'))),
+    if (~(isfield(PAR,'init')))
         PAR.init = 2;
     end
-    if (~(isfield(PAR,'dist'))),
+    if (~(isfield(PAR,'dist')))
         PAR.dist = 2;
     end
-    if (~(isfield(PAR,'learn'))),
+    if (~(isfield(PAR,'learn')))
         PAR.learn = 2;
     end
-    if (~(isfield(PAR,'No'))),
+    if (~(isfield(PAR,'No')))
         PAR.No = 0.7;
     end
-    if (~(isfield(PAR,'Nt'))),
+    if (~(isfield(PAR,'Nt')))
         PAR.Nt = 0.01;
     end
-    if (~(isfield(PAR,'neig'))),
+    if (~(isfield(PAR,'neig')))
         PAR.neig = 2;
     end
-    if (~(isfield(PAR,'Lo'))),
+    if (~(isfield(PAR,'Lo')))
         PAR.Lo = 0.8;
     end
-    if (~(isfield(PAR,'Lt'))),
+    if (~(isfield(PAR,'Lt')))
         PAR.Lt = 0.3;
     end
-    if (~(isfield(PAR,'lbl'))),
+    if (~(isfield(PAR,'lbl')))
         PAR.lbl = 1;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
-    if (~(isfield(PAR,'Ktype'))),
+    if (~(isfield(PAR,'Ktype')))
         PAR.Ktype = 0;
     end
-    if (~(isfield(PAR,'K'))),
+    if (~(isfield(PAR,'K')))
         PAR.K = 1;
     end
 end
@@ -133,7 +133,7 @@ tmax = N*Nep;       % max number of iterations
 
 % Init Outputs
 
-if (isfield(PAR,'Cx')),
+if (isfield(PAR,'Cx'))
     C = PAR.Cx;
     [~,Nk] = size(C);
 else
@@ -148,10 +148,10 @@ VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
 
 %% ALGORITHM
 
-for ep = 1:Nep,
+for ep = 1:Nep
     
 	% Save frame of the current epoch
-    if (Von),
+    if (Von)
         VID(ep) = prototypes_frame(C,DATA);
     end
 
@@ -160,7 +160,7 @@ for ep = 1:Nep,
     X = X(:,I);
     
     % Update Prototypes (one epoch)
-    for t = 1:N,
+    for t = 1:N
 
         % Get Sample
         xt = X(:,t);                        
@@ -172,7 +172,7 @@ for ep = 1:Nep,
         h = ng_f_neig(C,xt,PAR,t,tmax);
        
         % Uptade Prototypes - 1D
-        for prot = 1:Nk,
+        for prot = 1:Nk
             C(:,prot) = C(:,prot) + n*h(prot)*( xt - C(:,prot) );
         end
         
@@ -184,7 +184,7 @@ for ep = 1:Nep,
 end
 
 % Assign indexes
-for t = 1:N,
+for t = 1:N
     xt = DATA.input(:,t);          	% not shuffled data
     win = prototypes_win(C,xt,PAR);	% Winner Neuron index
     ind(:,t) = win;                	% save index for sample

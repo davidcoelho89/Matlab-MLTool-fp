@@ -28,8 +28,8 @@ PSpar.lambda = 2;   	% Jpbc = Ds + lambda * Err
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = 1;
-% kernels = [1,2,5];
+% kernels = 1;
+kernels = [1,2,5];
 
 %% HYPERPARAMETERS - DEFAULT
 

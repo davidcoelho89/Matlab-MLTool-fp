@@ -13,7 +13,8 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 
 % Vector with chosen datasets
 
-datasets = 30; % just Chessboard
+datasets = 34; % just Electricity
+% datasets = 30; % just Chessboard
 % datasets = 38; % just Rialto Dataset
 % datasets = [28,29,30,33,34,37];
 % datasets = [28,29,30,33,34,37,38];

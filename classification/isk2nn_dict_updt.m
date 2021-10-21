@@ -122,7 +122,7 @@ if (Us ~= 0)
     HP = isk2nn_add_sample(DATAnew,HP);
     
     % Get variables for prunning
-    HP.score_out(end) = score_aux;
+    HP.score(end) = score_aux;
     HP.class_history(end) = class_hist_aux;
     HP.times_selected(end) = times_selected_aux;
     

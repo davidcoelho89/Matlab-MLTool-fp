@@ -122,6 +122,8 @@ hold off
 Acc = accuracy_vector(end);
 Err = 1 - Acc;
 [~,Nprot] = size(PAR.Cx);
+Nprot_mean = mean(prot_per_class(end,:));
+Nprot_std = std(prot_per_class(end,:));
 % v1 = PAR.v1;
 % sigma = PAR.sigma;
 % alpha = PAR.alpha;

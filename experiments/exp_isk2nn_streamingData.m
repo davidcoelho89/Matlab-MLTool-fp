@@ -4,20 +4,49 @@
 % Author: David Nascimento Coelho
 % Last Update: 2021/08/24
 
-%% Labeling and Normalization Choice
+%% Choices
 
-norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.
-lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
+% datasets = [28,29,30,33,34,35,36,37,38];
+datasets = 28;  % Which dataset(s) will be used
+OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
+OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.
+OPT.prob2 = 1;  % Specific choice about dataset
 
-%% Datasets Choice
+% Grid-Search Cross-validation
 
-% Vector with chosen datasets
+PSpar.iterations = 5; % number of times data is presented to the algorithm
+PSpar.type = 2;       % 2: Takes into account also the dicitionary size
+PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
 
-datasets = 34; % just Electricity
-% datasets = 30; % just Chessboard
-% datasets = 38; % just Rialto Dataset
-% datasets = [28,29,30,33,34,37];
-% datasets = [28,29,30,33,34,37,38];
+% Kernels
+
+% 1: linear | 2: rbf | 3: polynomial | 4: exp | 
+% 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
+% kernels = [1,2,5];
+kernels = 2;
+
+% Hyperparameters - Default
+
+HP_gs.Ne = 01;
+HP_gs.Dm = 2;
+HP_gs.Ss = 1;
+HP_gs.v1 = 0.4;
+HP_gs.v2 = 0.9;
+HP_gs.Us = 1;
+HP_gs.eta = 0.1;
+HP_gs.Ps = 2;
+HP_gs.min_score = -10;
+HP_gs.max_prot = 600;
+HP_gs.min_prot = 1;
+HP_gs.Von = 0;
+HP_gs.K = 1;
+HP_gs.knn_type = 2;
+HP_gs.Ktype = 1;
+HP_gs.sig2n = 0.001;
+
+% Hyperparameter - specific
+
+OPT.max_prot_after_gs = 600;
 
 %% Datasets List
 
@@ -78,78 +107,78 @@ datasets = 34; % just Electricity
 %% Run algorithm at datasets
 
 if any(datasets == 25)
-    OPT = struct('prob',25,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 25;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 26)
-    OPT = struct('prob',26,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 26;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 27)
-    OPT = struct('prob',27,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 27;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 28)
-    OPT = struct('prob',28,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 28;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 29)
-    OPT = struct('prob',29,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);    
+    OPT.prob = 29;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 30)
-    OPT = struct('prob',30,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 30;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 31)
-    OPT = struct('prob',31,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 31;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 32)
-    OPT = struct('prob',32,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 32;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 33)
-    OPT = struct('prob',33,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 33;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 34)
-    OPT = struct('prob',34,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-end
-
-if any(datasets == 36)
-    OPT = struct('prob',36,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-end
-
-if any(datasets == 37)
-    OPT = struct('prob',37,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
-end
-
-if any(datasets == 38)
-    OPT = struct('prob',38,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 34;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 35)
-    OPT = struct('prob',35,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 35;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
+end
+
+if any(datasets == 36)
+    OPT.prob = 36;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
+end
+
+if any(datasets == 37)
+    OPT.prob = 37;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
+end
+
+if any(datasets == 38)
+    OPT.prob = 38;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 39)
-    OPT = struct('prob',39,'prob2',1,'norm',norm,'lbl',lbl);
-    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT);
+    OPT.prob = 39;
+    exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 %% FINISHED!

@@ -19,7 +19,7 @@ DATA = data_class_loading(OPT);
 %% HYPERPARAMETERS - DEFAULT
 
 HP_gs.dist = 2;        % Type of distance = euclidean
-HP_gs.Ws = 100;        % Window size
+HP_gs.Ws = 600;        % Window size
 HP_gs.Ktype = 0;       % Non-kernelized Algorithm
 HP_gs.K = 5;           % Number of nearest neighbors
 HP_gs.knn_type = 1;    % Majority voting KNN

@@ -1,4 +1,5 @@
-function [] = exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
+function [] = exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,...
+              OPT,HPgs,PSp)
 
 % --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
 %
@@ -110,7 +111,7 @@ PAR = grid_search_ttt(DATAhpo,HPgs,@isk2nn_train,@isk2nn_classify,PSp);
 
 % Change maximum number of prototypes
 
-PAR.max_prot = 1000;
+PAR.max_prot = OPT.max_prot_after_gs;
 
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 

@@ -1,4 +1,5 @@
-function [] = exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT)
+function [] = exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT,HP_gs,...
+                                                              PSp,kernels)
 
 % --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
 %
@@ -10,45 +11,18 @@ function [] = exp_isk2nn_pipeline_streaming_1data_1Ss_Nkernel(OPT)
 %           prob2 = a specification of the dataset
 %           norm = which normalization will be used
 %           lbl = which labeling strategy will be used
+%       HP_gs = default hyperparameters
+%       PSp.
+%           iterations = number of times data is presented to the algorithm
+%           type = Takes into account also the dicitionary size
+%           lambda = Jpbc = Ds + lambda * Err
+%       kernels = list of kernels to be used
 %   Output:
 %       "Do not have. Just save structures into a file"
 
 %% DATA LOADING
 
 DATA = data_class_loading(OPT);
-
-%% CROSS VALIDATION OPTIONS
-
-PSpar.iterations = 1;	% number of times data is presented to the algorithm
-PSpar.type = 2;         % Takes into account also the dicitionary size
-PSpar.lambda = 2;   	% Jpbc = Ds + lambda * Err
-
-%% WHICH KERNELS WILL BE USED
-
-% 1: linear | 2: rbf | 3: polynomial | 4: exp | 
-% 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
-
-% kernels = 1;
-kernels = [1,2,5];
-
-%% HYPERPARAMETERS - DEFAULT
-
-HP_gs.Ne = 01;
-HP_gs.Dm = 2;
-HP_gs.Ss = 1;
-HP_gs.v1 = 0.4;
-HP_gs.v2 = 0.9;
-HP_gs.Us = 1;
-HP_gs.eta = 0.1;
-HP_gs.Ps = 2;
-HP_gs.min_score = -10;
-HP_gs.max_prot = 500;
-HP_gs.min_prot = 1;
-HP_gs.Von = 0;
-HP_gs.K = 1;
-HP_gs.knn_type = 2;
-HP_gs.Ktype = 1;
-HP_gs.sig2n = 0.001;
 
 %% FILE NAME - STRINGS
 
@@ -72,10 +46,16 @@ str14 = 'nn.mat';
 if (any(kernels == 1))
 
     str12 = '_lin_';
-
-    HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
-    % HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
+    
+    if(HP_gs.Ss == 1)
+        HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
+    elseif(HP_gs.Ss == 2)
+        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
+    end
+    
+    % ToDo - The same thing of v1, to v2!
     HP_gs.v2 = HP_gs.v1(end) + 0.001;
+
     HP_gs.Ktype = 1;
     HP_gs.sigma = 2;
     HP_gs.gamma = 2;
@@ -85,7 +65,7 @@ if (any(kernels == 1))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -94,21 +74,26 @@ end
 if (any(kernels == 2))
     
     str12 = '_gau_';
+    
+    if(HP_gs.Ss == 1)
+        HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+    elseif(HP_gs.Ss == 2)
+        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    end
 
-    HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
-    % HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    % ToDo - The same thing of v1, to v2!
     HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    
     HP_gs.Ktype = 2;
     HP_gs.sigma = 2.^linspace(-10,9,20);
     HP_gs.gamma = 2;
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
-
+    
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -129,7 +114,7 @@ if (any(kernels == 3))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -150,8 +135,7 @@ if (any(kernels == 4))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -161,8 +145,12 @@ if (any(kernels == 5))
 
     str12 = '_cau_';
 
-    HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
-    % HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    if(HP_gs.Ss == 1)
+        HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+    elseif(HP_gs.Ss == 2)
+        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    end
+    
     HP_gs.v2 = HP_gs.v1(end) + 0.001;
     HP_gs.Ktype = 5;
     HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -173,7 +161,7 @@ if (any(kernels == 5))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -194,7 +182,7 @@ if (any(kernels == 6))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -216,7 +204,7 @@ if (any(kernels == 7))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 
@@ -237,7 +225,7 @@ if (any(kernels == 8))
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
 
-    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSpar);
+    exp_isk2nn_pipeline_streaming_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
 end
 

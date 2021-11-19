@@ -21,7 +21,7 @@ lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 
 % datasets = 38; % just Rialto Dataset
 % datasets = [28,29,30,33,34,37];
-datasets = [28,29,30,33,34,37,38];
+datasets = [28,29,30,33,34,35,36,37,38];
 
 % Sea Concepts              => 25: 200k / 03 / 02
 % label noise (10%)

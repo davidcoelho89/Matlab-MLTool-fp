@@ -40,7 +40,7 @@ X = [ones(1,N);X];          % x0 = +1
 
 %% ALGORITHM
 
-for t = 1:N,
+for t = 1:N
 
     % HIDDEN LAYER
     xi = X(:,t);              	% Get input sample

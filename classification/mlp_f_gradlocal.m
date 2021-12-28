@@ -17,9 +17,9 @@ function [Di] = mlp_f_gradlocal(Yi,option)
 %% ALGORITHM
 
 switch option
-    case (1)    % derivate of sigmoidal function
+    case (1)    % derivate of sigmoidal function => [0,1]
         Di = Yi.*(1 - Yi) + 0.05;
-    case (2)    % derivate of hyperbolic tangent
+    case (2)    % derivate of hyperbolic tangent function => [-1,+1]
         Di = 0.5*(1-Yi.^2) + 0.05;     
     otherwise
         Di = Yi;

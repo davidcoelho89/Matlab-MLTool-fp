@@ -6,6 +6,8 @@
 
 %% Choices
 
+% Datasets
+
 % datasets = [28,29,30,33,34,35,36,37,38];
 datasets = 28;  % Which dataset(s) will be used
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]

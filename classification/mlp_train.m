@@ -10,7 +10,7 @@ function [PARout] = mlp_train(DATA,PAR)
 %           output = labels                                     [No x N]
 %       PAR.
 %           Ne = maximum number of epochs	                    [cte]
-%           Nh = number of hidden neurons  	                    [cte]
+%           Nh = number of hidden neurons  	                    [1 x Nl]
 %           eta = learning rate           	                    [0.01 0.1]
 %           mom = moment factor            	                    [0.5 1.0]
 %           Nlin = non-linearity           	                    [cte]
@@ -26,7 +26,7 @@ function [PARout] = mlp_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Nh = 10;       	% Number of hidden neurons
     PARaux.Ne = 200;     	% Maximum training epochs
     PARaux.eta = 0.05;     	% Learning Step
@@ -36,22 +36,22 @@ if ((nargin == 1) || (isempty(PAR))),
     PAR = PARaux;
     
 else
-    if (~(isfield(PAR,'Nh'))),
+    if (~(isfield(PAR,'Nh')))
         PAR.Nh = 10;
     end
-    if (~(isfield(PAR,'Ne'))),
+    if (~(isfield(PAR,'Ne')))
         PAR.Ne = 200;
     end
-    if (~(isfield(PAR,'eta'))),
+    if (~(isfield(PAR,'eta')))
         PAR.eta = 0.05;
     end
-    if (~(isfield(PAR,'mom'))),
+    if (~(isfield(PAR,'mom')))
         PAR.mom = 0.75;
     end
-    if (~(isfield(PAR,'Nlin'))),
+    if (~(isfield(PAR,'Nlin')))
         PAR.Nlin = 2;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
 end
@@ -80,7 +80,7 @@ MQEtr = zeros(1,Nep);     	% Mean Quantization Error
 W = cell(2,1);                  % 1 hidden and 1 output layer
 W_old = cell(2,1);              % 1 hidden and 1 output layer
 
-if (isfield(PAR,'W')),
+if (isfield(PAR,'W'))
     W{1} = PAR.W{1};            % if already initialized
     W{2} = PAR.W{2};          	% if already initialized
 else
@@ -99,13 +99,13 @@ VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
 
 %% ALGORITHM
 
-for ep = 1:Nep,   % for each epoch
+for ep = 1:Nep   % for each epoch
 
     % Update Parameters
     PAR.W = W;
     
     % Save frame of the current epoch
-    if (Von),
+    if (Von)
         VID(ep) = get_frame_hyperplane(DATA,PAR,@mlp_classify);
     end
     
@@ -116,7 +116,7 @@ for ep = 1:Nep,   % for each epoch
     
     SQE = 0; % Init sum of quadratic errors
     
-    for t = 1:N,   % for each sample
+    for t = 1:N   % for each sample
             
         % HIDDEN LAYER
         xi = X(:,t);              	% Get input sample

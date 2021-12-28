@@ -15,9 +15,9 @@ function [Yi] = mlp_f_ativ(Ui,option)
 %% ALGORITHM
 
 switch option
-    case (1)    % [0 e 1]
+    case (1)    % sigmoidal function => [0,1]
         Yi = 1./(1+exp(-Ui));
-    case (2)    % [-1 e +1]
+    case (2)    % hyperbolic tangent function => [-1,+1]
         Yi = (1-exp(-Ui))./(1+exp(-Ui));
     otherwise
         Yi = Ui;

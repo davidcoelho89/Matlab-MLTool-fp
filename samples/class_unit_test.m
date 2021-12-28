@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 02;        	% Which problem will be solved / used
+OPT.prob = 04;        	% Which problem will be solved / used
 OPT.prob2 = 30;       	% More details about a specific data set
 OPT.norm = 2;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
@@ -33,18 +33,18 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 % Handlers for classification functions
 
-class_name = 'Bayes';
-class_train = @gauss_train;
-class_test = @gauss_classify;
+class_name = 'MLP';
+class_train = @mlp_train;
+class_test = @mlp_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
-HP.type = 1;
-
-% HP.Ne = 200;       	% maximum number of training epochs
-% HP.eta = 0.05;    	% Learning step
-% HP.Nh = 5;          % Number of hidden neurons
-% HP.Von = 1;         % disable video 
+HP.Nh = 5;          % Number of hidden neurons
+HP.Ne = 200;       	% maximum number of training epochs
+HP.eta = 0.05;    	% Learning step
+HP.mom = 0.75;    	% Moment Factor
+HP.Nlin = 2;       	% Non-linearity
+HP.Von = 0;         % disable video 
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
@@ -166,7 +166,7 @@ class_stats_ncomp(nSTATS_all,NAMES);
 % STATS = STATS_ts_acc{r};
 % 
 % % Classifier Decision Boundaries
-% plot_class_boundary(DATAf,PAR,class_test);
+% plot_class_boundary(DATA,PAR_acc{r},class_test);
 % 
 % % ROC Curve (one for each class)
 % plot_stats_roc_curve(STATS);

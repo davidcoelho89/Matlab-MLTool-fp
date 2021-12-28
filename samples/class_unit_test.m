@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 04;        	% Which problem will be solved / used
+OPT.prob = 12;        	% Which problem will be solved / used
 OPT.prob2 = 30;       	% More details about a specific data set
 OPT.norm = 2;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
-OPT.Nr = 10;           	% Number of repetitions of the algorithm
+OPT.Nr = 05;           	% Number of repetitions of the algorithm
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
@@ -39,7 +39,8 @@ class_test = @mlp_classify;
 
 %% CHOOSE HYPERPARAMETERS
 
-HP.Nh = 5;          % Number of hidden neurons
+HP.Nh = [5,3];      % Number of hidden neurons
+% HP.Nh = 5;          % Number of hidden neurons
 HP.Ne = 200;       	% maximum number of training epochs
 HP.eta = 0.05;    	% Learning step
 HP.mom = 0.75;    	% Moment Factor
@@ -78,6 +79,7 @@ for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
+disp('Turn and Time');
 disp(r);
 display(datestr(now));
 
@@ -119,7 +121,7 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
+% HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 

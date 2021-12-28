@@ -10,7 +10,7 @@ function [PARout] = mlp_train(DATA,PAR)
 %           output = labels                                     [No x N]
 %       PAR.
 %           Ne = maximum number of epochs	                    [cte]
-%           Nh = number of hidden neurons  	                    [1 x Nl]
+%           Nh = number of hidden neurons                       [NL-1 x 1]
 %           eta = learning rate           	                    [0.01 0.1]
 %           mom = moment factor            	                    [0.5 1.0]
 %           Nlin = non-linearity           	                    [cte]
@@ -19,8 +19,9 @@ function [PARout] = mlp_train(DATA,PAR)
 %           Von = enable or disable video                       [cte]
 %   Output:
 %       PARout.
-%           W{1} = Weight Matrix: Inputs to Hidden Layer        [Nh x p+1]
-%           W{2} = Weight Matrix: Hidden layer to output layer 	[No x Nh+1]
+%           W = weight matrices                                 [NL x 1]
+%               W{1:end-1} = Hidden layer weight Matrix 
+%               W{end} = Output layer weight Matrix
 %           MQEtr = Mean Quantization Error (learning curve)	[Ne x 1]
 %           VID = frame structure (can be played with 'video function')
 
@@ -71,28 +72,38 @@ Nlin = PAR.Nlin;            % Non-linearity
 Von = PAR.Von;              % Enable or disable video
 
 % Problem Initialization
-[No,~] = size(D);           % Number of Classes and Output Neurons
+[Nc,~] = size(D);           % Number of Classes and Output Neurons
 [p,N] = size(X);            % attributes and samples
 MQEtr = zeros(1,Nep);     	% Mean Quantization Error
+structure = [p,Nh,Nc];      % MLP Structure
+NL = length(structure) - 1; % Number of layers
 
-% Weight Matrices Initialization
+disp('MLP Structure:');
+disp(structure);
 
-W = cell(2,1);                  % 1 hidden and 1 output layer
-W_old = cell(2,1);              % 1 hidden and 1 output layer
+% Cells for holding info of forward and backward steps
+x = cell(NL,1);             % input of each layer
+y = cell(NL,1);             % output of each layer
+delta = cell(NL,1);         % local gradient of each layer
 
-if (isfield(PAR,'W'))
-    W{1} = PAR.W{1};            % if already initialized
-    W{2} = PAR.W{2};          	% if already initialized
-else
-    W{1} = 0.01*rand(Nh,p+1);	% Hidden Neurons weights
-    W{2} = 0.01*rand(No,Nh+1);	% Output Neurons weights
+% Weight Matrices Initialization (NL-1 Hidden layers)
+
+W = cell(NL,1);             % Weight Matrices
+W_old = cell(NL,1);         % Necessary for moment factor
+
+if (isfield(PAR,'W'))       % if already initialized
+    for i = 1:NL
+        W{i} = PAR.W{i};
+    end
+else                        % Initialize randomly
+    for i = 1:NL
+        W{i} = 0.01*rand(structure(i+1),structure(i)+1);
+        W_old{i} = W{i};    
+    end
 end
 
-W_old{1} = W{1};               	% necessary for moment factor
-W_old{2} = W{2};             	% necessary for moment factor
-
 % Add bias to input matrix
-X = [ones(1,N);X];              % x0 = +1
+X = [ones(1,N) ; X];       % x0 = +1
 
 % Initialize Video Structure
 VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
@@ -117,38 +128,70 @@ for ep = 1:Nep   % for each epoch
     SQE = 0; % Init sum of quadratic errors
     
     for t = 1:N   % for each sample
-            
-        % HIDDEN LAYER
-        xi = X(:,t);              	% Get input sample
-        Ui = W{1} * xi;            	% Activation of hidden neurons 
-        Yi = mlp_f_ativ(Ui,Nlin);	% Non-linear function
         
-        % OUTPUT LAYER
-        xk = [+1; Yi];          	% build input of output layer
-        Uk = W{2} * xk;           	% Activation of output neurons
-        Yk = mlp_f_ativ(Uk,Nlin);	% Non-linear function
+        % Forward Step (Calculate Layers' Outputs)
+        for i = 1:NL
+            if (i == 1) % Input layer
+                x{i} = X(:,t);          % Get input data
+            else
+                x{i} = [+1; y{i-1}];    % add bias to last output
+            end
+            Ui = W{i} * x{i};           % Activation of hidden neurons
+            y{i} = mlp_f_ativ(Ui,Nlin); % Non-linear function
+        end
         
-        % ERROR CALCULATION
-        Ek = D(:,t) - Yk;           % error between real and estimated output
-        SQE = SQE + sum(Ek.^2);     % sum of quadratic error
+        % Error Calculation
+        E = D(:,t) - y{NL};
+        SQE = SQE + sum(E.^2);
         
-        % LOCAL GRADIENTS - OUTPUT LAYER
-        Dk = mlp_f_gradlocal(Yk,Nlin);	% derivative of activation function
-        DDk = Ek.*Dk;                  	% local gradient (output layer)
+        % Backward Step (Calculate Layers' Local Gradients)
+        for i = NL:-1:1
+            f_der = mlp_f_gradlocal(y{i},Nlin);
+            if (i == NL) % output layer
+                delta{i} = E.*f_der;
+            else
+                delta{i} = f_der.*(W{i+1}(:,2:end)'*delta{i+1});
+            end
+        end
         
-        % LOCAL GRADIENTS -  HIDDEN LAYER
-        Di = mlp_f_gradlocal(Yi,Nlin);      % derivative of activation function
-        DDi = Di.*(W{2}(:,2:end)'*DDk);     % local gradient (hidden layer)
+        % Weight Adjustment
+        for i = NL:-1:1
+            W_aux = W{i};
+            W{i} = W{i} + eta*delta{i}*x{i}' + mom*(W{i} - W_old{i});
+            W_old{i} = W_aux;
+        end
         
-        % WEIGHTS ADJUSTMENT - OUTPUT LAYER
-        W_aux = W{2};                                    	% Hold curr weights
-        W{2} = W{2} + eta*DDk*xk' + mom*(W{2} - W_old{2});	% Update curr weights
-        W_old{2} = W_aux;                                	% Hold last weights
-        
-        % WEIGHTS ADJUSTMENT - HIDDEN LAYER
-        W_aux = W{1};                                       % Hold curr weights
-        W{1} = W{1} + eta*DDi*xi' + mom*(W{1} - W_old{1});	% Update curr weights
-        W_old{1} = W_aux;                                   % Hold last weights
+%         % HIDDEN LAYER
+%         xi = X(:,t);              	% Get input sample
+%         Ui = W{1} * xi;            	% Activation of hidden neurons 
+%         Yi = mlp_f_ativ(Ui,Nlin);	% Non-linear function
+%         
+%         % OUTPUT LAYER
+%         xk = [+1; Yi];          	% build input of output layer
+%         Uk = W{2} * xk;           	% Activation of output neurons
+%         Yk = mlp_f_ativ(Uk,Nlin);	% Non-linear function
+%         
+%         % ERROR CALCULATION
+%         E = D(:,t) - Yk;           % error between real and estimated output
+%         SQE = SQE + sum(E.^2);     % sum of quadratic error
+%         
+%         % LOCAL GRADIENTS - OUTPUT LAYER
+%         Dk = mlp_f_gradlocal(Yk,Nlin);	% derivative of activation function
+%         DDk = E.*Dk;                  	% local gradient (output layer)
+%         
+%         % LOCAL GRADIENTS -  HIDDEN LAYER
+%         Di = mlp_f_gradlocal(Yi,Nlin);      % derivative of activation function
+%         DDi = Di.*(W{2}(:,2:end)'*DDk);     % local gradient (hidden layer)
+%         
+%         % WEIGHTS ADJUSTMENT - OUTPUT LAYER
+%         W_aux = W{2};                                    	% Hold curr weights
+%         W{2} = W{2} + eta*DDk*xk' + mom*(W{2} - W_old{2});	% Update curr weights
+%         W_old{2} = W_aux;                                	% Hold last weights
+%         
+%         % WEIGHTS ADJUSTMENT - HIDDEN LAYER
+%         W_aux = W{1};                                       % Hold curr weights
+%         W{1} = W{1} + eta*DDi*xi' + mom*(W{1} - W_old{1});	% Update curr weights
+%         W_old{1} = W_aux;                                   % Hold last weights
         
     end   % end of epoch
         

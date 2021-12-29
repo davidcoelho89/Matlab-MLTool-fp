@@ -61,7 +61,7 @@ end
 
 % Data Initialization
 X = DATA.input;             % Input Matrix
-D = DATA.output;            % Output Matrix
+Y = DATA.output;            % Output Matrix
 
 % Hyperparameters Initialization
 Nep = PAR.Ne;           	% Number of training epochs
@@ -72,18 +72,18 @@ Nlin = PAR.Nlin;            % Non-linearity
 Von = PAR.Von;              % Enable or disable video
 
 % Problem Initialization
-[Nc,~] = size(D);           % Number of Classes and Output Neurons
+[Nc,~] = size(Y);           % Number of Classes and Output Neurons
 [p,N] = size(X);            % attributes and samples
 MQEtr = zeros(1,Nep);     	% Mean Quantization Error
 structure = [p,Nh,Nc];      % MLP Structure
 NL = length(structure) - 1; % Number of layers
 
-disp('MLP Structure:');
-disp(structure);
+% disp('MLP Structure:');
+% disp(structure);
 
 % Cells for holding info of forward and backward steps
 x = cell(NL,1);             % input of each layer
-y = cell(NL,1);             % output of each layer
+yh = cell(NL,1);         	% output of each layer
 delta = cell(NL,1);         % local gradient of each layer
 
 % Weight Matrices Initialization (NL-1 Hidden layers)
@@ -123,7 +123,7 @@ for ep = 1:Nep   % for each epoch
     % Shuffle Data
     I = randperm(N);        
     X = X(:,I);     
-    D = D(:,I);   
+    Y = Y(:,I);   
     
     SQE = 0; % Init sum of quadratic errors
     
@@ -134,19 +134,19 @@ for ep = 1:Nep   % for each epoch
             if (i == 1) % Input layer
                 x{i} = X(:,t);          % Get input data
             else
-                x{i} = [+1; y{i-1}];    % add bias to last output
+                x{i} = [+1; yh{i-1}];    % add bias to last output
             end
             Ui = W{i} * x{i};           % Activation of hidden neurons
-            y{i} = mlp_f_ativ(Ui,Nlin); % Non-linear function
+            yh{i} = mlp_f_ativ(Ui,Nlin); % Non-linear function
         end
         
         % Error Calculation
-        E = D(:,t) - y{NL};
+        E = Y(:,t) - yh{NL};
         SQE = SQE + sum(E.^2);
         
         % Backward Step (Calculate Layers' Local Gradients)
         for i = NL:-1:1
-            f_der = mlp_f_gradlocal(y{i},Nlin);
+            f_der = mlp_f_gradlocal(yh{i},Nlin);
             if (i == NL) % output layer
                 delta{i} = E.*f_der;
             else

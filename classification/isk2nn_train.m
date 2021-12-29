@@ -33,7 +33,7 @@
 %           max_prot = max number of prototypes ("Budget")      [cte]
 %           min_prot = min number of prototypes ("restriction") [cte]
 %           Von = enable or disable video                       [cte]
-%           K = number of nearest neighbors (classify)        	[cte]
+%           K = number of nearest neighbors (classification)   	[cte]
 %           knn_type = type of knn aproximation                 [cte]
 %               1: Majority Voting
 %               2: Weighted KNN

@@ -1,8 +1,8 @@
-function [] = exp_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
+function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
 
-% --- Pipeline used to test isk2nn model with 1 dataset and 1 Kernel ---
+% --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
 %
-%   [] = exp_isk2nn_pipeline_stationary_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
+%   [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,PSp)
 %
 %   Input:
 %       DATA.
@@ -42,11 +42,11 @@ nSTATS_all = cell(2,1);             % Acc of General statistics
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,21 +87,21 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@isk2nn_train,@isk2nn_classify,CVp);
+HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
 % Calculate model's parameters
-PAR_acc{r} = isk2nn_train(DATAtr,HP);
+PAR_acc{r} = spok_train(DATAtr,HP);
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
 % Results and Statistics with training data
-OUTtr = isk2nn_classify(DATAtr,PAR_acc{r});
+OUTtr = spok_classify(DATAtr,PAR_acc{r});
 STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
 
 % Results and Statistics with test data
-OUTts = isk2nn_classify(DATAts,PAR_acc{r});
+OUTts = spok_classify(DATAts,PAR_acc{r});
 STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
@@ -120,7 +120,7 @@ nSTATS_all{2,1} = nSTATS_ts;
 
 % Compare Training and Test Statistics
 
-% class_stats_ncomp(nSTATS_all,NAMES);
+class_stats_ncomp(nSTATS_all,NAMES);
 
 %% SAVE FILE
 

@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% spok-nn With stationary data
+% Spok With one stationary Dataset
 % Author: David Nascimento Coelho
-% Last Update: 2020/05/10
+% Last Update: 2021/05/10
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -87,13 +87,13 @@ nSTATS_all = cell(2,1);             % Acc of General statistics
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
-display('Begin Algorithm');
+disp('Begin Algorithm');
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,32 +134,32 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@isk2nn_train,@isk2nn_classify,GSp);
+HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,GSp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
 % Save video of last training
-if r == OPT.Nr,
+if r == OPT.Nr
     HP.Von = 1;
 end
 
 % Calculate model's parameters
-PAR_acc{r} = isk2nn_train(DATAtr,HP);
+PAR_acc{r} = spok_train(DATAtr,HP);
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
 % Results and Statistics with training data
-OUTtr = isk2nn_classify(DATAtr,PAR_acc{r});
+OUTtr = spok_classify(DATAtr,PAR_acc{r});
 STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
 
 % Results and Statistics with test data
-OUTts = isk2nn_classify(DATAts,PAR_acc{r});
+OUTts = spok_classify(DATAts,PAR_acc{r});
 STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
 
-display('Finish Algorithm')
-display(datestr(now));
+disp('Finish Algorithm')
+disp(datestr(now));
 
 %% RESULTS / STATISTICS
 

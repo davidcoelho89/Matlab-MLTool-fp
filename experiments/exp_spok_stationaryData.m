@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% isK2nn Model testing in various stationary datasets
+% Spok Model testing in various stationary datasets
 % Author: David Nascimento Coelho
-% Last Update: 2020/04/08
+% Last Update: 2021/12/08
 
 %% Datasets:
 
@@ -22,7 +22,7 @@ ptrn = 0.7;	% Percentage of samples for training
 % 
 % OPT =  struct('prob',06,'prob2',2,'norm',norm,'lbl',lbl, ...
 %               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Motor Failure
 
@@ -31,7 +31,7 @@ ptrn = 0.7;	% Percentage of samples for training
 % 
 % OPT =  struct('prob',07,'prob2',2,'norm',norm,'lbl',lbl, ...
 %               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Vertebral Column
 
@@ -40,7 +40,7 @@ ptrn = 0.7;	% Percentage of samples for training
 % 
 % OPT =  struct('prob',10,'prob2',2,'norm',norm,'lbl',lbl, ...
 %               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Cervical Cancer
 
@@ -49,7 +49,7 @@ ptrn = 0.7;	% Percentage of samples for training
 
 OPT =  struct('prob',19,'prob2',2,'norm',norm,'lbl',lbl, ...
               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% Wall-Following
 
@@ -58,6 +58,6 @@ test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
 % 
 % OPT =  struct('prob',22,'prob2',1,'norm',norm,'lbl',lbl, ...
 %               'Nr',Nr,'hold',hold,'ptrn',ptrn);
-% test_isk2nn_pipeline_stationary_1data_1Ss_Nkernel(OPT);
+% exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT);
 
 %% END

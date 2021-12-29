@@ -51,18 +51,6 @@ for t = 1:N
     end
     y_h(:,t) = Yi;                  % Get output of last layer
 
-%     % HIDDEN LAYER
-%     xi = X(:,t);              	% Get input sample
-%     Ui = W{1} * xi;            	% Activation of hidden neurons 
-%     Yi = mlp_f_ativ(Ui,Nlin);   % Non-linear function
-%     
-%     % OUTPUT LAYER
-%     xk = [+1; Yi];             	% build input of output layer
-%     Uk = W{2} * xk;            	% Activation of output neurons
-%     Yk = mlp_f_ativ(Uk,Nlin);	% Non-linear function
-%     
-%     y_h(:,t) = Yk;              % Hold neural net output
-
 end
 
 %% FILL OUTPUT STRUCTURE

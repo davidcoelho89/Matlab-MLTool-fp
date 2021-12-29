@@ -160,39 +160,7 @@ for ep = 1:Nep   % for each epoch
             W{i} = W{i} + eta*delta{i}*x{i}' + mom*(W{i} - W_old{i});
             W_old{i} = W_aux;
         end
-        
-%         % HIDDEN LAYER
-%         xi = X(:,t);              	% Get input sample
-%         Ui = W{1} * xi;            	% Activation of hidden neurons 
-%         Yi = mlp_f_ativ(Ui,Nlin);	% Non-linear function
-%         
-%         % OUTPUT LAYER
-%         xk = [+1; Yi];          	% build input of output layer
-%         Uk = W{2} * xk;           	% Activation of output neurons
-%         Yk = mlp_f_ativ(Uk,Nlin);	% Non-linear function
-%         
-%         % ERROR CALCULATION
-%         E = D(:,t) - Yk;           % error between real and estimated output
-%         SQE = SQE + sum(E.^2);     % sum of quadratic error
-%         
-%         % LOCAL GRADIENTS - OUTPUT LAYER
-%         Dk = mlp_f_gradlocal(Yk,Nlin);	% derivative of activation function
-%         DDk = E.*Dk;                  	% local gradient (output layer)
-%         
-%         % LOCAL GRADIENTS -  HIDDEN LAYER
-%         Di = mlp_f_gradlocal(Yi,Nlin);      % derivative of activation function
-%         DDi = Di.*(W{2}(:,2:end)'*DDk);     % local gradient (hidden layer)
-%         
-%         % WEIGHTS ADJUSTMENT - OUTPUT LAYER
-%         W_aux = W{2};                                    	% Hold curr weights
-%         W{2} = W{2} + eta*DDk*xk' + mom*(W{2} - W_old{2});	% Update curr weights
-%         W_old{2} = W_aux;                                	% Hold last weights
-%         
-%         % WEIGHTS ADJUSTMENT - HIDDEN LAYER
-%         W_aux = W{1};                                       % Hold curr weights
-%         W{1} = W{1} + eta*DDi*xi' + mom*(W{1} - W_old{1});	% Update curr weights
-%         W_old{1} = W_aux;                                   % Hold last weights
-        
+
     end   % end of epoch
         
     % Mean Squared Error of epoch

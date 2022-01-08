@@ -140,6 +140,8 @@ for ep = 1:Nep   % for each epoch
             yh{i} = mlp_f_ativ(Ui,Nlin); % Non-linear function
         end
         
+        % For the controller: yh{NL} -> MODELO -> Ym
+        
         % Error Calculation
         E = Y(:,t) - yh{NL};
         SQE = SQE + sum(E.^2);

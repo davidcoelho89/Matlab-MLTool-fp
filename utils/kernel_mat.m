@@ -30,7 +30,7 @@ function [Km] = kernel_mat(X,PAR)
 [~,N] = size(X);
 
 % Used to avoid inverse problems
-if (~(isfield(PAR,'sig2n'))),
+if (~(isfield(PAR,'sig2n')))
     PAR.sig2n = 0.001;
 else
     sig2n = PAR.sig2n;
@@ -41,8 +41,8 @@ Km = zeros(N,N);
 
 %% ALGORITHM
 
-for i = 1:N,
-    for j = i:N,
+for i = 1:N
+    for j = i:N
         Km(i,j) = kernel_func(X(:,i),X(:,j),PAR);
       	Km(j,i) = Km(i,j);
     end

@@ -17,7 +17,6 @@ function [COEHout] = coherence_criterion(Dx,xt,HP)
 %% INITIALIZATIONS
 
 [~,m] = size(Dx);               % Dictionary size
-
 v1 = HP.v1;                 	% Sparsification parameter
 
 %% ALGORITHM
@@ -29,14 +28,14 @@ u = kernel_func(Dx(:,1),xt,HP) / ...
 u_max = abs(u);
 
 % Get coherence measure
-if (m >= 2),
-    for i = 2:m,
+if (m >= 2)
+    for i = 2:m
         % Calculate kernel
         u = kernel_func(Dx(:,i),xt,HP) / ...
             (sqrt(kernel_func(Dx(:,i),Dx(:,i),HP) * ...
             kernel_func(xt,xt,HP)));
         % Calculate Coherence
-        if (abs(u) > u_max),
+        if (abs(u) > u_max)
             u_max = abs(u);
         end
     end

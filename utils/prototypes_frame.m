@@ -20,7 +20,7 @@ input = DATA.input;
 % Plot Clusters
 cla;
 hold on
-if(~isempty(Cx)),
+if(~isempty(Cx))
     plot(Cx(1,:),Cx(2,:),'k*');
 end
 plot(input(1,:),input(2,:),'r.');

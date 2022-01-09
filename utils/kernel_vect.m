@@ -2,7 +2,7 @@ function [kt] = kernel_vect(X,xt,PAR)
 
 % --- Calculate the kernel vector of a data matrix and a sample ---
 %
-%   [Kt] = kernel_vect(X,xi,PAR)
+%   [Kt] = kernel_vect(X,xt,PAR)
 %
 %   Input:
 %       X = matrix with samples                                 [p x N]
@@ -35,7 +35,7 @@ kt = zeros(N,1);
 
 %% ALGORITHM
 
-for j = 1:N,
+for j = 1:N
     kt(j) = kernel_func(X(:,j),xt,PAR);
 end
 

@@ -33,7 +33,7 @@ W = PAR.W;              % Transformation matrix
 
 % Remove mean from input matrix
 
-if (rem == 1),
+if (rem == 1)
     X = X - repmat(mu,1,N);
 end
 

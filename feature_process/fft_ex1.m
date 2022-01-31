@@ -53,7 +53,7 @@ figure; plot(t,y_res);  % plot signal
 
 %% FFT ALGORITHM
 
-M1 = fft(y_res,Nfft)/L;         % Frequencies (with real and imaginary)
+M1 = fft(y_res,Nfft)/L;         % Frequencies (with real and imag parts)
 M2 = 2*abs(M1(1:Nfreq,:));      % Frequencies (module - columms)
 arg_M2 = angle(M1(1:Nfreq,:));	% Frequencies (arguments)
 

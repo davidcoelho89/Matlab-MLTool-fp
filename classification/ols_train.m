@@ -19,11 +19,11 @@ function [PARout] = ols_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.aprox = 1;       % Neurons' labeling function
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'aprox'))),
+    if (~(isfield(PAR,'aprox')))
         PAR.aprox = 1;
     end
 end
@@ -45,11 +45,11 @@ X = [ones(1,N) ; X];
 
 %% ALGORITHM
 
-if aprox == 1,
+if aprox == 1
     W = Y*pinv(X);
-elseif aprox == 2,
+elseif aprox == 2
     W = Y*X'/(X*X');
-elseif aprox == 3,
+elseif aprox == 3
     W = Y/X;
 else
     disp('type a valid option: 1, 2 or 3');

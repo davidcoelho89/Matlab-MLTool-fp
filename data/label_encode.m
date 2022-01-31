@@ -38,7 +38,7 @@ case(1)
     [~,N] = size(labels_in);
     Nc = length(unique(labels_in));
     labels_out = -1*ones(Nc,N);
-    for i = 1:N,
+    for i = 1:N
         labels_out(labels_in(i),i) = 1;
     end
     
@@ -47,7 +47,7 @@ case(2)
     [~,N] = size(labels_in);
     Nc = length(unique(labels_in));
     labels_out = zeros(Nc,N);
-    for i = 1:N,
+    for i = 1:N
         labels_out(labels_in(i),i) = 1;
     end
     
@@ -55,8 +55,8 @@ case(3)
     
     [Nc,N] = size(labels_in);
     labels_out = zeros(1,N);
-    for i = 1:N,
-        for j = 1:Nc,
+    for i = 1:N
+        for j = 1:Nc
             if (labels_in(j,i) == 1)
                 labels_out(i) = j;
             end
@@ -72,9 +72,9 @@ case(4)
     
     labels_out = zeros(1,N);
     
-    for i = 1:N,
-        for j = 1:Nc,
-            if strcmp(labels_in{i},class_names{j}),
+    for i = 1:N
+        for j = 1:Nc
+            if strcmp(labels_in{i},class_names{j})
                 labels_out(i) = j;
                 break;
             end
@@ -90,9 +90,9 @@ case(5)
     
     labels_out = -1*ones(Nc,N);
     
-    for i = 1:N,
-        for j = 1:Nc,
-            if strcmp(labels_in{i},class_names{j}),
+    for i = 1:N
+        for j = 1:Nc
+            if strcmp(labels_in{i},class_names{j})
                 labels_out(j,i) = 1;
                 break;
             end
@@ -108,9 +108,9 @@ case(6)
     
     labels_out = zeros(Nc,N);
     
-    for i = 1:N,
-        for j = 1:Nc,
-            if strcmp(labels_in{i},class_names{j}),
+    for i = 1:N
+        for j = 1:Nc
+            if strcmp(labels_in{i},class_names{j})
                 labels_out(j,i) = 1;
                 break;
             end

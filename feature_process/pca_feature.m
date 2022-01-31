@@ -23,15 +23,15 @@ function [PAR] = pca_feature(DATA,HP)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(HP))),
+if ((nargin == 1) || (isempty(HP)))
     HPaux.tol = 1;
     HPaux.rem = 1;
 	HP = HPaux;
 else
-    if (~(isfield(HP,'tol'))),
+    if (~(isfield(HP,'tol')))
         HP.tol = 1;
     end
-    if (~(isfield(HP,'rem'))),
+    if (~(isfield(HP,'rem')))
         HP.rem = 1;
     end
 end
@@ -52,7 +52,7 @@ rem = HP.rem;       % remove or not mean
 % Calculate Mean and Remove it from each sample 
 
 Xmean = mean(X,2);
-if (rem == 1),
+if (rem == 1)
     X = X - repmat(Xmean,1,N);
 end
 
@@ -75,15 +75,15 @@ V = V(:,SORT.ind);          % sort eigenvectors
 
 Ev = zeros(1,p);
 Ev(1) = L(1);
-for i = 2:p,
+for i = 2:p
     Ev(i) = Ev(i-1) + L(i);
 end
 Ev = Ev/sum(L);
 
 % Find number of Principal Components
 
-for i = 1:p,
-    if(Ev(i) >= tol),
+for i = 1:p
+    if(Ev(i) >= tol)
         q = i;
         break;
     end

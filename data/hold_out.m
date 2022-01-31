@@ -19,7 +19,7 @@ function [DATAout] = hold_out(DATA,OPTIONS)
 %                  the remaining samples are for the test dataset
 %               3: separate samples of each class (nsamp_c).
 %                  from each class, get "ptrn x nsamp_c" for training
-%                  the remaining samples are forthe  test dataset
+%                  the remaining samples are for the test dataset
 %   Output:
 %       DATAout.
 %           DATAtr = training samples
@@ -39,7 +39,7 @@ lbls = DATA.lbl;
 % Number of classes and samples
 [Nc,N] = size(Y);
 flag_seq = 0;
-if Nc == 1,
+if Nc == 1
     flag_seq = 1;           % Informs that labels are sequential
     Nc = length(unique(Y)); % calculates one more time the number of classes
 end
@@ -88,7 +88,7 @@ switch (Mho)
         X_c = cell(Nc,1);
         Y_c = cell(Nc,1);
         lbl_c = cell(Nc,1);
-        for i = 1:Nc,
+        for i = 1:Nc
             X_c{i} = [];
             Y_c{i} = [];
             lbl_c{i} = [];
@@ -96,13 +96,13 @@ switch (Mho)
         
         % Separate data of each class
         
-        for i = 1:N,
+        for i = 1:N
             % current sample
             xi = X(:,i);
             yi = Y(:,i);
             lbl_i = lbls(:,i);
             % define class
-            if (flag_seq == 1),
+            if (flag_seq == 1)
                 class = yi;
             else
                 class = find(yi > 0);
@@ -114,14 +114,14 @@ switch (Mho)
         end
         
         % Get minimum quantity of samples at one class
-        for i = 1:Nc,
-            if (i == 1),
+        for i = 1:Nc
+            if (i == 1)
                 % init min number of samples
                 [~,Nmin] =  size(X_c{i});
             else
                 % verify the smaller number
                 [~,n] =  size(X_c{i});
-                if (n < Nmin),
+                if (n < Nmin)
                     Nmin = n;
                 end
             end
@@ -130,7 +130,7 @@ switch (Mho)
         % Quantidade de amostras, para treinamento, de cada classe
         J = floor(ptrn*Nmin);
         
-        for i = 1:Nc,
+        for i = 1:Nc
             % Number of samples from class i
             [~,n] =  size(X_c{i});
             % Shuffle samples from class i
@@ -155,7 +155,7 @@ switch (Mho)
         X_c = cell(Nc,1);
         Y_c = cell(Nc,1);
         lbl_c = cell(Nc,1);
-        for i = 1:Nc,
+        for i = 1:Nc
             X_c{i} = [];
             Y_c{i} = [];
             lbl_c{i} = [];
@@ -163,13 +163,13 @@ switch (Mho)
         
         % Separate data of each class
         
-        for i = 1:N,
+        for i = 1:N
             % current sample
             xi = X(:,i);
             yi = Y(:,i);
             lbl_i = lbls(:,i);
             % define class
-            if (flag_seq == 1),
+            if (flag_seq == 1)
                 class = yi;
             else
                 class = find(yi > 0);
@@ -182,7 +182,7 @@ switch (Mho)
         
         % Get % ptrn of each samples form class
         
-        for i = 1:Nc,
+        for i = 1:Nc
             % Number of samples from class i
             [~,n] =  size(X_c{i});
             % Shuffle samples from class i

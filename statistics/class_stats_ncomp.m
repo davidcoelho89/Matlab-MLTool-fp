@@ -17,9 +17,9 @@ function [] = class_stats_ncomp(STATS,NAMES)
 [~,n_turns] = size(STATS{1,1}.acc);
 
 % If it dont have names
-if (nargin == 1),
+if (nargin == 1)
     NAMES = cell(1,n_models);
-    for i = 1:n_models,
+    for i = 1:n_models
         NAMES{i} = strcat('class ',int2str(i));
     end
 end
@@ -33,7 +33,7 @@ Mat_boxplot2 = zeros(n_turns,n_models);
 
 % Box Plot - Accuracy
 
-for i = 1:n_models,
+for i = 1:n_models
     Mat_boxplot1(:,i) = STATS{i}.acc';
 end
 
@@ -51,7 +51,7 @@ hold off
 
 % Box Plot - Error
 
-for i = 1:n_models,
+for i = 1:n_models
     Mat_boxplot2(:,i) = STATS{i}.err';
 end
 

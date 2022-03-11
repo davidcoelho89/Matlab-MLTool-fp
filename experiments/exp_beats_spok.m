@@ -1,6 +1,6 @@
-%% MACHINE LEARNING TOOLBOX
+%% BEATS DATASET
 
-% Classification Algorithms - Unit Test
+% Classification Algorithms - SPOK
 % Author: David Nascimento Coelho
 % Last Update: 2022/02/03
 
@@ -15,11 +15,10 @@ format long e;  % Output data style (float)
 % General options' structure
 
 OPT.Nr = 05;           	% Number of realizations
-OPT.alg = 'mlp';        % Which classifier will be used
-OPT.prob = 12;        	% Which problem will be solved / used
-OPT.prob2 = 30;       	% More details about a specific data set
-OPT.norm = 2;         	% Normalization definition
-OPT.lbl = 1;           	% Labeling definition
+OPT.alg = 'ols';        % Which classifier will be used
+OPT.prob = 40;        	% Beats Data Set
+OPT.norm = 2;         	% Normalization definition (balanced training)
+OPT.lbl = 1;           	% Labeling definition [-1 +1]
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
@@ -32,12 +31,27 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-HP.Nh = 5; % [5,3]; % Number of hidden neurons
-HP.Ne = 200;       	% maximum number of training epochs
-HP.eta = 0.05;    	% Learning step
-HP.mom = 0.75;    	% Moment Factor
-HP.Nlin = 2;       	% Non-linearity
-HP.Von = 0;         % disable video 
+% SPOK
+HP.Ne = 2;          % Maximum number of epochs
+HP.Dm = 2;          % Design Method
+HP.Ss = 1;          % Sparsification strategy
+HP.v1 = 0.1;        % Sparseness parameter 1 
+HP.v2 = 0.9;        % Sparseness parameter 2
+HP.Us = 1;          % Update strategy
+HP.eta = 0.1;       % Update Rate
+HP.Ps = 2;          % Prunning strategy
+HP.min_score = -10; % Score that leads to prune prototype
+HP.max_prot = Inf;  % Max number of prototypes
+HP.min_prot = 1;    % Min number of prototypes
+HP.Von = 0;         % Enable / disable video
+HP.K = 1;           % Number of nearest neighbors (classify)
+HP.knn_type = 1;    % Majority voting for knn
+HP.Ktype = 2;       % Kernel Type (gaussian)
+HP.sig2n = 0.001;   % Kernel regularization parameter
+HP.sigma = 2;       % Kernel width (gaussian)
+HP.alpha = 1;       % Dot product multiplier
+HP.theta = 1;       % Dot product add cte 
+HP.gamma = 2;       % Polynomial order
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
@@ -57,7 +71,7 @@ nSTATS_all = cell(2,1);             % Acc of General statistics
 
 %% HANDLERS FOR CLASSIFICATION FUNCTIONS
 
-algorithm_name = upper(OPT.alg);
+class_name = upper(OPT.alg);
 
 str_train = strcat(lower(OPT.alg),'_train');
 class_train = str2func(str_train);
@@ -71,7 +85,7 @@ DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-% plot_data_pairplot(DATA);         % See pairplot of attributes
+plot_data_pairplot(DATA);         % See pairplot of attributes
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
@@ -161,40 +175,32 @@ nSTATS_all{2,1} = nSTATS_ts;
 
 class_stats_ncomp(nSTATS_all,NAMES); 
 
-%% GRAPHICS - OF LAST TURN
-
-% % Get Data, Parameters, Statistics
-% DATAf.input = [DATAtr.input, DATAts.input];
-% DATAf.output = [DATAtr.output, DATAts.output];
-% PAR = PAR_acc{r};
-% STATS = STATS_ts_acc{r};
-% 
-% % Classifier Decision Boundaries
-% plot_class_boundary(DATA,PAR_acc{r},class_test);
-% 
-% % ROC Curve (one for each class)
-% plot_stats_roc_curve(STATS);
-% 
-% % Precision-Recall (one for each class)
-% plot_stats_precision_recall(STATS)
-
-% % See Class Boundary Video (of last turn)
-% if (HP.Von == 1),
-%     VID = PAR_acc{r}.VID
-%     figure;
-%     movie(VID)
-% end
-
-%% SAVE VARIABLES AND VIDEO
-
-% % Save All Variables
-% save(OPT.file);
-% 
-% % Save Class Boundary Video (of last turn)
-% v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
-% v.FrameRate = 1;
-% open(v);
-% writeVideo(v,VID);
-% close(v);
-
 %% END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,11 @@ function [PAR] = pca_feature(DATA,HP)
 %           input = input matrix                            [p x N]
 %           output = output matrix                          [Nc x N]
 %       HP.
+%           choice = PCA reduction strategy [1 or 2]        [cte]
+%               1: uses tol to define No of attributes
+%               2: uses beta to define No of attributes
 %           tol = tolerance of explained value  [0 - 1]     [cte]
+%           beta = number of used attributes
 %           rem = mean removal [0 or 1]                     [cte]
 %   Output:
 %       PAR.
@@ -24,12 +28,20 @@ function [PAR] = pca_feature(DATA,HP)
 %% SET DEFAULT HYPERPARAMETERS
 
 if ((nargin == 1) || (isempty(HP)))
+    HPaux.choice = 1;
     HPaux.tol = 1;
+    HPaux.beta = 5;
     HPaux.rem = 1;
 	HP = HPaux;
 else
+    if (~(isfield(HP,'choice')))
+        HP.choice = 1;
+    end
     if (~(isfield(HP,'tol')))
         HP.tol = 1;
+    end
+    if (~(isfield(HP,'beta')))
+        HP.beta = 5;
     end
     if (~(isfield(HP,'rem')))
         HP.rem = 1;
@@ -44,8 +56,10 @@ Y = DATA.output;    % output matrix
 [p,N] = size(X);    % dimensions of input matrix
 
 % Get Hyperparameters
-tol = HP.tol;   	% explained value
-rem = HP.rem;       % remove or not mean
+choice = HP.choice; % PCA reduction strategy
+beta = HP.beta;     % Number of used attributes
+tol = HP.tol;   	% Explained value
+rem = HP.rem;       % Remove or not mean
 
 %% ALGORITHM
 
@@ -82,13 +96,24 @@ Ev = Ev/sum(L);
 
 % Find number of Principal Components
 
-for i = 1:p
-    if(Ev(i) >= tol)
-        q = i;
-        break;
+if (choice == 1)
+    % Uses explained variance
+    for i = 1:p
+        if(Ev(i) >= tol)
+            q = i;
+            break;
+        end
     end
-end
+else
+    % Uses fixed value of attributes
+    if(beta < p)
+        q = beta;
+    else
+        q = p;
+    end
 
+end
+    
 % Get transformation matrix [p x q]
 
 W = V(:,1:q);

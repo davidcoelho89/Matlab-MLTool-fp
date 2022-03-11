@@ -26,19 +26,19 @@ function [PARout] = mlm_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.dist = 2; 	% Gaussian distance
     PARaux.Ktype = 0; 	% Non-kernelized Algorithm
     PARaux.K = 9;       % Number of reference points
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'dist'))),
+    if (~(isfield(PAR,'dist')))
         PAR.dist = 2;
     end
-    if (~(isfield(PAR,'Ktype'))),
+    if (~(isfield(PAR,'Ktype')))
         PAR.Ktype = 0;
     end
-    if (~(isfield(PAR,'K'))),
+    if (~(isfield(PAR,'K')))
         PAR.K = 9;
     end
 end
@@ -77,9 +77,9 @@ end
 
 Dy = zeros(N,K);                         	% Init Dy [N x K]
 
-for n = 1:N,
+for n = 1:N
     yi = Y(n,:);                            % Get output sample
-    for k = 1:K,
+    for k = 1:K
         tk = Ty(k,:);                       % Get output reference point   
         Dy(n,k) = vectors_dist(yi,tk,PAR);	% Calculates distance
     end

@@ -25,10 +25,10 @@ function [PAR] = normalize_fit(DATA,OPTION)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(OPTION))),
+if ((nargin == 1) || (isempty(OPTION)))
     OPTION.norm = 3;
 else
-    if (~(isfield(OPTION,'norm'))),
+    if (~(isfield(OPTION,'norm')))
         OPTION.norm = 3;
     end
 end

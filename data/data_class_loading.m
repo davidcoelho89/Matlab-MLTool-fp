@@ -1,6 +1,6 @@
-    function [DATAout] = data_class_loading(OPTION)
+function [DATAout] = data_class_loading(OPTION)
 
-% --- Selects a Data Base ---
+% --- Selects a Data Set for Classification Problems ---
 %
 %   [DATAout] = data_class_loading(OPTION)
 %
@@ -45,6 +45,7 @@
 %           37: Outdoor
 %           38: Rialto
 %           39: Spam
+%           40: Beats Dataset
 %       OPTION.prob2 = specify data set
 %           databases that use this field: 03, 07, 08, 10, 19 
 %   Output:
@@ -53,9 +54,8 @@
 %           output = output matrix          [1 x N] (sequential: 1, 2...)
 %           lbl = mantain original labels   (usually sequential)
 
-%% INITIALIZATION
 
-DATA = struct('input',[],'output',[],'lbl',[]);
+%% SET DEFAULT OPTIONS
 
 if(nargin == 0)
     OPTION.prob = 6;
@@ -65,7 +65,11 @@ else
     end
 end
 
+%% INITIALIZATIONS
+
 choice = OPTION.prob;
+
+DATA = struct('input',[],'output',[],'lbl',[]);
 
 %% ALGORITHM
 
@@ -347,6 +351,12 @@ switch (choice)
         DATA.output = load('spam.labels')' + 1;
         DATA.lbl = DATA.output;
         DATA.name = 'spam';
+    case 40 % Beats
+        loaded_data = load('Beats_Dataset.mat');
+        DATA.input = loaded_data.Beats_Dataset(:,1:42)';
+        DATA.output = loaded_data.Beats_Dataset(:,43)';
+        DATA.lbl = DATA.output;
+        DATA.name = 'beats';
     otherwise
         % None of the sets
         disp('Unknown Data Base. Void Structure Created')

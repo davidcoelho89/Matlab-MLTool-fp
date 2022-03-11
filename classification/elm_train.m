@@ -20,16 +20,16 @@ function [PARout] = elm_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Nh = 25;         % Number of hidden neurons
     PARaux.Nlin = 2;        % Non-linearity
     PAR = PARaux;
     
 else
-    if (~(isfield(PAR,'Nh'))),
+    if (~(isfield(PAR,'Nh')))
         PAR.Nh = 25;
     end
-    if (~(isfield(PAR,'Nlin'))),
+    if (~(isfield(PAR,'Nlin')))
         PAR.Nlin = 2;
     end
 end

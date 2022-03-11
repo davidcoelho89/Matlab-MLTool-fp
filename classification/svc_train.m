@@ -28,23 +28,23 @@ function [PARout] = svc_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.lambda = 5;      % Regularization Constant
     PARaux.epsilon = 0.001; % Minimum value of lagrange multipliers
     PARaux.Ktype = 2;       % Gaussian Kernel
     PARaux.sigma = 2;       % Gaussian Kernel std
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'lambda'))),
+    if (~(isfield(PAR,'lambda')))
         PAR.lambda = 5;
     end
-    if (~(isfield(PAR,'epsilon'))),
+    if (~(isfield(PAR,'epsilon')))
         PAR.epsilon = 0.001;
     end
-    if (~(isfield(PAR,'Ktype'))),
+    if (~(isfield(PAR,'Ktype')))
         PAR.Ktype = 2;
     end
-    if (~(isfield(PAR,'sigma'))),
+    if (~(isfield(PAR,'sigma')))
         PAR.sigma = 2;
     end
 end
@@ -78,10 +78,10 @@ Nsv = cell(1,Nc);
 % Uses the "Interior-Point-Convex" algorithm to solve QP problem
 % Verify "Sequential-Minimal-Optimization" for big datasets
 
-for c = 1:Nc,
+for c = 1:Nc
 
 % if it is a binary classifier, calculates the parameters only once
-if (c == 2 && Nc == 2),
+if (c == 2 && Nc == 2)
 
     Xsv{2} = [];
     Ysv{2} = [];

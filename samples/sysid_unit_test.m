@@ -12,25 +12,29 @@ format long e;  % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
 
-OPT.Nr = 05;                % Number of realizations
-OPT.alg = 'mlp';            % Which estimator will be used
-OPT.prob = 'linear_arx';          % Which problem will be solved
-OPT.prob2 = 01;             % Some especification of the problem
-OPT.lag_y = 2;              % Maximum lag of estimated outputs
-OPT.lag_u = 1;              % Maximum lag of estimated inputs
+OPT.Nr = 10;                % Number of realizations
+OPT.ptrn = 0.5;             % Data used for training
+OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
 
-OPT.add_noise = 0;          % "=1" if want to add noise
+OPT.prob = 'tank';          % Which problem will be solved
+OPT.prob2 = 01;             % Some especification of the problem
+
+OPT.lag_y = 2;              % Maximum lag of estimated outputs
+OPT.lag_u = 2;              % Maximum lag of estimated inputs
+
+OPT.normalize = 0;          % "=1" if you want to normalize time series
+OPT.norm_type = 1;          % Which type of normalization will be used
+
+OPT.add_noise = 0;          % "=1" if you want to add noise
 OPT.noise_var = 0.01;       % Noise variance
 
-OPT.add_outlier = 0;        % "=1" if want to add outliers
+OPT.add_outlier = 0;        % "=1" if you want to add outliers
 OPT.outlier_ratio = 0.05;   % How many samples will be corrupted
 OPT.outlier_ext = 0.5;      % Extension of signal that will be corrupted
 
-OPT.norm = 0;               % Normalize input and outputs
-OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
-OPT.ptrn = 0.5;             % Data used for training
-
 %% CHOOSE ALGORITHM HYPERPARAMETERS
+
+OPT.alg = 'mlp';            % Which estimator will be used
 
 % OLS
 % HP.lambda = 0.001;
@@ -76,12 +80,33 @@ regress_predict = str2func(str_prediction);
 % Load input-output signals
 DATAts = data_sysid_loading(OPT);       
 
-% Select signals to work with
+% Visualize Time series
+plot_time_series(DATAts);
 
+% Select signals to work with
+if(strcmp(OPT.prob,'tank'))
+    DATAts.output = DATAts.output(1,:);
+end
+
+% Add noise to time series
+if(OPT.add_noise)
+    disp('Add Noise!');
+end
+
+% Add outliers to time series
+if(OPT.add_outlier)
+    disp('Add Outliers!');
+end
+
+% Normalize time series
+if(OPT.normalize)
+    disp('Normalize!');
+end
 
 % Build Regression Matrices
-DATA = regression_matrices(DATAts,OPT);	
+DATA = build_regression_matrices(DATAts,OPT);	
 
+% Divide data between train and test (estimate and predict)
 [DATAest,DATApred] = hold_out_sysid(DATA,OPT);
 
 %% SYS ID - HOLD OUT / NORMALIZE / ESTIMATE / PREDICT
@@ -105,8 +130,8 @@ PAR = regress_estimate(DATAest,HP);
 OUTest = regress_predict(DATAest,PAR);
 STATS_est_acc{r} = regress_stats_1turn(DATAest,OUTest);
 
-OUTpre = regress_predict(DATApred,PAR);
-STATS_pre_acc{r} = regress_stats_1turn(DATApred,OUTpre);
+OUTpred = regress_predict(DATApred,PAR);
+STATS_pre_acc{r} = regress_stats_1turn(DATApred,OUTpred);
 
 end
 
@@ -115,16 +140,29 @@ end
 nSTATS_estimation = regress_stats_nturns(STATS_est_acc);
 nSTATS_prediction = regress_stats_nturns(STATS_pre_acc);
 
-%% CONTROLLER
-
-yh = OUTest.y_h;
-y = DATAest.output;
+y_est = DATAest.output;
+yh_est = OUTest.y_h;
 
 figure;
-plot(y,'b-')
+plot(y_est,'b-')
+title('Signal used for estimation')
 hold on
-plot(yh,'r-')
+plot(yh_est,'r-')
 hold off
+
+y_pred = DATApred.output;
+yh_pred = OUTpred.y_h;
+
+figure;
+plot(y_pred,'b-')
+title('Signal used for prediction')
+hold on
+plot(yh_pred,'r-')
+hold off
+
+%% CONTROLLER
+
+
 
 %% RESULTS / STATISTICS
 

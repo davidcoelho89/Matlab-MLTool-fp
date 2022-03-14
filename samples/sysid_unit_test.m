@@ -14,23 +14,21 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 05;                % Number of realizations
 OPT.alg = 'mlp';            % Which estimator will be used
-OPT.prob = 'linear_arx';    % Linear ARX problem
+OPT.prob = 'linear_arx';          % Which problem will be solved
+OPT.prob2 = 01;             % Some especification of the problem
 OPT.lag_y = 2;              % Maximum lag of estimated outputs
 OPT.lag_u = 1;              % Maximum lag of estimated inputs
-OPT.add_noise = 1;          % "=1" if want to add noise
+
+OPT.add_noise = 0;          % "=1" if want to add noise
 OPT.noise_var = 0.01;       % Noise variance
+
 OPT.add_outlier = 0;        % "=1" if want to add outliers
 OPT.outlier_ratio = 0.05;   % How many samples will be corrupted
 OPT.outlier_ext = 0.5;      % Extension of signal that will be corrupted
+
 OPT.norm = 0;               % Normalize input and outputs
 OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
 OPT.ptrn = 0.5;             % Data used for training
-
-OPT.input_type = 'prbs';    % Which type of input will be used
-OPT.input_length = 500;     % Lengh of input
-OPT.input_ts = [];          % Input time series for system models
-OPT.y_coefs = [0.4,-0.6];   % Output coeficients for linear arx model
-OPT.u_coefs = 2;            % Input coeficients for linear arx model
 
 %% CHOOSE ALGORITHM HYPERPARAMETERS
 
@@ -38,8 +36,8 @@ OPT.u_coefs = 2;            % Input coeficients for linear arx model
 % HP.lambda = 0.001;
 
 % LMS 
-HP.Nep = 05;    % Numero de epocas
-HP.eta = 0.1;	% Taxa de aprendizado
+% HP.Nep = 05;    % Numero de epocas
+% HP.eta = 0.1;	% Taxa de aprendizado
 
 % LMM
 % HP.Nep = 05;    % Numero de epocas
@@ -75,13 +73,14 @@ regress_predict = str2func(str_prediction);
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
-if(strcmp(OPT.prob,'linear_arx'))
-    OPT.input_ts = build_input_ts(OPT); % Build input time series
-end
+% Load input-output signals
+DATAts = data_sysid_loading(OPT);       
 
-DATAts = data_sysid_loading(OPT);       % Load input-output signals
+% Select signals to work with
 
-DATA = regression_matrices(DATAts,OPT);	% Build regression matrices
+
+% Build Regression Matrices
+DATA = regression_matrices(DATAts,OPT);	
 
 [DATAest,DATApred] = hold_out_sysid(DATA,OPT);
 

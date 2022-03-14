@@ -1,34 +1,64 @@
-function y_ts = arxOutputFromInput(u_ts,y_coefs,u_coefs,noise_var)
+function y_ts = arxOutputFromInput(u_ts,HP)
 
 % --- Generate Output Signal from Input signal and ARX Coefficients ---
 %
-%   y_ts = arxOutputFromInput(u_ts,y_coefs,u_coefs)
+%   y_ts = arxOutputFromInput(u_ts,HP)
 %
 %   Input:
-%       u_ts = input vector                     [N x 1]
-%       y_coefs = output coefficients           [y_lag x 1]
-%       u_coefs = input coefficients            [u_lag x 1]
-%       noise_var
+%       u_ts = input vector               	[N x 1]
+%       HP.
+%           y_coefs = output coefficients	[y_lag x 1]
+%           u_coefs = input coefficients  	[u_lag x 1]
+%           noise_var = noise variance      [cte]
+%           noise_mean = noise mean         [cte]
 %   Output:
-%       y = Output vector                       [N x 1]
+%       y = Output vector                   [N x 1]
+
+%% SET DEFAULT HYPERPARAMETERS
+
+if(nargin == 0 || (isempty(HP)))
+    HP.y_coefs = [0.4,-0.6];
+    HP.u_coefs = 2;
+    HP.noise_var = 0.01;
+    HP.noise_mean = 0;
+else
+    if (~(isfield(HP,'y_coefs')))
+        HP.y_coefs = [0.4,-0.6];
+    end
+    if (~(isfield(HP,'u_coefs')))
+        HP.u_coefs = 2;
+    end
+    if (~(isfield(HP,'noise_var')))
+        HP.noise_var = 0.01;
+    end
+	if (~(isfield(HP,'noise_mean')))
+        HP.noise_mean = 0;
+	end
+end
 
 %% INIT
 
+% Get Hyperparameters
+u_coefs = HP.u_coefs;
+y_coefs = HP.y_coefs;
+noise_var = HP.noise_var;
+noise_mean = HP.noise_mean;
+
+% Define maximum lags
 lag_y = length(y_coefs);
 lag_u = length(u_coefs);
 
+% Init memories
 y_mem = zeros(lag_y,1);
 u_mem = zeros(lag_u,1);
 
+% Init output signal
 N = length(u_ts);
 y_ts = zeros(N,1);
 
-if (nargin == 3)
-    v = zeros(N,1);
-else
-    noise_std = sqrt(noise_var);
-    v = noise_std*randn(N,1);
-end
+% Build noise signal
+noise_std = sqrt(noise_var);
+v = noise_mean + noise_std*randn(N,1);
 
 %% ALGORITHM
 

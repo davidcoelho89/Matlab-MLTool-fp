@@ -2,7 +2,7 @@
 
 % System Identification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/02/03
+% Last Update: 2022/03/14
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -39,7 +39,7 @@ OPT.alg = 'mlp';            % Which estimator will be used
 % OLS
 % HP.lambda = 0.001;
 
-% LMS 
+% LMS
 % HP.Nep = 05;    % Numero de epocas
 % HP.eta = 0.1;	% Taxa de aprendizado
 

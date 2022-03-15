@@ -66,13 +66,13 @@ nSTATS_all = cell(2,1);             % Acc of General statistics
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
-display('Begin Algorithm');
+disp('Begin Algorithm');
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,7 +132,7 @@ STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
 
-display('Finish Algorithm')
+disp('Finish Algorithm')
 display(datestr(now));
 
 %% RESULTS / STATISTICS

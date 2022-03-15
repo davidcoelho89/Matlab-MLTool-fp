@@ -8,19 +8,19 @@ close;          % Close all windows
 clear;          % Clear all variables
 clc;            % Clear command window
 
-format long e;  % Output data style (float)
+format long e;   % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
 
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'mlm';        % Which classifier will be used
+OPT.alg = 'svc';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
 OPT.norm = 2;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
 OPT.hold = 2;         	% Hold out method
-OPT.ptrn = 0.7;        	% Percentage of samples for training
+OPT.ptrn = 0.1;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
@@ -35,27 +35,31 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 % HP.aprox = 1;   % Type of approximation
 
 % MLP
-% HP.Nh = 07;         % Number of hidden neurons
-% HP.Ne = 50;       	% maximum number of training epochs
-% HP.eta = 0.05;    	% Learning step
-% HP.mom = 0.75;    	% Moment Factor
-% HP.Nlin = 2;       	% Non-linearity
-% HP.Von = 0;         % disable video 
+% HP.Nh = [5,5]; % 07;    % Number of hidden neurons
+% HP.Ne = 50;             % maximum number of training epochs
+% HP.eta = 0.05;          % Learning step
+% HP.mom = 0.75;          % Moment Factor
+% HP.Nlin = 2;            % Non-linearity
+% HP.Von = 0;             % disable video 
 
 % % MLM
-HP.dist = 2;        % Gaussian distance
-HP.Ktype = 0;       % Non-kernelized Algorithm
-HP.K = 20;       	% Number of reference points
+% HP.dist = 2;        % Gaussian distance
+% HP.Ktype = 0;       % Non-kernelized Algorithm
+% HP.K = 20;       	% Number of reference points
 
 % % SVM
-% HP.lambda = 5;      % Regularization Constant
-% HP.epsilon = 0.001; % Minimum value of lagrange multipliers
-% HP.Ktype = 2;       % (2 = Gaussian Kernel)
-% HP.sigma = 2;       % Gaussian Kernel std
+HP.lambda = 5;      % Regularization Constant
+HP.epsilon = 0.001; % Minimum value of lagrange multipliers
+HP.Ktype = 2;       % (2 = Gaussian Kernel)
+HP.sigma = 2;       % Gaussian Kernel std
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
 HPgs = HP;
+
+HPgs.lambda = [0.5 5 10 15 25 50 100 250 500 1000];
+HPgs.Ktype = 2;
+HPgs.sigma = [0.01 0.05 0.1 0.5 1 5 10 50 100 500];
 
 % Can put here vectors of hyperparameters 
 % to be optimized. Ex: HPgs.eta = 0.01:0.01:0.1

@@ -57,13 +57,12 @@ for i = 1:Nsignals
         quadro = signal( indices );
         
 %         ah = ar_yw(quadro,p); % VERIFICAR IMPLEMENTACAO!
-        
         ah = aryule(quadro,p);
         ah = -ah(2:end)';
         
         Xlpc(i,(j-1)*p+1:j*p) = ah;
         
-        % Debug => verifica se modelo AR esta bem ajustado
+% Debug => verifica se modelo AR esta bem ajustado
 %         if((i == 1) && (j == 1))
 %             [X,y] = regressionMatrixFromTS(quadro,p);
 %             yh = X*ah;

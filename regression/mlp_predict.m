@@ -15,6 +15,8 @@ function [OUT] = mlp_predict(DATA,PAR)
 %           Nlin = Non-linearity                    [cte]
 %               1 -> Sigmoid                        [0 e 1]
 %               2 -> Hyperbolic Tangent             [-1 e +1]
+%           prediction_type = type of prediction    [0 or 1]
+%           output_mem = memory buffer              []
 %   Output:
 %       OUT.
 %           y_h = classifier's output               [No x N]

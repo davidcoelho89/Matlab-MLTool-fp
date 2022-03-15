@@ -6,9 +6,8 @@
 
 %% Choices
 
-% Datasets
+% Datasets [28,29,30,33,34,35,36,37,38]
 
-% datasets = [28,29,30,33,34,35,36,37,38];
 datasets = 28;  % Which dataset(s) will be used
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.
@@ -16,39 +15,44 @@ OPT.prob2 = 1;  % Specific choice about dataset
 
 % Grid-Search Cross-validation
 
-PSpar.iterations = 5; % number of times data is presented to the algorithm
+PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
 PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
 
-% Kernels
-
+% Kernels [1,2,5]
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
-% kernels = [1,2,5];
+
 kernels = 2;
 
 % Hyperparameters - Default
 
-HP_gs.Ne = 01;
-HP_gs.Dm = 2;
-HP_gs.Ss = 1;
-HP_gs.v1 = 0.4;
-HP_gs.v2 = 0.9;
-HP_gs.Us = 1;
-HP_gs.eta = 0.1;
-HP_gs.Ps = 2;
-HP_gs.min_score = -10;
-HP_gs.max_prot = 600;
-HP_gs.min_prot = 1;
-HP_gs.Von = 0;
-HP_gs.K = 1;
-HP_gs.knn_type = 2;
-HP_gs.Ktype = 1;
-HP_gs.sig2n = 0.001;
+HP_gs.Ne = 01;                 % Number of epochs
+HP_gs.Dm = 2;                  % Design Method
+HP_gs.Ss = 1;                  % Sparsification strategy
+HP_gs.v1 = 0.4;                % Sparseness parameter 1 
+HP_gs.v2 = 0.9;                % Sparseness parameter 2
+HP_gs.Us = 1;                  % Update strategy
+HP_gs.eta = 0.10;              % Update rate
+HP_gs.Ps = 2;                  % Prunning strategy
+HP_gs.min_score = -10;         % Score that leads the sample to be pruned
+HP_gs.max_prot = 600;          % Max number of prototypes
+HP_gs.min_prot = 1;            % Min number of prototypes
+HP_gs.Von = 0;                 % Enable / disable video 
+HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+HP_gs.knn_type = 2;            % Type of knn aproximation
+HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
+HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
+% HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
+% HP_gs.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
+% HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
+% HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
+
+% Obs: hyperparameters related to kernel: are in the pipelines
 
 % Hyperparameter - specific
 
-OPT.max_prot_after_gs = 600;
+OPT.max_prot_after_gs = 1000;
 
 %% Datasets List
 

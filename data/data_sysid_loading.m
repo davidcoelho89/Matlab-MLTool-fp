@@ -22,13 +22,13 @@ function [DATAout] = data_sysid_loading(OPTION)
 
 if(nargin == 0 || (isempty(OPTION)))
     OPTION.prob = 'linear_arx';
-    OPTION.prob2 = 01;
+    OPTION.prob2 = 1;
 else
     if (~(isfield(OPTION,'prob')))
         OPTION.prob = 'linear_arx';
     end
     if (~(isfield(OPTION,'prob2')))
-        OPTION.prob2 = 01;
+        OPTION.prob2 = 1;
     end
 end
 
@@ -68,33 +68,3 @@ end
 DATAout = DATA;
 
 %% END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

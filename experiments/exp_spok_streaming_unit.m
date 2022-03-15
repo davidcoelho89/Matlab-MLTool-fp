@@ -20,7 +20,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 36;              % Which problem will be solved / used
+OPT.prob = 26;              % Which problem will be solved / used
 OPT.prob2 = 30;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
@@ -31,6 +31,7 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 %% HYPERPARAMETERS - DEFAULT
 
+HP.Ne = 01;                 % Number of epochs
 HP.Dm = 2;                  % Design Method
 HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.8;                % Sparseness parameter 1 

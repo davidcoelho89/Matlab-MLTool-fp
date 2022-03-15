@@ -22,7 +22,7 @@ function [] = exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,...
 %           type = type of cross validation                         [cte]
 %               1: takes into account just accurary
 %               2: takes into account also the dicitionary size
-%           lambda = trade-off between error and dictionary size    [0 - 1]
+%           lambda = trade-off between error and dictionary size    [cte]
 %   Output:
 %       "Do not have. Just save structures into a file"
 
@@ -107,7 +107,7 @@ end
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-PAR = grid_search_ttt(DATAhpo,HPgs,@isk2nn_train,@isk2nn_classify,PSp);
+PAR = grid_search_ttt(DATAhpo,HPgs,@spok_train,@spok_classify,PSp);
 
 % Change maximum number of prototypes
 

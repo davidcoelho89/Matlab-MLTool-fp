@@ -57,9 +57,9 @@ HP.sigma = 2;       % Gaussian Kernel std
 
 HPgs = HP;
 
-HPgs.lambda = [0.5 5 10 15 25 50 100 250 500 1000];
+HPgs.lambda = [0.5 5 10 25 100 500];
 HPgs.Ktype = 2;
-HPgs.sigma = [0.01 0.05 0.1 0.5 1 5 10 50 100 500];
+HPgs.sigma = [0.01 0.05 0.5 5 25 100 500];
 
 % Can put here vectors of hyperparameters 
 % to be optimized. Ex: HPgs.eta = 0.01:0.01:0.1

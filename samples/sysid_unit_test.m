@@ -80,7 +80,7 @@ regress_predict = str2func(str_prediction);
 % Load input-output signals
 DATAts = data_sysid_loading(OPT);       
 
-% Visualize Time series
+% Visualize Time series (before 
 plot_time_series(DATAts);
 
 % Select signals to work with

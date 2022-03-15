@@ -1,7 +1,7 @@
 function [] = exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,...
                                                               PSp,kernels)
 
-% --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
+% --- Pipeline used to test spok model with 1 dataset and N Kernels ---
 %
 %   [] = exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HPgs,PSp)
 %
@@ -53,7 +53,7 @@ if (any(kernels == 1))
         HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
     end
     
-    % ToDo - The same thing of v1, to v2!
+    % ToDo - The same thing of v1, to v2! Novelty and Surprise!
     HP_gs.v2 = HP_gs.v1(end) + 0.001;
 
     HP_gs.Ktype = 1;
@@ -81,7 +81,7 @@ if (any(kernels == 2))
         HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
     end
 
-    % ToDo - The same thing of v1, to v2!
+    % ToDo - The same thing of v1, to v2! Novelty and Surprise!
     HP_gs.v2 = HP_gs.v1(end) + 0.001;
     
     HP_gs.Ktype = 2;

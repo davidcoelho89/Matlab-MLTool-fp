@@ -30,7 +30,7 @@ N_HP = numel(HP_names);         % Number of HP
 
 % Init Auxiliary HyperParameters
 
-for i = 1:N_HP,
+for i = 1:N_HP
     HP_name = HP_names{i};              % Get HP name
     HP_values = HPgs.(HP_name);         % Get HP values vector
     HP_aux.(HP_name) = HP_values(1);    % Init auxiliary HP value
@@ -44,7 +44,7 @@ turn = 0;                       % number of turns of grid search
 
 %% ALGORITHM
 
-while 1,
+while 1
     
     % Update Turn of Grid Search
 
@@ -53,7 +53,7 @@ while 1,
     
     % Cross Validation
     
-    if (nargin == 4),
+    if (nargin == 4)
         CVout = cross_valid(DATA,HP_aux,f_train,f_class);
     else
         CVout = cross_valid(DATA,HP_aux,f_train,f_class,CVp);
@@ -61,11 +61,11 @@ while 1,
 
     % Define new optimum HP
     
-    if (turn == 1),
+    if (turn == 1)
         HPoptm = HP_aux;
         min_metric = CVout.metric;
     else
-        if (CVout.metric < min_metric),
+        if (CVout.metric < min_metric)
             HPoptm = HP_aux;
             min_metric = CVout.metric;
         end
@@ -74,11 +74,11 @@ while 1,
     % Update indexes of HP (uses "digital clock logic")
 
     i = 1;
-    while i <= N_HP,
+    while i <= N_HP
         index_HP(i) = index_HP(i)+1;
         
         HP_name = HP_names{i};
-        if index_HP(i) > length(HPgs.(HP_name)),
+        if index_HP(i) > length(HPgs.(HP_name))
             if i == N_HP
                 still_searching = 0;
             end
@@ -91,16 +91,16 @@ while 1,
 
     % if all HP sets were tested, finish the grid search
 
-    if still_searching == 0,
+    if still_searching == 0
         break;
     end
 
     % update auxiliary HP
 
-    for j = 1:N_HP,
-        HP_name = HP_names{j};                     % get HP name
-        HP_values = HPgs.(HP_name);               % get HP values vector
-        HP_aux.(HP_name) = HP_values(index_HP(j)); % get HP value
+    for j = 1:N_HP
+        HP_name = HP_names{j};                      % get HP name
+        HP_values = HPgs.(HP_name);                 % get HP values vector
+        HP_aux.(HP_name) = HP_values(index_HP(j));  % get HP value
     end
 
 end % end of while

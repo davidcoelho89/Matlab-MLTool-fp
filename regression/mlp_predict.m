@@ -14,9 +14,10 @@ function [OUT] = mlp_predict(DATA,PAR)
 %           Nh = number of hidden neurons         	[NL-1 x 1]
 %           Nlin = Non-linearity                    [cte]
 %               1 -> Sigmoid                        [0 e 1]
+%           add_bias = add or not bias for input 	[0 or 1]
 %               2 -> Hyperbolic Tangent             [-1 e +1]
-%           prediction_type = type of prediction    [0 or 1]
-%           output_mem = memory buffer              []
+%           prediction_type = type of prediction    [cte]
+%           lag_output = lag for each output      	[1 x Ny]
 %   Output:
 %       OUT.
 %           y_h = classifier's output               [No x N]
@@ -27,9 +28,13 @@ function [OUT] = mlp_predict(DATA,PAR)
 X = DATA.input';           	% Get attributes matrix
 
 % Get parameters
-W = PAR.W;                  % Weight Matrices
-NL = length(W);             % Number of layers
-Nlin = PAR.Nlin;            % Non-linearity
+W = PAR.W;                          % Weight Matrices
+NL = length(W);                     % Number of layers
+Nlin = PAR.Nlin;                    % Non-linearity
+add_bias = PAR.add_bias;            % Add or not bias for input
+
+pred_type = PAR.prediction_type;    % Type of prediction
+lag_output = PAR.lag_output;        % Lag for each output
 
 % Problem Initialization
 [No,~] = size(W{NL});      	% Number of outputs
@@ -39,13 +44,26 @@ Nlin = PAR.Nlin;            % Non-linearity
 y_h = zeros(No,N);          % Estimated output
 
 % Add bias to input matrix
-X = [ones(1,N);X];          % x0 = +1
+if(add_bias == 1)
+    X = [ones(1,N) ; X]; 	% x0 = +1
+end
+
+% Initialize memory of last predictions (for free simulation)
+output_memory_length = sum(lag_output);
+if(add_bias)
+    output_memory = X(2:output_memory_length+1,1);
+else
+    output_memory = X(1:output_memory_length,1);
+end
 
 %% ALGORITHM
 
-for t = 1:N
+for n = 1:N
     
-    xi = X(:,t);                      % Get input sample
+    xi = X(:,n);                      % Get input sample
+
+    xi = update_regression_vector(xi, output_memory, pred_type, add_bias);
+    
     for i = 1:NL
         Ui = W{i} * xi;               % Activation of hidden neurons
         if (i == NL)
@@ -55,7 +73,9 @@ for t = 1:N
         end
         xi = [+1; Yi];                % Build input for next layer
     end
-    y_h(:,t) = Yi;                    % Get output of last layer
+    y_h(:,n) = Yi;                    % Get output of last layer
+    
+    output_memory = update_output_memory(Yi, output_memory, lag_output);
 
 end
 

@@ -6,8 +6,10 @@ function [PARout] = mlp_estimate(DATA,PAR)
 %
 %   Input:
 %       DATA.
-%           input = regression variables                        [p x N]
-%           output = regression output                          [No x N]
+%           input = regression variables	[Ns-lag_max x lag_u + lag_y]
+%           output = regression output   	[Ns-lag_max x Ny]
+%           lag_input = lag_u             	[1 x Nu]
+%           lag_output = lag_y            	[1 x Ny]
 %       PAR.
 %           Ne = maximum number of epochs	                    [cte]
 %           Nh = number of hidden neurons                       [NL-1 x 1]
@@ -16,24 +18,32 @@ function [PARout] = mlp_estimate(DATA,PAR)
 %           Nlin = non-linearity           	                    [cte]
 %               1 -> Sigmoid                                    [0 e 1]
 %               2 -> Hyperbolic Tangent                         [-1 e +1]
+%           add_bias = add or not bias for input                [0 or 1]
 %           Von = enable or disable video                       [cte]
+%           prediction_type = type of prediction                [cte]
+%               =0 -> Free simulation
+%               >0 -> "n-steps ahead"
 %   Output:
 %       PARout.
 %           W = weight matrices                                 [NL x 1]
 %               W{1:end-1} = Hidden layer weight Matrix 
 %               W{end} = Output layer weight Matrix
 %           MQEtr = Mean Quantization Error (learning curve)	[Ne x 1]
-%           VID = frame structure (can be played with 'video function')
+%           VID = frame structure 
+%               (can be played with 'video function')
+%           lag_output = lag for each output                    [1 x Ny]
 
 %% SET DEFAULT HYPERPARAMETERS
 
 if ((nargin == 1) || (isempty(PAR)))
-    PARaux.Nh = 10;       	% Number of hidden neurons
-    PARaux.Ne = 200;     	% Maximum training epochs
-    PARaux.eta = 0.05;     	% Learning Step
-    PARaux.mom = 0.75;    	% Moment Factor
-    PARaux.Nlin = 2;       	% Non-linearity
-    PARaux.Von = 0;         % disable video 
+    PARaux.Nh = 10;             % Number of hidden neurons
+    PARaux.Ne = 200;            % Maximum training epochs
+    PARaux.eta = 0.05;          % Learning Step
+    PARaux.mom = 0.75;          % Moment Factor
+    PARaux.Nlin = 2;            % Non-linearity
+    PARaux.add_bias = 1;        % Add bias to input
+    PARaux.Von = 0;             % Disable video
+    PARaux.prediction_type = 1; % 1-step ahead prediction
     PAR = PARaux;
     
 else
@@ -52,8 +62,17 @@ else
     if (~(isfield(PAR,'Nlin')))
         PAR.Nlin = 2;
     end
+    if (~(isfield(PAR,'add_bias')))
+        PAR.add_bias = 1;
+    end
     if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
+    end
+    if (~(isfield(PAR,'prediction_type')))
+        PAR.prediction_type = 1;
+    end
+    if (~(isfield(PAR,'add_bias')))
+        PAR.add_bias = 1;
     end
 end
 
@@ -64,12 +83,13 @@ X = DATA.input';            % Input Matrix
 Y = DATA.output';           % Output Matrix
 
 % Hyperparameters Initialization
-Nep = PAR.Ne;           	% Number of training epochs
+Nep = PAR.Ne;            	% Number of training epochs
 Nh = PAR.Nh;                % Number of hidden neurons
-eta = PAR.eta;              % learning rate 
-mom = PAR.mom;              % Moment Factor
-Nlin = PAR.Nlin;            % Non-linearity
-Von = PAR.Von;              % Enable or disable video
+eta = PAR.eta;            	% learning rate 
+mom = PAR.mom;            	% Moment Factor
+Nlin = PAR.Nlin;          	% Non-linearity
+Von = PAR.Von;            	% Enable or disable video
+add_bias = PAR.add_bias;    % Add bias to input (or not)
 
 % Problem Initialization
 [No,~] = size(Y);           % Number of Outputs (Regression and Neurons)
@@ -103,7 +123,9 @@ else                        % Initialize randomly
 end
 
 % Add bias to input matrix
-X = [ones(1,N) ; X];       % x0 = +1
+if(add_bias == 1)
+    X = [ones(1,N) ; X]; 	% x0 = +1
+end
 
 % Initialize Video Structure
 VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
@@ -181,5 +203,6 @@ PARout = PAR;
 PARout.W = W;
 PARout.MQEtr = MQEtr;
 PARout.VID = VID;
+PARout.lag_output = DATA.lag_output;
 
 %% END

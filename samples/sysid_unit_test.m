@@ -7,7 +7,6 @@
 close;          % Close all windows
 clear;          % Clear all variables
 clc;            % Clear command window
-
 format long e;  % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
@@ -27,9 +26,10 @@ OPT.norm_type = 1;          % Which type of normalization will be used
 
 OPT.add_noise = 0;          % "=1" if you want to add noise
 OPT.noise_var = 0.01;       % Noise variance
+OPT.noise_mean = 0;         % Noise mean
 
 OPT.add_outlier = 0;        % "=1" if you want to add outliers
-OPT.outlier_ratio = 0.05;   % How many samples will be corrupted
+OPT.outlier_rate = 0.05;    % Rate of samples that will be corrupted
 OPT.outlier_ext = 0.5;      % Extension of signal that will be corrupted
 
 %% CHOOSE ALGORITHM HYPERPARAMETERS
@@ -54,7 +54,9 @@ HP.Ne = 100;       	% maximum number of training epochs
 HP.eta = 0.05;    	% Learning step
 HP.mom = 0.75;    	% Moment Factor
 HP.Nlin = 2;       	% Non-linearity
-HP.Von = 0;         % disable video 
+HP.Von = 0;         % disable video
+
+HP.prediction_type = OPT.prediction_type;
 
 %% ACCUMULATORS
 
@@ -80,7 +82,7 @@ regress_predict = str2func(str_prediction);
 % Load input-output signals
 DATAts = data_sysid_loading(OPT);       
 
-% Visualize Time series (before 
+% Visualize Time series (before noise, outliers, normalization)
 plot_time_series(DATAts);
 
 % Select signals to work with
@@ -91,17 +93,22 @@ end
 % Add noise to time series
 if(OPT.add_noise)
     disp('Add Noise!');
+    DATAts.output = addTimeSeriesNoise(DATAts.output,OPT);
 end
 
 % Add outliers to time series
 if(OPT.add_outlier)
     disp('Add Outliers!');
+    DATAts.output = addTimeSeriesOutilers(DATAts.output,OPT);
 end
 
 % Normalize time series
 if(OPT.normalize)
     disp('Normalize!');
 end
+
+% Visualize Time series (after noise, outliers, normalization)
+plot_time_series(DATAts);
 
 % Build Regression Matrices
 DATA = build_regression_matrices(DATAts,OPT);	

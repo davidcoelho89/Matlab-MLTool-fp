@@ -15,7 +15,7 @@ format long e;   % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'svc';        % Which classifier will be used
+OPT.alg = 'elm';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
 OPT.norm = 2;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
@@ -47,22 +47,27 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 % HP.Ktype = 0;       % Non-kernelized Algorithm
 % HP.K = 20;       	% Number of reference points
 
-% % SVM
-HP.lambda = 5;      % Regularization Constant
-HP.epsilon = 0.001; % Minimum value of lagrange multipliers
-HP.Ktype = 2;       % (2 = Gaussian Kernel)
-HP.sigma = 2;       % Gaussian Kernel std
+% % SVC
+% HP.lambda = 5;      % Regularization Constant
+% HP.epsilon = 0.001; % Minimum value of lagrange multipliers
+% HP.Ktype = 2;       % (2 = Gaussian Kernel)
+% HP.sigma = 2;       % Gaussian Kernel std
+
+% ELM
+HP.Nh = 25;         % No. de neuronios na camada oculta
+HP.Nlin = 2;    	% Não linearidade ELM (tg hiperb)
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
 HPgs = HP;
 
-HPgs.lambda = [0.5 5 10 25 100 500];
-HPgs.Ktype = 2;
-HPgs.sigma = [0.01 0.05 0.5 5 25 100 500];
-
 % Can put here vectors of hyperparameters 
 % to be optimized. Ex: HPgs.eta = 0.01:0.01:0.1
+
+% SVC
+% HPgs.lambda = [0.5 5 10 25 100 500];
+% HPgs.Ktype = 2;
+% HPgs.sigma = [0.01 0.05 0.5 5 25 100 500];
 
 %% ACCUMULATORS
 

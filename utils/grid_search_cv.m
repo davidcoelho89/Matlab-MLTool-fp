@@ -2,7 +2,7 @@ function [HPoptm] = grid_search_cv(DATA,HPgs,f_train,f_class,CVp)
 
 % --- Optm hyperparameters definition by Grid Search and Cross Validation ---
 %
-%   [HPoptm] = grid_search_cv1(DATA,HP_gs,f_train,f_class,CVp)
+%   [HPoptm] = grid_search_cv(DATA,HP_gs,f_train,f_class,CVp)
 %
 %   Input:
 %       DATA.
@@ -14,9 +14,10 @@ function [HPoptm] = grid_search_cv(DATA,HPgs,f_train,f_class,CVp)
 %       f_class = handler for classifier's class function       
 %       CVp.
 %           fold = number of data partitions for cross validation	[cte]
-%           type = type of cross validation                         [cte]
-%               1: takes into account just accurary
-%               2: takes into account also the dicitionary size
+%           type = type of cross validation cost function           [cte]
+%               1: Accurary (any classifier)
+%               2: Accuracy and dict size (prototype based)
+%               3: Accu
 %           lambda = trade-off between error and dictionary size   	[cte]
 %   Output:
 %       HPoptm = Optimum hyperparameters of classifier for dataset [struct]

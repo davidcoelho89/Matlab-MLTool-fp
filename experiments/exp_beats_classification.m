@@ -15,7 +15,7 @@ format long e;   % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'elm';        % Which classifier will be used
+OPT.alg = 'mlp';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
 OPT.norm = 2;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
@@ -35,12 +35,12 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 % HP.aprox = 1;   % Type of approximation
 
 % MLP
-% HP.Nh = [5,5]; % 07;    % Number of hidden neurons
-% HP.Ne = 50;             % maximum number of training epochs
-% HP.eta = 0.05;          % Learning step
-% HP.mom = 0.75;          % Moment Factor
-% HP.Nlin = 2;            % Non-linearity
-% HP.Von = 0;             % disable video 
+HP.Nh = [10,10]; % 07;	% Number of hidden neurons
+HP.Ne = 50;             % maximum number of training epochs
+HP.eta = 0.05;          % Learning step
+HP.mom = 0.75;          % Moment Factor
+HP.Nlin = 2;            % Non-linearity
+HP.Von = 0;             % disable video 
 
 % % MLM
 % HP.dist = 2;        % Gaussian distance

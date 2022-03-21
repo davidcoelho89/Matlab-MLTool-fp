@@ -12,8 +12,8 @@ function [DATA] = build_regression_matrices(DATAts,OPT)
 %           lag_u = output lags             [1 x Nu]
 %           lag_y = input lags              [1 x Ny]
 %   Output:
-%       input = Regression Matrix           [Ns-lag_max x lag_u + lag_y]
-%       output = Outputs vector             [Ns-lag_max x Ny]
+%       input = Regression Matrix           [lag_u + lag_y x Ns-lag_max]
+%       output = Outputs vector             [Ny x Ns-lag_max]
 %       lag_input = lag for each input      [1 x Nu]
 %       lag_output = lag for each output    [1 x Ny]
 
@@ -86,8 +86,8 @@ end
 
 %% FILL STRUCTURE
 
-DATA.input = X;
-DATA.output = y;
+DATA.input = X';
+DATA.output = y';
 DATA.lag_input = lag_u;
 DATA.lag_output = lag_y;
 

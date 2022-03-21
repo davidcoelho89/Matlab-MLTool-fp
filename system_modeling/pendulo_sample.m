@@ -38,7 +38,9 @@ subplot(1,2,2);
 plot(x(:,1),x(:,2));
 for n = 1:N
 	subplot(1,2,1);
-	plot([0 vetx(n)],[0 vety(n)],'b-',vetx(n),vety(n),'bo');
+	plot([0 vetx(n)],[0 vety(n)],'b-', ...
+          vetx(n),vety(n),'bo', ...
+          [-1 1],[0 0],'b-');
 	axis([-1.5 1.5 -1.5 1.5]);
 	subplot(1,2,2);
 	hold on

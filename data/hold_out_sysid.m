@@ -20,8 +20,8 @@ function [DATAtr,DATAts] = hold_out_sysid(DATA,OPTIONS)
 %% INICIALIZAÇÕES
 
 X = DATA.input;
-y = DATA.output;
-N = length(y);
+Y = DATA.output;
+[~,N] = size(Y);
 
 ptrn = OPTIONS.ptrn;
 Ntr = ceil(N*ptrn);
@@ -31,10 +31,10 @@ lag_output = DATA.lag_output;
 
 %% ALGORITMO
 
-Xtr = X(1:Ntr,:);
-ytr = y(1:Ntr,:);
-Xts = X(Ntr+1:end,:);
-yts = y(Ntr+1:end,:);
+Xtr = X(:,1:Ntr);
+ytr = Y(:,1:Ntr);
+Xts = X(:,Ntr+1:end);
+yts = Y(:,Ntr+1:end);
 
 %% FILL STRUCTURE
 

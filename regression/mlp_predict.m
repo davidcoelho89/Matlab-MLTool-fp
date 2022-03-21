@@ -6,7 +6,7 @@ function [OUT] = mlp_predict(DATA,PAR)
 %
 %   Input:
 %       DATA.
-%           input = attributes                      [p x N]
+%           input = regression variables	[lag_u + lag_y x Ns-lag_max]
 %       PAR.
 %           W = weight matrices                     [NL x 1]
 %               W{1:end-1} = Hidden layer weight Matrix 
@@ -25,7 +25,7 @@ function [OUT] = mlp_predict(DATA,PAR)
 %% INITIALIZATIONS
 
 % Get data
-X = DATA.input';           	% Get attributes matrix
+X = DATA.input;                     % Get attributes matrix
 
 % Get parameters
 W = PAR.W;                          % Weight Matrices
@@ -62,7 +62,7 @@ for n = 1:N
     
     xi = X(:,n);                      % Get input sample
 
-    xi = update_regression_vector(xi, output_memory, pred_type, add_bias);
+    xi = update_regression_vector(xi,output_memory,pred_type,add_bias);
     
     for i = 1:NL
         Ui = W{i} * xi;               % Activation of hidden neurons
@@ -75,12 +75,12 @@ for n = 1:N
     end
     y_h(:,n) = Yi;                    % Get output of last layer
     
-    output_memory = update_output_memory(Yi, output_memory, lag_output);
+    output_memory = update_output_memory(Yi,output_memory,lag_output);
 
 end
 
 %% FILL OUTPUT STRUCTURE
 
-OUT.y_h = y_h';
+OUT.y_h = y_h;
 
 %% END

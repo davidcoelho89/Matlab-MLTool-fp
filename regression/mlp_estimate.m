@@ -6,8 +6,8 @@ function [PARout] = mlp_estimate(DATA,PAR)
 %
 %   Input:
 %       DATA.
-%           input = regression variables	[Ns-lag_max x lag_u + lag_y]
-%           output = regression output   	[Ns-lag_max x Ny]
+%           input = regression variables	[lag_u + lag_y x Ns-lag_max]
+%           output = regression output   	[Ny  x  Ns-lag_max]
 %           lag_input = lag_u             	[1 x Nu]
 %           lag_output = lag_y            	[1 x Ny]
 %       PAR.
@@ -79,8 +79,8 @@ end
 %% INITIALIZATIONS
 
 % Data Initialization
-X = DATA.input';            % Input Matrix
-Y = DATA.output';           % Output Matrix
+X = DATA.input;             % Input Matrix
+Y = DATA.output;            % Output Matrix
 
 % Hyperparameters Initialization
 Nep = PAR.Ne;            	% Number of training epochs
@@ -154,13 +154,14 @@ for ep = 1:Nep   % for each epoch
         % Forward Step (Calculate Layers' Outputs)
         for i = 1:NL
             if (i == 1) % Input layer
-                x{i} = X(:,t);            % Get input data
+                x{i} = X(:,t);               % Get input data
             else
-                x{i} = [+1; yh{i-1}];     % add bias to last output
+                x{i} = [+1; yh{i-1}];        % add bias to last output
             end
-            Ui = W{i} * x{i};             % Activation of hidden neurons
-            if (i == NL) % Output layer
-                yh{i} = mlp_f_ativ(Ui,0);    % Linear function
+            Ui = W{i} * x{i};           	 % Activation of hidden neurons
+            
+            if (i == NL)                     % Output layer
+                yh{i} = mlp_f_ativ(Ui,0); 	 % Linear function
             else
                 yh{i} = mlp_f_ativ(Ui,Nlin); % Non-linear function
             end

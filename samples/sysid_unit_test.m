@@ -11,15 +11,15 @@ format long e;  % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
 
-OPT.Nr = 10;                % Number of realizations
+OPT.Nr = 02;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
 OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
 
 OPT.prob = 'tank';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = 2;              % Maximum lag of estimated outputs
-OPT.lag_u = 2;              % Maximum lag of estimated inputs
+OPT.lag_y = 3;              % Maximum lag of estimated outputs
+OPT.lag_u = 3;              % Maximum lag of estimated inputs
 
 OPT.normalize = 0;          % "=1" if you want to normalize time series
 OPT.norm_type = 1;          % Which type of normalization will be used
@@ -90,6 +90,12 @@ if(strcmp(OPT.prob,'tank'))
     DATAts.output = DATAts.output(1,:);
 end
 
+% Normalize time series
+if(OPT.normalize)
+    disp('Normalize!');
+    DATAts = normalizeTimeSeries(DATAts,OPT);
+end
+
 % Add noise to time series
 if(OPT.add_noise)
     disp('Add Noise!');
@@ -100,11 +106,6 @@ end
 if(OPT.add_outlier)
     disp('Add Outliers!');
     DATAts.output = addTimeSeriesOutilers(DATAts.output,OPT);
-end
-
-% Normalize time series
-if(OPT.normalize)
-    disp('Normalize!');
 end
 
 % Visualize Time series (after noise, outliers, normalization)

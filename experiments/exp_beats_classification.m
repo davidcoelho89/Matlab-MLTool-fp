@@ -20,13 +20,13 @@ OPT.prob = 40;        	% Beats Data Set
 OPT.norm = 2;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
 OPT.hold = 2;         	% Hold out method
-OPT.ptrn = 0.1;        	% Percentage of samples for training
+OPT.ptrn = 0.5;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
 
 GSp.fold = 5;           % number of data partitions for cross validation
-GSp.type = 1;           % Takes into account just accuracy
+GSp.type = 1;           % Cost function: just accuracy
 GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
@@ -35,8 +35,8 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 % HP.aprox = 1;   % Type of approximation
 
 % MLP
-HP.Nh = [10,10]; % 07;	% Number of hidden neurons
-HP.Ne = 50;             % maximum number of training epochs
+HP.Nh = [50,50]; % 07;	% Number of hidden neurons
+HP.Ne = 500;          	% maximum number of training epochs
 HP.eta = 0.05;          % Learning step
 HP.mom = 0.75;          % Moment Factor
 HP.Nlin = 2;            % Non-linearity
@@ -54,8 +54,8 @@ HP.Von = 0;             % disable video
 % HP.sigma = 2;       % Gaussian Kernel std
 
 % ELM
-HP.Nh = 25;         % No. de neuronios na camada oculta
-HP.Nlin = 2;    	% Não linearidade ELM (tg hiperb)
+% HP.Nh = 25;         % No. de neuronios na camada oculta
+% HP.Nlin = 2;    	% Não linearidade ELM (tg hiperb)
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 

@@ -13,23 +13,23 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 02;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
-OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
+OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
 
 OPT.prob = 'tank';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = 3;              % Maximum lag of estimated outputs
-OPT.lag_u = 3;              % Maximum lag of estimated inputs
+OPT.lag_y = 4;              % Maximum lag of estimated outputs
+OPT.lag_u = 4;              % Maximum lag of estimated inputs
 
 OPT.normalize = 0;          % "=1" if you want to normalize time series
 OPT.norm_type = 1;          % Which type of normalization will be used
 
 OPT.add_noise = 0;          % "=1" if you want to add noise
-OPT.noise_var = 0.01;       % Noise variance
+OPT.noise_var = 0.05;       % Noise variance
 OPT.noise_mean = 0;         % Noise mean
 
 OPT.add_outlier = 0;        % "=1" if you want to add outliers
-OPT.outlier_rate = 0.05;    % Rate of samples that will be corrupted
+OPT.outlier_rate = 0.01;    % Rate of samples that will be corrupted
 OPT.outlier_ext = 0.5;      % Extension of signal that will be corrupted
 
 %% CHOOSE ALGORITHM HYPERPARAMETERS
@@ -40,8 +40,9 @@ OPT.alg = 'mlp';            % Which estimator will be used
 % HP.lambda = 0.001;
 
 % LMS
-% HP.Nep = 05;    % Numero de epocas
-% HP.eta = 0.1;	% Taxa de aprendizado
+% HP.Nep = 10;        % Numero de epocas
+% HP.eta = 0.1;       % Taxa de aprendizado
+% HP.add_bias = 0;    % Adiciona ou nao o bias
 
 % LMM
 % HP.Nep = 05;    % Numero de epocas
@@ -49,7 +50,7 @@ OPT.alg = 'mlp';            % Which estimator will be used
 % HP.Kout = 0.3;	% Maximo nivel de erro
 
 % MLP
-HP.Nh = 5; % [5,3]; % Number of hidden neurons
+HP.Nh = 10; % [5,3]; % Number of hidden neurons
 HP.Ne = 100;       	% maximum number of training epochs
 HP.eta = 0.05;    	% Learning step
 HP.mom = 0.75;    	% Moment Factor
@@ -87,7 +88,9 @@ plot_time_series(DATAts);
 
 % Select signals to work with
 if(strcmp(OPT.prob,'tank'))
-    DATAts.output = DATAts.output(1,:);
+    if(OPT.prob2 == 1)
+        DATAts.output = DATAts.output(1,:);
+    end
 end
 
 % Normalize time series

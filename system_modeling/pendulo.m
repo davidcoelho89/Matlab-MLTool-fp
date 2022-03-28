@@ -1,6 +1,6 @@
 function dx = pendulo(t,x)
 
-% Inverted pendulum
+% Suspended pendulum
 %
 % m.l.d2theta/dt^2 = -m.g.sin(theta) -k.l.theta
 % d2theta/dt^2 = -(g/l).sin(theta) - (k/m).theta

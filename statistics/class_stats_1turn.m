@@ -39,22 +39,22 @@ Yh = OUT.y_h;
 [Nc,N] = size(Y);
 
 % Convert Problem into Binary Problem
-if (nargin == 3),
+if (nargin == 3)
     Y_aux = -1*ones(2,N);
     Yh_aux = -1*ones(2,N);
     class1 = BIN.class1;
     class2 = BIN.class2;
     [~,Y_seq] = max(Y);
     [~,Yh_seq] = max(Yh);
-    for i = 1:N,
+    for i = 1:N
         % Binary Class for Actual Labels
-        if (any(class1 == Y_seq)),
+        if (any(class1 == Y_seq))
             Y_aux(1,i) = 1;
         elseif(any(class2 == Y_seq))
             Y_aux(2,i) = 1;
         end
         % Binary Class for Estimated Labels
-        if(any(class1 == Yh_seq)),
+        if(any(class1 == Yh_seq))
             Yh_aux(1,i) = 1;
         elseif(any(class2 == Yh_seq))
             Yh_aux(2,i) = 1;
@@ -66,7 +66,7 @@ if (nargin == 3),
     Nc = 2;
 end
 
-if Nc == 1, 
+if Nc == 1
     Nc = length(unique(Y));
     classType = 1;  % ordinal
 else
@@ -77,14 +77,14 @@ end
 
 Mconf = zeros(Nc,Nc);
 
-for i = 1:N,
+for i = 1:N
     
     y_i = Y(:,i);       % get actual label
     yh_i = Yh(:,i);     % get estimated label
     
-    if classType == 1,
+    if classType == 1
         % Ordinal - ToDo
-    elseif classType == 2,
+    elseif classType == 2
         % [0 1] or [-1 +1]
         [~,iY] = max(y_i);
         [~,iY_h] = max(yh_i);
@@ -108,7 +108,7 @@ ROC_t = -1:disc:1;  % Threshold vector
 
 % Ordinal Classification - Todo
 
-if classType == 1,
+if classType == 1
     
     ROC_TPR = [];       % True Positive Rate (sensitivity)
     ROC_SPEC = [];      % Specificity
@@ -134,33 +134,33 @@ else
     
     % One ROC curve for each classifier
     
-    for c = 1:Nc,
+    for c = 1:Nc
         
         y = Y(c,:);         % actual labels for class c
         yh = Yh(c,:);       % predicted labels for class c
         
         cont = 0;           % Counter
         
-        for t = -1:disc:1,   % t limiar
+        for t = -1:disc:1   % t limiar
             
             cont = cont + 1;
             Mconf_roc = zeros(2,2);
             
-            for i = 1:N,    % calculate confusion matrix
+            for i = 1:N    % calculate confusion matrix
                 
                 % Get actual and predicted labels
                 y_i = y(i);
                 yh_i = yh(i);
                 
                 % Get actual label position for confusion matrix
-                if y_i == 1,
+                if y_i == 1
                     y_pos = 1;
                 else
                     y_pos = 2;
                 end
                 
                 % Get predicted label position for confusion matrix
-                if (yh_i > t),
+                if (yh_i > t)
                     yh_pos = 1;
                 else
                     yh_pos = 2;
@@ -184,14 +184,14 @@ else
             ROC_PREC(c,cont) = TP / (TP + FP);
             ROC_REC(c,cont)  = TP / (TP + FN);
             
-            if (t == 0),
+            if (t == 0)
                 % Get f1-score
                 FSC(c) = 2 * ROC_PREC(c,cont) * ROC_REC(c,cont) / ...
                         ( ROC_PREC(c,cont) + ROC_REC(c,cont) );
                 % Get Matthews Correlation Coefficient
                 sum1 = TP + FP; sum2 = TP + FN;
                 sum3 = TN + FP; sum4 = TN + FN;
-                if (sum1 == 0 || sum2 == 0 || sum3 == 0 || sum4 == 0),
+                if (sum1 == 0 || sum2 == 0 || sum3 == 0 || sum4 == 0)
                     den = 1;
                 else
                     den = (sum1*sum2*sum3*sum4)^0.5;
@@ -211,7 +211,7 @@ end
 
 AUC = zeros(Nc,1);
 
-for c = 1:Nc,
+for c = 1:Nc
     AUC(c) = sum(ROC_TPR(c,:))/len;
 end
 

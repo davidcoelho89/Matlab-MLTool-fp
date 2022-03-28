@@ -17,7 +17,7 @@ format long e;   % Output data style (float)
 OPT.Nr = 10;           	% Number of realizations
 OPT.alg = 'mlp';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
-OPT.norm = 2;         	% Normalization definition (balanced training)
+OPT.norm = 3;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.5;        	% Percentage of samples for training
@@ -183,5 +183,9 @@ nSTATS_all{2,1} = nSTATS_ts;
 % Compare Training and Test Statistics
 
 class_stats_ncomp(nSTATS_all,NAMES); 
+
+% Generate Report for Test Statistics
+
+class_stats_report(nSTATS_ts);
 
 %% END

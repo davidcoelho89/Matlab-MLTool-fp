@@ -65,14 +65,14 @@ else
     if (~(isfield(PAR,'add_bias')))
         PAR.add_bias = 1;
     end
+    if (~(isfield(PAR,'add_bias')))
+        PAR.add_bias = 1;
+    end
     if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
     if (~(isfield(PAR,'prediction_type')))
         PAR.prediction_type = 1;
-    end
-    if (~(isfield(PAR,'add_bias')))
-        PAR.add_bias = 1;
     end
 end
 

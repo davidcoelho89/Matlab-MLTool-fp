@@ -25,27 +25,26 @@ function [OUT] = mlp_predict(DATA,PAR)
 %% INITIALIZATIONS
 
 % Get data
-X = DATA.input;                     % Get attributes matrix
+X = DATA.input;                     % Inputs matrix
 
 % Get parameters
 W = PAR.W;                          % Weight Matrices
 NL = length(W);                     % Number of layers
 Nlin = PAR.Nlin;                    % Non-linearity
-add_bias = PAR.add_bias;            % Add or not bias for input
-
+add_bias = PAR.add_bias;            % Whether or not to add the bias
 pred_type = PAR.prediction_type;    % Type of prediction
 lag_output = PAR.lag_output;        % Lag for each output
 
 % Problem Initialization
-[No,~] = size(W{NL});      	% Number of outputs
-[~,N] = size(X);            % Number of samples
+[No,~] = size(W{NL});           	% Number of outputs
+[~,N] = size(X);                    % Number of samples
 
 % Initialize Outputs
-y_h = zeros(No,N);          % Estimated output
+y_h = zeros(No,N);                  % Estimated output
 
 % Add bias to input matrix
 if(add_bias == 1)
-    X = [ones(1,N) ; X]; 	% x0 = +1
+    X = [ones(1,N) ; X];            % x0 = +1
 end
 
 % Initialize memory of last predictions (for free simulation)
@@ -60,18 +59,18 @@ end
 
 for n = 1:N
     
-    xi = X(:,n);                      % Get input sample
+    xn = X(:,n);                      % Get input sample
 
-    xi = update_regression_vector(xi,output_memory,pred_type,add_bias);
+    xn = update_regression_vector(xn,output_memory,pred_type,add_bias);
     
     for i = 1:NL
-        Ui = W{i} * xi;               % Activation of hidden neurons
+        Ui = W{i} * xn;               % Activation of hidden neurons
         if (i == NL)
             Yi = mlp_f_ativ(Ui,0);    % Layer Output (linear function)
         else
             Yi = mlp_f_ativ(Ui,Nlin); % Layer Output (Non-linear function)
         end
-        xi = [+1; Yi];                % Build input for next layer
+        xn = [+1; Yi];                % Build input for next layer
     end
     y_h(:,n) = Yi;                    % Get output of last layer
     

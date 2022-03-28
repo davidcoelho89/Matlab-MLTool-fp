@@ -22,8 +22,8 @@ for i = 1:Ny
     if(lag == 1)
         updated_memory(initial_sample) = Y(i);
     else
-        updated_memory(initial_sample:final_sample) = ...
-        [Y(i),memory(initial_sample:final_sample-1)];
+        updated_memory(initial_sample:final_sample,1) = ...
+        [Y(i); memory(initial_sample:final_sample-1,1)];
     end
     % Update Initial sample for next output
     initial_sample = final_sample + 1;

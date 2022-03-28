@@ -2,7 +2,7 @@ function [] = class_stats_ncomp(STATS,NAMES)
 
 % --- Provide comparison of n turns of Classifiers ---
 %
-%   [nSTATS] = class_stats_ncomp(STATS,NAMES)
+%   [] = class_stats_ncomp(STATS,NAMES)
 % 
 %   Input:
 %    	STATS = Cell containing statistics of various classifiers

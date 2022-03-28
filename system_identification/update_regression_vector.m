@@ -1,4 +1,4 @@
-function x_out = update_regression_vector(x,out_mem,pred_type,add_bias)
+function xn_out = update_regression_vector(xn,out_mem,pred_type,add_bias)
 
 %
 %
@@ -8,15 +8,15 @@ function x_out = update_regression_vector(x,out_mem,pred_type,add_bias)
 
 outputs_mem_length = length(out_mem);
 
-x_out = x;
+xn_out = xn;
 
 %% ALGORITHM
 
 if(pred_type == 0)       % free simulation
     if(add_bias)
-        x_out(2:outputs_mem_length+1) = out_mem;
+        xn_out(2:outputs_mem_length+1,1) = out_mem;
     else
-        x_out(1:outputs_mem_length) = output_mermory;
+        xn_out(1:outputs_mem_length,1) = out_mem;
     end    
 elseif (pred_type == 1) % 1-step ahead
     % Does nothing

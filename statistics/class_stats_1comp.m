@@ -23,7 +23,7 @@ Mat_boxplot = zeros(t,n_models);
 
 % Box Plot
 
-for i = 1:n_models,
+for i = 1:n_models
     Mat_boxplot(:,i) = STATS{i}.acc';
 end
 

@@ -30,7 +30,9 @@ function [nSTATS] = class_stats_nturns(STATS_acc)
 %           err_cv = Coefficient of variation       [cte]
 %           roc_t = threshold                       [1 x t]
 %           roc_tpr = true positive rate            [1 x t]
+%           (a.k.a. recall, sensitivity)
 %           roc_spec = specificity                  [1 x t]
+%           (a.k.a. true negative rate) 
 %           roc_fpr = false positive rate           [1 x t]
 %           roc_prec = precision                    [1 x t]
 %           roc_rec = recall                        [1 x t]

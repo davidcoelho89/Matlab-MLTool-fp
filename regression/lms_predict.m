@@ -1,17 +1,18 @@
 function [OUT] = lms_predict(DATA,PAR)
 
-% --- LMS Regression  Test ---
+% --- LMS Regression Prediction ---
 %
 %   [OUT] = lms_predict(DATA,PAR)
 %
 %   Input:
 %       DATA.
-%           input = attributes matrix [p x N]
+%           input = inputs matrix                       [p x N]
 %       PAR.
-%           W = transformation matrix [Nc x p+1]
+%           W = transformation matrix                [No x p+1] or [No x p]
+%           add_Bias = whether or not to add the bias   [0 or 1]
 %   Output:
 %       OUT.
-%           y_h = classifier's output [Nc x N]
+%           y_h = estimated outputs matrix              [No x N]
 
 %% ALGORITHM
 

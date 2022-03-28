@@ -20,19 +20,19 @@ function [PARout] = lms_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Ne = 200;       	% maximum number of training epochs
     PARaux.eta = 0.05;    	% Learning step
     PARaux.Von = 0;         % disable video 
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'Ne'))),
+    if (~(isfield(PAR,'Ne')))
         PAR.Ne = 200;
     end
-    if (~(isfield(PAR,'eta'))),
+    if (~(isfield(PAR,'eta')))
         PAR.eta = 0.05;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
 end
@@ -54,24 +54,24 @@ Von = PAR.Von;              % enable or disable video
 MQEtr = zeros(1,Nep);      	% Learning Curve
 
 % Weight Matrix Init
-if (isfield(PAR,'W')), 
+if (isfield(PAR,'W')) 
     W = PAR.W;              % if already initialized
 else
     W = 0.01*rand(Nc,p+1);  % else, initialize with small random numbers
 end
 
 % add bias to input matrix [x0 = +1]
-X = [ones(1,N);X];          
+X = [ones(1,N); X];          
 
 % Initialize Video Structure
 VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
 
 %% ALGORITHM
 
-for ep = 1:Nep,
+for ep = 1:Nep
 
     % Save frame of the current epoch
-    if (Von),
+    if (Von)
         VID(ep) = hyperplane_frame(W,DATA);
     end
     
@@ -83,7 +83,7 @@ for ep = 1:Nep,
     % Init sum of quadratic errors
     SQE = 0;
     
-    for t = 1:N,   % 1 epoch
+    for t = 1:N   % 1 epoch
         
         % Calculate Output
         x = X(:,t);         % Get sample vector

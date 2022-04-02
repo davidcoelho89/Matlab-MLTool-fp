@@ -41,28 +41,30 @@ Xmax = PAR.Xmax;
 Xmed = PAR.Xmed;
 Xstd = PAR.Xstd;
 
-%% ALGORITHM
+% initialize data
 
-X_norm = zeros(N,p); % initialize data
+X_norm = zeros(N,p); 
+
+%% ALGORITHM
 
 switch normalization_option
     case (0)
         X_norm = X;
     case (1)    % normalize between [0 e 1]
-        for i = 1:N,
-            for j = 1:p,
+        for i = 1:N
+            for j = 1:p
                 X_norm(i,j) = (X(i,j) - Xmin(j))/(Xmax(j) - Xmin(j)); 
             end
         end
     case (2)    % normalize between [-1 e +1]
-        for i = 1:N,
-            for j = 1:p,
+        for i = 1:N
+            for j = 1:p
                 X_norm(i,j) = 2*(X(i,j) - Xmin(j))/(Xmax(j) - Xmin(j)) - 1; 
             end
         end
     case (3)    % normalize by z-score transform (by mean and std)
-        for i = 1:N,
-            for j = 1:p,
+        for i = 1:N
+            for j = 1:p
                 X_norm(i,j) = (X(i,j) - Xmed(j))/Xstd(j); 
             end
         end

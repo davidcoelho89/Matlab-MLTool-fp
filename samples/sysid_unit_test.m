@@ -13,16 +13,16 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 02;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
-OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
+OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
 
 OPT.prob = 'tank';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = 4;              % Maximum lag of estimated outputs
-OPT.lag_u = 4;              % Maximum lag of estimated inputs
+OPT.lag_y = 2;              % Maximum lag of estimated outputs
+OPT.lag_u = 2;              % Maximum lag of estimated inputs
 
 OPT.normalize = 0;          % "=1" if you want to normalize time series
-OPT.norm_type = 1;          % Which type of normalization will be used
+OPT.norm_type = 4;          % Which type of normalization will be used
 
 OPT.add_noise = 0;          % "=1" if you want to add noise
 OPT.noise_var = 0.05;       % Noise variance
@@ -50,8 +50,8 @@ OPT.alg = 'mlp';            % Which estimator will be used
 % HP.Kout = 0.3;	% Maximo nivel de erro
 
 % MLP
-HP.Nh = 10; % [5,3]; % Number of hidden neurons
-HP.Ne = 100;       	% maximum number of training epochs
+HP.Nh = 8; % [5,3]; % Number of hidden neurons
+HP.Ne = 200;       	% maximum number of training epochs
 HP.eta = 0.05;    	% Learning step
 HP.mom = 0.75;    	% Moment Factor
 HP.Nlin = 2;       	% Non-linearity
@@ -81,7 +81,7 @@ regress_predict = str2func(str_prediction);
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
 % Load input-output signals
-DATAts = data_sysid_loading(OPT);       
+DATAts = data_sysid_loading(OPT);
 
 % Visualize Time series (before noise, outliers, normalization)
 plot_time_series(DATAts);
@@ -91,12 +91,16 @@ if(strcmp(OPT.prob,'tank'))
     if(OPT.prob2 == 1)
         DATAts.output = DATAts.output(1,:);
     end
+    if(OPT.prob2 == 2)
+        DATAts.input = [DATAts.input;DATAts.input];
+    end
 end
 
 % Normalize time series
 if(OPT.normalize)
     disp('Normalize!');
-    DATAts = normalizeTimeSeries(DATAts,OPT);
+    PARnorm = normalizeTimeSeries_fit(DATAts,OPT);
+    DATAts = normalizeTimeSeries_transform(DATAts,PARnorm);
 end
 
 % Add noise to time series

@@ -15,7 +15,7 @@ format long e;   % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'mlp';        % Which classifier will be used
+OPT.alg = 'svc';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
 OPT.norm = 3;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
@@ -35,12 +35,12 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 % HP.aprox = 1;   % Type of approximation
 
 % MLP
-HP.Nh = [50,50]; % 07;	% Number of hidden neurons
-HP.Ne = 500;          	% maximum number of training epochs
-HP.eta = 0.05;          % Learning step
-HP.mom = 0.75;          % Moment Factor
-HP.Nlin = 2;            % Non-linearity
-HP.Von = 0;             % disable video 
+% HP.Nh = [50,50]; % 07;	% Number of hidden neurons
+% HP.Ne = 500;          	% maximum number of training epochs
+% HP.eta = 0.05;          % Learning step
+% HP.mom = 0.75;          % Moment Factor
+% HP.Nlin = 2;            % Non-linearity
+% HP.Von = 0;             % disable video 
 
 % % MLM
 % HP.dist = 2;        % Gaussian distance
@@ -48,10 +48,10 @@ HP.Von = 0;             % disable video
 % HP.K = 20;       	% Number of reference points
 
 % % SVC
-% HP.lambda = 5;      % Regularization Constant
-% HP.epsilon = 0.001; % Minimum value of lagrange multipliers
-% HP.Ktype = 2;       % (2 = Gaussian Kernel)
-% HP.sigma = 2;       % Gaussian Kernel std
+HP.lambda = 5;      % Regularization Constant
+HP.epsilon = 0.001; % Minimum value of lagrange multipliers
+HP.Ktype = 1;       % Kernel. (1 = linear / 2 = Gaussian)
+HP.sigma = 2;       % Gaussian Kernel std
 
 % ELM
 % HP.Nh = 25;         % No. de neuronios na camada oculta
@@ -186,6 +186,6 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 % Generate Report for Test Statistics
 
-class_stats_report(nSTATS_ts);
+class_stats_report(nSTATS_tr);
 
 %% END

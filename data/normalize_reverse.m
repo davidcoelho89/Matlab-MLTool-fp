@@ -34,32 +34,32 @@ Xmax = PAR.Xmax;        % maximum value of each attribute
 Xmed = PAR.Xmed;        % mean value of each attribute
 Xstd = PAR.Xstd;        % standard deviation of each attribute
 
-%% ALGORITHM
+X = zeros(p,N);         % Initialize data
 
-X = zeros(p,N); % initialize data
+%% ALGORITHM
 
 switch option
     case (1)    % denormalize between [0 e 1]
-        for i = 1:p,
-            for j = 1:N,
+        for i = 1:p
+            for j = 1:N
                 X(i,j) = X_norm(i,j)*(Xmax(i) - Xmin(i)) + Xmin(i); 
             end
         end
     case (2)    % denormalize between [-1 e +1]
-        for i = 1:p,
-            for j = 1:N,
+        for i = 1:p
+            for j = 1:N
                 X(i,j) = 0.5*(X_norm(i,j) + 1)*(Xmax(i) - Xmin(i)) + Xmin(i); 
             end
         end
     case (3)    % denormalize by the mean and standard deviation
-        for i = 1:p,
-            for j = 1:N,
+        for i = 1:p
+            for j = 1:N
                 X(i,j) = X_norm(i,j)*Xstd(i) + Xmed(i);
             end
         end
     otherwise
         X = X_norm;
-        disp('Choose a correct option. Data was not normalized.')
+        disp('Choose a correct option. Data was not denormalized.')
 end
 
 %% FILL OUTPUT STRUCTURE

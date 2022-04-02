@@ -28,8 +28,8 @@ K = zeros(N,N);         % Kernel matrix
 %% ALGORITHM
 
 % Calculate Kernel Matrix
-for i = 1:N,
-    for j = i:N,
+for i = 1:N
+    for j = i:N
         K(i,j) = Yi(i) * Yi(j) * kernel_func(X(:,i),X(:,j),PAR);
         K(j,i) = K(i,j);
     end

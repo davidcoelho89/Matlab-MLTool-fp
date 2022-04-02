@@ -53,7 +53,7 @@ end
 %% Grafico das variaves
 
 dt = 0.01;
-[tout,x] = ode45(@pendulo_invertido,0:dt:20,[0;0;pi/3;0]);
+[tout,x] = ode45(@pendulo_invertido,0:dt:60,[0;0;8*pi/9;0]);
 
 figure;
 grid
@@ -63,7 +63,7 @@ legend({'x','theta'},'Location','northwest')
 %% Animacao Pendulo Invertido
 
 dt = 0.01;
-[tout,x] = ode45(@pendulo_invertido,0:dt:20,[0;0;11*pi/9;0]);
+[tout,x] = ode45(@pendulo_invertido,0:dt:40,[0;0;10*pi/9;0]);
 
 pos = x(:,1);
 angle = x(:,3);

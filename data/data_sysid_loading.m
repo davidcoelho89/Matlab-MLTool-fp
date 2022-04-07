@@ -59,6 +59,8 @@ elseif(strcmp(problem,'exchanger'))
     loaded_data = load('exchanger.dat');
     DATA.input = loaded_data(:,1)';
     DATA.output = loaded_data(:,2)';
+elseif(strcmp(problem,'motor'))
+    % ToDo - All
 else
     disp('Choose an existing data set. Empty signals were created.');
 end

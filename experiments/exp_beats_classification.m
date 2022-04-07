@@ -15,12 +15,12 @@ format long e;   % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'svc';        % Which classifier will be used
+OPT.alg = 'elm';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
-OPT.norm = 3;         	% Normalization definition (balanced training)
+OPT.norm = 0;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
-OPT.hold = 2;         	% Hold out method
-OPT.ptrn = 0.5;        	% Percentage of samples for training
+OPT.hold = 1;         	% Hold out method
+OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
@@ -31,7 +31,7 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-% % OLS
+% OLS
 % HP.aprox = 1;   % Type of approximation
 
 % MLP
@@ -42,20 +42,23 @@ GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 % HP.Nlin = 2;            % Non-linearity
 % HP.Von = 0;             % disable video 
 
-% % MLM
+% MLM
 % HP.dist = 2;        % Gaussian distance
 % HP.Ktype = 0;       % Non-kernelized Algorithm
 % HP.K = 20;       	% Number of reference points
 
-% % SVC
-HP.lambda = 5;      % Regularization Constant
-HP.epsilon = 0.001; % Minimum value of lagrange multipliers
-HP.Ktype = 1;       % Kernel. (1 = linear / 2 = Gaussian)
-HP.sigma = 2;       % Gaussian Kernel std
+% SVC
+% HP.lambda = 5;      % Regularization Constant
+% HP.epsilon = 0.001; % Minimum value of lagrange multipliers
+% HP.Ktype = 1;       % Kernel. (1 = linear / 2 = Gaussian)
+% HP.sigma = 2;       % Gaussian Kernel std
 
 % ELM
-% HP.Nh = 25;         % No. de neuronios na camada oculta
-% HP.Nlin = 2;    	% Não linearidade ELM (tg hiperb)
+HP.Nh = 2500;       % No. de neuronios na camada oculta
+HP.Nlin = 2;    	% Não linearidade ELM (tg hiperb)
+
+% GAUSSIAN (BAYESIAN)
+HP.type = 5;        % Type of gaussian classifier
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
@@ -186,6 +189,6 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 % Generate Report for Test Statistics
 
-class_stats_report(nSTATS_tr);
+class_stats_report(nSTATS_ts);
 
 %% END

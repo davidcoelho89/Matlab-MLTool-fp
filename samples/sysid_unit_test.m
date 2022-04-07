@@ -13,7 +13,7 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 02;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
-OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
+OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
 
 OPT.prob = 'tank';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem

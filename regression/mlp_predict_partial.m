@@ -1,6 +1,8 @@
-function [OUT] = mlp_predict(DATA,PAR)
+function [OUT] = mlp_predict_partial(DATA,PAR)
 
-% --- MLP Regression Test ---
+% --- MLP Regression Test (for one sample) ---
+%
+%   TODO - ALL! Foi apenas copiada a estrutura do predict!!
 %
 %   [OUT] = mlp_classify(DATA,PAR)
 %

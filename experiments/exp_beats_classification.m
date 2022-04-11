@@ -25,9 +25,10 @@ OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
 
-GSp.fold = 5;           % number of data partitions for cross validation
-GSp.type = 1;           % Cost function: just accuracy
-GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
+CVp.max_it = 9;         % Maximum number of iterations (random search)
+CVp.fold = 5;           % number of data partitions for cross validation
+CVp.cost = 1;           % Which cost function will be used
+CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
@@ -71,6 +72,9 @@ HPgs = HP;
 % HPgs.lambda = [0.5 5 10 25 100 500];
 % HPgs.Ktype = 2;
 % HPgs.sigma = [0.01 0.05 0.5 5 25 100 500];
+
+% ELM
+HPgs.Nh = [1500,2500];
 
 %% ACCUMULATORS
 
@@ -149,7 +153,8 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-% HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
+HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+% HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 

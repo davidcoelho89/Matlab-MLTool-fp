@@ -143,7 +143,6 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 disp('begin hyperparameters optimization')
 
-
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
 PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);

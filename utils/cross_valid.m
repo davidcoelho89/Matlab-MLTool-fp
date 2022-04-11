@@ -1,48 +1,62 @@
-function [CVout] = cross_valid(DATA,HP,f_train,f_class,CVp)
+function [CVout] = cross_valid(DATAtr,HP_probe,class_train,class_test,CVp)
 
 % --- Cross Validation Function ---
 %
-%   [CVout] = cross_valid(DATA,HP,f_train,f_class,CVp)
+%   [CVout] = cross_valid(DATAtr,HP_probe,class_train,class_test,CVp)
 %
 %   Input:
-%       DATA.
-%           input = Matrix of training attributes             	[p x N]
-%           output = Matrix of training labels                 	[Nc x N]
-%       HP = set of HyperParameters to be tested
-%       f_train = handler for classifier's training function
-%       f_class = handler for classifier's classification function       
+%       DATAtr.
+%           input = Matrix of training attributes                   [p x N]
+%           output = Matrix of training labels                      [Nc x N]
+%       HP_probe = set of HyperParameters to be tested              [struct]
+%       class_train = handler for classifier's training function
+%       class_test = handler for classifier's test function       
 %       CVp.
 %           fold = number of data partitions                        [cte]
-%           type = type of cross validation                         [cte]
-%               1: takes into account just accurary
-%               2: takes into account also the dicitionary size
-%           lambda = trade-off between error and dictionary size   	[cte]
+%           cost = Which cost function will be used                 [cte]
+%               1: Error (any classifier)
+%               2: Error and dictionary size (prototype based)
+%               3: Error and number of SV (SVC based)
+%               4: Error and number of neurons (NN based)
+%           lambda = trade-off between error and other parameters  	[cte]
 %   Output:
 %       CVout.
-%           metric = metric to be minimized
+%           measure = measure to be minimized
 %           acc = mean accuracy for data set and parameters
 %           err = mean error for data set and parameters
 %           Ds = percentage of prototypes compared to the dataset
 
-%% INIT
+%% SET DEFAULT HYPERPARAMETERS
+
+if ((nargin == 4) || (isempty(CVp)))
+    CVp.fold = 5;
+    CVp.cost = 1;
+    CVp.lambda = 0.5;
+else
+    if (~(isfield(CVp,'fold')))
+        CVp.fold = 5;
+    end
+    if (~(isfield(CVp,'cost')))
+        CVp.cost = 1;
+    end
+    if (~(isfield(CVp,'lambda')))
+        CVp.lambda = 0.5;
+    end
+end
+
+%% INITIALIZATIONS
 
 % Get Data 
 
-X = DATA.input;     	% Attributes Matrix [p x N]
-Y = DATA.output;     	% labels Matriz [Nc x N]
+X = DATAtr.input;     	% Attributes Matrix [p x N]
+Y = DATAtr.output;     	% labels Matriz [Nc x N]
 [~,N] = size(X);      	% Number of samples
 
 % Get HyperParameters
 
-if (nargin == 4)
-    CVp.fold = 5;       % 5-fold cross-validation
-    CVp.type = 1;       % just takes into account accuracy
-    CVp.lambda = 0.5;   % More weight for dictionary size
-end
-
 Nfold = CVp.fold;     	% Number of data partitions
 part = floor(N/Nfold); 	% Size of each data partition
-type = CVp.type;        % If classifier is prototype-based or not
+cost = CVp.cost;        % Which cost function will be used
 lambda = CVp.lambda;    % trade-off between error and dictionary size
 
 % Init Outupts
@@ -53,6 +67,13 @@ Ds = 0;                 % Dictionary Size
 %% ALGORITHM
 
 for fold = 1:Nfold
+    
+    % Restriction 1: About combination of hyperparameters
+    
+    restriction1 = restriction_hp(HP_probe,class_train);
+    if(restriction1)
+        break;
+    end
 
     % Define Data division
 
@@ -74,16 +95,16 @@ for fold = 1:Nfold
     end
 
     % Training of classifier
-    [PAR] = f_train(DATAtr,HP);
+    [PAR] = class_train(DATAtr,HP_probe);
     
     % Accumulate Number of Prototypes (for prototype-based classifiers)
-    if (type == 2)
+    if (cost == 2)
         [~,Nk] = size(PAR.Cx);
         Ds = Ds + Nk;
     end
 
     % Test of classifier
-    [OUT] = f_class(DATAts,PAR);
+    [OUT] = class_test(DATAts,PAR);
 
     % Statistics of Classifier
     [STATS_ts] = class_stats_1turn(DATAts,OUT);
@@ -93,19 +114,41 @@ for fold = 1:Nfold
 
 end
 
+% Get accuracy and error
+
 accuracy = accuracy / Nfold;    % Mean Accuracy
 error = 1 - accuracy;           % Mean Error
-Ds = Ds / (N * Nfold);          % Mean Percentage of Prototypes
 
-if (type == 1)
-    metric = error;
-elseif (type == 2)
-    metric = Ds + lambda * error;
+% Restriction 2: About combination of parameters after training
+
+restriction2 = restriction_par_final(DATA,PAR,class_train);
+
+% Generate measure (value to be minimized)
+
+if (cost == 1)
+    
+    if(restriction1 || restriction2)
+        measure = 1;        % Maximum Error
+    else
+        measure = error;    % Error Measure
+    end
+    
+elseif (cost == 2)
+    
+    % Get dictionary mean size (Mean Percentage of Prototypes)
+    Ds = Ds / (N * Nfold);
+    
+    if(restriction1 || restriction2)
+        measure = 1 + lambda;           % Maximum value
+    else
+        measure = Ds + lambda * error;  % Measure
+    end
+    
 end
 
 %% FILL OUTPUT STRUCTURE
 
-CVout.metric = metric;
+CVout.measure = measure;
 CVout.acc = accuracy;
 CVout.err = error;
 CVout.Ds = Ds;

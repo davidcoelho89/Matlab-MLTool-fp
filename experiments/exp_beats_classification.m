@@ -1,8 +1,8 @@
 %% BEATS DATASET
 
-% Classification Algorithms - OLS / MLP / SVM / MLM / 
+% Classification Algorithms - OLS / MLP / SVM / MLM / ELM / GAUSS /
 % Author: David Nascimento Coelho
-% Last Update: 2022/02/03
+% Last Update: 2022/04/11
 
 close;          % Close all windows
 clear;          % Clear all variables

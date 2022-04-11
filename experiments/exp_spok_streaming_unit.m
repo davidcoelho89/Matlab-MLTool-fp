@@ -2,7 +2,7 @@
 
 % Sample used to run spok Algorithm and a Streaming DataSet
 % Author: David Nascimento Coelho
-% Last Update: 2020/05/11
+% Last Update: 2022/04/11
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -11,12 +11,6 @@ clc;            % Clear command window
 format long e;  % Output data style (float)
 
 %% GENERAL DEFINITIONS
-
-% General Datasets / Problems:
-
-% 25 - sea / 26 - Hyperplane / 27 - RBFmov / 28 - RBFint / 29 - Squares /
-% 30 - Chess / 31 - MixDrift / 32 - led / 33 - weather / 34 - Electricity / 
-% 35 - CoverType / 36 - Poker / 37 - Outdoor / 38 - Rialto / 39 - Spam /
 
 % General options' structure
 
@@ -28,6 +22,19 @@ OPT.Nr = 01;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
+
+% "Hyperparameters Optimization" Parameters
+
+PSp.max_it = 100;    % Maximum number of iterations (random search)
+PSp.repetitions = 1; % number of times data is presented to the algorithm
+PSp.cost = 2;        % Which cost function will be used
+PSp.lambda = 2; 	 % Jpbc = Ds + lambda * Err
+
+% General Datasets / Problems:
+
+% 25 - sea / 26 - Hyperplane / 27 - RBFmov / 28 - RBFint / 29 - Squares /
+% 30 - Chess / 31 - MixDrift / 32 - led / 33 - weather / 34 - Electricity / 
+% 35 - CoverType / 36 - Poker / 37 - Outdoor / 38 - Rialto / 39 - Spam /
 
 %% HYPERPARAMETERS - DEFAULT
 
@@ -134,17 +141,12 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 %% GRID SEARCH FOR HYPERPARAMETERS OPTIMIZATION
 
-disp('begin grid search')
+disp('begin hyperparameters optimization')
 
-% Grid Search Parameters
-
-GSp.iterations = 01; % number of times data is presented to the algorithm
-GSp.type = 2;        % Takes into account also the dicitionary size
-GSp.lambda = 2; 	 % Jpbc = Ds + lambda * Err
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,GSp);
+PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
 
 % PAR.max_prot = 1000;
 

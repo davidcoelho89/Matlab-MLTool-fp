@@ -2,7 +2,7 @@
 
 % Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/02/03
+% Last Update: 2022/04/11
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -24,27 +24,36 @@ OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
-% Grid Search Parameters
+% "Hyperparameters Optimization" Parameters
 
-GSp.fold = 5;           % number of data partitions for cross validation
-GSp.type = 1;           % Takes into account just accuracy
-GSp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
+CVp.max_it = 9;         % Maximum number of iterations (random search)
+CVp.fold = 5;           % number of data partitions for cross validation
+CVp.cost = 1;           % Which cost function will be used
+CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-HP.Nh = 5; % [5,3]; % Number of hidden neurons
-HP.Ne = 200;       	% maximum number of training epochs
-HP.eta = 0.05;    	% Learning step
-HP.mom = 0.75;    	% Moment Factor
-HP.Nlin = 2;       	% Non-linearity
-HP.Von = 0;         % disable video 
+% MLP
+HP.Nh = 05;     % Number of hidden neurons
+HP.Ne = 200;	% maximum number of training epochs
+HP.eta = 0.05;	% Learning step
+HP.mom = 0.75;	% Moment Factor
+HP.Nlin = 2;	% Non-linearity
+HP.Von = 0;     % disable video
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
+% Get Default Hyperparameters
 HPgs = HP;
 
-% Can put here vectors of hyperparameters 
-% to be optimized. Ex: HPgs.eta = 0.01:0.01:0.1
+% Can put here vectors of hyperparameters to be optimized. 
+% Ex: HPgs.eta = 0.01:0.01:0.1
+
+% MLP
+% HPgs.Nh = {5,10,20,[2,3],[3,3],[4,5]};
+% HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
+HPgs.Nh = {10,[3,3],[4,5]};
+HPgs.eta = [0.01,0.05,0.1];
 
 %% ACCUMULATORS
 
@@ -93,21 +102,18 @@ DATAts = DATA_acc{r}.DATAts;      	% Test Data
 
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 
-% Get Normalization Parameters
+% Get Normalization Parameters (from trainig data set)
 
 PARnorm = normalize_fit(DATAtr,OPT);
 
-% Training data normalization
+% Training and Test data normalization
 
 DATAtr = normalize_transform(DATAtr,PARnorm);
-
-% Test data normalization
-
 DATAts = normalize_transform(DATAts,PARnorm);
+DATA = normalize_transform(DATA,PARnorm);
 
 % Adjust Values for video function
 
-DATA = normalize_transform(DATA,PARnorm);
 DATAtr.Xmax = max(DATA.input,[],2);  % max value
 DATAtr.Xmin = min(DATA.input,[],2);  % min value
 DATAtr.Xmed = mean(DATA.input,2);    % mean value
@@ -122,8 +128,9 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
-% Using Grid Search and Cross-Validation
-% HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,GSp);
+% Using Grid/Random Search and Cross-Validation
+HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+% HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 

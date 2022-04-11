@@ -1,34 +1,32 @@
-function restriction = gs_restriction_par_final(DATA,PAR,f_train)
+function restriction = restriction_par_training(PAR,class_train)
 
 % --- Verify a restriction for a combination of Parameters ---
 %
-%  gs_restriction_par_final(DATA,PAR,f_train)
+%   restriction = restriction_par_training(PAR,class_train)
 %
 %   Input:
-%       DATA
 %       PAR = struct including algorithm's hyperparameters      [struct]
-%       f_train = handle of classifier training function        [handle]
+%       class_train = handle of classifier training function 	[handle]
 %   Output:
 %       restriction: indicates the presence of a restriction    [0 or 1] 
 
 %% INTIALIZATIONS
 
 % Get Algorithm Name
-algorithm_name = func2str(f_train);
+algorithm_name = func2str(class_train);
 
 % Init Output
 restriction = 0;
 
 %% ALGORITHM
 
-% Restrictions for isk2nn
-if (strcmp(algorithm_name,'isk2nn_train'))
-    % Get Data
-    [Nc,~] = size(DATA.output);
+% Restrictions for spok
+if (strcmp(algorithm_name,'spok_train'))
     % Get parameters
     [~,Nk] = size(PAR.Cx);
-    % Verify Minimum number of prototypes
-    if (Nk <= Nc)
+    max_prot = PAR.max_prot;
+    % Verify Maximum number of prototypes
+    if (Nk >= max_prot)
         restriction = 1;
     end
 end

@@ -25,7 +25,7 @@ OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 % Grid Search Parameters
 
-CVp.max_it = 9;         % Maximum number of iterations (random search)
+CVp.max_it = 2;         % Maximum number of iterations (random search)
 CVp.fold = 5;           % number of data partitions for cross validation
 CVp.cost = 1;           % Which cost function will be used
 CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
@@ -74,7 +74,8 @@ HPgs = HP;
 % HPgs.sigma = [0.01 0.05 0.5 5 25 100 500];
 
 % ELM
-HPgs.Nh = [1500,2500];
+HPgs.Nh = [1500,2500]; % Grid Search
+% HPgs.Nh = [1500,1800,2000,2200,2500]; % Random Search
 
 %% ACCUMULATORS
 

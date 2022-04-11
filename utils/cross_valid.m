@@ -121,7 +121,7 @@ error = 1 - accuracy;           % Mean Error
 
 % Restriction 2: About combination of parameters after training
 
-restriction2 = restriction_par_final(DATA,PAR,class_train);
+restriction2 = restriction_par_final(DATAtr,PAR,class_train);
 
 % Generate measure (value to be minimized)
 

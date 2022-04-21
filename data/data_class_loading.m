@@ -59,9 +59,13 @@ function [DATAout] = data_class_loading(OPTION)
 
 if(nargin == 0)
     OPTION.prob = 6;
+    OPTION.prob2 = 0;
 else
     if (~(isfield(OPTION,'prob')))
         OPTION.prob = 6;
+    end
+    if (~(isfield(OPTION,'prob2')))
+        OPTION.prob2 = 0;
     end
 end
 
@@ -352,11 +356,7 @@ switch (choice)
         DATA.lbl = DATA.output;
         DATA.name = 'spam';
     case 40 % Beats
-        loaded_data = load('Beats_Dataset.mat');
-        DATA.input = loaded_data.Beats_Dataset(:,1:42)';
-        DATA.output = loaded_data.Beats_Dataset(:,43)';
-        DATA.lbl = DATA.output;
-        DATA.name = 'beats';
+        DATA = data_beats_gen(OPTION);
     otherwise
         % None of the sets
         disp('Unknown Data Base. Void Structure Created')

@@ -17,6 +17,7 @@ format long e;   % Output data style (float)
 OPT.Nr = 10;           	% Number of realizations
 OPT.alg = 'elm';        % Which classifier will be used
 OPT.prob = 40;        	% Beats Data Set
+OPT.prob2 = 'real';     % Get specific dataset
 OPT.norm = 0;         	% Normalization definition (balanced training)
 OPT.lbl = 1;           	% Labeling definition [-1 +1]
 OPT.hold = 1;         	% Hold out method
@@ -59,7 +60,7 @@ HP.Nh = 2500;       % No. de neuronios na camada oculta
 HP.Nlin = 2;    	% Não linearidade ELM (tg hiperb)
 
 % GAUSSIAN (BAYESIAN)
-HP.type = 5;        % Type of gaussian classifier
+% HP.type = 5;        % Type of gaussian classifier
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
@@ -74,8 +75,9 @@ HPgs = HP;
 % HPgs.sigma = [0.01 0.05 0.5 5 25 100 500];
 
 % ELM
-HPgs.Nh = [1500,2500]; % Grid Search
+% HPgs.Nh = [1500,2500]; % Grid Search
 % HPgs.Nh = [1500,1800,2000,2200,2500]; % Random Search
+% HPgs.Nlin = [1,2]; % sigmoid or hyperbolic tangent
 
 %% ACCUMULATORS
 
@@ -98,11 +100,15 @@ class_test = str2func(str_test);
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
-DATA = data_class_loading(OPT);     % Load Data Set
-
-DATA = label_encode(DATA,OPT);      % adjust labels for the problem
-
-% plot_data_pairplot(DATA);         % See pairplot of attributes
+if (strcmp(OPT.prob2,'original'))
+    DATA = data_class_loading(OPT);     % Load Data Set
+    DATA = label_encode(DATA,OPT);      % adjust labels for the problem
+    % plot_data_pairplot(DATA);         % See pairplot of attributes
+elseif (strcmp(OPT.prob2,'artificial'))
+    prob_aux = 'artificial';
+elseif (strcmp(OPT.prob2,'real'))
+    prob_aux = 'real';
+end
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
@@ -118,9 +124,28 @@ display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
-DATAtr = DATA_acc{r}.DATAtr;        % Training Data
-DATAts = DATA_acc{r}.DATAts;      	% Test Data
+if(strcmp(OPT.prob2,'original'))
+    DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
+    DATAtr = DATA_acc{r}.DATAtr;        % Training Data
+    DATAts = DATA_acc{r}.DATAts;      	% Test Data
+
+elseif (strcmp(prob_aux,'artificial'))
+    OPT.prob2 = strcat("beats_artificial_train_",int2str(r),".mat");
+    DATAtr = data_class_loading(OPT);
+    DATAtr = label_encode(DATAtr,OPT);
+    OPT.prob2 = strcat("beats_artificial_test_",int2str(r),".mat");
+    DATAts = data_class_loading(OPT);
+    DATAts = label_encode(DATAts,OPT);
+    
+elseif (strcmp(prob_aux,'real'))
+    OPT.prob2 = strcat("beats_real_train_",int2str(r),".mat");
+    DATAtr = data_class_loading(OPT);
+    DATAtr = label_encode(DATAtr,OPT);
+    OPT.prob2 = strcat("beats_real_test_",int2str(r),".mat");
+    DATAts = data_class_loading(OPT);
+    DATAts = label_encode(DATAts,OPT);
+
+end
 
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -138,11 +163,13 @@ DATAts = normalize_transform(DATAts,PARnorm);
 
 % Adjust Values for video function
 
-DATA = normalize_transform(DATA,PARnorm);
-DATAtr.Xmax = max(DATA.input,[],2);  % max value
-DATAtr.Xmin = min(DATA.input,[],2);  % min value
-DATAtr.Xmed = mean(DATA.input,2);    % mean value
-DATAtr.Xdp = std(DATA.input,[],2);   % std value
+if(strcmp(OPT.prob2,'original'))
+    DATA = normalize_transform(DATA,PARnorm);
+    DATAtr.Xmax = max(DATA.input,[],2);  % max value
+    DATAtr.Xmin = min(DATA.input,[],2);  % min value
+    DATAtr.Xmed = mean(DATA.input,2);    % mean value
+    DATAtr.Xdp = std(DATA.input,[],2);   % std value
+end
 
 % %%%%%%%%%%%%%% SHUFFLE TRAINING DATA %%%%%%%%%%%%%%%%%%%
 
@@ -153,8 +180,8 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
-% Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+% Using Grid Search or Cross-Validation
+% HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
 % HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%

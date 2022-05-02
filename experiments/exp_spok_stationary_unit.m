@@ -18,7 +18,7 @@ OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 02;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
-OPT.Nr = 10;              	% Number of repetitions of the algorithm
+OPT.Nr = 02;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 
@@ -29,7 +29,7 @@ OPT.videoname = 'spok_iris.mp4';
 
 GSp.fold = 5;       % number of data partitions for cross validation
 GSp.type = 2;       % Takes into account also the dicitionary size
-GSp.lambda = 2; 	% Jpbc = Ds + lambda * Err
+GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
@@ -43,7 +43,7 @@ HP.Us = 1;                  % Update strategy
 HP.eta = 0.1;               % Update rate
 HP.Ps = 2;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
-HP.max_prot = 600;          % Max number of prototypes
+HP.max_prot = 20;           % Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
@@ -187,7 +187,7 @@ PAR = PAR_acc{r};
 STATS = STATS_ts_acc{r};
 
 % Classifier Decision Boundaries
-plot_class_boundary(DATAf,PAR,@isk2nn_classify);
+plot_class_boundary(DATAf,PAR,@spok_classify);
 
 % ROC Curve (one for each class)
 plot_stats_roc_curve(STATS);

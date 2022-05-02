@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 19;              % Which problem will be solved / used
+OPT.prob = 06;              % Which problem will be solved / used
 OPT.prob2 = 02;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
@@ -22,8 +22,8 @@ OPT.Nr = 10;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
 
-OPT.filename = 'cervical_isk2nn_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';     
-OPT.videoname = 'isk2nn_iris.mp4';
+OPT.filename = 'iris_spok_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';     
+OPT.videoname = 'spok_iris.mp4';
 
 % Grid Search Parameters
 
@@ -33,7 +33,8 @@ GSp.lambda = 2; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
-HP.Ne = 01;             	% Maximum number of epochs
+HP.Ne = 05;             	% Maximum number of epochs
+HP.is_static = 1;           % Verify if the dataset is stationary
 HP.Dm = 2;                  % Design Method
 HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.8;                % Sparseness parameter 1 

@@ -10,6 +10,7 @@
 %           output = output matrix                              [Nc x N]
 %       HP.
 %           Ne = maximum number of epochs	                    [cte]
+%           is_istatic = Verify if the dataset is stationary    [0 or 1]
 %           Dm = Design Method                                  [cte]
 %               = 1 -> all data set
 %               = 2 -> per class
@@ -61,6 +62,7 @@
 
 if ((nargin == 1) || (isempty(HP)))
     PARaux.Ne = 1;          % Maximum number of epochs
+    PARaux.is_static = 0;   % Verify if the data set is stationary
     PARaux.Dm = 2;          % Design Method
     PARaux.Ss = 1;          % Sparsification strategy
     PARaux.v1 = 0.1;        % Sparseness parameter 1 
@@ -84,6 +86,9 @@ if ((nargin == 1) || (isempty(HP)))
 else
     if (~(isfield(HP,'Ne')))
         HP.Ne = 1;
+    end
+    if (~(isfield(HP,'is_static')))
+        HP.is_static = 1;
     end
     if (~(isfield(HP,'Dm')))
         HP.Dm = 2;
@@ -148,17 +153,18 @@ end
 
 % Data Initialization
 
-X = DATA.input;         % Input Matrix
-Y = DATA.output;        % Output Matrix
+X = DATA.input;             % Input Matrix
+Y = DATA.output;            % Output Matrix
 
 % Get Hyperparameters
 
-Ne = HP.Ne;             % Maximum number of epochs
-Von = HP.Von;           % Enable or not Video
+Ne = HP.Ne;                 % Maximum number of epochs
+Von = HP.Von;               % Enable or not Video
+is_static = HP.is_static;
 
 % Problem Initialization
 
-[Nc,N] = size(Y);       % Total of classes and samples
+[Nc,N] = size(Y);           % Total of classes and samples
 
 % Init Outputs
 
@@ -187,7 +193,12 @@ yh = -1*ones(Nc,N);
 
 for ep = 1:Ne
     
-    % ToDo - Shuflle data!
+    % Shuffle Data
+    if(is_static)
+        I = randperm(N);        
+        X = X(:,I);     
+        Y = Y(:,I);
+    end
     
     for n = 1:N
 
@@ -195,7 +206,7 @@ for ep = 1:Ne
         if (Von)
             it = it+1;
             VID(it) = prototypes_frame(PAR.Cx,DATA);
-        end
+        end 
 
         % Get sample
         DATAn.input = X(:,n);

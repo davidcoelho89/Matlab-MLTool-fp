@@ -28,11 +28,11 @@ function [DATAout] = normalize_transform(DATAin,PAR)
 % Get normalization option and data matrix [N x p]
 
 normalization_option = PAR.norm;   
-X = DATAin.input';      
+Xin = DATAin.input';      
 
 % Get number of samples and attributes
 
-[N,p] = size(X);
+[N,p] = size(Xin);
 
 % Get min, max, mean and standard deviation measures
 
@@ -43,41 +43,41 @@ Xstd = PAR.Xstd;
 
 % initialize data
 
-X_norm = zeros(N,p); 
+Xout = zeros(N,p); 
 
 %% ALGORITHM
 
 switch normalization_option
     case (0)
-        X_norm = X;
+        Xout = Xin;
     case (1)    % normalize between [0 e 1]
         for i = 1:N
             for j = 1:p
-                X_norm(i,j) = (X(i,j) - Xmin(j))/(Xmax(j) - Xmin(j)); 
+                Xout(i,j) = (Xin(i,j) - Xmin(j))/(Xmax(j) - Xmin(j)); 
             end
         end
     case (2)    % normalize between [-1 e +1]
         for i = 1:N
             for j = 1:p
-                X_norm(i,j) = 2*(X(i,j) - Xmin(j))/(Xmax(j) - Xmin(j)) - 1; 
+                Xout(i,j) = 2*(Xin(i,j) - Xmin(j))/(Xmax(j) - Xmin(j)) - 1; 
             end
         end
     case (3)    % normalize by z-score transform (by mean and std)
         for i = 1:N
             for j = 1:p
-                X_norm(i,j) = (X(i,j) - Xmed(j))/Xstd(j); 
+                Xout(i,j) = (Xin(i,j) - Xmed(j))/Xstd(j); 
             end
         end
     otherwise
-        X_norm = X;
+        Xout = Xin;
         disp('Choose a correct option. Data was not normalized.')
 end
 
-X_norm = X_norm'; % transpose data for [p x N] pattern
+Xout = Xout'; % transpose data for [p x N] pattern
 
 %% FILL OUTPUT STRUCTURE
 
 DATAout = DATAin;
-DATAout.input = X_norm;
+DATAout.input = Xout;
 
 %% END

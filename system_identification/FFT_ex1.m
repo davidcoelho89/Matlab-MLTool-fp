@@ -35,11 +35,11 @@ f = (Fs/2)*linspace(0,1,Nfreq)';    % frequencies for spectrum plot
 f1 = 50;                % 50Hz (main frequency)
 
 w1 = 2*pi*f1;           % first harmonic
-a1 = 10;                % first amplitude
+a1 = 20;                % first amplitude
 w2 = 2*w1;              %   "       "
-a2 = 3;                 %   "       "
-w3 = 3*w1;              %   "       "
-a3 = 2;                 %   "       "
+a2 = 5;                 %   "       "
+w3 = 4*w1;              %   "       "
+a3 = 8;                 %   "       "
 
 y1 = a1*sin(w1*t);      % first signal
 y2 = a2*sin(w2*t);      % second signal
@@ -49,14 +49,25 @@ y_res = (y1+y2+y3);     % result signal
 
 figure; plot(t,y1,'r',t,y2,'b',t,y3,'g')
 
-figure; plot(t,y_res);  % plot signal
-pca_transform
+figure; plot(t,y_res);
+
+ruido = 10*randn(length(t),1);
+
+y_res_ruido = y_res + ruido;
+
+figure; plot(t,y_res_ruido);
 
 %% FFT ALGORITHM
 
 M1 = fft(y_res,Nfft)/L;         % Frequencies (with real and imag parts)
 M2 = 2*abs(M1(1:Nfreq,:));      % Frequencies (module - columms)
 arg_M2 = angle(M1(1:Nfreq,:));	% Frequencies (arguments)
+
+figure; plot(f,M2);
+
+M1 = fft(y_res_ruido,Nfft)/L;	% Frequencies (with real and imag parts)
+M2 = 2*abs(M1(1:Nfreq,:));      % Frequencies (module - columms)
+% arg_M2 = angle(M1(1:Nfreq,:));	% Frequencies (arguments)
 
 figure; plot(f,M2);
 

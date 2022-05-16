@@ -20,17 +20,20 @@ classdef blip
     
     methods
         
+        % DO NOT NEED A CONSTRUCTOR! CREATE AN OBJECT WITH THE CLASS' NAME!
+        % Ex: blip1 = blip;
+        
         % Can have getter functions!
         function wavelength = get.wavelength(self)
             wavelength = self.AoA / self.signal;
         end
         
-        function self = blip(AoA,signal)
-            if nargin == 2
-                self.AoA = AoA;
-                self.signal = signal;
-            end
-        end
+%         function self = blip(AoA,signal)
+%             if nargin == 2
+%                 self.AoA = AoA;
+%                 self.signal = signal;
+%             end
+%         end
         
         function identify(self)
             disp("A " + self.AoA + " degree");

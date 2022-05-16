@@ -15,8 +15,8 @@ format long e;  % Output data style (float)
 % General options' structure
 
 OPT.Nr = 05;           	% Number of realizations
-OPT.alg = 'mlp';        % Which classifier will be used
-OPT.prob = 12;        	% Which problem will be solved / used
+OPT.alg = 'ols';        % Which classifier will be used
+OPT.prob = 06;        	% Which problem will be solved / used
 OPT.prob2 = 30;       	% More details about a specific data set
 OPT.norm = 2;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
@@ -34,12 +34,20 @@ CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 %% CHOOSE FIXED HYPERPARAMETERS 
 
 % MLP
-HP.Nh = 05;     % Number of hidden neurons
-HP.Ne = 200;	% maximum number of training epochs
-HP.eta = 0.05;	% Learning step
-HP.mom = 0.75;	% Moment Factor
-HP.Nlin = 2;	% Non-linearity
-HP.Von = 0;     % disable video
+% HP.Nh = 05;     % Number of hidden neurons
+% HP.Ne = 200;	% maximum number of training epochs
+% HP.eta = 0.05;	% Learning step
+% HP.mom = 0.75;	% Moment Factor
+% HP.Nlin = 2;	% Non-linearity
+% HP.Von = 0;     % disable video
+
+% LMS
+HP.Ne = 200;       	% maximum number of training epochs
+HP.eta = 0.05;    	% Learning step
+HP.Von = 0;         % disable video
+
+% OLS
+HP.aprox = 1;       % type of approximation
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
@@ -52,8 +60,8 @@ HPgs = HP;
 % MLP
 % HPgs.Nh = {5,10,20,[2,3],[3,3],[4,5]};
 % HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
-HPgs.Nh = {10,[3,3],[4,5]};
-HPgs.eta = [0.01,0.05,0.1];
+% HPgs.Nh = {10,[3,3],[4,5]};
+% HPgs.eta = [0.01,0.05,0.1];
 
 %% ACCUMULATORS
 

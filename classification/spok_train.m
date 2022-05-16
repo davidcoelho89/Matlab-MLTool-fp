@@ -160,7 +160,7 @@ Y = DATA.output;            % Output Matrix
 
 Ne = HP.Ne;                 % Maximum number of epochs
 Von = HP.Von;               % Enable or not Video
-is_static = HP.is_static;
+is_static = HP.is_static;   % Verify if data set is static
 
 % Problem Initialization
 

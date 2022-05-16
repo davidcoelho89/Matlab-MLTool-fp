@@ -13,13 +13,13 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 02;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
-OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
+OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
 
-OPT.prob = 'tank';          % Which problem will be solved
+OPT.prob = 'motor';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = 2;              % Maximum lag of estimated outputs
-OPT.lag_u = 2;              % Maximum lag of estimated inputs
+OPT.lag_y = [2,2];              % Maximum lag of estimated outputs
+OPT.lag_u = [2,2];              % Maximum lag of estimated inputs
 
 OPT.normalize = 0;          % "=1" if you want to normalize time series
 OPT.norm_type = 4;          % Which type of normalization will be used
@@ -159,20 +159,20 @@ y_est = DATAest.output;
 yh_est = OUTest.y_h;
 
 figure;
-plot(y_est,'b-')
+plot(y_est(1,:),'b-')
 title('Signal used for estimation')
 hold on
-plot(yh_est,'r-')
+plot(yh_est(1,:),'r-')
 hold off
 
 y_pred = DATApred.output;
 yh_pred = OUTpred.y_h;
 
 figure;
-plot(y_pred,'b-')
+plot(y_pred(1,:),'b-')
 title('Signal used for prediction')
 hold on
-plot(yh_pred,'r-')
+plot(yh_pred(1,:),'r-')
 hold off
 
 %% CONTROLLER

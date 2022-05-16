@@ -39,14 +39,19 @@ PSp.lambda = 2; 	 % Jpbc = Ds + lambda * Err
 %% HYPERPARAMETERS - DEFAULT
 
 HP.Ne = 01;                 % Number of epochs
+HP.is_static = 0;           % Verify if the dataset is stationary
 HP.Dm = 2;                  % Design Method
+
 HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.8;                % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
+
 HP.Us = 1;                  % Update strategy
 HP.eta = 0.10;              % Update rate
+
 HP.Ps = 2;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
+
 HP.max_prot = 600;          % Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
@@ -142,6 +147,7 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 %% GRID SEARCH FOR HYPERPARAMETERS OPTIMIZATION
 
 disp('begin hyperparameters optimization')
+display(datestr(now));
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
@@ -152,6 +158,7 @@ PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
 disp('begin Test-than-train')
+display(datestr(now));
 
 figure; % new figure for video ploting
 

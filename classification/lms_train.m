@@ -41,7 +41,7 @@ end
 
 % Data matrix
 X = DATA.input;             % input matrix
-D = DATA.output;            % output matrix (desired values)
+Y = DATA.output;            % output matrix (desired values)
 
 % Hyperparameters Init
 Nep = PAR.Ne;              	% maximum number of epochs
@@ -49,7 +49,7 @@ eta = PAR.eta;              % learning rate
 Von = PAR.Von;              % enable or disable video
 
 % Problem Init
-[Nc,~] = size(D);           % Number of Classes (and neurons)
+[Nc,~] = size(Y);           % Number of Classes (and neurons)
 [p,N] = size(X);            % Number of attributes and samples
 MQEtr = zeros(1,Nep);      	% Learning Curve
 
@@ -78,7 +78,7 @@ for ep = 1:Nep
     % Shuffle Data
     I = randperm(N); 
     X = X(:,I); 
-    D = D(:,I);   
+    Y = Y(:,I);   
     
     % Init sum of quadratic errors
     SQE = 0;
@@ -86,16 +86,12 @@ for ep = 1:Nep
     for t = 1:N   % 1 epoch
         
         % Calculate Output
-        x = X(:,t);         % Get sample vector
-        U = W*x;         	% Neurons Output vector
-        Y = U;              % Don't have Activation Function
-        
-        % Error Calculation
-        Er = D(:,t) - Y;    	% Quantization error or each output
-        SQE = SQE + sum(Er.^2);	% sum of quadratic errors
-        
-        % Atualização dos Pesos
-        W = W + eta*Er*x';
+        x = X(:,t);             % Get sample vector
+        U = W*x;                % Neurons Output vector
+        Yh = U;                 % Don't have Activation Function
+        e = Y(:,t) - Yh;    	% Error or each output
+        W = W + eta*e*x';       % Update weights
+        SQE = SQE + sum(e.^2);	% Sum of quadratic errors
         
     end % end of one epoch
     

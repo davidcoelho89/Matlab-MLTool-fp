@@ -14,13 +14,14 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 06;              % Which problem will be solved / used
-OPT.prob2 = 02;             % More details about a specific data set
-OPT.norm = 3;               % Normalization definition
-OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
-OPT.Nr = 02;              	% Number of repetitions of the algorithm
-OPT.hold = 2;               % Hold out method
-OPT.ptrn = 0.7;             % Percentage of samples for training
+OPT.Nr = 02;        % Number of repetitions of the algorithm
+OPT.alg = 'spok';	% Which classifier will be used
+OPT.prob = 06;      % Which problem will be solved / used
+OPT.prob2 = 02;     % More details about a specific data set
+OPT.norm = 3;       % Normalization definition
+OPT.lbl = 1;        % Labeling definition. 1: [-1 +1] pattern
+OPT.hold = 2;       % Hold out method
+OPT.ptrn = 0.7;     % Percentage of samples for training
 
 OPT.filename = 'iris_spok_hpo1_norm3_Dm2_Ss1_Us1_Ps2_gau_nn.mat';     
 OPT.videoname = 'spok_iris.mp4';
@@ -29,14 +30,14 @@ OPT.videoname = 'spok_iris.mp4';
 
 GSp.fold = 5;       % number of data partitions for cross validation
 GSp.type = 2;       % Takes into account also the dicitionary size
-GSp.lambda = 0.5; 	% Jpbc = Ds + lambda * Err
+GSp.lambda = 0.2; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
 HP.Ne = 05;             	% Maximum number of epochs
 HP.is_static = 1;           % Verify if the dataset is stationary
 HP.Dm = 2;                  % Design Method
-HP.Ss = 1;                  % Sparsification strategy
+HP.Ss = 2;                  % Sparsification strategy
 HP.v1 = 0.8;                % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
 HP.Us = 1;                  % Update strategy
@@ -60,14 +61,14 @@ HP.gamma = 2;               % polynomial order (poly 2 or 3)
 HPgs = HP;
 
 % Hiperparameters for ALD
-HPgs.v1 = 2.^linspace(-4,3,8);
-HPgs.v2 = HPgs.v1(end) + 0.001;
-HPgs.sigma = 2.^linspace(-10,9,20);
-
-% Hiperparameters for Coherence
-% HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+% HPgs.v1 = 2.^linspace(-4,3,8);
 % HPgs.v2 = HPgs.v1(end) + 0.001;
 % HPgs.sigma = 2.^linspace(-10,9,20);
+
+% Hiperparameters for Coherence
+HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+HPgs.v2 = HPgs.v1(end) + 0.001;
+HPgs.sigma = 2.^linspace(-10,9,20);
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 

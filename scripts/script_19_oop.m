@@ -31,7 +31,7 @@ clc;
 
 %% Instatiate Object
 
-blip1 = blip(2,3);
+blip1 = blip;
 blip1.AoA = 4;
 blip1.signal = 5;
 

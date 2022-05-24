@@ -1,4 +1,4 @@
-%% FFT EXAMPLE
+%% FFT EXAMPLE 1
 
 clear;
 clc;

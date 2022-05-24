@@ -58,8 +58,6 @@ for n = 1:N
 	output_memory = update_output_memory(y_h(:,n),output_memory,lag_output);
 end
 
-% y_h = W * X;
-
 %% FILL OUTPUT STRUCTURE
 
 OUT.y_h = y_h;

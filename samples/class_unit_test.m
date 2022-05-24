@@ -7,18 +7,17 @@
 close;          % Close all windows
 clear;          % Clear all variables
 clc;            % Clear command window
-
 format long e;  % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
 
 % General options' structure
 
-OPT.Nr = 05;           	% Number of realizations
-OPT.alg = 'ols';        % Which classifier will be used
+OPT.Nr = 10;           	% Number of realizations
+OPT.alg = 'lms';        % Which classifier will be used
 OPT.prob = 06;        	% Which problem will be solved / used
 OPT.prob2 = 30;       	% More details about a specific data set
-OPT.norm = 2;         	% Normalization definition
+OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
@@ -47,7 +46,7 @@ HP.eta = 0.05;    	% Learning step
 HP.Von = 0;         % disable video
 
 % OLS
-HP.aprox = 1;       % type of approximation
+% HP.aprox = 1;       % type of approximation
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 

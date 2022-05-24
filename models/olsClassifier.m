@@ -14,6 +14,7 @@ classdef olsClassifier
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
+        name = 'ols';
         W = [];     % Regression Matrix     [Nc x p] or [Nc x p+1]
     end
     

@@ -71,9 +71,9 @@ classdef classificationStatisticsNturns
             for r = 1:Nr
                 
                 classStats1turn = self.cell_of_results{r,1};
-%                 self.Mconf_sum = self.Mconf_sum + classStats1turn.Mconf;
+                self.Mconf_sum = self.Mconf_sum + classStats1turn.Mconf;
                 self.acc_vect(r) = classStats1turn.acc;
-%                 self.err_vect(r) = classStats1turn.err;
+                self.err_vect(r) = classStats1turn.err;
                 
             end
             

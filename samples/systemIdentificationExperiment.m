@@ -1,13 +1,13 @@
-classdef classificationExperiment
+classdef systemIdentificationExperiment
 
     properties
         number_of_realizations = 10;
-        classifier_name = 'lms';
-        dataset_name = 'iris';
+        percentage_for_training = 0.7;
+        model_name = 'lms';
+        dataset_name = 'motor';
         label_encoding = 'bipolar';
         normalization = 'zscore';
         split_method = 'random';
-        percentage_for_training = 0.7;
         filename = [];
 
         hp_optm_method = 'random';
@@ -35,7 +35,7 @@ classdef classificationExperiment
     
     methods
         
-        function self = classificationExperiment()
+        function self = systemIdentificationExperiment()
             % Set the hyperparameters after initializing!
         end
         
@@ -47,7 +47,7 @@ classdef classificationExperiment
             self.stats_ts_acc = cell(self.number_of_realizations,1);
             
             if(isempty(self.classifier))
-                self.classifier = initializeClassifier(self.classifier_name);
+                self.classifier = initializeClassifier(self.model_name);
             end
             
             if(isempty(self.dataset))

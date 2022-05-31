@@ -3,7 +3,7 @@ classdef lmsArx
     
     % Hyperparameters
     properties
-        number_of_epochs = 200;
+        number_of_epochs = 05;
         learning_step = 0.05;
         add_bias = 1;
         video_enabled = 0;
@@ -53,7 +53,7 @@ classdef lmsArx
             % Update Model's Weights
             yh = self.W * x;
             e = y - yh;
-            self.W = self.W + self.learning_step * e * x' / (xn'*xn);
+            self.W = self.W + self.learning_step * e * x' / (x'*x);
             
             % Save weight update
             if(~isempty(self.W))
@@ -86,7 +86,7 @@ classdef lmsArx
             
             % Initialize W accumulator
             self.W_acc = cell(1,self.number_of_epochs*N+1);
-            self.W_acc{1.1} = self.W;
+            self.W_acc{1,1} = self.W;
             
             for ep = 1:self.number_of_epochs
                 
@@ -99,7 +99,7 @@ classdef lmsArx
                 end
                 
                 Y_h = linearPrediction(self,X);
-                self.MQE(ep) = sum(sum((Y-Y_h).^2))/N;
+                self.MQE(ep) = sum(sum((Y - Y_h).^2))/N;
                 
             end
         end

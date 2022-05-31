@@ -58,7 +58,6 @@ rmse_median = rmse_median + median(rmse);
 rmse_std = rmse_std + std(rmse);
 rmse_cv = rmse_cv + (rmse_std / rmse_mean);
 
-
 %% FILL OUTPUT STRUCTURE
 
 nSTATS.rmse = rmse;

@@ -1,14 +1,14 @@
 classdef classificationStatistics1turn
-   % HELP about classificationStatistics1turn
-   
-   % Hyperparameters
-   properties
+    % HELP about classificationStatistics1turn
+    
+    % Hyperparameters
+    properties
         class_type = 'bipolar';
         discretization = 0.1;
         acc = [];
-   end
-   
-   % Parameters
+    end
+    
+    % Parameters
     properties (GetAccess = public, SetAccess = protected)
         Y = [];
         Yh = [];
@@ -42,7 +42,7 @@ classdef classificationStatistics1turn
                 yh_i = Yh(:,i);
                 
                 if(strcmp(self.class_type,'bipolar') || ...
-                   strcmp(self.class_type,'binary'))
+                        strcmp(self.class_type,'binary'))
                     [~,iY] = max(y_i);
                     [~,iY_h] = max(yh_i);
                     self.Mconf(iY,iY_h) = self.Mconf(iY,iY_h) + 1;
@@ -53,13 +53,13 @@ classdef classificationStatistics1turn
         end
         
         function self = calculate_accuracy(self,Y,Yh)
-
+            
             [~,N] = size(Y);
             
             if(isempty(self.Mconf))
                 self.acc = 0;
                 for i = 1:N
-
+                    
                     y_i = Y(:,i);
                     [~,iY] = max(y_i);
                     yh_i = Yh(:,i);
@@ -90,8 +90,6 @@ classdef classificationStatistics1turn
             
             self = self.calculateConfusionMatrix(Y,Yh);
             self = self.calculate_accuracy(Y,Yh);
-            
-            
             
         end
         

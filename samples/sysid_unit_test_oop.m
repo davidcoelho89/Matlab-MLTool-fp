@@ -9,16 +9,19 @@ clear;          % Clear all variables
 clc;            % Clear command window
 format long e;  % Output data style (float)
 
-%% CHOOSE EXPERIMENT PARAMETERS
+%% CHOOSE EXPERIMENT PARAMETERS AND OBJECTS
 
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
-dataset_name = 'motor';         
+dataset_name = 'tank';         
 model_name = 'lms';             
-output_lags = [2,2];             
-input_lag = [2,2];              
 normalization = 'zscore3';      
+output_lags = [2,2];             
+input_lags = [2,2];              
+
+inputs_to_work_with = 'all';
+outputs_to_work_with = 1;
 
 add_noise = 0;
 noise_variance = 0.05;
@@ -26,148 +29,142 @@ noise_mean = 0;
 
 add_outlier = 0;
 outlier_rate = 0.01;
-outiler_extension = 0.5;
+outlier_extension = 0.5;
+
+normalizer = timeSeriesNormalizer();
+normalizer.normalization = normalization;
+
+statsGen1turn = regressionStatistics1turn();
+sysId_stats_est = regressionStatisticsNturns();
+sysId_stats_pre = regressionStatisticsNturns();
+
+%% DATA LOADING AND PREPROCESSING
+
+datasetTS = loadSysIdDataset(dataset_name);
+
+% Visualize Time series (before noise, outliers, normalization)
+plot_time_series(datasetTS);
+
+% Select signals to work with
+if(strcmp(dataset_name,'tank'))
+    if(strcmp('all',outputs_to_work_with))
+        % Does nothing
+    elseif(outputs_to_work_with == 1)
+        datasetTS.output = datasetTS.output(1,:);
+    end
+end
+
+% Normalize time series
+normalizer = normalizer.fit(datasetTS);
+datasetTS = normalizer.transform(datasetTS);
+% datasetTS = normalizer.reverse(datasetTS); % for debug
+
+% Add noise to time series
+if(add_noise)
+    disp('Add Noise!');
+    datasetTS.output = addTimeSeriesNoise(datasetTS.output,...
+                                          noise_variance,...
+                                          noise_mean);
+end
+
+% Add outliers to time series
+if(add_outlier)
+    disp('Add Outliers!');
+    datasetTS.output = addTimeSeriesOutilers(datasetTS.output,...
+                                             outlier_rate,...
+                                             outlier_extension);
+end
+
+% Visualize Time series (after noise, outliers, normalization)
+plot_time_series(datasetTS);
+
+% Build Regression Matrices
+dataset = buildRegressionMatrices(datasetTS,output_lags,input_lags);
+
+% Divide data between train and test (estimate and predict)
+[DATAest,DATApred] = splitSysIdDataset(dataset,percentage_for_training);
 
 %% LOAD SYSTEM IDENTIFICATION MODEL AND CHOOSE ITS HYPERPARAMETERS
 
+% Model's Object
+lmsArx
 model = initializeSysIdModel(model_name);
 
+% General Hyperparameters
+
 model.prediction_type = prediction_type;
-model.output_lags = output_lags;
+model.output_lags = dataset.lag_output;
+
+% Specific Hyperparameters
 
 if(strcmp(model_name,'ols'))
-    classifier.approximation = 'pinv';
-    classifier.regularization = 0.0001;
-    classifier.add_bias = 1;
-
+    model.approximation = 'pinv';
+    model.regularization = 0.0001;
+    model.add_bias = 1;
+    
 elseif(strcmp(model_name,'lms'))
-    model.number_of_epochs = 200;
+    model.number_of_epochs = 5;
     model.learning_step = 0.05;
     model.video_enabled = 0;
     model.add_bias = 1;
-
+    
 elseif(strcmp(model_name,'lmm'))
-    model.number_of_epochs = 200;
+    model.number_of_epochs = 5;
     model.learning_step = 0.1;
     model.video_enabled = 0;
     model.add_bias = 1;
     model.Kout = 0.3;
-
+    
 elseif(strcmp(model_name,'rls'))
-    
-
+    model.number_of_epochs = 5;
+        
 elseif(strcmp(model_name,'rlm'))
-    
-
+    model.number_of_epochs = 5;
+        
 elseif(strcmp(model_name,'mlp'))
-        model.number_of_epochs = 200;
-        model.number_of_hidden_neurons = 8;
-        model.learning_rate = 0.05;
-        model.moment_factor = 0.75;
-        model.non_linearity = 'sigmoid';
-        model.add_bias = 1;
-        model.video_enabled = 0;
-        model.prediction_type = prediction_type;
-        model.output_lags = [];
+    model.number_of_epochs = 200;
+    model.number_of_hidden_neurons = 8;
+    model.learning_rate = 0.05;
+    model.moment_factor = 0.75;
+    model.non_linearity = 'sigmoid';
+    model.add_bias = 1;
+    model.video_enabled = 0;
+
 end
 
-%% CHOOSE ALGORITHM HYPERPARAMETERS
+%% SYS ID - HOLD OUT / NORMALIZE / ESTIMATE / PREDICT
 
-% MLP
+disp('Begin Algorithm');
 
-% 
-% %% ACCUMULATORS
-% 
-% NAMES = {'estimation','prediction'};
-% STATS_est_acc = cell(number_of_realizations,1);	% Acc of Stats of estimation data
-% STATS_pre_acc = cell(number_of_realizations,1);	% Acc of Stats of test data
-% nSTATS_all = cell(2,1);                         % Acc of General statistics
-% 
-% %% HANDLERS FOR REGRESSION FUNCTIONS
-% 
-% algorithm_name = upper(OPT.alg);
-% 
-% % Training = Estimation -> Generate Residues
-% str_estimation = strcat(lower(OPT.alg),'_estimate');
-% regress_estimate = str2func(str_estimation);
-% 
-% % Test = Prediction -> Generate Prediction Errors
-% str_prediction = strcat(lower(OPT.alg),'_predict');
-% regress_predict = str2func(str_prediction);
-% 
-% %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
-% 
-% % Load input-output signals
-% DATAts = data_sysid_loading(OPT);
-% 
-% % Visualize Time series (before noise, outliers, normalization)
-% plot_time_series(DATAts);
-% 
-% % Select signals to work with
-% if(strcmp(OPT.prob,'tank'))
-%     if(OPT.prob2 == 1)
-%         DATAts.output = DATAts.output(1,:);
-%     end
-%     if(OPT.prob2 == 2)
-%         DATAts.input = [DATAts.input;DATAts.input];
-%     end
-% end
-% 
-% % Normalize time series
-% if(OPT.normalize)
-%     disp('Normalize!');
-%     PARnorm = normalizeTimeSeries_fit(DATAts,OPT);
-%     DATAts = normalizeTimeSeries_transform(DATAts,PARnorm);
-% end
-% 
-% % Add noise to time series
-% if(OPT.add_noise)
-%     disp('Add Noise!');
-%     DATAts.output = addTimeSeriesNoise(DATAts.output,OPT);
-% end
-% 
-% % Add outliers to time series
-% if(OPT.add_outlier)
-%     disp('Add Outliers!');
-%     DATAts.output = addTimeSeriesOutilers(DATAts.output,OPT);
-% end
-% 
-% % Visualize Time series (after noise, outliers, normalization)
-% plot_time_series(DATAts);
-% 
-% % Build Regression Matrices
-% DATA = build_regression_matrices(DATAts,OPT);	
-% 
-% % Divide data between train and test (estimate and predict)
-% [DATAest,DATApred] = hold_out_sysid(DATA,OPT);
-% 
-% %% SYS ID - HOLD OUT / NORMALIZE / ESTIMATE / PREDICT
-% 
-% disp('Begin Algorithm');
-% 
-% for r = 1:number_of_realizations
-% 
-% % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
-% 
-% disp('Turn and Time');
-% disp(r);
-% display(datestr(now));
-% 
-% % %%%%%%%%%%%%%%% SYSTEM'S ESTIMATION %%%%%%%%%%%%%%%%%%%%
-% 
-% PAR = regress_estimate(DATAest,HP);
-% 
-% % %%%%%%%% SYSTEM'S PREDICTION AND STATISTICS %%%%%%%%%%%%
-% 
-% OUTest = regress_predict(DATAest,PAR);
-% STATS_est_acc{r} = regress_stats_1turn(DATAest,OUTest);
-% 
-% OUTpred = regress_predict(DATApred,PAR);
-% STATS_pre_acc{r} = regress_stats_1turn(DATApred,OUTpred);
-% 
-% end
-% 
-% %% RESULTS / STATISTICS
+for r = 1:number_of_realizations
+
+% %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
+
+disp('Turn and Time');
+disp(r);
+display(datestr(now));
+
+% %%%%%%%%%%%%%%% SYSTEM'S ESTIMATION %%%%%%%%%%%%%%%%%%%%
+
+model = model.fit(DATAest.input,DATAest.output);
+
+% %%%%%%%% SYSTEM'S PREDICTION AND STATISTICS %%%%%%%%%%%%
+
+model = model.predict(DATAest.input);
+stats = statsGen1turn(model.Yh,DATAest.output);
+sysId_stats_est = sysId_stats_est.add(stats);
+
+model = model.predict(DATApred.input);
+stats = statsGen1turn(model.Yh,DATAest.output);
+sysId_stats_pre = sysId_stats_pre.add(stats);
+
+end
+
+sysId_stats_est = sysId_stats_est.calculate_all();
+
+sysId_stats_pre = sysId_stats_pre.calculate_all();
+
+%% RESULTS / STATISTICS
 % 
 % nSTATS_estimation = regress_stats_nturns(STATS_est_acc);
 % nSTATS_prediction = regress_stats_nturns(STATS_pre_acc);
@@ -192,12 +189,12 @@ end
 % plot(yh_pred(1,:),'r-')
 % hold off
 % 
-% %% CONTROLLER
-% 
-% 
-% 
-% %% RESULTS / STATISTICS
-% 
-% 
-% 
-% %% END
+%% CONTROLLER
+
+
+
+%% RESULTS / STATISTICS
+
+
+
+%% END

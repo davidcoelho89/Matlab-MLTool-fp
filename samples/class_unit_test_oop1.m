@@ -1,8 +1,8 @@
 %% MACHINE LEARNING TOOLBOX
 
-% Classification Algorithms (OOP Based) - Unit Test
+% System Identification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/04/11
+% Last Update: 2022/03/14
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -54,7 +54,7 @@ elseif(strcmp(classifier_name,'ols'))
 
 end
 
-%% LOAD DATASET
+%% DATA LOADING AND PRE-PROCESSING
 
 dataset = loadClassificationDataset(dataset_name);
 dataset = encodeLabels(dataset,label_encoding);

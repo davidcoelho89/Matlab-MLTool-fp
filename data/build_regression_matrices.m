@@ -1,4 +1,4 @@
-function [DATA] = build_regression_matrices(DATAts,OPT)
+function [DATA] = build_regression_matrices(datasetTS,OPT)
 
 % --- Build Regression Matrix from Time Series or System Signals ---
 %
@@ -21,13 +21,13 @@ function [DATA] = build_regression_matrices(DATAts,OPT)
 
 % Get Output Signals
 
-y_ts = DATAts.output;
+y_ts = datasetTS.output;
 [Ny,~] = size(y_ts);
 
 % Get Input Signals
 
-if (isfield(DATAts,'input'))
-    u_ts = DATAts.input;
+if (isfield(datasetTS,'input'))
+    u_ts = datasetTS.input;
     [Nu,~] = size(u_ts);
 else
     Nu = 0;

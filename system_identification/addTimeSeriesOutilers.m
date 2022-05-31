@@ -1,36 +1,26 @@
-function y_ts_noisy = addTimeSeriesOutilers(y_ts,HP)
+function y_ts_noisy = addTimeSeriesOutilers(y_ts,outlier_rate,outlier_ext)
 
 % --- Add Outliers to Time Series ---
 %
-%   y_ts_noisy = addTimeSeriesOutilers(y_ts,outlier_ratio,outlier_ext)
+%   y_ts_noisy = addTimeSeriesOutilers(y_ts,outlier_rate,outlier_ext)
 %
 %   Input:
 %       y_ts = Matrix with time series                            [Ny x N]
-%       HP.
-%           outlier_rate = rate of samples that will be contaminated [0-1]
-%           outlier_ext = until which sample can be contaminated     [0-1]
+%       outlier_rate = rate of samples that will be contaminated  [0-1]
+%       outlier_ext = until which sample can be contaminated      [0-1]
 %   Output:
 %       y_ts_noisy = time series with outliers                    [Ny x N]
 
 %% SET DEFAULT OPTIONS
 
-if(nargin == 1 || (isempty(HP)))
-    HP.outlier_rate = 0.05;
-    HP.outlier_ext = 0.5;
-else
-    if (~(isfield(HP,'outlier_rate')))
-        HP.outlier_rate = 0.05;
-    end
-    if (~(isfield(HP,'outlier_ext')))
-        HP.outlier_ext = 0.5;
-    end
+if(nargin == 1)
+    outlier_rate = 0.05;
+    outlier_ext = 0.5;
+elseif(nargin == 2)
+    outlier_ext = 0.5;
 end
 
 %% INIT
-
-% Get hyperparameters
-outlier_rate = HP.outlier_rate;
-outlier_ext = HP.outlier_ext;
 
 % Get number of time series and their extension
 [Ny,N] = size(y_ts);

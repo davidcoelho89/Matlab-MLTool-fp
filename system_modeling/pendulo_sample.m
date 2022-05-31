@@ -53,7 +53,9 @@ end
 %% Grafico das variaves
 
 dt = 0.01;
-[tout,x] = ode45(@pendulo_invertido,0:dt:60,[0;0;8*pi/9;0]);
+init_angle = pi/9;
+
+[tout,x] = ode45(@pendulo_invertido,0:dt:60,[0;0;init_angle;0]);
 
 figure;
 grid
@@ -63,23 +65,31 @@ legend({'x','theta'},'Location','northwest')
 %% Animacao Pendulo Invertido
 
 dt = 0.01;
-[tout,x] = ode45(@pendulo_invertido,0:dt:40,[0;0;10*pi/9;0]);
+init_angle = pi/9;
+
+[tout,x] = ode45(@pendulo_invertido,0:dt:40,[0;0;init_angle;0]);
 
 pos = x(:,1);
 angle = x(:,3);
 
-l = 0.3;    % comprimento do pendulo
+l = 0.3;   % comprimento do pendulo
 hc = 0.15;	% altura do carro
-lc = 0.2;   % largura carro
+lc = 0.20;  % largura carro
 
 N = length(pos);
 vetx = zeros(1,N);
 vety = zeros(1,N);
 
 for n = 1:N
-	vetx(n) = pos(n) + l*cos(angle(n)-pi/2);
-	vety(n) = hc + l*sin(angle(n)-pi/2);
+	vetx(n) = pos(n) - l*sin(angle(n));
+	vety(n) = hc + l*cos(angle(n));
 end
+
+
+% for n = 1:N
+% 	vetx(n) = pos(n) + l*cos(angle(n)-pi/2);
+% 	vety(n) = hc + l*sin(angle(n)-pi/2);
+% end
 
 figure;
 for n = 1:N

@@ -48,7 +48,7 @@ HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
 % HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
 % HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
-% Obs: hyperparameters related to kernel: are in the pipelines
+% Obs: the hyperparameters related to kernel functions are at the pipelines
 
 % Hyperparameter - specific
 

@@ -5,20 +5,20 @@ function [STATS] = regress_stats_1turn(DATA,OUT)
 %   [STATS] = regress_stats_1turn(OUT,OUT_h)
 % 
 %    	DATA.
-%           output = actual outputs             [1 x N] or [Nc x N]
+%           output = actual outputs             [No x N]
 %     	OUT.
-%           y_h = estimated outputs             [1 x N] or [Nc x N]
+%           y_h = estimated outputs             [No x N]
 %   Output:
 %       STATS.
-%       	err = error vector                  [1 x N]
-%           rmse = root mean squared error      [cte]
+%       	err = error Matrix                  [No x N]
+%           rmse = root mean squared error      [No x 1]
 
 %% INITIALIZATIONS
 
 y = DATA.output;
 y_h = OUT.y_h;
 
-N = length(y);
+[~,N] = size(y);
 
 %% ALGORITHM
 

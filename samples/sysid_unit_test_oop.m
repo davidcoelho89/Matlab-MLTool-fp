@@ -18,10 +18,10 @@ dataset_name = 'tank';
 model_name = 'lms';             
 normalization = 'zscore3';      
 output_lags = [2,2];             
-input_lags = [2,2];              
+input_lags = [2];              
 
 inputs_to_work_with = 'all';
-outputs_to_work_with = 1;
+outputs_to_work_with = 'all';
 
 add_noise = 0;
 noise_variance = 0.05;
@@ -82,12 +82,12 @@ plot_time_series(datasetTS);
 dataset = buildRegressionMatrices(datasetTS,output_lags,input_lags);
 
 % Divide data between train and test (estimate and predict)
-[DATAest,DATApred] = splitSysIdDataset(dataset,percentage_for_training);
+[dataEst,dataPred] = splitSysIdDataset(dataset,percentage_for_training);
 
 %% LOAD SYSTEM IDENTIFICATION MODEL AND CHOOSE ITS HYPERPARAMETERS
 
 % Model's Object
-lmsArx
+
 model = initializeSysIdModel(model_name);
 
 % General Hyperparameters
@@ -146,28 +146,26 @@ display(datestr(now));
 
 % %%%%%%%%%%%%%%% SYSTEM'S ESTIMATION %%%%%%%%%%%%%%%%%%%%
 
-model = model.fit(DATAest.input,DATAest.output);
+model = model.fit(dataEst.input,dataEst.output);
 
 % %%%%%%%% SYSTEM'S PREDICTION AND STATISTICS %%%%%%%%%%%%
 
-model = model.predict(DATAest.input);
-stats = statsGen1turn(model.Yh,DATAest.output);
-sysId_stats_est = sysId_stats_est.add(stats);
+model = model.predict(dataEst.input);
+stats = statsGen1turn.calculate_all(model.Yh,dataEst.output);
+sysId_stats_est = sysId_stats_est.addResult(stats);
 
-model = model.predict(DATApred.input);
-stats = statsGen1turn(model.Yh,DATAest.output);
-sysId_stats_pre = sysId_stats_pre.add(stats);
+model = model.predict(dataPred.input);
+stats = statsGen1turn.calculate_all(model.Yh,dataEst.output);
+sysId_stats_pre = sysId_stats_pre.addResult(stats);
 
 end
 
-sysId_stats_est = sysId_stats_est.calculate_all();
+%% RESULTS - CALCULATE
 
+sysId_stats_est = sysId_stats_est.calculate_all();
 sysId_stats_pre = sysId_stats_pre.calculate_all();
 
 %% RESULTS / STATISTICS
-% 
-% nSTATS_estimation = regress_stats_nturns(STATS_est_acc);
-% nSTATS_prediction = regress_stats_nturns(STATS_pre_acc);
 % 
 % y_est = DATAest.output;
 % yh_est = OUTest.y_h;

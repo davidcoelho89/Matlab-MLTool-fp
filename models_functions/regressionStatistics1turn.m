@@ -8,7 +8,10 @@ classdef regressionStatistics1turn
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
-        % ToDo - All
+        %Y = [];
+        %Yh = [];
+        error = [];
+        rmse = [];
     end
     
     methods
@@ -18,7 +21,19 @@ classdef regressionStatistics1turn
             % Set the hyperparameters after initializing!
         end
         
-        % ToDo - All
+        function self = calculate_all(self,Y,Yh)
+            
+            %self.Y = Y;
+            %self.Yh = Yh;
+            
+            [~,N] = size(Y);
+
+            self.error = Y - Yh;
+            
+            self.rmse = sqrt((1/N)*sum(self.error.^2,2));
+            
+            
+        end
 
     end    
     

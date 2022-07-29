@@ -190,11 +190,11 @@ ksomef3_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%

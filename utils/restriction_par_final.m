@@ -5,7 +5,7 @@ function restriction = restriction_par_final(DATA,PAR,class_train)
 %  restriction = restriction_par_final(DATA,PAR,class_train)
 %
 %   Input:
-%       DATA
+%       DATA = dataset                                          [struct]
 %       PAR = struct including algorithm's hyperparameters      [struct]
 %       class_train = handle of classifier training function 	[handle]
 %   Output:
@@ -27,8 +27,13 @@ if (strcmp(algorithm_name,'spok_train'))
     [Nc,~] = size(DATA.output);
     % Get parameters
     [~,Nk] = size(PAR.Cx);
+    max_prot = PAR.max_prot;
     % Verify Minimum number of prototypes
     if (Nk <= Nc)
+        restriction = 1;
+    end
+    % Verify Maximum number of prototypes
+    if (Nk >= max_prot)
         restriction = 1;
     end
 end

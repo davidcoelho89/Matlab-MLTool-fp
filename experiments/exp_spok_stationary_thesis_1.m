@@ -18,12 +18,12 @@ OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Label encoding. 1: [-1 +1] pattern
 OPT.hold = 2;       % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 0;        % Allow hyperparameter optimization
+OPT.hpo = 1;        % Allow hyperparameter optimization
 
 % Grid Search Parameters
 
 GSp.fold = 5;       % number of data partitions for cross validation
-GSp.type = 2;       % Takes into account also the dicitionary size
+GSp.cost = 2;       % Takes into account also the dicitionary size
 GSp.lambda = 2; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT

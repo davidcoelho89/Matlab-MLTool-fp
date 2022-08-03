@@ -1,9 +1,5 @@
 %% Machine Learning ToolBox
 
-% Spok With one stationary Dataset
-% Author: David Nascimento Coelho
-% Last Update: 2022/08/02
-
 close;          % Close all windows
 clear;          % Clear all variables
 clc;            % Clear command window
@@ -14,59 +10,59 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 02;        % Number of repetitions of the algorithm
+OPT.Nr = 10;        % Number of repetitions of the algorithm
 OPT.alg = 'spok';	% Which classifier will be used
 OPT.prob = 06;      % Which problem will be solved / used
 OPT.prob2 = 02;     % More details about a specific data set
 OPT.norm = 3;       % Normalization definition
-OPT.lbl = 1;        % Labeling definition. 1: [-1 +1] pattern
+OPT.lbl = 1;        % Label encoding. 1: [-1 +1] pattern
 OPT.hold = 2;       % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 1;        % Allow hyperparameter optimization
+OPT.hpo = 0;        % Allow hyperparameter optimization
 
 % Grid Search Parameters
 
 GSp.fold = 5;       % number of data partitions for cross validation
 GSp.type = 2;       % Takes into account also the dicitionary size
-GSp.lambda = 0.2; 	% Jpbc = Ds + lambda * Err
+GSp.lambda = 2; 	% Jpbc = Ds + lambda * Err
 
 %% HYPERPARAMETERS - DEFAULT
 
-HP.Ne = 05;             	% Maximum number of epochs
+HP.Ne = 01;             	% Maximum number of epochs
 HP.is_static = 1;           % Verify if the dataset is stationary
-HP.Dm = 2;                  % Design Method
-HP.Ss = 2;                  % Sparsification strategy
-HP.v1 = 0.8;                % Sparseness parameter 1 
+HP.Dm = 1;                  % Design Method
+HP.Ss = 1;                  % Sparsification strategy
+HP.v1 = 0.1;                % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
-HP.Us = 1;                  % Update strategy
+HP.Us = 0;                  % Update strategy
 HP.eta = 0.1;               % Update rate
-HP.Ps = 2;                  % Prunning strategy
+HP.Ps = 0;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
-HP.max_prot = 20;           % Max number of prototypes
+HP.max_prot = Inf;         	% Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
 HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
-HP.sig2n = 0.001;           % Kernel Regularization parameter
+HP.sig2n = 0.0001;          % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
 HP.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
-HP.gamma = 2;               % polynomial order (poly 2 or 3)
+HP.gamma = 20;           	% polynomial order (poly 2 or 3)
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
 HPgs = HP;
 
 % Hiperparameters for ALD
-% HPgs.v1 = 2.^linspace(-4,3,8);
-% HPgs.v2 = HPgs.v1(end) + 0.001;
-% HPgs.sigma = 2.^linspace(-10,9,20);
-
-% Hiperparameters for Coherence
-HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+HPgs.v1 = 2.^linspace(-4,3,8);
 HPgs.v2 = HPgs.v1(end) + 0.001;
 HPgs.sigma = 2.^linspace(-10,9,20);
+
+% Hiperparameters for Coherence
+% HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+% HPgs.v2 = HPgs.v1(end) + 0.001;
+% HPgs.sigma = 2.^linspace(-10,9,20);
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
@@ -74,9 +70,7 @@ DATA = data_class_loading(OPT);     % Load Data Set
 
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-% plot_data_pairplot(DATA);           % See pairplot of attributes
-
-%% ACCUMULATORS
+%% ACCUMULATORS AND HANDLERS
 
 NAMES = {'train','test'};           % Acc of names for plots
 DATA_acc = cell(OPT.Nr,1);       	% Acc of Data
@@ -84,6 +78,12 @@ PAR_acc = cell(OPT.Nr,1);         	% Acc of Parameters and Hyperparameters
 STATS_tr_acc = cell(OPT.Nr,1);   	% Acc of Statistics of training data
 STATS_ts_acc = cell(OPT.Nr,1);   	% Acc of Statistics of test data
 nSTATS_all = cell(2,1);             % Acc of General statistics
+
+train_string = strcat(OPT.alg,'_train');
+model_train = str2func(train_string);
+
+test_string = strcat(OPT.alg,'_classify');
+model_classify = str2func(test_string);
 
 %% VIDEO NAME AND FILE NAME
 
@@ -144,7 +144,10 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,GSp);
+
+if (OPT.hpo == 1)
+    HP = grid_search_cv(DATAtr,HPgs,model_train,model_classify,GSp);
+end
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
@@ -154,16 +157,16 @@ if r == OPT.Nr
 end
 
 % Calculate model's parameters
-PAR_acc{r} = spok_train(DATAtr,HP);
+PAR_acc{r} = model_train(DATAtr,HP);
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
 % Results and Statistics with training data
-OUTtr = spok_classify(DATAtr,PAR_acc{r});
+OUTtr = model_classify(DATAtr,PAR_acc{r});
 STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
 
 % Results and Statistics with test data
-OUTts = spok_classify(DATAts,PAR_acc{r});
+OUTts = model_classify(DATAts,PAR_acc{r});
 STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
@@ -196,7 +199,7 @@ PAR = PAR_acc{r};
 STATS = STATS_ts_acc{r};
 
 % Classifier Decision Boundaries
-plot_class_boundary(DATAf,PAR,@spok_classify);
+% plot_class_boundary(DATAf,PAR,@spok_classify);
 
 % ROC Curve (one for each class)
 plot_stats_roc_curve(STATS);

@@ -25,23 +25,23 @@
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(HP))),
+if ((nargin == 1) || (isempty(HP)))
     PARaux.Ctype = 2;       % Classifier type (regularized)
     PARaux.Ktype = 2;       % Kernel Type (Gaussian)
     PARaux.sig2n = 0.001;   % Kernel regularization parameter
     PARaux.sigma = 2;       % Kernel width
 	HP = PARaux;
 else
-    if (~(isfield(HP,'Ctype'))),
+    if (~(isfield(HP,'Ctype')))
         HP.Ctype = 2;
     end
-    if (~(isfield(HP,'Ktype'))),
+    if (~(isfield(HP,'Ktype')))
         HP.Ktype = 2;
     end
-    if (~(isfield(HP,'sig2n'))),
+    if (~(isfield(HP,'sig2n')))
         HP.sig2n = 0.001;
     end
-    if (~(isfield(HP,'sigma'))),
+    if (~(isfield(HP,'sigma')))
         HP.sigma = 2;
     end
 end
@@ -79,7 +79,7 @@ Kinv_reg_t = cell(Nc,1);    % "tilde" -> "centered"
 
 %% ALGORITHM
 
-for c = 1:Nc,
+for c = 1:Nc
     % Get samples of class
     n_c{c} = sum(Y_seq == c);
     X_c{c} = X(:,(Y_seq == c));

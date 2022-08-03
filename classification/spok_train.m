@@ -62,7 +62,7 @@
 
 if ((nargin == 1) || (isempty(HP)))
     PARaux.Ne = 1;          % Maximum number of epochs
-    PARaux.is_static = 0;   % Verify if the data set is stationary
+    PARaux.is_static = 1;   % Verify if the data set is stationary
     PARaux.Dm = 2;          % Design Method
     PARaux.Ss = 1;          % Sparsification strategy
     PARaux.v1 = 0.1;        % Sparseness parameter 1 
@@ -103,13 +103,13 @@ else
         HP.v2 = 0.9;
     end
     if (~(isfield(HP,'Us')))
-        HP.Us = 0;
+        HP.Us = 1;
     end
     if (~(isfield(HP,'eta')))
-        HP.eta = 0.01;
+        HP.eta = 0.1;
     end
     if (~(isfield(HP,'Ps')))
-        HP.Ps = 0;
+        HP.Ps = 2;
     end
     if (~(isfield(HP,'min_score')))
         HP.min_score = -10;
@@ -193,20 +193,13 @@ yh = -1*ones(Nc,N);
 
 for ep = 1:Ne
     
-    % Shuffle Data
-    if(is_static)
-        I = randperm(N);        
-        X = X(:,I);     
-        Y = Y(:,I);
-    end
-    
     for n = 1:N
 
         % Save frame of the current iteration
         if (Von)
             it = it+1;
             VID(it) = prototypes_frame(PAR.Cx,DATA);
-        end 
+        end
 
         % Get sample
         DATAn.input = X(:,n);
@@ -217,7 +210,7 @@ for ep = 1:Ne
 
         % Init Dictionary (if it is the first sample)
         if (mt1 == 0)
-            % Make a guess (yh = 1 : first class)
+            % Make a guess (yh = [1 -1 -1 ... -1 -1]' : first class)
             yh(1,n) = 1;
             % Add sample to dictionary
             PAR = spok_dict_grow(DATAn,PAR);
@@ -252,6 +245,20 @@ for ep = 1:Ne
         PAR = spok_score_updt(DATAn,OUTn,PAR);
         PAR = spok_dict_prun(PAR);
 
+    end
+    
+    if(is_static)
+        % Shuffle Data
+        I = randperm(N);        
+        X = X(:,I);     
+        Y = Y(:,I);
+        
+        % Hold last classification labels
+        if (ep == Ne)
+            OUT = spok_classify(DATA,PAR);
+            yh = OUT.y_h;
+        end
+        
     end
 
 end

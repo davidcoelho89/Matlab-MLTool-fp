@@ -35,7 +35,7 @@ HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.1;                % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
 HP.Us = 0;                  % Update strategy
-HP.eta = 0.1;               % Update rate
+HP.eta = 0.01;           	% Update rate
 HP.Ps = 0;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
 HP.max_prot = Inf;         	% Max number of prototypes
@@ -43,7 +43,7 @@ HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
+HP.Ktype = 5;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.0001;          % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
@@ -54,15 +54,36 @@ HP.gamma = 20;           	% polynomial order (poly 2 or 3)
 
 HPgs = HP;
 
-% Hiperparameters for ALD
-HPgs.v1 = 2.^linspace(-4,3,8);
-HPgs.v2 = HPgs.v1(end) + 0.001;
-HPgs.sigma = 2.^linspace(-10,9,20);
+% ALD 
+if HP.Ss == 1
 
-% Hiperparameters for Coherence
-% HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
-% HPgs.v2 = HPgs.v1(end) + 0.001;
-% HPgs.sigma = 2.^linspace(-10,9,20);
+    if HP.Ktype == 1
+        % Linear
+        HPgs.v1 = 2.^linspace(-10,3,14);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+    elseif HP.Ktype == 2
+        % Gaussian
+        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,5,14);
+    elseif HP.Ktype == 5
+        % Cauchy
+        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,5,14);
+    end
+
+% COHERENCE
+elseif HP.Ss == 2
+    
+    % Gaussian
+    if HP.Ktype == 2
+        HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-10,9,20);
+    end
+    
+end
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
@@ -88,10 +109,11 @@ model_classify = str2func(test_string);
 %% VIDEO NAME AND FILE NAME
 
 OPT.filename = strcat(DATA.name,'_',OPT.alg,'_hpo',int2str(OPT.hpo),...
+                      '_lamb',num2str(GSp.lambda,2),...
                       '_norm',int2str(OPT.norm),'_Dm',int2str(HP.Dm),...
                       '_Ss',int2str(HP.Ss),'_Us',int2str(HP.Us),...
                       '_Ps',int2str(HP.Ps),'_kernel',int2str(HP.Ktype),...
-                      '_',int2str(HP.K),'nn');
+                      '_',int2str(HP.K),'nn','.mat');
 
 OPT.videoname = strcat(OPT.alg,'_',DATA.name,'.mp4');
 
@@ -111,6 +133,12 @@ display(datestr(now));
 DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
 DATAtr = DATA_acc{r}.DATAtr;        % Training Data
 DATAts = DATA_acc{r}.DATAts;      	% Test Data
+
+% Update maximum number of prototypes 
+% (avoid PBC getting all data training points)
+Ntr_samples = length(DATAtr.lbl);
+HP.max_prot = Ntr_samples;
+HPgs.max_prot = Ntr_samples;
 
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -192,22 +220,22 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 %% GRAPHICS - OF LAST TURN
 
-% Get Data, Parameters, Statistics
-DATAf.input = [DATAtr.input, DATAts.input];
-DATAf.output = [DATAtr.output, DATAts.output];
-PAR = PAR_acc{r};
-STATS = STATS_ts_acc{r};
+% % Get Data, Parameters, Statistics
+% DATAf.input = [DATAtr.input, DATAts.input];
+% DATAf.output = [DATAtr.output, DATAts.output];
+% PAR = PAR_acc{r};
+% STATS = STATS_ts_acc{r};
 
-% Classifier Decision Boundaries
+% % Classifier Decision Boundaries
 % plot_class_boundary(DATAf,PAR,@spok_classify);
 
-% ROC Curve (one for each class)
-plot_stats_roc_curve(STATS);
+% % ROC Curve (one for each class)
+% plot_stats_roc_curve(STATS);
 
-% Precision-Recall (one for each class)
-plot_stats_precision_recall(STATS)
+% % Precision-Recall (one for each class)
+% plot_stats_precision_recall(STATS)
 
-% See Class Boundary Video (of last turn)
+% % See Class Boundary Video (of last turn)
 % if (HP.Von == 1),
 %     VID = PAR_acc{r}.VID
 %     figure;
@@ -216,9 +244,9 @@ plot_stats_precision_recall(STATS)
 
 %% SAVE VARIABLES AND VIDEO
 
-% % Save All Variables
-% save(OPT.filename);
-% 
+% Save All Variables
+save(OPT.filename);
+
 % % Save Class Boundary Video (of last turn)
 % v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
 % v.FrameRate = 1;

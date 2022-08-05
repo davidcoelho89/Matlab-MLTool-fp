@@ -97,10 +97,20 @@ for fold = 1:Nfold
     % Training of classifier
     [PAR] = class_train(DATAtr,HP_probe);
     
+    % Uses just accuracy as measure
+    if (cost == 1)
+        
     % Accumulate Number of Prototypes (for prototype-based classifiers)
-    if (cost == 2)
+    elseif (cost == 2)
         [~,Nk] = size(PAR.Cx);
         Ds = Ds + Nk;
+    
+    % Accumulate Number of Support Vectors (for SV-based classifiers)
+    elseif (cost == 3)
+    
+    % Accumulate Number of neurons (for NN-based classifiers)
+    elseif (cost == 4)
+        
     end
 
     % Test of classifier

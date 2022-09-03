@@ -18,6 +18,9 @@ classdef mlpArx
     properties (GetAccess = public, SetAccess = protected)
         name = 'mlp';
         W = [];
+        W_old = [];
+        structure = [];
+        number_of_layers = [];
         MQE = [];
         video = [];
         output_memory = [];
@@ -28,6 +31,21 @@ classdef mlpArx
         % Constructor
         function self = mlpArx()
             % Set the hyperparameters after initializing!
+        end
+
+        % Initialize Parameteres
+        function self = initialize_parameters(self,x,y)
+            p = length(x);
+            No = length(y);
+
+            self.structure = [p,self.number_of_hidden_neurons,No];
+            self.number_of_layers = length(self.structure) - 1;
+
+            self.W = cell(self.number_of_layers,1);
+            self.W_old = cell(self.number_of_layers,1);
+
+            
+            
         end
         
         % Training Function (1 instance)

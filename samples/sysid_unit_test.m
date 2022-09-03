@@ -49,6 +49,10 @@ OPT.alg = 'mlp';            % Which estimator will be used
 % HP.eta = 0.1;	% Taxa de aprendizado
 % HP.Kout = 0.3;	% Maximo nivel de erro
 
+% RLS
+
+% RLM
+
 % MLP
 HP.Nh = 8; % [5,3]; % Number of hidden neurons
 HP.Ne = 200;       	% maximum number of training epochs

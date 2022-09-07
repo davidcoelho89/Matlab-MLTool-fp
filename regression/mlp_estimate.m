@@ -143,9 +143,9 @@ for ep = 1:Nep   % for each epoch
     end
     
     % Shuffle Data
-    I = randperm(N);        
-    X = X(:,I);     
-    Y = Y(:,I);   
+    I = randperm(N);
+    X = X(:,I);
+    Y = Y(:,I);
     
     SQE = 0; % Init sum of quadratic errors
     

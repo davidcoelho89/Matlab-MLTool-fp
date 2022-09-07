@@ -59,9 +59,10 @@ classdef mlpArx
                 self = self.initialize_parameters(self,x,y);
             end
             
-            x_layer = cell(self.number_of_layers,1); % input of each layer
-            y_layer = cell(self.number_of_layers,1); % output of each layer
-            delta = cell(self.number_of_layers,1); % local gradient of each layer
+            % information of each layer
+            x_layer = cell(self.number_of_layers,1); % input
+            y_layer = cell(self.number_of_layers,1); % output
+            local_gradient = cell(self.number_of_layers,1); % local gradient
             
             % Forward Step (Calculate Layers' Outputs)
             for i = 1:self.number_of_layers
@@ -76,13 +77,12 @@ classdef mlpArx
                     x_layer{i} = [+1; y_layer{i-1}];
                 end
                 
-                % Activation of hidden neurons
+                % Neurons' Activation 
                 Ui = self.W{i} * x_layer{i}; 
-                
-                if (i == self.number_of_layers)
-                    y_layer{i} = mlp_f_ativ(Ui,'linear');
+                if (i == self.number_of_layers) % output_layer
+                    y_layer{i} = self.activation_function(Ui,'linear');
                 else
-                    y_layer{i} = mlp_f_ativ(Ui,self.non_linearity);
+                    y_layer{i} = self.activation_function(Ui,self.non_linearity);
                 end
             end
             
@@ -91,12 +91,11 @@ classdef mlpArx
             
             % Backward Step (Calculate Layers' Local Gradients)
             for i = self.number_of_layers:-1:1
-                f_der = mlp_f_gradlocal(y_layer{i},self.non_linearity);
+                Di = self.function_derivate(y_layer{i},self.non_linearity);
                 if (i == self.number_of_layers) % output layer
-                    % delta{i} = self.error.*f_der;
-                    delta{i} = self.error; % linear function.
+                    local_gradient{i} = Di.*self.error;
                 else
-                    delta{i} = f_der.*(self.W{i+1}(:,2:end)'*delta{i+1});
+                    local_gradient{i} = Di.*(self.W{i+1}(:,2:end)'*local_gradient{i+1});
                 end
             end
             
@@ -104,7 +103,7 @@ classdef mlpArx
             for i = self.number_of_layers:-1:1
                 W_aux = self.W{i};
                 self.W{i} = self.W{i} + ...
-                            self.learning_rate*delta{i}*x_layer{i}' + ...
+                            self.learning_rate*local_gradient{i}*x_layer{i}' + ...
                             mom*(self.W{i} - self.W_old{i});
                 self.W_old{i} = W_aux;
             end
@@ -175,10 +174,10 @@ classdef mlpArx
 
                 for i = 1:self.number_of_layers
                     Ui = self.W{i} * xn;
-                    if i == self.number_of_layers
-                        Yi = mlp_f_ativ(Ui,0);
+                    if i == self.number_of_layers % output layer
+                        Yi = self.activation_function(Ui,'linear');
                     else
-                        Yi = mlp_f_ativ(Ui,self.non_linearity);
+                        Yi = self.activation_function(Ui,self.non_linearity);
                     end
                     xn = [+1; Yi];
                 end
@@ -193,11 +192,33 @@ classdef mlpArx
             
         end
         
-    end
+        function Yi = activation_function(Ui,non_linearity)
+            if(strcmp(non_linearity,'linear'))
+                Yi = Ui;
+            elseif(strcmp(non_linearity,'sigmoid'))
+                Yi = 1./(1+exp(-Ui));
+            elseif(strcmp(non_linearity,'hyperbolic_tangent'))
+                Yi = (1-exp(-Ui))./(1+exp(-Ui));
+            else
+                Yi = Ui;
+                disp('Invalid function option');
+            end
+        end
+
+        function Di = function_derivate(Yi,non_linearity)
+            % There is a minimum of 0.05 out so as not to paralyze the learning
+            if(strcmp(non_linearity,'linear'))
+                Di = ones(size(Yi));
+            elseif(strcmp(non_linearity,'sigmoid'))
+                Di = Yi.*(1 - Yi) + 0.05;
+            elseif(strcmp(non_linearity,'hyperbolic_tangent'))
+                Di = 0.5*(1-Yi.^2) + 0.05;
+            else
+                Di = Yi;
+                disp('Invalid function option');
+            end
+        end
+
+    end % end methods
     
-end
-
-
-
-
-
+end % end class

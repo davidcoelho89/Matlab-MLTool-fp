@@ -99,13 +99,13 @@ classdef spokClassifier
         times_selected = []; % Used for prunning method
         video = [];  % frame structure (can be played with 'video function')
         Yh = [];           % all predictions (fit function)
+        winners = [];      % closest prototype to each sample [1 x N]
+        distances = [];    % distance of each sample from each prototype [Nk x N]
+        near_indexes = []; % indexes for nearest prototypes [K x N]
         yh = [];           % last prediction (partial_fit function)
         winner = [];       % closest prototype to sample [1 x 1]
-        winners = [];      % closest prototype to each sample [1 x N]
         distance = [];     % distance of sample from each prototype [Nk x 1]
-        distances = [];    % distance of each sample from each prototype [Nk x N]
         near_index = [];   % indexes for nearest prototypes [K x 1]
-        near_indexes = []; % indexes for nearest prototypes [K x N]
 
 
     end

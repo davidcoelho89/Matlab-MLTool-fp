@@ -4,62 +4,61 @@ classdef spokClassifier
     %
     % Properties (Hyperparameters):
     %
-    %    number_of_epochs = <integer>
+    %    - number_of_epochs = <integer>
     %        if > 1, "shows the data" more than once to the algorithm
-    %    is_stationary = [0 or 1]
-    %
-    %    design_method = how the dictionary will be built
+    %    - is_stationary = [0 or 1]
+    %    - design_method = how the dictionary will be built
     %        = 'one_dicitionary_per_class'
     %        = 'single_dictionary'
-    %    sparsification_strategy = define how the prototypes will be selected
+    %    - sparsification_strategy = define how the prototypes will be selected
     %        = 'ald'
     %        = 'coherence'
     %        = 'novelty'
     %        = 'surprise'
-    %    v1 =
-    %    v2 =
-    %    update_strategy = define how the prototypes will be updated
+    %    - v1 = <real>
+    %    - v2 = <real> 
+    %    - update_strategy = define how the prototypes will be updated
     %        = 'none'
     %        = 'wta' (lms, unsupervised)
     %        = 'lvq' (supervised)
-    %    update_rate = <real>
+    %    - update_rate = <real>
     %        [0 to 1]
-    %    pruning_strategy = define how the prototypes will be prunned
+    %    - pruning_strategy = define how the prototypes will be prunned
     %        = 'none'
     %        = 'drift_based'
     %        = 'hits_and_error'
-    %    min_score =
-    %    max_prototypes =
-    %    min_prototypes =
-    %    video_enabled =
-    %    nearest_neighbors =
-    %    knn_aproximation =
-    %    kernel_type =
-    %    regularization =
-    %    sigma =
-    %    alpha =
-    %    theta =
-    %    gamma =
+    %    - min_score =
+    %    - max_prototypes =
+    %    - min_prototypes =
+    %    - video_enabled =
+    %    - nearest_neighbors =
+    %    - knn_aproximation =
+    %    - kernel_type =
+    %    - regularization =
+    %    - sigma =
+    %    - alpha =
+    %    - theta =
+    %    - gamma =
     %
     % Properties (Parameters)
     %
-    %    Cx = Clusters' centroids (prototypes)
-    %    Cy = Clusters' labels
-    %    Km = Kernel Matrix of Entire Dictionary
-    %    Kinv = Kernel Matrix for each class (cell)
-    %    Kinvc = Inverse Kernel Matrix for each class (cell)
-    %    score = Used for prunning method
-    %    classification_history = Used for prunning method
-    %    times_selected = Used for prunning method
-    %    video = frame structure (can be played with 'video function')
-    %    Yh = Hold all predictions
+    %    - Cx = Clusters' centroids (prototypes)
+    %    - Cy = Clusters' labels
+    %    - Km = Kernel Matrix of Entire Dictionary
+    %    - Kinv = Kernel Matrix for each class (cell)
+    %    - Kinvc = Inverse Kernel Matrix for each class (cell)
+    %    - score = Used for prunning method
+    %    - classification_history = Used for prunning method
+    %    - times_selected = Used for prunning method
+    %    - video = frame structure (can be played with 'video function')
+    %    - Yh = Hold all predictions
     %
     % Methods:
     %
-    %	spokClassifier()        % Constructor
-    %	partial_fit(self,x,y)	% Training Function (1 instance)
-    %	fit(self,X,Y)           % Training Function (N instances)
-    %	Yh = predict(self,X)    % Prediction Function
+    %	- spokClassifier()        % Constructor
+    %	- partial_fit(self,x,y)   % Training Function (1 instance)
+    %	- fit(self,X,Y)           % Training Function (N instances)
+    %	- Yh = predict(self,X)    % Prediction Function
 
     % Hyperparameters
     properties
@@ -106,7 +105,6 @@ classdef spokClassifier
         winner = [];       % closest prototype to sample [1 x 1]
         distance = [];     % distance of sample from each prototype [Nk x 1]
         near_index = [];   % indexes for nearest prototypes [K x 1]
-
 
     end
 

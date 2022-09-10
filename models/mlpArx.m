@@ -201,7 +201,7 @@ classdef mlpArx
                 Yi = (1-exp(-Ui))./(1+exp(-Ui));
             else
                 Yi = Ui;
-                disp('Invalid function option');
+                disp('Invalid function option. Linear function chosen.');
             end
         end
 
@@ -214,8 +214,8 @@ classdef mlpArx
             elseif(strcmp(non_linearity,'hyperbolic_tangent'))
                 Di = 0.5*(1-Yi.^2) + 0.05;
             else
-                Di = Yi;
-                disp('Invalid function option');
+                Di = ones(size(Yi));
+                disp('Invalid function option. Linear function chosen.');
             end
         end
 

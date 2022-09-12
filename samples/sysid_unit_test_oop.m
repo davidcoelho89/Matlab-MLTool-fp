@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
-dataset_name = 'tank';         
-model_name = 'lms';             
-normalization = 'zscore3';      
-output_lags = [2,2];             
-input_lags = [2];              
+dataset_name = 'linear_arx_01'; % verify with: tank!
+model_name = 'lms';             %
+normalization = 'zscore3';      %
+output_lags = [2];              % [2,2];
+input_lags = [2];               %
 
 inputs_to_work_with = 'all';
 outputs_to_work_with = 'all';
@@ -35,8 +35,8 @@ normalizer = timeSeriesNormalizer();
 normalizer.normalization = normalization;
 
 statsGen1turn = regressionStatistics1turn();
-sysId_stats_est = regressionStatisticsNturns();
-sysId_stats_pre = regressionStatisticsNturns();
+sysId_stats_est = regressionStatisticsNturns(number_of_realizations);
+sysId_stats_pre = regressionStatisticsNturns(number_of_realizations);
 
 %% DATA LOADING AND PREPROCESSING
 
@@ -103,10 +103,10 @@ if(strcmp(model_name,'ols'))
     model.add_bias = 1;
     
 elseif(strcmp(model_name,'lms'))
-    model.number_of_epochs = 5;
+    model.number_of_epochs = 50;
     model.learning_step = 0.05;
-    model.video_enabled = 0;
     model.add_bias = 1;
+    model.video_enabled = 0;
     
 elseif(strcmp(model_name,'lmm'))
     model.number_of_epochs = 5;
@@ -136,12 +136,12 @@ end
 
 disp('Begin Algorithm');
 
-for r = 1:number_of_realizations
+for realization = 1:number_of_realizations
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp('Turn and Time');
-disp(r);
+disp(realization);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%% SYSTEM'S ESTIMATION %%%%%%%%%%%%%%%%%%%%
@@ -166,16 +166,16 @@ sysId_stats_est = sysId_stats_est.calculate_all();
 sysId_stats_pre = sysId_stats_pre.calculate_all();
 
 %% RESULTS / STATISTICS
-% 
-% y_est = DATAest.output;
-% yh_est = OUTest.y_h;
-% 
-% figure;
-% plot(y_est(1,:),'b-')
-% title('Signal used for estimation')
-% hold on
-% plot(yh_est(1,:),'r-')
-% hold off
+
+y_est = dataEst.output;
+yh_est = model.Yh;
+
+figure;
+plot(y_est(1,:),'b-')
+title('Signal used for estimation')
+hold on
+plot(yh_est(1,:),'r-')
+hold off
 % 
 % y_pred = DATApred.output;
 % yh_pred = OUTpred.y_h;

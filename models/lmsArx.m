@@ -30,22 +30,26 @@ classdef lmsArx
             % Set the hyperparameters after initializing!
         end
         
+        % Initialize Parameteres
+        function self = initialize_parameters(self,x,y)
+            if(self.add_bias == 1)
+                self.W = 0.01*rand(length(y),length(x)+1);
+            else
+                self.W = 0.01*rand(length(y),length(x));
+            end
+            self.output_memory = x(1:sum(self.output_lags));
+        end
+        
         % Training Function (1 instance)
         function self = partial_fit(self,x,y)
             
-            % Initialize W (if needed)
             if(isempty(self.W))
-                if(self.add_bias == 1)
-                    self.W = 0.01*rand(length(y),length(x)+1);
-                else
-                    self.W = 0.01*rand(length(y),length(x));
-                end
+                self = initialize_parameters(x,y);
             end
             
-            % Update output memory
-            self.output_memory = x(1:sum(self.output_lags));
-            
-            % Add bias if needed
+            self.output_memory = update_output_memory(y,...
+                                                      self.output_memory,...
+                                                      self.output_lags);
             if(self.add_bias)
                 x = [1 ; x];
             end
@@ -65,41 +69,32 @@ classdef lmsArx
         % Training Function (N instances)
         function self = fit(self,X,Y)
             
-            % Get Number of samples, attributes and classes
-            [Nc,~] = size(Y);
-            [p,N] = size(X);
+            [~,number_of_samples] = size(X);
             
+            self = self.initialize_parameters(X(:,1),Y(:,1));
             self.MQE = zeros(1,self.number_of_epochs);
-            
             self.video = struct('cdata',...
                                 cell(1,self.number_of_epochs), ...
                                 'colormap', ...
                                 cell(1,self.number_of_epochs) ...
                                 );
             
-            % Initialize W
-            if(self.add_bias)
-                self.W = 0.01*rand(Nc,p+1);
-            else
-                self.W = 0.01*rand(Nc,p);
-            end
-            
             % Initialize W accumulator
-            self.W_acc = cell(1,self.number_of_epochs*N+1);
+            self.W_acc = cell(1,self.number_of_epochs*number_of_samples+1);
             self.W_acc{1,1} = self.W;
             
-            for ep = 1:self.number_of_epochs
+            for epoch = 1:self.number_of_epochs
                 
                 if(self.video_enabled)
-                    self.video(ep) = hyperplane_frame(self.W,DATA);
+                    self.video(epoch) = hyperplane_frame(self.W,DATA);
                 end
                 
-                for n = 1:N
+                for n = 1:number_of_samples
                     self = self.partial_fit(X(:,n),Y(:,n));
                 end
                 
                 Y_h = linearPrediction(self,X);
-                self.MQE(ep) = sum(sum((Y - Y_h).^2))/N;
+                self.MQE(epoch) = sum(sum((Y - Y_h).^2))/number_of_samples;
                 
             end
         end

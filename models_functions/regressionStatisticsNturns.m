@@ -9,7 +9,7 @@ classdef regressionStatisticsNturns
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
         
-        number_of_repetitions;
+        number_of_realizations;
         repetition;
         cell_of_results;
         
@@ -20,10 +20,10 @@ classdef regressionStatisticsNturns
     methods
         
         % Constructor
-        function self = regressionStatisticsNturns(number_of_repetitions)
-            self.number_of_repetitions = number_of_repetitions;
+        function self = regressionStatisticsNturns(number_of_realizations)
+            self.number_of_realizations = number_of_realizations;
             self.repetition = 0;
-            self.cell_of_results = cell(number_of_repetitions,1);
+            self.cell_of_results = cell(number_of_realizations,1);
 
         end
         
@@ -36,7 +36,7 @@ classdef regressionStatisticsNturns
         
         function self = calculate_all(self)
             
-            Nr = self.number_of_repetitions;
+            Nr = self.number_of_realizations;
             No = length(self.cell_of_results{1,1}.rmse);
             
             self.rmse_matrix = zeros(No,Nr);

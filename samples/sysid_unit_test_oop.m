@@ -15,8 +15,8 @@ number_of_realizations = 10;
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
 dataset_name = 'linear_arx_01'; % verify with: tank!
-model_name = 'lms';             %
-normalization = 'zscore3';      %
+model_name = 'lms';             % 'mlp'
+normalization = 'none';         % 'zscore3'
 output_lags = [2];              % [2,2];
 input_lags = [2];               %
 

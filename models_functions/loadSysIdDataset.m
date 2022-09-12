@@ -30,7 +30,7 @@ DATA = struct('input',[],'output',[],'name',dataset_name);
 %% ALGORITHM
 
 if (strcmp(dataset_name,'linear_arx_01'))
-    % y[n] = 0.4y[n-1] - 0.6y[n-2] + 1.0u[n-1]
+    % y[n] = 0.4y[n-1] - 0.6y[n-2] + 2.0u[n-1]
     loaded_data = load('linear_arx_01.mat');
     DATA.input = loaded_data.u_ts';
     DATA.output = loaded_data.y_ts';

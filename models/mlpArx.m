@@ -24,7 +24,7 @@ classdef mlpArx
         MQE = [];
         video = [];
         output_memory = [];
-        yh = [];
+        Yh = [];
         error = [];
     end
     
@@ -60,38 +60,38 @@ classdef mlpArx
             end
             
             % information of each layer
-            x_layer = cell(self.number_of_layers,1); % input
-            y_layer = cell(self.number_of_layers,1); % output
-            local_gradient = cell(self.number_of_layers,1); % local gradient
+            local_input = cell(self.number_of_layers,1);
+            local_output = cell(self.number_of_layers,1);
+            local_gradient = cell(self.number_of_layers,1);
             
             % Forward Step (Calculate Layers' Outputs)
             for i = 1:self.number_of_layers
                 
                 if (i == 1) % input layer
                     if (self.add_bias)
-                        x_layer{i} = [+1; x];
+                        local_input{i} = [+1; x];
                     else
-                        x_layer{i} = x;
+                        local_input{i} = x;
                     end
                 else % other layers (add bias to last output)
-                    x_layer{i} = [+1; y_layer{i-1}];
+                    local_input{i} = [+1; local_output{i-1}];
                 end
                 
                 % Neurons' Activation 
-                Ui = self.W{i} * x_layer{i}; 
+                Ui = self.W{i} * local_input{i}; 
                 if (i == self.number_of_layers) % output_layer
-                    y_layer{i} = self.activation_function(Ui,'linear');
+                    local_output{i} = self.activation_function(Ui,'linear');
                 else
-                    y_layer{i} = self.activation_function(Ui,self.non_linearity);
+                    local_output{i} = self.activation_function(Ui,self.non_linearity);
                 end
             end
             
             % Error Calculation
-            self.error = y - y_layer{self.number_of_layers};
+            self.error = y - local_output{self.number_of_layers};
             
             % Backward Step (Calculate Layers' Local Gradients)
             for i = self.number_of_layers:-1:1
-                Di = self.function_derivate(y_layer{i},self.non_linearity);
+                Di = self.function_derivate(local_output{i},self.non_linearity);
                 if (i == self.number_of_layers) % output layer
                     local_gradient{i} = Di.*self.error;
                 else
@@ -103,7 +103,7 @@ classdef mlpArx
             for i = self.number_of_layers:-1:1
                 W_aux = self.W{i};
                 self.W{i} = self.W{i} + ...
-                            self.learning_rate*local_gradient{i}*x_layer{i}' + ...
+                            self.learning_rate*local_gradient{i}*local_input{i}' + ...
                             mom*(self.W{i} - self.W_old{i});
                 self.W_old{i} = W_aux;
             end
@@ -115,9 +115,12 @@ classdef mlpArx
             
             [~,number_of_samples] = size(X);
             
-            self = self.initialize_parameters(self,X(:,1),Y(:,1));
+            self = self.initialize_parameters(X(:,1),Y(:,1));
             self.MQE = zeros(1,self.number_of_epochs);
-            self.video = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
+            self.video = struct('cdata',...
+                                cell(1,self.number_of_epochs),...
+                                'colormap',...
+                                cell(1,self.number_of_epochs));
             
             for epoch = 1:self.number_of_epochs
                 

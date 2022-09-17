@@ -8,8 +8,8 @@ classdef regressionStatistics1turn
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
-        %Y = [];
-        %Yh = [];
+        Y = [];
+        Yh = [];
         error = [];
         rmse = [];
     end
@@ -23,8 +23,8 @@ classdef regressionStatistics1turn
         
         function self = calculate_all(self,Y,Yh)
             
-            %self.Y = Y;
-            %self.Yh = Yh;
+            self.Y = Y;
+            self.Yh = Yh;
             
             [~,N] = size(Y);
 

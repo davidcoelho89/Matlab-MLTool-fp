@@ -11,15 +11,15 @@ format long e;  % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
 
-OPT.Nr = 02;                % Number of realizations
+OPT.Nr = 10;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
-OPT.prediction_type = 1;    % "=0": free simulation. ">0": n-steps ahead
+OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
 
-OPT.prob = 'motor';          % Which problem will be solved
+OPT.prob = 'linear_arx';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = [2,2];              % Maximum lag of estimated outputs
-OPT.lag_u = [2,2];              % Maximum lag of estimated inputs
+OPT.lag_y = 2;%[2,2];              % Maximum lag of estimated outputs
+OPT.lag_u = 2;%[2,2];              % Maximum lag of estimated inputs
 
 OPT.normalize = 0;          % "=1" if you want to normalize time series
 OPT.norm_type = 4;          % Which type of normalization will be used
@@ -32,36 +32,38 @@ OPT.add_outlier = 0;        % "=1" if you want to add outliers
 OPT.outlier_rate = 0.01;    % Rate of samples that will be corrupted
 OPT.outlier_ext = 0.5;      % Extension of signal that will be corrupted
 
-%% CHOOSE ALGORITHM HYPERPARAMETERS
-
 OPT.alg = 'mlp';            % Which estimator will be used
 
-% OLS
-% HP.lambda = 0.001;
+%% CHOOSE ALGORITHM HYPERPARAMETERS
 
-% LMS
-% HP.Nep = 10;        % Numero de epocas
-% HP.eta = 0.1;       % Taxa de aprendizado
-% HP.add_bias = 0;    % Adiciona ou nao o bias
-
-% LMM
-% HP.Nep = 05;    % Numero de epocas
-% HP.eta = 0.1;	% Taxa de aprendizado
-% HP.Kout = 0.3;	% Maximo nivel de erro
-
-% RLS
-
-% RLM
-
-% MLP
-HP.Nh = 8; % [5,3]; % Number of hidden neurons
-HP.Ne = 200;       	% maximum number of training epochs
-HP.eta = 0.05;    	% Learning step
-HP.mom = 0.75;    	% Moment Factor
-HP.Nlin = 2;       	% Non-linearity
-HP.Von = 0;         % disable video
+% General Hyperparameters
 
 HP.prediction_type = OPT.prediction_type;
+
+% Specific Hyperparameters
+
+if(strcmp(OPT.alg,'ols'))
+    HP.lambda = 0.001;
+elseif(strcmp(OPT.alg,'lms'))
+    HP.Nep = 10;        % Numero de epocas
+    HP.eta = 0.1;       % Taxa de aprendizado
+    HP.add_bias = 1;    % Adiciona ou nao o bias
+elseif(strcmp(OPT.alg,'lmm'))
+    HP.Nep = 05;    % Numero de epocas
+    HP.eta = 0.1;	% Taxa de aprendizado
+    HP.Kout = 0.3;	% Maximo nivel de erro
+elseif(strcmp(OPT.alg,'rls'))
+    % ToDo
+elseif(strcmp(OPT.alg,'rlm'))
+    % ToDo
+elseif(strcmp(OPT.alg,'mlp'))
+    HP.Nh = [5,3]; % 8; % Number of hidden neurons
+    HP.Ne = 200;       	% maximum number of training epochs
+    HP.eta = 0.05;    	% Learning step
+    HP.mom = 0.75;    	% Moment Factor
+    HP.Nlin = 2;       	% Non-linearity
+    HP.Von = 0;         % disable video
+end
 
 %% ACCUMULATORS
 
@@ -77,10 +79,12 @@ algorithm_name = upper(OPT.alg);
 % Training = Estimation -> Generate Residues
 str_estimation = strcat(lower(OPT.alg),'_estimate');
 regress_estimate = str2func(str_estimation);
+clear str_estimation;
 
 % Test = Prediction -> Generate Prediction Errors
 str_prediction = strcat(lower(OPT.alg),'_predict');
 regress_predict = str2func(str_prediction);
+clear str_prediction;
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
@@ -110,7 +114,8 @@ end
 % Add noise to time series
 if(OPT.add_noise)
     disp('Add Noise!');
-    DATAts.output = addTimeSeriesNoise(DATAts.output,OPT);
+    DATAts.output = addTimeSeriesNoise(DATAts.output,OPT.noise_var, ...
+                                          OPT.noise_mean);
 end
 
 % Add outliers to time series
@@ -166,7 +171,8 @@ figure;
 plot(y_est(1,:),'b-')
 title('Signal used for estimation')
 hold on
-plot(yh_est(1,:),'r-')
+plot(yh_est(1,:),'r--')
+legend('real','estimated')
 hold off
 
 y_pred = DATApred.output;
@@ -176,7 +182,8 @@ figure;
 plot(y_pred(1,:),'b-')
 title('Signal used for prediction')
 hold on
-plot(yh_pred(1,:),'r-')
+plot(yh_pred(1,:),'r--')
+legend('real','estimated')
 hold off
 
 %% CONTROLLER

@@ -15,7 +15,7 @@ number_of_realizations = 10;
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
 dataset_name = 'linear_arx_01'; % verify with: tank!
-model_name = 'lms';             % 'mlp'
+model_name = 'mlp';             % 'mlp'
 normalization = 'none';         % 'zscore3'
 output_lags = [2];              % [2,2];
 input_lags = [2];               %
@@ -145,7 +145,6 @@ disp(realization);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%% SYSTEM'S ESTIMATION %%%%%%%%%%%%%%%%%%%%
-
 model = model.fit(dataEst.input,dataEst.output);
 
 % %%%%%%%% SYSTEM'S PREDICTION AND STATISTICS %%%%%%%%%%%%
@@ -155,7 +154,7 @@ stats = statsGen1turn.calculate_all(model.Yh,dataEst.output);
 sysId_stats_est = sysId_stats_est.addResult(stats);
 
 model = model.predict(dataPred.input);
-stats = statsGen1turn.calculate_all(model.Yh,dataEst.output);
+stats = statsGen1turn.calculate_all(model.Yh,dataPred.output);
 sysId_stats_pre = sysId_stats_pre.addResult(stats);
 
 end
@@ -167,26 +166,26 @@ sysId_stats_pre = sysId_stats_pre.calculate_all();
 
 %% RESULTS / STATISTICS
 
-y_est = dataEst.output;
-yh_est = model.Yh;
+y_est = sysId_stats_est.cell_of_results{1}.Y;
+yh_est = sysId_stats_est.cell_of_results{1}.Yh;
 
 figure;
 plot(y_est(1,:),'b-')
 title('Signal used for estimation')
 hold on
-plot(yh_est(1,:),'r-')
+plot(yh_est(1,:),'r--')
 hold off
-% 
-% y_pred = DATApred.output;
-% yh_pred = OUTpred.y_h;
-% 
-% figure;
-% plot(y_pred(1,:),'b-')
-% title('Signal used for prediction')
-% hold on
-% plot(yh_pred(1,:),'r-')
-% hold off
-% 
+
+y_pred = sysId_stats_pre.cell_of_results{1}.Y;
+yh_pred = sysId_stats_pre.cell_of_results{1}.Yh;
+
+figure;
+plot(y_pred(1,:),'b-')
+title('Signal used for prediction')
+hold on
+plot(yh_pred(1,:),'r--')
+hold off
+
 %% CONTROLLER
 
 

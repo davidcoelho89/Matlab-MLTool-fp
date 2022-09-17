@@ -136,7 +136,7 @@ classdef mlpArx
                 SQE = 0; % Init sum of quadratic errors
                 
                 for t = 1:number_of_samples
-                      self = self.partial_fit(self,X(:,t),Y(:,t));
+                      self = self.partial_fit(X(:,t),Y(:,t));
                       SQE = SQE + sum((self.error).^2);
                 end
                 
@@ -195,6 +195,7 @@ classdef mlpArx
             
         end
         
+        % Different types of non-linear functions
         function Yi = activation_function(Ui,non_linearity)
             if(strcmp(non_linearity,'linear'))
                 Yi = Ui;
@@ -208,6 +209,7 @@ classdef mlpArx
             end
         end
 
+        % Different types of non-linear functions derivates
         function Di = function_derivate(Yi,non_linearity)
             % There is a minimum of 0.05 out so as not to paralyze the learning
             if(strcmp(non_linearity,'linear'))

@@ -10,6 +10,9 @@ classdef lmsArx
         training_samples_count = 0;
         prediction_type = 1;
         output_lags = [];
+        Yh = [];    % Hold all predictions
+        yh = [];    % Hold last prediction
+        output_memory = []; % hold value of last predictions
     end
     
     % Parameters
@@ -19,8 +22,6 @@ classdef lmsArx
         W_acc = []; % Accumulate progression of weights
         MQE = [];   % mean quantization error of training          [1 x Ne]
         video = []; % frame structure (can be played with 'video function')
-        output_memory = []; % hold value of last predictions
-        Yh = [];    % Hold all predictions
     end
     
     methods
@@ -55,8 +56,8 @@ classdef lmsArx
             end
             
             % Update Model's Weights
-            yh = self.W * x;
-            e = y - yh;
+            self.yh = self.W * x;
+            e = y - self.yh;
             self.W = self.W + self.learning_step * e * x' / (x'*x);
             
             % Save weight update
@@ -99,27 +100,56 @@ classdef lmsArx
             end
         end
         
-        % Prediction Function
+        % Prediction Function (1 instance)
+        function self = partial_predict(self,x)
+            x = update_regression_vector(x,...
+                                         self.output_memory, ...
+                                         self.prediction_type, ...
+                                         self.add_bias);
+            self.yh = self.W * x;
+            
+            self.output_memory = update_output_memory(self.yh,...
+                                                      self.output_memory,...
+                                                      self.output_lags);
+        end
+        
+        % Prediction Function (N instances)
         function self = predict(self,X)
             
-            [~,N] = size(X);
-            [Nc,~] = size(self.W);
+            [~,number_of_samples] = size(X);
+            [number_of_outputs,~] = size(self.W);
             
-            self.Yh = zeros(Nc,N);
+            self.Yh = zeros(number_of_outputs,number_of_samples);
             
-            for n = 1:N
-                xn = X(:,n);
+            if(self.add_bias)
+                X = [ones(1,number_of_samples) ; X];
+            end
+            
+            % Initialize memory of last predictions (for free simulation)
+            output_memory_length = sum(self.output_lags);
+            if(self.add_bias)
+                self.output_memory = X(2:output_memory_length+1,1);
+            else
+                self.output_memory = X(1:output_memory_length,1);
+            end
+            
+            for n = 1:number_of_samples
                 
-                xn = update_regression_vector(xn,...
-                                              self.output_memory,...
-                                              self.prediction_type, ...
-                                              self.add_bias);
-    
-                self.Yh(:,n) = linearPrediction(self,xn);
+                self = self.partial_predict(X(:,n));
+                self.Yh(:,n) = self.yh;
                 
-                self.output_memory = update_output_memory(self.Yh(:,n),...
-                                                          self.output_memory,...
-                                                          self.output_lags);
+%                 xn = X(:,n);
+%                 
+%                 xn = update_regression_vector(xn,...
+%                                               self.output_memory, ...
+%                                               self.prediction_type, ...
+%                                               self.add_bias);
+% 
+%                 self.Yh(:,n) = self.W * xn;
+%                 
+%                 self.output_memory = update_output_memory(self.Yh(:,n),...
+%                                                           self.output_memory,...
+%                                                           self.output_lags);
             end
             
         end

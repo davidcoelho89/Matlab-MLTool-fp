@@ -15,11 +15,11 @@ OPT.Nr = 10;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
 OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
 
-OPT.prob = 'linear_arx';          % Which problem will be solved
+OPT.prob = 'tank';          % Which problem will be solved
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = 2;%[2,2];              % Maximum lag of estimated outputs
-OPT.lag_u = 2;%[2,2];              % Maximum lag of estimated inputs
+OPT.lag_y = 2;%[2,2];       % Maximum lag of estimated outputs
+OPT.lag_u = 2;%[2,2];       % Maximum lag of estimated inputs
 
 OPT.normalize = 0;          % "=1" if you want to normalize time series
 OPT.norm_type = 4;          % Which type of normalization will be used

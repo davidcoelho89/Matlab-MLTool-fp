@@ -102,6 +102,11 @@ classdef lmsArx
         
         % Prediction Function (1 instance)
         function self = partial_predict(self,x)
+            
+            if(self.add_bias == 1)
+                x = [1 ; x];
+            end
+            
             x = update_regression_vector(x,...
                                          self.output_memory, ...
                                          self.prediction_type, ...
@@ -121,35 +126,12 @@ classdef lmsArx
             
             self.Yh = zeros(number_of_outputs,number_of_samples);
             
-            if(self.add_bias)
-                X = [ones(1,number_of_samples) ; X];
-            end
-            
-            % Initialize memory of last predictions (for free simulation)
             output_memory_length = sum(self.output_lags);
-            if(self.add_bias)
-                self.output_memory = X(2:output_memory_length+1,1);
-            else
-                self.output_memory = X(1:output_memory_length,1);
-            end
+            self.output_memory = X(1:output_memory_length,1);
             
             for n = 1:number_of_samples
-                
                 self = self.partial_predict(X(:,n));
                 self.Yh(:,n) = self.yh;
-                
-%                 xn = X(:,n);
-%                 
-%                 xn = update_regression_vector(xn,...
-%                                               self.output_memory, ...
-%                                               self.prediction_type, ...
-%                                               self.add_bias);
-% 
-%                 self.Yh(:,n) = self.W * xn;
-%                 
-%                 self.output_memory = update_output_memory(self.Yh(:,n),...
-%                                                           self.output_memory,...
-%                                                           self.output_lags);
             end
             
         end

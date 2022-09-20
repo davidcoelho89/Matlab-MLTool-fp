@@ -175,11 +175,13 @@ for ep = 1:Nep   % for each epoch
         
         % Backward Step (Calculate Layers' Local Gradients)
         for i = NL:-1:1
-            f_der = mlp_f_gradlocal(yh{i},Nlin);
+            
             if (i == NL) % output layer
-                % delta{i} = E.*f_der;
-                delta{i} = E;
+                f_der = mlp_f_gradlocal(yh{i},0);
+                delta{i} = E.*f_der;
+                % delta{i} = E;
             else
+                f_der = mlp_f_gradlocal(yh{i},Nlin);
                 delta{i} = f_der.*(W{i+1}(:,2:end)'*delta{i+1});
             end
         end

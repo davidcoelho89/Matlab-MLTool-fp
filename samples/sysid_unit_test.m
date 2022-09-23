@@ -15,13 +15,14 @@ OPT.Nr = 10;                % Number of realizations
 OPT.ptrn = 0.5;             % Data used for training
 OPT.prediction_type = 0;    % "=0": free simulation. ">0": n-steps ahead
 
-OPT.prob = 'tank';          % Which problem will be solved
+OPT.alg = 'mlp';            % Which estimator will be used
+OPT.prob = 'tank'; % Which problem will be solved ('linear_arx')
 OPT.prob2 = 01;             % Some especification of the problem
 
-OPT.lag_y = 2;%[2,2];       % Maximum lag of estimated outputs
-OPT.lag_u = 2;%[2,2];       % Maximum lag of estimated inputs
+OPT.lag_y = 10;%[2,2];      % Maximum lag of estimated outputs
+OPT.lag_u = 10;%[2,2];      % Maximum lag of estimated inputs
 
-OPT.normalize = 0;          % "=1" if you want to normalize time series
+OPT.normalize = 3;          % "=1" if you want to normalize time series
 OPT.norm_type = 4;          % Which type of normalization will be used
 
 OPT.add_noise = 0;          % "=1" if you want to add noise
@@ -31,8 +32,6 @@ OPT.noise_mean = 0;         % Noise mean
 OPT.add_outlier = 0;        % "=1" if you want to add outliers
 OPT.outlier_rate = 0.01;    % Rate of samples that will be corrupted
 OPT.outlier_ext = 0.5;      % Extension of signal that will be corrupted
-
-OPT.alg = 'mlp';            % Which estimator will be used
 
 %% CHOOSE ALGORITHM HYPERPARAMETERS
 
@@ -57,7 +56,7 @@ elseif(strcmp(OPT.alg,'rls'))
 elseif(strcmp(OPT.alg,'rlm'))
     % ToDo
 elseif(strcmp(OPT.alg,'mlp'))
-    HP.Nh = [5,3]; % 8; % Number of hidden neurons
+    HP.Nh = [5,5]; % 8; % Number of hidden neurons
     HP.Ne = 200;       	% maximum number of training epochs
     HP.eta = 0.05;    	% Learning step
     HP.mom = 0.75;    	% Moment Factor
@@ -137,12 +136,12 @@ DATA = build_regression_matrices(DATAts,OPT);
 
 disp('Begin Algorithm');
 
-for r = 1:OPT.Nr
+for realization = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp('Turn and Time');
-disp(r);
+disp(realization);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%% SYSTEM'S ESTIMATION %%%%%%%%%%%%%%%%%%%%
@@ -152,10 +151,10 @@ PAR = regress_estimate(DATAest,HP);
 % %%%%%%%% SYSTEM'S PREDICTION AND STATISTICS %%%%%%%%%%%%
 
 OUTest = regress_predict(DATAest,PAR);
-STATS_est_acc{r} = regress_stats_1turn(DATAest,OUTest);
+STATS_est_acc{realization} = regress_stats_1turn(DATAest,OUTest);
 
 OUTpred = regress_predict(DATApred,PAR);
-STATS_pre_acc{r} = regress_stats_1turn(DATApred,OUTpred);
+STATS_pre_acc{realization} = regress_stats_1turn(DATApred,OUTpred);
 
 end
 
@@ -195,33 +194,3 @@ hold off
 
 
 %% END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

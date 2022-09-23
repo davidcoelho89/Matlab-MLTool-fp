@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
-dataset_name = 'linear_arx_01'; % verify with: tank!
+dataset_name = 'tank'; % verify with: 'linear_arx_01', 'tank'
 model_name = 'mlp';             % 'mlp'
 normalization = 'none';         % 'zscore3'
 output_lags = [2];              % [2,2];
-input_lags = [2];               %
+input_lags = [2];               % [2,2];
 
 inputs_to_work_with = 'all';
 outputs_to_work_with = 'all';
@@ -149,10 +149,12 @@ model = model.fit(dataEst.input,dataEst.output);
 
 % %%%%%%%% SYSTEM'S PREDICTION AND STATISTICS %%%%%%%%%%%%
 
+% Predict Training data (in order to identify an overfit)
 model = model.predict(dataEst.input);
 stats = statsGen1turn.calculate_all(model.Yh,dataEst.output);
 sysId_stats_est = sysId_stats_est.addResult(stats);
 
+% Predict Test data (in order to identify Generalization ability)
 model = model.predict(dataPred.input);
 stats = statsGen1turn.calculate_all(model.Yh,dataPred.output);
 sysId_stats_pre = sysId_stats_pre.addResult(stats);

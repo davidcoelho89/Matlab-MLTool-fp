@@ -24,7 +24,8 @@ classdef mlpArx
         MQE = [];
         video = [];
         output_memory = [];
-        Yh = [];
+        Yh = [];    % Hold all predictions
+        yh = [];    % Hold last prediction
         error = [];
     end
     
@@ -41,6 +42,7 @@ classdef mlpArx
             No = length(y);
 
             self.structure = [p,self.number_of_hidden_neurons,No];
+            
             self.number_of_layers = length(self.structure) - 1;
 
             self.W = cell(self.number_of_layers,1);
@@ -50,14 +52,25 @@ classdef mlpArx
                 self.W{i} = 0.01*rand(self.structure(i+1),self.structure(i)+1);
                 self.W_old{i} = self.W{i};
             end
+            
+            self.output_memory = x(1:sum(self.output_lags));
         end
         
         % Training Function (1 instance)
         function self = partial_fit(self,x,y)
             
             if(isempty(self.W))
-                self = self.initialize_parameters(self,x,y);
+                self = self.initialize_parameters(x,y);
+
+                disp('Initial W - for debug');
+                disp(self.W{1});
+                disp(self.W{2});
+                
             end
+            
+            self.output_memory = update_output_memory(y,...
+                                                      self.output_memory,...
+                                                      self.output_lags);
             
             % information of each layer
             local_input = cell(self.number_of_layers,1);
@@ -89,22 +102,29 @@ classdef mlpArx
             % Error Calculation
             self.error = y - local_output{self.number_of_layers};
             
+%             disp('Error - for debug');
+%             disp(self.error);
+            
             % Backward Step (Calculate Layers' Local Gradients)
             for i = self.number_of_layers:-1:1
-                Di = self.function_derivate(local_output{i},self.non_linearity);
+                
                 if (i == self.number_of_layers) % output layer
+                    Di = self.function_derivate(local_output{i},'linear');
                     local_gradient{i} = Di.*self.error;
+                    % local_gradient{i} = self.error;
                 else
-                    local_gradient{i} = Di.*(self.W{i+1}(:,2:end)'*local_gradient{i+1});
+                    Di = self.function_derivate(local_output{i},self.non_linearity);
+                    retropropagated_error = self.W{i+1}(:,2:end)'*local_gradient{i+1};
+                    local_gradient{i} = Di.*retropropagated_error;
                 end
             end
             
-            % Weight Adjustment
+            % Update Model's Weights
             for i = self.number_of_layers:-1:1
                 W_aux = self.W{i};
                 self.W{i} = self.W{i} + ...
                             self.learning_rate*local_gradient{i}*local_input{i}' + ...
-                            mom*(self.W{i} - self.W_old{i});
+                            self.moment_factor*(self.W{i} - self.W_old{i});
                 self.W_old{i} = W_aux;
             end
             
@@ -135,6 +155,13 @@ classdef mlpArx
 
                 SQE = 0; % Init sum of quadratic errors
                 
+%                 disp('epoch');
+%                 disp(epoch);
+%                 disp('W - for debug');
+%                 disp(self.error);
+%                 disp(self.W{2});
+%                 system('pause');
+                
                 for t = 1:number_of_samples
                       self = self.partial_fit(X(:,t),Y(:,t));
                       SQE = SQE + sum((self.error).^2);
@@ -146,54 +173,57 @@ classdef mlpArx
             
         end
         
-        % Prediction Function
+        % Prediction Function (1 instance)
+        function self = partial_predict(self,x)
+            
+            if(self.add_bias == 1)
+                x = [1 ; x];
+            end
+            
+            x = update_regression_vector(x,...
+                                         self.output_memory,...
+                                         self.prediction_type, ...
+                                         self.add_bias);
+            
+            for i = 1:self.number_of_layers
+                Ui = self.W{i} * x;
+                if i == self.number_of_layers % output layer
+                    Yi = self.activation_function(Ui,'linear');
+                else
+                    Yi = self.activation_function(Ui,self.non_linearity);
+                end
+                x = [+1; Yi];
+            end
+            
+            self.yh = Yi;
+            
+            self.output_memory = update_output_memory(self.yh,...
+                                                      self.output_memory,...
+                                                      self.output_lags);
+        end
+        
+        % Prediction Function (N instances)
         function self = predict(self,X)
             
             [number_of_outputs,~] = size(self.W{self.number_of_layers});
             [~,number_of_samples] = size(X);
             
-            self.yh = zeros(number_of_outputs,number_of_samples);
+            self.Yh = zeros(number_of_outputs,number_of_samples);
             
-            if(self.add_bias == 1)
-                X = [ones(1,number_of_samples) ; X];
-            end
-            
-            % Initialize memory of last predictions (for free simulation)
             output_memory_length = sum(self.output_lags);
-            if(self.add_bias)
-                self.output_memory = X(2:output_memory_length+1,1);
-            else
-                self.output_memory = X(1:output_memory_length,1);
-            end
+            self.output_memory = X(1:output_memory_length,1);
             
+            % Main loop
             for n = 1:number_of_samples
-                
-                xn = X(:,n);
-                
-                xn = update_regression_vector(xn,...
-                                              self.output_memory,...
-                                              self.prediction_type, ...
-                                              self.add_bias);
-
-                for i = 1:self.number_of_layers
-                    Ui = self.W{i} * xn;
-                    if i == self.number_of_layers % output layer
-                        Yi = self.activation_function(Ui,'linear');
-                    else
-                        Yi = self.activation_function(Ui,self.non_linearity);
-                    end
-                    xn = [+1; Yi];
-                end
-                
-                self.yh(:,n) = Yi;
-                
-                self.output_memory = update_output_memory(Yi,...
-                                                          self.output_memory,...
-                                                          self.output_lags);
-                
+                self = self.partial_predict(X(:,n));
+                self.Yh(:,n) = self.yh;
             end
             
         end
+        
+    end % end methods
+    
+    methods (Static)
         
         % Different types of non-linear functions
         function Yi = activation_function(Ui,non_linearity)
@@ -223,7 +253,13 @@ classdef mlpArx
                 disp('Invalid function option. Linear function chosen.');
             end
         end
-
-    end % end methods
+        
+    end % end static methods
     
 end % end class
+
+
+
+
+
+

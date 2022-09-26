@@ -15,8 +15,8 @@ classdef spokClassifier
     %        = 'coherence'
     %        = 'novelty'
     %        = 'surprise'
-    %    - v1 = <real>
-    %    - v2 = <real> 
+    %    - v1 = sparsification coefficient 1 <real>
+    %    - v2 = sparsification coefficient 2 <real> 
     %    - update_strategy = define how the prototypes will be updated
     %        = 'none'
     %        = 'wta' (lms, unsupervised)
@@ -26,19 +26,19 @@ classdef spokClassifier
     %    - pruning_strategy = define how the prototypes will be prunned
     %        = 'none'
     %        = 'drift_based'
-    %        = 'hits_and_error'
-    %    - min_score =
-    %    - max_prototypes =
-    %    - min_prototypes =
-    %    - video_enabled =
-    %    - nearest_neighbors =
-    %    - knn_aproximation =
-    %    - kernel_type =
-    %    - regularization =
-    %    - sigma =
-    %    - alpha =
-    %    - theta =
-    %    - gamma =
+    %        = 'error_score_based'
+    %    - min_score = minimum score allowed for a prototype
+    %    - max_prototypes = max # of model's prototypes ("Budget")
+    %    - min_prototypes = min # of model's prototypes ("restriction")
+    %    - video_enabled = [0 or 1]
+    %    - nearest_neighbors = number of nearest neighbors
+    %    - knn_aproximation = majority or weighted
+    %    - kernel_type = which kernele will be used
+    %    - regularization = kernel regularization parameter
+    %    - sigma = kernel hyperparameter ( see kernel_func() ) 
+    %    - alpha = kernel hyperparameter ( see kernel_func() )
+    %    - theta = kernel hyperparameter ( see kernel_func() )
+    %    - gamma = kernel hyperparameter ( see kernel_func() )
     %
     % Properties (Parameters)
     %
@@ -47,7 +47,7 @@ classdef spokClassifier
     %    - Km = Kernel Matrix of Entire Dictionary
     %    - Kinv = Kernel Matrix for each class (cell)
     %    - Kinvc = Inverse Kernel Matrix for each class (cell)
-    %    - score = Used for prunning method
+    %    - score = Score used for prunning method
     %    - classification_history = Used for prunning method
     %    - times_selected = Used for prunning method
     %    - video = frame structure (can be played with 'video function')
@@ -72,10 +72,10 @@ classdef spokClassifier
         update_rate = 0.1;
         pruning_strategy = 'error_score_based';
         min_score = -10;
-        max_prototypes = 600;  % ("Budget")
-        min_prototypes = 2;    % ("restriction")
+        max_prototypes = 600;
+        min_prototypes = 2;
         video_enabled = 0;
-        nearest_neighbors = 1; % KNN
+        nearest_neighbors = 1;
         knn_aproximation = 'majority_voting';
         kernel_type = 'gaussian';
         regularization = 0.001;

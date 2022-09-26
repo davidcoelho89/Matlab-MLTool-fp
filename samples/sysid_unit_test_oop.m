@@ -2,7 +2,7 @@
 
 % System Identification Algorithms (OOP Based) - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/03/14
+% Last Update: 2022/09/23
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,9 +14,9 @@ format long e;  % Output data style (float)
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
-dataset_name = 'tank'; % verify with: 'linear_arx_01', 'tank'
+dataset_name = 'tank'; % 'linear_arx_01', 'tank'
 model_name = 'mlp';             % 'mlp'
-normalization = 'none';         % 'zscore3'
+normalization = 'zscore';       % 'none' 'zscore' 'zscore3'
 output_lags = [2];              % [2,2];
 input_lags = [2];               % [2,2];
 
@@ -122,7 +122,7 @@ elseif(strcmp(model_name,'rlm'))
     model.number_of_epochs = 5;
         
 elseif(strcmp(model_name,'mlp'))
-    model.number_of_epochs = 200;
+    model.number_of_epochs = 50;
     model.number_of_hidden_neurons = 8;
     model.learning_rate = 0.05;
     model.moment_factor = 0.75;

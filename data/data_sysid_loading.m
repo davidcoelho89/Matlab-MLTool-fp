@@ -42,7 +42,7 @@ problem = OPTION.prob;
 problem_spec = OPTION.prob2;
 
 if (strcmp(problem,'linear_arx'))
-    if (problem_spec == 01) % y[n] = 0.4y[n-1] - 0.6y[n-2] + u[n-1]
+    if (problem_spec == 01) % y[n] = 0.4y[n-1] - 0.6y[n-2] + 2u[n-1]
         loaded_data = load('linear_arx_01.mat');
         DATA.input = loaded_data.u_ts';
         DATA.output = loaded_data.y_ts';

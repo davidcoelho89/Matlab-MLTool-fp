@@ -23,9 +23,9 @@ classdef mlpArx
         number_of_layers = [];
         MQE = [];
         video = [];
-        output_memory = [];
-        Yh = [];    % Hold all predictions
-        yh = [];    % Hold last prediction
+        output_memory = []; % hold value of last predictions
+        Yh = []; % Hold all predictions
+        yh = []; % Hold last prediction
         error = [];
     end
     
@@ -173,6 +173,23 @@ classdef mlpArx
             
         end
         
+        % Need to be implemented for any ArxModel
+        function self = calculate_output(self,x)
+
+            for i = 1:self.number_of_layers
+                Ui = self.W{i} * x;
+                if i == self.number_of_layers % output layer
+                    Yi = self.activation_function(Ui,'linear');
+                else
+                    Yi = self.activation_function(Ui,self.non_linearity);
+                end
+                x = [+1; Yi];
+            end
+            
+            self.yh = Yi;
+            
+        end
+        
         % Prediction Function (1 instance)
         function self = partial_predict(self,x)
             
@@ -185,17 +202,7 @@ classdef mlpArx
                                          self.prediction_type, ...
                                          self.add_bias);
             
-            for i = 1:self.number_of_layers
-                Ui = self.W{i} * x;
-                if i == self.number_of_layers % output layer
-                    Yi = self.activation_function(Ui,'linear');
-                else
-                    Yi = self.activation_function(Ui,self.non_linearity);
-                end
-                x = [+1; Yi];
-            end
-            
-            self.yh = Yi;
+            self = self.calculate_output(x);
             
             self.output_memory = update_output_memory(self.yh,...
                                                       self.output_memory,...
@@ -257,9 +264,3 @@ classdef mlpArx
     end % end static methods
     
 end % end class
-
-
-
-
-
-

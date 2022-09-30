@@ -18,9 +18,9 @@ classdef lmsArx
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
         name = 'lms';
-        W = [];     % Regression Matrix              [Nc x p] or [Nc x p+1]
+        W = [];     % Regression Matrix [Nc x p] or [Nc x p+1]
         W_acc = []; % Accumulate progression of weights
-        MQE = [];   % mean quantization error of training          [1 x Ne]
+        MQE = [];   % mean quantization error of training [1 x Ne]
         video = []; % frame structure (can be played with 'video function')
     end
     
@@ -100,6 +100,11 @@ classdef lmsArx
             end
         end
         
+        % Need to be implemented for any ArxModel
+        function self = calculate_output(self,x)
+            self.yh = self.W * x;
+        end
+        
         % Prediction Function (1 instance)
         function self = partial_predict(self,x)
             
@@ -111,7 +116,8 @@ classdef lmsArx
                                          self.output_memory, ...
                                          self.prediction_type, ...
                                          self.add_bias);
-            self.yh = self.W * x;
+
+            self = self.calculate_output(x);
             
             self.output_memory = update_output_memory(self.yh,...
                                                       self.output_memory,...
@@ -136,6 +142,6 @@ classdef lmsArx
             
         end
         
-    end
+    end % end methods
     
-end
+end % end class

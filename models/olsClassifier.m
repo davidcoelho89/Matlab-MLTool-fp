@@ -10,6 +10,7 @@ classdef olsClassifier
         approximation = 'pinv';
         regularization = 0.0001;
         add_bias = 1;
+        Yh = [];    % Hold all predictions
     end
     
     % Parameters
@@ -33,17 +34,11 @@ classdef olsClassifier
         % Training Function (N instances)
         function self = fit(self,X,Y)
             
-            % Get Number of samples, attributes and classes
-            [Nc,~] = size(Y);
             [p,N] = size(X);
-            
             if(self.add_bias)
-                self.W = 0.01*rand(Nc,p+1);
-            else
-                self.W = 0.01*rand(Nc,p);
+                p = p+1;
+                X = [ones(1,N) ; X];
             end
-            
-            X = [ones(1,N) ; X];
             
             if(strcmp(self.approximation,'pinv'))
                 self.W = Y*pinv(X);
@@ -58,8 +53,8 @@ classdef olsClassifier
         end
         
         % Prediction Function
-        function Yh = predict(self,X)
-            Yh = linearPrediction(self,X);
+        function self = predict(self,X)
+            self.Yh = linearPrediction(self,X);
         end
         
     end

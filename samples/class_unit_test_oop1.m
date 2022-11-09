@@ -1,8 +1,8 @@
 %% MACHINE LEARNING TOOLBOX
 
-% System Identification Algorithms - Unit Test
+% Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/03/14
+% Last Update: 2022/10/20
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -27,15 +27,13 @@ hp_optm_struct = [];
 
 data_acc = cell(number_of_realizations,1);
 classifier_acc = cell(number_of_realizations,1);
-stats_tr_acc = cell(number_of_realizations,1);
-stats_ts_acc = cell(number_of_realizations,1);
 
 normalizer = dataNormalizer();
 normalizer.normalization = normalization;
 
 statsGen1turn = classificationStatistics1turn();
-classification_stats_tr = classificationStatisticsNturns();
-classification_stats_ts = classificationStatisticsNturns();
+classification_stats_tr = classificationStatisticsNturns(number_of_realizations);
+classification_stats_ts = classificationStatisticsNturns(number_of_realizations);
 
 %% LOAD CLASSIFIER AND CHOOSE ITS HYPERPARAMETERS
 
@@ -52,6 +50,28 @@ elseif(strcmp(classifier_name,'ols'))
     classifier.regularization = 0.0001;
     classifier.add_bias = 1;
 
+elseif(strcmp(classifier_name,'spok'))
+    classifier.number_of_epochs = 1;
+    classifier.is_stationary = 0;
+    classifier.design_method = 'one_dicitionary_per_class';
+    classifier.sparsification_strategy = 'ald';
+    classifier.v1 = 0.1;
+    classifier.v2 = 0.9;
+    classifier.update_strategy = 'lms';
+    classifier.update_rate = 0.1;
+    classifier.pruning_strategy = 'error_score_based';
+    classifier.min_score = -10;
+    classifier.max_prototypes = 600;
+    classifier.min_prototypes = 2;
+    classifier.video_enabled = 0;
+    classifier.nearest_neighbors = 1;
+    classifier.knn_aproximation = 'majority_voting';
+    classifier.kernel_type = 'gaussian';
+    classifier.regularization = 0.001;
+    classifier.sigma = 2;
+    classifier.alpha = 1;
+    classifier.theta = 1;
+    classifier.gamma = 2;
 end
 
 %% DATA LOADING AND PRE-PROCESSING
@@ -61,10 +81,10 @@ dataset = encodeLabels(dataset,label_encoding);
 
 %% RUN EXPERIMENT
 
-for r = 1:number_of_realizations
+for realization = 1:number_of_realizations
     
     disp('Turn and Time');
-    disp(r);
+    disp(realization);
     display(datestr(now));
     
     datasets = splitDataset(dataset,split_method,percentage_for_training);
@@ -73,26 +93,18 @@ for r = 1:number_of_realizations
     datasets.data_tr.input = normalizer.transform(datasets.data_tr.input);
     datasets.data_ts.input = normalizer.transform(datasets.data_ts.input);
 
-    data_acc{r} = datasets;
+    data_acc{realization} = datasets;
     
     classifier = classifier.fit(datasets.data_tr.input, ...
                                 datasets.data_tr.output);
     
-    % For debug:
-%     if(isprop(classifier,'MQE'))
-%         figure; plot(1:classifier.number_of_epochs,classifier.MQE,'b-');
-%     end
+    classifier_acc{realization} = classifier;
     
-    classifier_acc{r} = classifier;
-    
-    Yh_tr = classifier.predict(datasets.data_tr.input);
-    Yh_ts = classifier.predict(datasets.data_ts.input);
-    
-    stats_tr = statsGen1turn.calculate_all(datasets.data_tr.output,Yh_tr);
-    stats_ts = statsGen1turn.calculate_all(datasets.data_ts.output,Yh_ts);
-    
-    stats_tr_acc{r} = stats_tr;
-    stats_ts_acc{r} = stats_ts;
+    classifier = classifier.predict(datasets.data_tr.input);
+    stats_tr = statsGen1turn.calculate_all(datasets.data_tr.output,classifier.Yh);
+
+    classifier = classifier.predict(datasets.data_ts.input);
+    stats_ts = statsGen1turn.calculate_all(datasets.data_ts.output,classifier.Yh);
     
     classification_stats_tr = classification_stats_tr.addResult(stats_tr);
     classification_stats_ts = classification_stats_ts.addResult(stats_ts);

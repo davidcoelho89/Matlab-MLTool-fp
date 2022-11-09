@@ -9,8 +9,9 @@ classdef classificationStatisticsNturns
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
         
-        number_of_repetitions = 0;
-        cell_of_results = [];
+        number_of_realizations;
+        realization;
+        cell_of_results;
 
         Mconf_sum = [];
         Mconf_mean = [];
@@ -39,28 +40,38 @@ classdef classificationStatisticsNturns
     
     methods
         
+        % Constructor
+        function self = classificationStatisticsNturns(number_of_realizations)
+            self.number_of_realizations = number_of_realizations;
+            self.realization = 0;
+            self.cell_of_results = cell(number_of_realizations,1);
+        end
+
         function self = addResult(self,classStats1turn)
             
-            Nr = self.number_of_repetitions + 1;
-            self.number_of_repetitions = Nr;
+            self.realization = self.realization + 1;
 
-            disp('add result!');
-            disp('number of repetitions: ');
-            disp(self.number_of_repetitions);
-            
-            if(self.number_of_repetitions == 1)
-                self.cell_of_results = cell(Nr,1);
-            else
-                cell_aux = self.cell_of_results;
-                self.cell_of_results = cell(Nr,1);
-                self.cell_of_results(1:Nr-1,1) = cell_aux;
+            if(~(self.realization > self.number_of_realizations))
+                disp('add result!');
+                disp('number of repetitions: ');
+                disp(self.number_of_realizations);
+                
+                if(self.number_of_realizations == 1)
+                    self.cell_of_results = cell(Nr,1);
+                else
+                    cell_aux = self.cell_of_results;
+                    self.cell_of_results = cell(Nr,1);
+                    self.cell_of_results(1:Nr-1,1) = cell_aux;
+                end
+                self.cell_of_results{Nr,1} = classStats1turn;
+
             end
-            self.cell_of_results{Nr,1} = classStats1turn;
+
         end
         
-        function self = calculate(self)
+        function self = calculate_all(self)
             
-            Nr = self.number_of_repetitions;
+            Nr = self.number_of_realizations;
             [Nc,~] = size(self.cell_of_results{1,1}.Mconf);
             
             self.Mconf_sum = zeros(Nc,Nc);
@@ -85,14 +96,3 @@ classdef classificationStatisticsNturns
     
     
 end
-
-
-
-
-
-
-
-
-
-
-

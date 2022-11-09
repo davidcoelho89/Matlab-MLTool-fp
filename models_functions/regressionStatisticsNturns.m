@@ -10,7 +10,7 @@ classdef regressionStatisticsNturns
     properties (GetAccess = public, SetAccess = protected)
         
         number_of_realizations;
-        repetition;
+        realization;
         cell_of_results;
         
         rmse_matrix;
@@ -22,15 +22,15 @@ classdef regressionStatisticsNturns
         % Constructor
         function self = regressionStatisticsNturns(number_of_realizations)
             self.number_of_realizations = number_of_realizations;
-            self.repetition = 0;
+            self.realization = 0;
             self.cell_of_results = cell(number_of_realizations,1);
 
         end
         
         function self = addResult(self,sysIdStats1turn)
 
-            self.repetition = self.repetition + 1;
-            self.cell_of_results{self.repetition,1} = sysIdStats1turn;
+            self.realization = self.realization + 1;
+            self.cell_of_results{self.realization,1} = sysIdStats1turn;
             
         end
         

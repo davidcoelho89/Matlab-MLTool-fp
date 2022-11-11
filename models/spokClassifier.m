@@ -31,8 +31,10 @@ classdef spokClassifier
     %    - max_prototypes = max # of model's prototypes ("Budget")
     %    - min_prototypes = min # of model's prototypes ("restriction")
     %    - video_enabled = [0 or 1]
-    %    - nearest_neighbors = number of nearest neighbors
-    %    - knn_aproximation = majority or weighted
+    %    - nearest_neighbors = number of nearest neighbors (classification)
+    %    - knn_aproximation = how the output will be generated
+    %        = 'majority_voting'
+    %        = 'weighted_knn'
     %    - kernel_type = which kernele will be used
     %    - regularization = kernel regularization parameter
     %    - sigma = kernel hyperparameter ( see kernel_func() ) 
@@ -58,7 +60,7 @@ classdef spokClassifier
     %	- spokClassifier()        % Constructor
     %	- partial_fit(self,x,y)   % Training Function (1 instance)
     %	- fit(self,X,Y)           % Training Function (N instances)
-    %	- Yh = predict(self,X)    % Prediction Function
+    %	- predict(self,X)         % Prediction Function
 
     % Hyperparameters
     properties

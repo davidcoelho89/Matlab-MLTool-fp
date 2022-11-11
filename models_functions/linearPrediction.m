@@ -1,4 +1,4 @@
-function [yh] = linearPrediction(model,X)
+function [Yh] = linearPrediction(model,X)
 
 % --- Linear Prediction (Classifiers or Regressors) ---
 %
@@ -18,6 +18,6 @@ function [yh] = linearPrediction(model,X)
 if(model.add_bias)
      X = [ones(1,N) ; X];
 end
-yh = model.W * X;
+Yh = model.W * X;
 
 %% END

@@ -1,33 +1,38 @@
 classdef spokClassifier
     %
-    % SParse Online adptive Kernel Classifier
+    % --- SParse Online adptive Kernel Classifier ---
     %
     % Properties (Hyperparameters):
     %
     %    - number_of_epochs = <integer>
     %        if > 1, "shows the data" more than once to the algorithm
     %    - is_stationary = [0 or 1]
-    %    - design_method = how the dictionary will be built
-    %        = 'one_dicitionary_per_class'
+    %         Allow to shuffle data and run more than one epoch
+    %    - design_method
+    %        Define how the dictionary will be built
     %        = 'single_dictionary'
-    %    - sparsification_strategy = define how the prototypes will be selected
+    %        = 'one_dicitionary_per_class'
+    %    - sparsification_strategy
+    %        Define how the prototypes will be selected
     %        = 'ald'
     %        = 'coherence'
     %        = 'novelty'
     %        = 'surprise'
     %    - v1 = sparsification coefficient 1 <real>
     %    - v2 = sparsification coefficient 2 <real> 
-    %    - update_strategy = define how the prototypes will be updated
+    %    - update_strategy
+    %        Define how the prototypes will be updated
     %        = 'none'
     %        = 'wta' (lms, unsupervised)
     %        = 'lvq' (supervised)
     %    - update_rate = <real>
-    %        [0 to 1]
+    %        Values ranging from 0 to 1
     %    - pruning_strategy = define how the prototypes will be prunned
-    %        = 'none'
+    %        = 'none' (do not remove prototypes)
     %        = 'drift_based'
     %        = 'error_score_based'
     %    - min_score = minimum score allowed for a prototype
+    %        Used for the prunning methods
     %    - max_prototypes = max # of model's prototypes ("Budget")
     %    - min_prototypes = min # of model's prototypes ("restriction")
     %    - video_enabled = [0 or 1]
@@ -35,8 +40,9 @@ classdef spokClassifier
     %    - knn_aproximation = how the output will be generated
     %        = 'majority_voting'
     %        = 'weighted_knn'
-    %    - kernel_type = which kernele will be used
+    %    - kernel_type = which kernel will be used
     %    - regularization = kernel regularization parameter
+    %        Avoid numerical problems when inverting kernel matrices
     %    - sigma = kernel hyperparameter ( see kernel_func() ) 
     %    - alpha = kernel hyperparameter ( see kernel_func() )
     %    - theta = kernel hyperparameter ( see kernel_func() )
@@ -44,7 +50,7 @@ classdef spokClassifier
     %
     % Properties (Parameters)
     %
-    %    - Cx = Clusters' centroids (prototypes)
+    %    - Cx = Clusters' centroids (prototypes) [p x Nk]
     %    - Cy = Clusters' labels
     %    - Km = Kernel Matrix of Entire Dictionary
     %    - Kinv = Kernel Matrix for each class (cell)
@@ -53,7 +59,9 @@ classdef spokClassifier
     %    - classification_history = Used for prunning method
     %    - times_selected = Used for prunning method
     %    - video = frame structure (can be played with 'video function')
-    %    - Yh = Hold all predictions
+    %       Size: [1 x Nep.Ntr]
+    %    - Yh = Hold all predictions (fit)
+    %    - yh = Hold last prediction
     %
     % Methods:
     %
@@ -208,7 +216,7 @@ classdef spokClassifier
             self.Yh = classification_output.Yh;
             self.winners = classification_output.winners;
             self.distances = classification_output.distances;
-            self.nearest_neighbors = classification_output.nearest_neighbors;
+            self.near_index = classification_output.near_indexes;
         end
 
         function self = dictionaryGrow(self,x,y)

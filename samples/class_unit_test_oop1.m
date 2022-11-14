@@ -12,12 +12,12 @@ format long e;  % Output data style (float)
 %% CHOOSE EXPERIMENT PARAMETERS AND OBJECTS
 
 number_of_realizations = 10;
-classifier_name = 'ols';
-dataset_name = 'iris';
-label_encoding = 'bipolar';
-normalization = 'zscore';
-split_method = 'random';
 percentage_for_training = 0.7;
+dataset_name = 'iris';
+model_name = 'knn';
+normalization = 'zscore';
+label_encoding = 'bipolar';
+split_method = 'random';
 
 hp_optm_method = 'random';
 hp_optm_max_interations = 10;
@@ -37,20 +37,23 @@ classification_stats_ts = classificationStatisticsNturns(number_of_realizations)
 
 %% LOAD CLASSIFIER AND CHOOSE ITS HYPERPARAMETERS
 
-classifier = initializeClassifier(classifier_name);
+classifier = initializeClassifier(model_name);
 
-if(strcmp(classifier_name,'lms'))
+if(strcmp(model_name,'lms'))
     classifier.number_of_epochs = 200;
     classifier.learning_step = 0.05;
     classifier.video_enabled = 0;
     classifier.add_bias = 1;
 
-elseif(strcmp(classifier_name,'ols'))
+elseif(strcmp(model_name,'ols'))
     classifier.approximation = 'pinv';
     classifier.regularization = 0.0001;
     classifier.add_bias = 1;
 
-elseif(strcmp(classifier_name,'spok'))
+elseif(strcmp(model_name,'knn'))
+
+
+elseif(strcmp(model_name,'spok'))
     classifier.number_of_epochs = 1;
     classifier.is_stationary = 0;
     classifier.design_method = 'one_dicitionary_per_class';

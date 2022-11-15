@@ -1,4 +1,5 @@
 classdef olsClassifier
+    %
     % HELP about olsClassifier
     % approximation:
 	%	pinv -> W = Y*pinv(X);

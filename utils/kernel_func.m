@@ -66,7 +66,6 @@ else
         elseif (PAR.Ktype == 7)
             PAR.alpha = 0.1;
         end
-    else
     end
     if (~(isfield(PAR,'theta')))
         if(PAR.Ktype == 1)

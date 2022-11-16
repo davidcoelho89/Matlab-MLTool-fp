@@ -58,21 +58,3 @@ classdef knnClassifier
     end
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

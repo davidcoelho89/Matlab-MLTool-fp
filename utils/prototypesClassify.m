@@ -65,41 +65,160 @@ if (model.nearest_neighbors == 1)
         sample = X(:,n);
         
         % Get closest prototype and min distance from sample to each class
+        
         d_min = -1*ones(Nc,1);              % Init class min distance
         d_min_all = -1;                     % Initi global min distance
+        
         % for k = 1:Nk(1)
         for k = 1:Nk
+            
             prot = model.Cx(:,k);           % Get prototype
             [~,class] = max(model.Cy(:,k));	% Get prototype label
             
+            d = vectorsDistance(prot,sample,model);
+            distances(k,n) = d;
+            
+            % Get class-conditional closest prototype
+            if(d_min(class) == -1 || d < d_min(class))
+                d_min(class) = d;
+            end
+
+            % Get global closest prototype
+            if(d_min_all == -1 || d < d_min_all)
+                d_min_all = d;
+                winners(n) = k;
+                nearest_indexes(n) = k;
+            end
+
         end
-        
+
+        % Fill Output
+        for class = 1:Nc
+
+            % Invert signal for second class in binary problems
+
+            if(class == 2 && Nc == 2)
+            	Yh(2,:) = -Yh(1,:);
+                break;
+            end
+
+            % Calculate Class Output for the Sample
+
+            % Get minimum distance from class
+            dp = d_min(class);
+            % There is no prototypes from this class
+            if (dp == -1)
+                Yh(class,n) = -1;
+            else
+                % get minimum distance from other classes
+                dm = -1;        
+                for j = 1:Nc
+                    if(j == class) % looking for other classes
+                        continue;
+                    elseif (d_min(j) == -1) % no prot from this class
+                        continue;
+                    elseif (dm == -1 || d_min(j) < dm)
+                        dm = d_min(j);
+                    end
+                end
+                if (dm == -1)  % no prototypes from other classes
+                    Yh(class,n) = 1;
+                else
+                    Yh(class,n) = (dm - dp) / (dm + dp);
+                end
+            end
+        end
         
     end
     
 elseif (model.nearest_neighbors > 1) 
     
     for n = 1:N
+
+        % Display classification iteration (for debug)
+        if(mod(n,1000) == 0)
+            disp(n);
+        end
+
+        % Get test sample
+        sample = X(:,n);
         
+        % Measure distance from sample to each prototype
+        Vdist = zeros(1,Nk);
+        for k = 1:Nk
+            prot = model.Cx(:,k);
+            Vdist(k) = vectorsDistance(prot,sample,model);
+        end
+        distances(:,n) = Vdist';    % hold distances
+
+        % Sort distances and get nearest neighbors
+        out = bubble_sort(Vdist,1);
+
+        % Get closest prototype
+        winners(n) = out.ind(1);
+
+        % Verify number of prototypes and neighbors
+        if(Nk <= K)
+            nearest_indexes(:,n) = out.ind(1:Nk)';
+            number_of_nearest = Nk;
+        else
+            nearest_indexes(:,n) = out.ind(1:K+1)';
+            number_of_nearest = K;
+        end
+        
+        % Get labels of nearest neighbors
+        lbls_near = model.Cy(:,nearest_indexes(:,n)');
+
+        if(strcmp(model.knn_aproximation,'majority_voting'))
+            
+            % Compute votes
+            votes = zeros(1,Nc);
+            for k = 1:number_of_nearest
+                [~,class] = max(lbls_near(:,k));
+                votes(class) = votes(class) + 1;
+            end
+            
+            % Update class
+            [~,class] = max(votes);
+            Yh(class,n) = 1;
+        
+        else % Weighted KNN
+
+            % Avoid weights of 0
+            epsilon = 0.001;
+
+            % Auxiliary output and weight
+            y_aux = zeros(Nc,1);
+            w_sum = 0;
+            
+            % Get distances of nearest neighbors
+            Dnear = Vdist(nearest_indexes(:,n)');
+            
+            % Calculate Output
+            for k = 1:number_of_nearest
+                % Compute Weight (Triangular)
+                if (strcmp(model.knn_aproximation,'weighted_knn'))
+                    Dnorm = Dnear(k)/(Dnear(end) + epsilon);
+                    w = 1 - Dnorm;
+                end
+                w_sum = w_sum + w;
+                % Compute weighted outptut
+                y_aux = y_aux + w*lbls_near(:,k);
+
+            end
+            Yh(:,n) = y_aux / w_sum;
+
+        end
     end
     
 end
 
 %% FILL OUTPUT STRUCTURE
 
-model_out = model + X;
+model_out = model;
+model_out.Yh = Yh;
+model_out.winners = winners;
+model_out.distances = distances;
+model_out.nearest_indexes = nearest_indexes;
 
-%% END
-
-
-
-
-
-
-
-
-
-
-
-
-
+end

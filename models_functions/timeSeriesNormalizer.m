@@ -131,15 +131,23 @@ classdef timeSeriesNormalizer
             elseif(strcmp(self.normalization,'zscore3'))
                 if(isfield(time_series,'input'))
                     for i = 1:Nu
-                        for j = 1:N
-                            Unorm(i,j) = (U(i,j) - self.Umed(i))/(3*self.Ustd(i));
+                        if(self.Ustd(i) == 0)
+                             Unorm(i,:) = 0;
+                        else
+                            for j = 1:N
+                                Unorm(i,j) = (U(i,j) - self.Umed(i))/(3*self.Ustd(i));
+                            end                            
                         end
                     end
                 end
                 if(isfield(time_series,'output'))
                     for i = 1:Ny
-                        for j = 1:N
-                            Ynorm(i,j) = (Y(i,j) - self.Ymed(i))/(3*self.Ystd(i));
+                        if(self.Ystd(i) == 0)
+                            Ynorm(i,:) = 0;
+                        else
+                            for j = 1:N
+                                Ynorm(i,j) = (Y(i,j) - self.Ymed(i))/(3*self.Ystd(i));
+                            end
                         end
                     end
                 end

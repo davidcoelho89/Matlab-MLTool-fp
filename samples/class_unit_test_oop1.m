@@ -2,7 +2,7 @@
 
 % Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/10/20
+% Last Update: 2022/11/15
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -39,19 +39,20 @@ classification_stats_ts = classificationStatisticsNturns(number_of_realizations)
 
 classifier = initializeClassifier(model_name);
 
-if(strcmp(model_name,'lms'))
+if(strcmp(model_name,'ols'))
+    classifier.approximation = 'pinv';
+    classifier.regularization = 0.0001;
+    classifier.add_bias = 1;
+
+elseif(strcmp(model_name,'lms'))
     classifier.number_of_epochs = 200;
     classifier.learning_step = 0.05;
     classifier.video_enabled = 0;
     classifier.add_bias = 1;
 
-elseif(strcmp(model_name,'ols'))
-    classifier.approximation = 'pinv';
-    classifier.regularization = 0.0001;
-    classifier.add_bias = 1;
-
 elseif(strcmp(model_name,'knn'))
-
+    classifier.nearest_neighbors = 1;
+    classifier.knn_aproximation = 'majority_voting';
 
 elseif(strcmp(model_name,'spok'))
     classifier.number_of_epochs = 1;

@@ -36,6 +36,13 @@ classdef spokClassifier
     %    - max_prototypes = max # of model's prototypes ("Budget")
     %    - min_prototypes = min # of model's prototypes ("restriction")
     %    - video_enabled = [0 or 1]
+    %    - type of distance = [cte]
+    %    	= 0: Dot product
+    %       = inf: Chebyshev distance
+    %       = -inf: Minimum Minkowski distance
+    %       = 1: Manhattam (city-block) distance
+    %       = 2: Euclidean distance
+    %       >= 3: Minkowski distance
     %    - nearest_neighbors = number of nearest neighbors (classification)
     %    - knn_aproximation = how the output will be generated
     %        = 'majority_voting'
@@ -85,6 +92,7 @@ classdef spokClassifier
         max_prototypes = 600;
         min_prototypes = 2;
         video_enabled = 0;
+        distance_measure = 2;
         nearest_neighbors = 1;
         knn_aproximation = 'majority_voting';
         kernel_type = 'gaussian';
@@ -140,11 +148,7 @@ classdef spokClassifier
                 self = self.dictionaryGrow(x,y);
             else
                 % Predict Output
-                classification_output = prototypesClassify(self,x);
-                self.yh = classification_output.Yh;
-                self.winner = classification_output.winners;
-                self.distance = classification_output.distances;
-                self.near_index = classification_output.near_indexes;
+                self = prototypesClassify(self,x);
 
                 % Update number of times a prototype has been the winner
                 self.times_selected(self.winner) = self.times_selected(self.winner) + 1;
@@ -212,11 +216,7 @@ classdef spokClassifier
 
         % Prediction Function
         function self = predict(self,X)
-            classification_output = prototypesClassify(self,X);
-            self.Yh = classification_output.Yh;
-            self.winners = classification_output.winners;
-            self.distances = classification_output.distances;
-            self.near_index = classification_output.near_indexes;
+            self = prototypesClassify(self,X);
         end
 
         function self = dictionaryGrow(self,x,y)

@@ -8,13 +8,9 @@ function [dataset_out] = encodeLabels(dataset_in,label_encoding)
 %       dataset_in.
 %           output = misfit labels for each sample [Nc x N] or [1 x N]
 %       label_encoding
-%               0) label in = label out
-%               1) from sequencial (1, 2, 3...) to [-1 and +1] ([-1 -1 +1])
-%               2) from sequencial (1, 2, 3...) to [0 and +1] ([0 0 +1])
-%               3) from [-1 e +1] or [0 e 1] to sequencial (1, 2, 3...)
-%               4) from string (words) to sequencial (1, 2, 3...)
-%               5) from string (words) to -1 and +1 ([-1 -1 +1])
-%               6) from string (words) to 0 and +1 ([0 0 +1])
+%           = 'bipolar' = [-1 and +1]. Ex: ([-1 -1 +1]
+%           = 'binary' = [0 and +1]. Ex: ([0 0 +1])
+%           = 'sequential' = (1, 2, 3...)
 %	Output:
 %       DATAout.
 %           output = adjusted labels [Nc x N] or [1 x N]
@@ -23,10 +19,11 @@ function [dataset_out] = encodeLabels(dataset_in,label_encoding)
 
 labels_in = dataset_in.output;   
 
+% ToDo - Verify if it is numerical or literal 
+
 if(strcmp(label_encoding,'original'))
     labels_out = labels_in;
 elseif(strcmp(label_encoding,'bipolar'))
-    % Passou aqui!
 	[~,N] = size(labels_in);
     Nc = length(unique(labels_in));
     labels_out = -1*ones(Nc,N);
@@ -41,6 +38,14 @@ dataset_out = dataset_in;
 dataset_out.output = labels_out;
 
 %% ALGORITHM
+
+% 0) label in = label out
+% 1) from sequencial  to )
+% 2) from sequencial (1, 2, 3...) to 
+% 3) from [-1 e +1] or [0 e 1] to sequencial (1, 2, 3...)
+% 4) from string (words) to sequencial (1, 2, 3...)
+% 5) from string (words) to -1 and +1 ([-1 -1 +1])
+% 6) from string (words) to 0 and +1 ([0 0 +1])
 
 % switch(label_encoding)
 % 

@@ -36,7 +36,7 @@ end
 % Initialize outputs
 
 Yh = -1*ones(Nc,N);         % One output for each sample
-winners = zeros(1,N);       % One closest prototype for each sample
+winners = zeros(1,N);       % The closest prototype for each sample
 distances = zeros(Nk,N);	% Distance from prototypes to each sample
 
 % indexes for nearest prototypes
@@ -67,15 +67,14 @@ if (model.nearest_neighbors == 1)
         % Get closest prototype and min distance from sample to each class
         
         d_min = -1*ones(Nc,1);              % Init class min distance
-        d_min_all = -1;                     % Initi global min distance
+        d_min_all = -1;                     % Init global min distance
         
-        % for k = 1:Nk(1)
-        for k = 1:Nk
+        for k = 1:Nk % for k = 1:Nk(1)
             
-            prot = model.Cx(:,k);           % Get prototype
+            prototype = model.Cx(:,k);      % Get prototype
             [~,class] = max(model.Cy(:,k));	% Get prototype label
             
-            d = vectorsDistance(prot,sample,model);
+            d = vectorsDistance(prototype,sample,model);
             distances(k,n) = d;
             
             % Get class-conditional closest prototype
@@ -95,7 +94,7 @@ if (model.nearest_neighbors == 1)
         % Fill Output
         for class = 1:Nc
 
-            % Invert signal for second class in binary problems
+            % Invert signal for 2nd class in binary problems
 
             if(class == 2 && Nc == 2)
             	Yh(2,:) = -Yh(1,:);
@@ -127,9 +126,10 @@ if (model.nearest_neighbors == 1)
                     Yh(class,n) = (dm - dp) / (dm + dp);
                 end
             end
-        end
+
+        end % end for class = 1:Nc
         
-    end
+    end % end for n = 1:N
     
 elseif (model.nearest_neighbors > 1) 
     
@@ -146,23 +146,25 @@ elseif (model.nearest_neighbors > 1)
         % Measure distance from sample to each prototype
         Vdist = zeros(1,Nk);
         for k = 1:Nk
-            prot = model.Cx(:,k);
-            Vdist(k) = vectorsDistance(prot,sample,model);
+            prototype = model.Cx(:,k);
+            Vdist(k) = vectorsDistance(prototype,sample,model);
         end
-        distances(:,n) = Vdist';    % hold distances
+        
+        % hold distances
+        distances(:,n) = Vdist';
 
         % Sort distances and get nearest neighbors
-        out = bubble_sort(Vdist,1);
+        sort_result = bubble_sort(Vdist,1);
 
         % Get closest prototype
-        winners(n) = out.ind(1);
+        winners(n) = sort_result.ind(1);
 
         % Verify number of prototypes and neighbors
         if(Nk <= K)
-            nearest_indexes(:,n) = out.ind(1:Nk)';
+            nearest_indexes(:,n) = sort_result.ind(1:Nk)';
             number_of_nearest = Nk;
         else
-            nearest_indexes(:,n) = out.ind(1:K+1)';
+            nearest_indexes(:,n) = sort_result.ind(1:K+1)';
             number_of_nearest = K;
         end
         
@@ -208,10 +210,11 @@ elseif (model.nearest_neighbors > 1)
             end
             Yh(:,n) = y_aux / w_sum;
 
-        end
-    end
+        end % end if majority_voting
+
+    end % end for n = 1:N
     
-end
+end % end if(model.nearest_neighbors > 1)
 
 %% FILL OUTPUT STRUCTURE
 

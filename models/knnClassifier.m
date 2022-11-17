@@ -1,15 +1,22 @@
-classdef knnClassifier
+classdef knnClassifier < prototypeBasedClassifier
     %
     % --- K-Nearest Neighbors Classifier ---
     %
     % Properties (Hyperparameters)
     %  
-    %    - nearest_neighbors = number of nearest neighbors (classification)
-    %    - knn_aproximation = how the output will be generated
-    %        = 'majority_voting'
-    %        = 'weighted_knn'
+    %   - distance_measure = which measure used to compare two vectors
+    %   - nearest_neighbors = number of nearest neighbors (classification)
+    %   - knn_aproximation = how the output will be generated
+    %       = 'majority_voting'
+    %       = 'weighted_knn'
+    %   - kernel_type = which kernel used (kernel based classifiers)
+    %       = 'none' (it is not a kernel based model)
     %
     % Properties (Parameters)
+    %
+    %   - Cx = Clusters' centroids (prototypes)
+    %   - Cy = Clusters' labels
+    %   - Yh = all predictions (predict function)
     %
     % Methods
     %

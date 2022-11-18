@@ -6,11 +6,16 @@ function [d] = vectorsDistance(x,y,model)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if(~isprop(model,'distance_measure'))
+if (nargin == 2)
     model.distance_measure = 2;
-end
-if(~isprop(model,'kernel_type'))
     model.kernel_type = 'none';
+else
+    if(~isprop(model,'distance_measure'))
+        model.distance_measure = 2;
+    end
+    if(~isprop(model,'kernel_type'))
+        model.kernel_type = 'none';
+    end
 end
     
 %% ALGORITHM

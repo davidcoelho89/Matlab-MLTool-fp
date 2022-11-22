@@ -50,22 +50,7 @@ classdef classificationStatisticsNturns
         function self = addResult(self,classStats1turn)
             
             self.realization = self.realization + 1;
-
-            if(~(self.realization > self.number_of_realizations))
-                disp('add result!');
-                disp('number of repetitions: ');
-                disp(self.number_of_realizations);
-                
-                if(self.number_of_realizations == 1)
-                    self.cell_of_results = cell(Nr,1);
-                else
-                    cell_aux = self.cell_of_results;
-                    self.cell_of_results = cell(Nr,1);
-                    self.cell_of_results(1:Nr-1,1) = cell_aux;
-                end
-                self.cell_of_results{Nr,1} = classStats1turn;
-
-            end
+            self.cell_of_results{self.realization,1} = classStats1turn;
 
         end
         

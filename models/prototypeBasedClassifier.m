@@ -27,15 +27,13 @@ classdef prototypeBasedClassifier
 
         % Training Function (1 instance)
 %         function self = partial_fit(self,x,y)
-%             % ToDo - Add one sample to existing prototypes
-%             % (verify if RLS can be used)
+%             % Each classifier has it own function
 %         end
 
         % Training Function (N instances)
-        function self = fit(self,X,Y)
-            self.Cx = X;
-            self.Cy = Y;
-        end
+%         function self = fit(self,X,Y)
+%             % Each classifier has it own function
+%         end
         
         % Prediction Function (N instances)
         function self = predict(self,X)

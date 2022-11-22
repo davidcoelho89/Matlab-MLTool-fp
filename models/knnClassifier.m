@@ -5,6 +5,7 @@ classdef knnClassifier < prototypeBasedClassifier
     % Properties (Hyperparameters)
     %  
     %   - distance_measure = which measure used to compare two vectors
+    %      (used in a lot of functions for prototype-based classifiers)
     %   - nearest_neighbors = number of nearest neighbors (classification)
     %   - knn_aproximation = how the output will be generated
     %       = 'majority_voting'
@@ -17,6 +18,9 @@ classdef knnClassifier < prototypeBasedClassifier
     %   - Cx = Clusters' centroids (prototypes)
     %   - Cy = Clusters' labels
     %   - Yh = all predictions (predict function)
+    %	- winners = The closest prototype for each sample
+    %	- distances = Distance from prototypes to each sample
+    %	- nearest_indexes = identify nearest prototypes for each sample
     %
     % Methods
     %
@@ -26,17 +30,26 @@ classdef knnClassifier < prototypeBasedClassifier
 
     % Hyperparameters
     properties
-        distance_measure = 2;
-        nearest_neighbors = 1;
-        knn_aproximation = 'majority_voting';
-        kernel_type = 'none';
+        
+% Following properties already defined in "prototypeBasedClassifier":
+%         distance_measure = 2;
+%         nearest_neighbors = 1;
+%         knn_aproximation = 'majority_voting';
+%         kernel_type = 'none';
+
     end
 
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
-        Cx = [];     % Clusters' centroids (prototypes)
-        Cy = [];     % Clusters' labels
-        Yh = [];	 % all predictions (predict function)
+        
+% Following properties already defined in "prototypeBasedClassifier":
+%         Cx = [];     % Clusters' centroids (prototypes)
+%         Cy = [];     % Clusters' labels
+%         Yh = [];	 % all predictions (predict function)
+%         winners = [];         % The closest prototype for each sample
+%         distances = [];       % Distance from prototypes to each sample
+%         nearest_indexes = []; % identify nearest prototypes for each sample
+
     end
 
     methods
@@ -47,9 +60,10 @@ classdef knnClassifier < prototypeBasedClassifier
         end
         
         % Training Function (1 instance)
-%         function self = partial_fit(self,x,y)
-%             % ToDo - Add one sample to existing prototypes
-%         end
+        function self = partial_fit(self,x,y)
+            self.Cx = [self.Cx, x];
+            self.Cy = [self.Cy, y];
+        end
 
         % Training Function (N instances)
         function self = fit(self,X,Y)
@@ -58,9 +72,9 @@ classdef knnClassifier < prototypeBasedClassifier
         end
 
         % Prediction Function (N instances)
-        function self = predict(self,X)
-            self = prototypesClassify(self,X);
-        end
+        % function self = predict(self,X)
+        %   This functions is already defined in "PrototypeBasedClassifier"
+        % end
 
     end
 

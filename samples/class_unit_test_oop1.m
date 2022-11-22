@@ -51,8 +51,10 @@ elseif(strcmp(model_name,'lms'))
     classifier.add_bias = 1;
 
 elseif(strcmp(model_name,'knn'))
+    classifier.distance_measure = 2;
     classifier.nearest_neighbors = 1;
     classifier.knn_aproximation = 'majority_voting';
+    classifier.kernel_type = 'none';
 
 elseif(strcmp(model_name,'spok'))
     classifier.number_of_epochs = 1;

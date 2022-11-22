@@ -1,5 +1,5 @@
 classdef regressionStatisticsNturns
-    % HELP about sysIdStatisticsNturns
+    % HELP about regressionStatisticsNturns
     
     % Hyperparameters
     properties

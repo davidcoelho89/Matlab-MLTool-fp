@@ -1,23 +1,43 @@
 classdef olsClassifier
+    % 
+    % --- Ordinary Least-Squares Classifier ---
     %
-    % HELP about olsClassifier
-    % approximation:
-	%	pinv -> W = Y*pinv(X);
-    %	svd -> W = Y/X;
-    %	theoretical -> W = Y*X'/(X*X' + regularization * eye(p,p));
+    % Properties (Hyperparameters)
+    %
+    %   - approximation = which aproximation method is used
+    %     = 'pinv'        -> W = Y*pinv(X);
+    %     = 'svd'         -> W = Y/X;
+    %     = 'theoretical' -> W = Y*X'/(X*X' + regularization * eye(p,p));
+    %   - regularization = used to mitigate numerical computation errors
+    %     (constant)
+    %   - add_bias = add bias (or not) to the model
+    %     (0 or 1)
+    %   - Yh = Hold all predictions (matrix)
+    % 
+    % Properties (Parameters)
+    %
+    %   - name = 'ols'
+    %   - W = regression matrix [Nc x p] or [Nc x p+1]
+    %
+    % Methods
+    %
+    %   - olsClassifier()           % Constructor
+    %   - fit(self,X,Y)             % Training function (N instances)
+    %   - partial_fit(self,x,y)     % Training function (1 instance)
+    %   - predict(self,X)           % Prediction Function
 
     % Hyperparameters
     properties
         approximation = 'pinv';
         regularization = 0.0001;
         add_bias = 1;
-        Yh = [];    % Hold all predictions
+        Yh = [];
     end
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
         name = 'ols';
-        W = [];     % Regression Matrix     [Nc x p] or [Nc x p+1]
+        W = [];    
     end
     
     methods
@@ -28,9 +48,9 @@ classdef olsClassifier
         end
         
         % Training Function (1 instance)
-%         function self = partial_fit(self,x,y)
-%             % Verify if an RLS can be used
-%         end
+        % function self = partial_fit(self,x,y)
+        %     % Verify if an RLS can be used
+        % end
         
         % Training Function (N instances)
         function self = fit(self,X,Y)

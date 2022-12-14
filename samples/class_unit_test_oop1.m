@@ -1,6 +1,6 @@
 %% MACHINE LEARNING TOOLBOX
 
-% Classification Algorithms - Unit Test
+% Classification Algorithms (OOP Based) - Unit Test
 % Author: David Nascimento Coelho
 % Last Update: 2022/11/15
 

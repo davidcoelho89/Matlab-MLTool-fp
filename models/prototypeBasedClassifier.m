@@ -1,4 +1,33 @@
 classdef prototypeBasedClassifier
+    %
+    % --- Common features for all Prototype-Based Classifiers ---
+    %
+    % Properties (Hyperparameters)
+    %  
+    %   - distance_measure = which measure used to compare two vectors
+    %      (used in a lot of functions for prototype-based classifiers)
+    %   - nearest_neighbors = number of nearest neighbors (classification)
+    %   - knn_aproximation = how the output will be generated
+    %       = 'majority_voting'
+    %       = 'weighted_knn'
+    %   - kernel_type = which kernel used (kernel based classifiers)
+    %       = 'none' (it is not a kernel based model)
+    %
+    % Properties (Parameters)
+    %
+    %   - Cx = Clusters' centroids (prototypes)
+    %   - Cy = Clusters' labels
+    %   - Yh = all predictions (predict function)
+    %	- winners = The closest prototype for each sample
+    %	- distances = Distance from prototypes to each sample
+    %	- nearest_indexes = identify nearest prototypes for each sample
+    %
+    % Methods
+    %
+    %   - prototypeBasedClassifier()    % Constructor
+    %   - predict(self,X)               % Prediction Function
+    %
+    % ----------------------------------------------------------------
 
     % Hyperparameters
     properties
@@ -26,14 +55,14 @@ classdef prototypeBasedClassifier
         end
 
         % Training Function (1 instance)
-%         function self = partial_fit(self,x,y)
-%             % Each classifier has it own function
-%         end
+        % function self = partial_fit(self,x,y)
+        %     % Each classifier has it own function
+        % end
 
         % Training Function (N instances)
-%         function self = fit(self,X,Y)
-%             % Each classifier has it own function
-%         end
+        % function self = fit(self,X,Y)
+        %   "Each classifier has it own function"
+        % end
         
         % Prediction Function (N instances)
         function self = predict(self,X)
@@ -233,4 +262,4 @@ classdef prototypeBasedClassifier
 
     end % end methods
 
-end
+end % end class

@@ -1,23 +1,51 @@
-classdef olsClassifier
+classdef olsClassifier < linearClassifier
+    % 
+    % --- Ordinary Least-Squares Classifier ---
     %
-    % HELP about olsClassifier
-    % approximation:
-	%	pinv -> W = Y*pinv(X);
-    %	svd -> W = Y/X;
-    %	theoretical -> W = Y*X'/(X*X' + regularization * eye(p,p));
+    % Properties (Hyperparameters)
+    %
+    %   - approximation = which aproximation method is used
+    %     = 'pinv'        -> W = Y*pinv(X);
+    %     = 'svd'         -> W = Y/X;
+    %     = 'theoretical' -> W = Y*X'/(X*X' + regularization * eye(p,p));
+    %   - regularization = used to mitigate numerical computation errors
+    %     (constant)
+    %   - add_bias = add bias (or not) to the model
+    %     (0 or 1)
+    %
+    % Properties (Parameters)
+    %
+    %   - name = 'ols'
+    %   - W = regression matrix [Nc x p] or [Nc x p+1]
+    %   - Yh = Hold all predictions [Nc x N]
+    % 
+    % Methods
+    %
+    %   - olsClassifier()           % Constructor
+    %   - fit(self,X,Y)             % Training function (N instances)
+    %   - partial_fit(self,x,y)     % Training function (1 instance)
+    %   - predict(self,X)           % Prediction Function
+    %
+    % ----------------------------------------------------------------
 
     % Hyperparameters
     properties
+    
+        % Following properties already defined in "linearClassifier":
+        % regularization = 0.0001;
+        % add_bias = 1;
+
         approximation = 'pinv';
-        regularization = 0.0001;
-        add_bias = 1;
-        Yh = [];    % Hold all predictions
     end
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
+
+        % Following properties already defined in "linearClassifier":
+        % W = [];    
+        % Yh = [];
+
         name = 'ols';
-        W = [];     % Regression Matrix     [Nc x p] or [Nc x p+1]
     end
     
     methods
@@ -28,9 +56,9 @@ classdef olsClassifier
         end
         
         % Training Function (1 instance)
-%         function self = partial_fit(self,x,y)
-%             % Verify if an RLS can be used
-%         end
+        % function self = partial_fit(self,x,y)
+        %     % Verify if an RLS can be used
+        % end
         
         % Training Function (N instances)
         function self = fit(self,X,Y)
@@ -53,11 +81,11 @@ classdef olsClassifier
             
         end
         
-        % Prediction Function
-        function self = predict(self,X)
-            self.Yh = linearPrediction(self,X);
-        end
+        % Prediction Function (N instances)
+        % function self = predict(self,X)
+        %  This functions is already defined in "linearClassifier"
+        % end
         
-    end
+    end % end methods
     
-end
+end % end class

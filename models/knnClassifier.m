@@ -84,6 +84,6 @@ classdef knnClassifier < prototypeBasedClassifier
         %  This functions is already defined in "PrototypeBasedClassifier"
         % end
 
-    end
+    end % end methods
 
-end
+end % end class

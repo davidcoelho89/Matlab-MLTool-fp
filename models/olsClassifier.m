@@ -1,4 +1,4 @@
-classdef olsClassifier
+classdef olsClassifier < linearClassifier
     % 
     % --- Ordinary Least-Squares Classifier ---
     %
@@ -12,32 +12,40 @@ classdef olsClassifier
     %     (constant)
     %   - add_bias = add bias (or not) to the model
     %     (0 or 1)
-    %   - Yh = Hold all predictions (matrix)
-    % 
+    %
     % Properties (Parameters)
     %
     %   - name = 'ols'
     %   - W = regression matrix [Nc x p] or [Nc x p+1]
-    %
+    %   - Yh = Hold all predictions [Nc x N]
+    % 
     % Methods
     %
     %   - olsClassifier()           % Constructor
     %   - fit(self,X,Y)             % Training function (N instances)
     %   - partial_fit(self,x,y)     % Training function (1 instance)
     %   - predict(self,X)           % Prediction Function
+    %
+    % ----------------------------------------------------------------
 
     % Hyperparameters
     properties
+    
+        % Following properties already defined in "linearClassifier":
+        % regularization = 0.0001;
+        % add_bias = 1;
+
         approximation = 'pinv';
-        regularization = 0.0001;
-        add_bias = 1;
-        Yh = [];
     end
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
+
+        % Following properties already defined in "linearClassifier":
+        % W = [];    
+        % Yh = [];
+
         name = 'ols';
-        W = [];    
     end
     
     methods
@@ -73,11 +81,11 @@ classdef olsClassifier
             
         end
         
-        % Prediction Function
-        function self = predict(self,X)
-            self.Yh = linearPrediction(self,X);
-        end
+        % Prediction Function (N instances)
+        % function self = predict(self,X)
+        %  This functions is already defined in "linearClassifier"
+        % end
         
-    end
+    end % end methods
     
-end
+end % end class

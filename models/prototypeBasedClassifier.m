@@ -262,4 +262,4 @@ classdef prototypeBasedClassifier
 
     end % end methods
 
-end
+end % end class

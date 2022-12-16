@@ -132,7 +132,7 @@ elseif(strcmp(model_name,'mlp'))
 
 end
 
-%% SYS ID - HOLD OUT / NORMALIZE / ESTIMATE / PREDICT
+%% RUN EXPERIMENT
 
 disp('Begin Algorithm');
 

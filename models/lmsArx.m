@@ -104,6 +104,11 @@ classdef lmsArx
         function self = calculate_output(self,x)
             self.yh = self.W * x;
         end
+
+        % Need to be implemented for any ArxModel
+        function number_of_outputs = get_number_of_outputs(self)
+            [number_of_outputs,~] = size(self.W);
+        end
         
         % Prediction Function (1 instance)
         function self = partial_predict(self,x)
@@ -128,7 +133,7 @@ classdef lmsArx
         function self = predict(self,X)
             
             [~,number_of_samples] = size(X);
-            [number_of_outputs,~] = size(self.W);
+            number_of_outputs = get_number_of_outputs(self);
             
             self.Yh = zeros(number_of_outputs,number_of_samples);
             

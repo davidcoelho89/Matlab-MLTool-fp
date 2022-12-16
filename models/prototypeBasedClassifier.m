@@ -202,6 +202,7 @@ classdef prototypeBasedClassifier
                     self.winners(n) = sort_result.ind(1);
 
                     % Verify number of prototypes and neighbors
+                    K = self.nearest_neighbors;
                     if(Nk <= K)
                         self.nearest_indexes(:,n) = sort_result.ind(1:Nk)';
                         number_of_nearest = Nk;
@@ -211,7 +212,7 @@ classdef prototypeBasedClassifier
                     end
 
                     % Get labels of nearest neighbors
-                    lbls_near = model.Cy(:,self.nearest_indexes(:,n)');
+                    lbls_near = self.Cy(:,self.nearest_indexes(:,n)');
 
                     if(strcmp(self.knn_aproximation,'majority_voting'))
 

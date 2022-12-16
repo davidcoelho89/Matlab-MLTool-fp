@@ -1,20 +1,14 @@
 function updated_memory = update_output_memory(Y,outdated_memory,lags)
 
-%
-%
-%
-
 %% INITIALIZATIONS
 
-Ny = length(lags);                       % Number of outputs
-memory_length = length(outdated_memory); % Sum of lags from all outputs 
-updated_memory = zeros(memory_length,1); % Init update memory
-
-initial_sample_index = 1;
+% Init update memory
+updated_memory = zeros(length(outdated_memory),1); 
 
 %% ALGORITHM
 
-for i = 1:Ny
+initial_sample_index = 1;
+for i = 1:length(lags)
     % Get lag and last sample for present output
     lag = lags(i);
     final_sample_index = initial_sample_index + lag - 1;
@@ -28,6 +22,5 @@ for i = 1:Ny
     % Update Initial sample for next output
     initial_sample_index = final_sample_index + 1;
 end
-
 
 %% END

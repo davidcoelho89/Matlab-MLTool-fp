@@ -23,10 +23,10 @@ classdef mlpArx
         number_of_layers = [];
         MQE = [];
         video = [];
-        output_memory = []; % hold value of last predictions
+        error = [];
         Yh = []; % Hold all predictions
         yh = []; % Hold last prediction
-        error = [];
+        output_memory = []; % hold value of last predictions
     end
     
     methods
@@ -174,6 +174,11 @@ classdef mlpArx
         end
         
         % Need to be implemented for any ArxModel
+        function number_of_outputs = get_number_of_outputs(self)
+            [number_of_outputs,~] = size(self.W{self.number_of_layers});
+        end
+
+        % Need to be implemented for any ArxModel
         function self = calculate_output(self,x)
 
             for i = 1:self.number_of_layers
@@ -212,15 +217,14 @@ classdef mlpArx
         % Prediction Function (N instances)
         function self = predict(self,X)
             
-            [number_of_outputs,~] = size(self.W{self.number_of_layers});
             [~,number_of_samples] = size(X);
-            
+            number_of_outputs = get_number_of_outputs(self);
+
             self.Yh = zeros(number_of_outputs,number_of_samples);
             
             output_memory_length = sum(self.output_lags);
             self.output_memory = X(1:output_memory_length,1);
             
-            % Main loop
             for n = 1:number_of_samples
                 self = self.partial_predict(X(:,n));
                 self.Yh(:,n) = self.yh;

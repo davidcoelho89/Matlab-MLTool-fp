@@ -74,6 +74,20 @@ classdef classificationStatisticsNturns
             end
             
             self.Mconf_mean = self.Mconf_sum / Nr;
+
+            [self.acc_max,self.acc_max_i] = max(self.acc_vect);
+            [self.acc_min,self.acc_min_i] = min(self.acc_vect);
+            self.acc_mean = mean(self.acc_vect);
+            self.acc_median = median(self.acc_vect);
+            self.acc_std = std(self.acc_vect);
+            self.acc_cv = self.acc_std / self.acc_mean;
+
+            [self.err_max,self.err_max_i] = max(self.err_vect);
+            [self.err_min,self.err_min_i] = min(self.err_vect);
+            self.err_mean = mean(self.err_vect);
+            self.err_median = median(self.err_vect);
+            self.err_std = std(self.err_vect);
+            self.err_cv = self.err_std / self.err_mean;
             
         end
         

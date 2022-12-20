@@ -14,20 +14,21 @@ classdef identifierArx
     %   - yh = vector that holds last prediction  [Noutputs x 1]
     %   - output_memory = vector holding past values of predictions or
     %              outputs (depends on prediction type and output lags)
-    %   
     %
     % Methods
     %
     %   - identifierArx()           % Constructor 
     %   - predict(self,X)           % Prediction function (N instances)
     %   - partial_predict(self,x)   % Prediction function (1 instance)
+    %   - update_output_memory_from_prediction(self)
+    %   - update_regression_vector_from_memory(self,x)
     %
     % ----------------------------------------------------------------
 
     % Hyperparameters
     properties
-
-        add_bias = 1;           % 
+        
+        add_bias = 1;           % Add bias as default
         prediction_type = 1;    % 1-step ahead
         output_lags = 2;        % considering just one output with 2 lags
 
@@ -125,21 +126,3 @@ classdef identifierArx
     end
     
 end % end class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

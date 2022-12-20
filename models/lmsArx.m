@@ -1,27 +1,47 @@
-classdef lmsArx
-    % HELP about lmsArx
+classdef lmsArx < idenfierArx
+    %
+    % --- LMS for System Identification ---
+    %
+    % Properties (Hyperparameters)
+    %
+    %   - add_bias = 0 or 1. Add bias or not.
+    %   - prediction_type "=0": free simulate. ">0": n-steps ahead
+    %   - output_lags = indicates number of lags for each output
+    %
+    % Properties (Parameters)
+    %
+    %   - Yh = matrix that holds all predictions  [Noutputs x Nsamples]
+    %   - yh = vector that holds last prediction  [Noutputs x 1]
+    %   - output_memory = vector holding past values of predictions or
+    %              outputs (depends on prediction type and output lags)
+    %
+    % Methods
+    %
+    %   - identifierArx()           % Constructor 
+    %   - predict(self,X)           % Prediction function (N instances)
+    %   - partial_predict(self,x)   % Prediction function (1 instance)
+    %
+    % ----------------------------------------------------------------
     
     % Hyperparameters
     properties
+        
         number_of_epochs = 05;
         learning_step = 0.05;
-        add_bias = 1;
         video_enabled = 0;
         training_samples_count = 0;
-        prediction_type = 1;
-        output_lags = [];
-        Yh = [];    % Hold all predictions
-        yh = [];    % Hold last prediction
-        output_memory = []; % hold value of last predictions
+        
     end
     
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
+        
         name = 'lms';
         W = [];     % Regression Matrix [Nc x p] or [Nc x p+1]
         W_acc = []; % Accumulate progression of weights
         MQE = [];   % mean quantization error of training [1 x Ne]
         video = []; % frame structure (can be played with 'video function')
+        
     end
     
     methods
@@ -94,8 +114,8 @@ classdef lmsArx
                     self = self.partial_fit(X(:,n),Y(:,n));
                 end
                 
-                Y_h = linearPrediction(self,X);
-                self.MQE(epoch) = sum(sum((Y - Y_h).^2))/number_of_samples;
+                self = self.predict(X);
+                self.MQE(epoch) = sum(sum((Y - self.Yh).^2))/number_of_samples;
                 
             end
         end

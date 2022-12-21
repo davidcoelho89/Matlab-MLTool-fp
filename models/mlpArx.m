@@ -21,6 +21,19 @@ classdef mlpArx < idenfierArx
     %   - predict(self,X)           % Prediction function (N instances)
     %   - partial_predict(self,x)   % Prediction function (1 instance)
     %
+    %   - update_output_memory_from_prediction(self)
+    %   - update_regression_vector_from_memory(self,x)
+    %
+    %   - self = initialize_parameters(self,x,y)
+    %   - self = partial_fit(self,x,y)
+    %   - self = fit(self,X,Y)
+    %
+    %   - self = calculate_output(self,x)
+    %   - number_of_outputs = get_number_of_outputs(self)
+    % 
+    %   - Yi = activation_function(Ui,non_linearity)
+    %   - Di = function_derivate(Yi,non_linearity)
+    %
     % ----------------------------------------------------------------
     
     % Hyperparameters

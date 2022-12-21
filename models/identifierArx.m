@@ -17,11 +17,11 @@ classdef identifierArx
     %
     % Methods
     %
-    %   - identifierArx()           % Constructor 
-    %   - predict(self,X)           % Prediction function (N instances)
-    %   - partial_predict(self,x)   % Prediction function (1 instance)
-    %   - update_output_memory_from_prediction(self)
-    %   - update_regression_vector_from_memory(self,x)
+    %   - self = identifierArx() 
+    %   - self = predict(self,X) 
+    %   - self = partial_predict(self,x)
+    %   - self = update_output_memory_from_prediction(self)
+    %   - xn_out = update_regression_vector_from_memory(self,x)
     %
     % ----------------------------------------------------------------
 

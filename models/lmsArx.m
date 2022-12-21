@@ -7,20 +7,39 @@ classdef lmsArx < idenfierArx
     %   - add_bias = 0 or 1. Add bias or not.
     %   - prediction_type "=0": free simulate. ">0": n-steps ahead
     %   - output_lags = indicates number of lags for each output
+    %   - number_of_epochs = integer >= 1;
+    %   - learning_step = real number between 0 and 1
+    %   - video_enabled = 0 or 1;
+    %   - training_samples_count = integer. for debug.;
     %
     % Properties (Parameters)
     %
     %   - Yh = matrix that holds all predictions  [Noutputs x Nsamples]
     %   - yh = vector that holds last prediction  [Noutputs x 1]
     %   - output_memory = vector holding past values of predictions or
-    %              outputs (depends on prediction type and output lags)
+    %                 outputs (depends on prediction type and output lags)
+    %
+    %   - W = Regression Matrix [Nc x p] or [Nc x p+1]
+    %   - W_acc = Accumulate progression of weights
+    %   - MQE = mean quantization error of training [1 x Ne]
+    %   - video = frame structure (can be played with 'video function')
     %
     % Methods
     %
-    %   - identifierArx()           % Constructor 
-    %   - predict(self,X)           % Prediction function (N instances)
-    %   - partial_predict(self,x)   % Prediction function (1 instance)
+    %   - self = lmsArx()
+    %   - self = predict(self,X) % Prediction function (N samples)
+    %   - self = partial_predict(self,x) % Prediction function (1 sample)
     %
+    %   - self = update_output_memory_from_prediction(self)
+    %   - xn_out = update_regression_vector_from_memory(self,x)
+    %
+    %   - self = initialize_parameters(self,x,y)
+    %   - self = partial_fit(self,x,y) % Training Function (1 sample)
+    %   - self = fit(self,X,Y) % Training Function (N samples)
+    %
+    %   - self = calculate_output(self,x)
+    %   - number_of_outputs = get_number_of_outputs(self)
+    % 
     % ----------------------------------------------------------------
     
     % Hyperparameters
@@ -37,10 +56,10 @@ classdef lmsArx < idenfierArx
     properties (GetAccess = public, SetAccess = protected)
         
         name = 'lms';
-        W = [];     % Regression Matrix [Nc x p] or [Nc x p+1]
-        W_acc = []; % Accumulate progression of weights
-        MQE = [];   % mean quantization error of training [1 x Ne]
-        video = []; % frame structure (can be played with 'video function')
+        W = [];
+        W_acc = [];
+        MQE = [];
+        video = [];
         
     end
     
@@ -128,43 +147,6 @@ classdef lmsArx < idenfierArx
         % Need to be implemented for any ArxModel
         function number_of_outputs = get_number_of_outputs(self)
             [number_of_outputs,~] = size(self.W);
-        end
-        
-        % Prediction Function (1 instance)
-        function self = partial_predict(self,x)
-            
-            if(self.add_bias == 1)
-                x = [1 ; x];
-            end
-            
-            x = update_regression_vector(x,...
-                                         self.output_memory, ...
-                                         self.prediction_type, ...
-                                         self.add_bias);
-
-            self = self.calculate_output(x);
-            
-            self.output_memory = update_output_memory(self.yh,...
-                                                      self.output_memory,...
-                                                      self.output_lags);
-        end
-        
-        % Prediction Function (N instances)
-        function self = predict(self,X)
-            
-            [~,number_of_samples] = size(X);
-            number_of_outputs = get_number_of_outputs(self);
-            
-            self.Yh = zeros(number_of_outputs,number_of_samples);
-            
-            output_memory_length = sum(self.output_lags);
-            self.output_memory = X(1:output_memory_length,1);
-            
-            for n = 1:number_of_samples
-                self = self.partial_predict(X(:,n));
-                self.Yh(:,n) = self.yh;
-            end
-            
         end
         
     end % end methods

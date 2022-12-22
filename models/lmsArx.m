@@ -1,4 +1,4 @@
-classdef lmsArx < idenfierArx
+classdef lmsArx < identifierArx
     %
     % --- LMS for System Identification ---
     %

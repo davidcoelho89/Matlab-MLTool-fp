@@ -13,9 +13,9 @@ format long e;  % Output data style (float)
 
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
-prediction_type = 0;            % "=0": free simulate. ">0": n-steps ahead
+prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
 dataset_name = 'linear_arx_01'; % 'linear_arx_01' 'tank' 'motor_step' 'motor'
-model_name = 'lms';             % 'mlp'
+model_name = 'mlp';             % 'mlp'
 normalization = 'zscore3';     	% 'none' 'zscore' 'zscore3'
 output_lags = [2];              % [2,2];
 input_lags = [2];               % [2,2];
@@ -122,7 +122,7 @@ elseif(strcmp(model_name,'rlm'))
     model.number_of_epochs = 5;
         
 elseif(strcmp(model_name,'mlp'))
-    model.number_of_epochs = 05;            % 20 a 100
+    model.number_of_epochs = 30;            % 20 a 100
     model.number_of_hidden_neurons = 8;     % 2 a 20
     model.learning_rate = 0.05;             % 0.01 a 0.1
     model.moment_factor = 0.75;             % 0.5 a 0.09
@@ -195,41 +195,41 @@ hold off
 
 %% MOTOR TEST - NEW DATA SET
 
-% Load motor step
-
-dataset_name = 'motor_step';
-datasetTS = loadSysIdDataset(dataset_name);
-plot_time_series(datasetTS);
-
-% Normalize
-
-datasetTS = normalizer.transform(datasetTS);
-plot_time_series(datasetTS);
-
-% Predict model
-
-dataset = buildRegressionMatrices(datasetTS,output_lags,input_lags);
-model = model.predict(dataset.input);
-stats = statsGen1turn.calculate_all(model.Yh,dataset.output);
-
-% Gera Graficos comparativos
-
-y_step = dataset.output;
-yh_step = model.Yh;
-
-figure;
-plot(y_step(1,:),'b-')
-title('Signal used for estimation')
-hold on
-plot(yh_step(1,:),'r--')
-hold off
-
-figure;
-plot(y_step(2,:),'b-')
-title('Signal used for estimation')
-hold on
-plot(yh_step(2,:),'r--')
-hold off
+% % Load motor step
+% 
+% dataset_name = 'motor_step';
+% datasetTS = loadSysIdDataset(dataset_name);
+% plot_time_series(datasetTS);
+% 
+% % Normalize
+% 
+% datasetTS = normalizer.transform(datasetTS);
+% plot_time_series(datasetTS);
+% 
+% % Predict model
+% 
+% dataset = buildRegressionMatrices(datasetTS,output_lags,input_lags);
+% model = model.predict(dataset.input);
+% stats = statsGen1turn.calculate_all(model.Yh,dataset.output);
+% 
+% % Gera Graficos comparativos
+% 
+% y_step = dataset.output;
+% yh_step = model.Yh;
+% 
+% figure;
+% plot(y_step(1,:),'b-')
+% title('Signal used for estimation')
+% hold on
+% plot(yh_step(1,:),'r--')
+% hold off
+% 
+% figure;
+% plot(y_step(2,:),'b-')
+% title('Signal used for estimation')
+% hold on
+% plot(yh_step(2,:),'r--')
+% hold off
 
 %% CONTROLLER
 

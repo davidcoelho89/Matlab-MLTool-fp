@@ -1,4 +1,4 @@
-classdef mlpArx < idenfierArx
+classdef mlpArx < identifierArx
     %
     % --- MLP for System Identification ---
     %
@@ -225,43 +225,6 @@ classdef mlpArx < idenfierArx
             end
             
             self.yh = Yi;
-            
-        end
-        
-        % Prediction Function (1 instance)
-        function self = partial_predict(self,x)
-            
-            if(self.add_bias == 1)
-                x = [1 ; x];
-            end
-            
-            x = update_regression_vector(x,...
-                                         self.output_memory,...
-                                         self.prediction_type, ...
-                                         self.add_bias);
-            
-            self = self.calculate_output(x);
-            
-            self.output_memory = update_output_memory(self.yh,...
-                                                      self.output_memory,...
-                                                      self.output_lags);
-        end
-        
-        % Prediction Function (N instances)
-        function self = predict(self,X)
-            
-            [~,number_of_samples] = size(X);
-            number_of_outputs = get_number_of_outputs(self);
-
-            self.Yh = zeros(number_of_outputs,number_of_samples);
-            
-            output_memory_length = sum(self.output_lags);
-            self.output_memory = X(1:output_memory_length,1);
-            
-            for n = 1:number_of_samples
-                self = self.partial_predict(X(:,n));
-                self.Yh(:,n) = self.yh;
-            end
             
         end
         

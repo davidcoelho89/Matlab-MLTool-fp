@@ -1,4 +1,4 @@
-classdef spokClassifier
+classdef spokClassifier < prototypeBasedClassifier
     %
     % --- SParse Online adptive Kernel Classifier ---
     %
@@ -43,7 +43,7 @@ classdef spokClassifier
     %       = 1: Manhattam (city-block) distance
     %       = 2: Euclidean distance
     %       >= 3: Minkowski distance
-    %    - nearest_neighbors = number of nearest neighbors (classification)
+    %    - nearest_neighbors = number of nearest neighbors
     %    - knn_aproximation = how the output will be generated
     %        = 'majority_voting'
     %        = 'weighted_knn'
@@ -60,14 +60,15 @@ classdef spokClassifier
     %    - Cx = Clusters' centroids (prototypes) [p x Nk]
     %    - Cy = Clusters' labels
     %    - Km = Kernel Matrix of Entire Dictionary
-    %    - Kinv = Kernel Matrix for each class (cell)
+    %    - Kmc = Kernel Matrix for each class (cell)
+    %    - Kinv = Inverse Kernel Matrix of Entire Dictionary
     %    - Kinvc = Inverse Kernel Matrix for each class (cell)
     %    - score = Score used for prunning method
     %    - classification_history = Used for prunning method
     %    - times_selected = Used for prunning method
     %    - video = frame structure (can be played with 'video function')
-    %       Size: [1 x Nep.Ntr]
-    %    - Yh = Hold all predictions (fit)
+    %              Size: [1 x Nep.Ntr]
+    %    - Yh = Hold all predictions
     %    - yh = Hold last prediction
     %
     % Methods:
@@ -105,23 +106,19 @@ classdef spokClassifier
 
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
-        Cx = [];     % Clusters' centroids (prototypes)
-        Cy = [];     % Clusters' labels
-        Km = [];     % Kernel Matrix of Entire Dictionary
-        Kmc = [];    % Kernel Matrix for each class (cell)
-        Kinv = [];   % Inverse Kernel Matrix of Dictionary
-        Kinvc = [];  % Inverse Kernel Matrix for each class (cell)
-        score = [];          % Used for prunning method
-        class_history = [];  % Used for prunning method
-        times_selected = []; % Used for prunning method
-        video = [];  % frame structure (can be played with 'video function')
-        Yh = [];           % all predictions (fit function)
-        winners = [];      % closest prototype to each sample [1 x N]
-        distances = [];    % distance of each sample from each prototype [Nk x N]
-        near_indexes = []; % indexes for nearest prototypes [K x N]
+        
+        Km = [];
+        Kmc = [];
+        Kinv = [];
+        Kinvc = [];
+        score = [];
+        classification_history = [];
+        times_selected = [];
+        video = [];
+        
         yh = [];           % last prediction (partial_fit function)
         winner = [];       % closest prototype to sample [1 x 1]
-        distance = [];     % distance of sample from each prototype [Nk x 1]
+        distance = [];     % distance of sample from each prot [Nk x 1]
         near_index = [];   % indexes for nearest prototypes [K x 1]
 
     end
@@ -213,11 +210,6 @@ classdef spokClassifier
             end % end epoch
 
         end % end fit
-
-        % Prediction Function
-        function self = predict(self,X)
-            self = prototypesClassify(self,X);
-        end
 
         function self = dictionaryGrow(self,x,y)
             % ToDo - All

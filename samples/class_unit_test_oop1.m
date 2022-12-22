@@ -2,7 +2,7 @@
 
 % Classification Algorithms (OOP Based) - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/11/15
+% Last Update: 2022/12/22
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -131,12 +131,12 @@ classification_stats_ts = classification_stats_ts.addResult(stats_ts);
 
 end
 
-%% RESULTS - CALCULATE
+%% RESULTS / STATISTICS - CALCULATE
 
 classification_stats_tr = classification_stats_tr.calculate_all();
 classification_stats_ts = classification_stats_ts.calculate_all();
 
-%% SHOW RESULTS
+%% RESULTS / STATISTICS - SHOW
 
 cell_stats_compare{1,1} = classification_stats_tr;
 cell_stats_compare{1,2} = classification_stats_ts;

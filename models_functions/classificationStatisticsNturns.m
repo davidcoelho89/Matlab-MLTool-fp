@@ -50,6 +50,11 @@ classdef classificationStatisticsNturns
         function self = addResult(self,classStats1turn)
             
             self.realization = self.realization + 1;
+            if(self.realization > self.number_of_realizations)
+            disp('Overflow in number of results. Overwriting.')
+                self.realization = 1;
+            end
+            
             self.cell_of_results{self.realization,1} = classStats1turn;
 
         end

@@ -17,10 +17,10 @@ classdef prototypeBasedClassifier
     %
     %   - Cx = Clusters' centroids (prototypes)
     %   - Cy = Clusters' labels
-    %   - Yh = all predictions (predict function)
-    %	- winners = The closest prototype for each sample
-    %	- distances = Distance from prototypes to each sample
-    %	- nearest_indexes = identify nearest prototypes for each sample
+    %   - Yh = all predictions (predict function) [Nc x N]
+    %	- winners = The closest prototype for each sample [1 x N]
+    %	- distances = Distance from prototypes to each sample [Nk x N]
+    %	- nearest_indexes = identify nearest prototypes for each sample [K x N]
     %
     % Methods
     %

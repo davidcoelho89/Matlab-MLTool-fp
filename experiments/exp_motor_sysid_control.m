@@ -1,6 +1,6 @@
 %% MACHINE LEARNING TOOLBOX
 
-% System Identification Algorithms (OOP Based) - Unit Test
+% Motor System Identification and Control
 % Author: David Nascimento Coelho
 % Last Update: 2022/12/22
 
@@ -9,16 +9,17 @@ clear;          % Clear all variables
 clc;            % Clear command window
 format long e;  % Output data style (float)
 
-%% CHOOSE EXPERIMENT PARAMETERS AND OBJECTS
+
+%% PARAMETERS AND OBJECTS
 
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
-dataset_name = 'linear_arx_01'; % 'linear_arx_01' 'tank' 'motor_step' 'motor'
+dataset_name = 'motor';         % 'motor_step' 'motor'
 model_name = 'mlp';             % 'mlp'
 normalization = 'zscore3';     	% 'none' 'zscore' 'zscore3'
-output_lags = 2;                % [2,2];
-input_lags = 2;                 % [2,2];
+output_lags = [2,2];            % 2;
+input_lags = [2,2];             % 2;
 
 inputs_to_work_with = 'all';
 outputs_to_work_with = 'all';
@@ -166,12 +167,12 @@ sysId_stats_pre = sysId_stats_pre.addResult(stats);
 
 end
 
-%% RESULTS / STATISTICS - CALCULATE
+%% RESULTS - CALCULATE
 
 sysId_stats_est = sysId_stats_est.calculate_all();
 sysId_stats_pre = sysId_stats_pre.calculate_all();
 
-%% RESULTS / STATISTICS - SHOW
+%% RESULTS / STATISTICS
 
 y_est = sysId_stats_est.cell_of_results{1}.Y;
 yh_est = sysId_stats_est.cell_of_results{1}.Yh;
@@ -192,5 +193,55 @@ title('Signal used for prediction')
 hold on
 plot(yh_pred(1,:),'r--')
 hold off
+
+%% MOTOR TEST - NEW DATA SET
+
+% % Load motor step
+% 
+% dataset_name = 'motor_step';
+% datasetTS = loadSysIdDataset(dataset_name);
+% plot_time_series(datasetTS);
+% 
+% % Normalize
+% 
+% datasetTS = normalizer.transform(datasetTS);
+% plot_time_series(datasetTS);
+% 
+% % Predict model
+% 
+% dataset = buildRegressionMatrices(datasetTS,output_lags,input_lags);
+% model = model.predict(dataset.input);
+% stats = statsGen1turn.calculate_all(model.Yh,dataset.output);
+% 
+% % Gera Graficos comparativos
+% 
+% y_step = dataset.output;
+% yh_step = model.Yh;
+% 
+% figure;
+% plot(y_step(1,:),'b-')
+% title('Signal used for estimation')
+% hold on
+% plot(yh_step(1,:),'r--')
+% hold off
+% 
+% figure;
+% plot(y_step(2,:),'b-')
+% title('Signal used for estimation')
+% hold on
+% plot(yh_step(2,:),'r--')
+% hold off
+
+%% CONTROLLER
+
+
+
+%% RESULTS / STATISTICS - CALCULATE
+
+
+
+%% RESULTS / STATISTICS - SHOW
+
+
 
 %% END

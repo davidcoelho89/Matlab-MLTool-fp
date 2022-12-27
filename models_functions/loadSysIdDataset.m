@@ -50,6 +50,10 @@ elseif(strcmp(dataset_name,'motor_step'))
 	loaded_data = load('motor2.mat');
     DATA.input = loaded_data.u;
     DATA.output = loaded_data.y;
+elseif(strcmp(dataset_name,'motor_aprbs'))
+	loaded_data = load('motor_aprbs.mat');
+    DATA.input = loaded_data.u1;
+    DATA.output = loaded_data.y1;
 elseif(strcmp(dataset_name,'motor'))
 	loaded_data = load('motor.mat');
     DATA.input = loaded_data.u1;

@@ -14,8 +14,8 @@ format long e;  % Output data style (float)
 number_of_realizations = 10;    
 percentage_for_training = 0.5;  
 prediction_type = 1;            % "=0": free simulate. ">0": n-steps ahead
-dataset_name = 'motor_aprbs';   % 'linear_arx_01' 'tank'
-model_name = 'mlp';             % 'mlp'
+dataset_name = 'linear_arx_01'; % 'linear_arx_01' 'tank'
+model_name = 'mlp';             % 'mlp' 'lms'
 normalization = 'zscore3';     	% 'none' 'zscore' 'zscore3'
 output_lags = 2;                % [2,2];
 input_lags = 2;                 % [2,2];

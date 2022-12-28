@@ -36,7 +36,7 @@ classdef spokClassifier < prototypeBasedClassifier
     %    - max_prototypes = max # of model's prototypes ("Budget")
     %    - min_prototypes = min # of model's prototypes ("restriction")
     %    - video_enabled = [0 or 1]
-    %    - type of distance = [cte]
+    %    - distance_measure = [cte]
     %    	= 0: Dot product
     %       = inf: Chebyshev distance
     %       = -inf: Minimum Minkowski distance
@@ -48,6 +48,7 @@ classdef spokClassifier < prototypeBasedClassifier
     %        = 'majority_voting'
     %        = 'weighted_knn'
     %    - kernel_type = which kernel will be used
+    %        = 'none' (it is not a kernel based model)
     %    - regularization = kernel regularization parameter
     %        Avoid numerical problems when inverting kernel matrices
     %    - sigma = kernel hyperparameter ( see kernel_func() ) 

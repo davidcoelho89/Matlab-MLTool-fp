@@ -12,15 +12,14 @@ classdef identifierArx
     %
     %   - Yh = matrix that holds all predictions  [Noutputs x Nsamples]
     %   - yh = vector that holds last prediction  [Noutputs x 1]
-    %   - output_memory = vector holding past values of predictions or
-    %              outputs (depends on prediction type and output lags)
+    %   - last_predictions_memory = vector holding past values of predictions
     %
     % Methods
     %
     %   - self = identifierArx() 
     %   - self = predict(self,X) 
     %   - self = partial_predict(self,x)
-    %   - self = update_output_memory_from_prediction(self)
+    %   - self = update_memory_from_prediction(self)
     %   - xn_out = update_regression_vector_from_memory(self,x)
     %
     % ----------------------------------------------------------------
@@ -39,7 +38,7 @@ classdef identifierArx
 
         Yh = [];
         yh = [];
-        output_memory = [];
+        last_predictions_memory = [];
 
     end
 
@@ -59,7 +58,7 @@ classdef identifierArx
 
             x = self.update_regression_vector_from_memory(x);
             self = self.calculate_output(x);
-            self = self.update_output_memory_from_prediction();
+            self = self.update_memory_from_prediction();
 
         end
 
@@ -71,7 +70,7 @@ classdef identifierArx
             
             self.Yh = zeros(number_of_outputs,number_of_samples);
             
-            self.output_memory = X(1:sum(self.output_lags),1);
+            self.last_predictions_memory = X(1:sum(self.output_lags),1);
             
             for n = 1:number_of_samples
                 self = self.partial_predict(X(:,n));
@@ -80,9 +79,9 @@ classdef identifierArx
             
         end
 
-        function self = update_output_memory_from_prediction(self)
+        function self = update_memory_from_prediction(self)
             
-            updated_memory = zeros(length(self.output_memory),1);
+            updated_memory = zeros(length(self.last_predictions_memory),1);
             
             initial_sample_index = 1;
             for i = 1:length(self.output_lags)
@@ -95,14 +94,19 @@ classdef identifierArx
                 else
                     updated_memory(initial_sample_index:final_sample_index,1) = ...
                     [self.yh(i); ...
-                     self.output_memory(initial_sample_index:final_sample_index-1,1)];
+                     self.last_predictions_memory(initial_sample_index:final_sample_index-1,1)];
                 end
                 % Update Initial sample for next output
                 initial_sample_index = final_sample_index + 1;
             end
 
-            self.output_memory = updated_memory;
+            self.last_predictions_memory = updated_memory;
             
+        end
+        
+        function self = hold_last_output_from_fit(self,y)
+            self.yh = y;
+            self = self.update_memory_from_prediction();
         end
         
         function xn_out = update_regression_vector_from_memory(self,x)
@@ -111,9 +115,9 @@ classdef identifierArx
             
             if(self.prediction_type == 0)       % free simulation
                 if(self.add_bias)
-                    xn_out(2:length(self.output_memory)+1,1) = self.output_memory;
+                    xn_out(2:length(self.last_predictions_memory)+1,1) = self.last_predictions_memory;
                 else
-                    xn_out(1:length(self.output_memory),1) = self.output_memory;
+                    xn_out(1:length(self.last_predictions_memory),1) = self.last_predictions_memory;
                 end
             elseif(self.prediction_type == 1)   % 1-step ahead
                 % Does nothing

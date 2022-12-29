@@ -94,10 +94,10 @@ classdef spokClassifier < prototypeBasedClassifier
         max_prototypes = 600;
         min_prototypes = 2;
         video_enabled = 0;
-        distance_measure = 2;
-        nearest_neighbors = 1;
-        knn_aproximation = 'majority_voting';
-        kernel_type = 'gaussian';
+%         distance_measure = 2;
+%         nearest_neighbors = 1;
+%         knn_aproximation = 'majority_voting';
+%         kernel_type = 'gaussian';
         regularization = 0.001;
         sigma = 2;
         alpha = 1;

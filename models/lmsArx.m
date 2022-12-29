@@ -72,24 +72,29 @@ classdef lmsArx < identifierArx
         
         % Initialize Parameteres
         function self = initialize_parameters(self,x,y)
+            
+            % Needed for all arx models
+            self.last_predictions_memory = x(1:sum(self.output_lags));
+
             if(self.add_bias == 1)
                 self.W = 0.01*rand(length(y),length(x)+1);
             else
                 self.W = 0.01*rand(length(y),length(x));
             end
-            self.output_memory = x(1:sum(self.output_lags));
+            
         end
         
         % Training Function (1 instance)
         function self = partial_fit(self,x,y)
             
+            % Need this function for first instance
             if(isempty(self.W))
                 self = initialize_parameters(x,y);
             end
             
-            self.output_memory = update_output_memory(y,...
-                                                      self.output_memory,...
-                                                      self.output_lags);
+            % Need this function for free simulation
+            self = self.hold_last_output_from_fit(y);
+            
             if(self.add_bias)
                 x = [1 ; x];
             end

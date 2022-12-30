@@ -84,8 +84,6 @@ datasets.data_ts.input = normalizer.transform(datasets.data_ts.input);
 
 data_acc{realization} = datasets;
 
-
-
 end
 
 %% END

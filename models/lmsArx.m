@@ -16,8 +16,7 @@ classdef lmsArx < identifierArx
     %
     %   - Yh = matrix that holds all predictions  [Noutputs x Nsamples]
     %   - yh = vector that holds last prediction  [Noutputs x 1]
-    %   - output_memory = vector holding past values of predictions or
-    %                 outputs (depends on prediction type and output lags)
+    %   - last_predictions_memory = vector holding past values of predictions
     %
     %   - W = Regression Matrix [Nc x p] or [Nc x p+1]
     %   - W_acc = Accumulate progression of weights

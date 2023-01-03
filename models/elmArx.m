@@ -1,6 +1,6 @@
 classdef elmArx < identifierArx
     %
-    % --- LMS for System Identification ---
+    % --- ELM for System Identification ---
     %
     % Properties (Hyperparameters)
     %

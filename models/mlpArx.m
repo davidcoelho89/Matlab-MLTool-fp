@@ -12,8 +12,7 @@ classdef mlpArx < identifierArx
     %
     %   - Yh = matrix that holds all predictions  [Noutputs x Nsamples]
     %   - yh = vector that holds last prediction  [Noutputs x 1]
-    %   - output_memory = vector holding past values of predictions or
-    %              outputs (depends on prediction type and output lags)
+    %   - last_predictions_memory = vector holding past values of predictions
     %
     % Methods
     %
@@ -71,6 +70,10 @@ classdef mlpArx < identifierArx
 
         % Initialize Parameteres
         function self = initialize_parameters(self,x,y)
+            
+            % Needed for all arx models
+            self.last_predictions_memory = x(1:sum(self.output_lags));
+            
             p = length(x);
             No = length(y);
 
@@ -86,25 +89,19 @@ classdef mlpArx < identifierArx
                 self.W_old{i} = self.W{i};
             end
             
-            self.output_memory = x(1:sum(self.output_lags));
         end
         
         % Training Function (1 instance)
         function self = partial_fit(self,x,y)
             
+            % Need this function for first instance
             if(isempty(self.W))
                 self = self.initialize_parameters(x,y);
-
-                disp('Initial W - for debug');
-                disp(self.W{1});
-                disp(self.W{2});
-                
             end
             
-            self.output_memory = update_output_memory(y,...
-                                                      self.output_memory,...
-                                                      self.output_lags);
-            
+            % Need this function for free simulation
+            self = self.hold_last_output_from_fit(y);
+                        
             % information of each layer
             local_input = cell(self.number_of_layers,1);
             local_output = cell(self.number_of_layers,1);
@@ -135,16 +132,12 @@ classdef mlpArx < identifierArx
             % Error Calculation
             self.error = y - local_output{self.number_of_layers};
             
-%             disp('Error - for debug');
-%             disp(self.error);
-            
             % Backward Step (Calculate Layers' Local Gradients)
             for i = self.number_of_layers:-1:1
                 
                 if (i == self.number_of_layers) % output layer
                     Di = self.function_derivate(local_output{i},'linear');
                     local_gradient{i} = Di.*self.error;
-                    % local_gradient{i} = self.error;
                 else
                     Di = self.function_derivate(local_output{i},self.non_linearity);
                     retropropagated_error = self.W{i+1}(:,2:end)'*local_gradient{i+1};
@@ -186,14 +179,7 @@ classdef mlpArx < identifierArx
                 X = X(:,I);
                 Y = Y(:,I);
 
-                SQE = 0; % Init sum of quadratic errors
-                
-%                 disp('epoch');
-%                 disp(epoch);
-%                 disp('W - for debug');
-%                 disp(self.error);
-%                 disp(self.W{2});
-%                 system('pause');
+                SQE = 0;
                 
                 for t = 1:number_of_samples
                       self = self.partial_fit(X(:,t),Y(:,t));

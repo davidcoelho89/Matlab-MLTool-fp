@@ -49,7 +49,7 @@ Nlin = PAR.Nlin;                    % Non-linearity
 
 % Weight Matrices Initialization
 
-if (isfield(PAR,'W')), 
+if (isfield(PAR,'W'))
     W{1} = PAR.W{1};            	% if already initialized
 else
     W{1} = 0.01*(2*rand(Nh,p+1)-1);	% Weights of Hidden layer [-0.01,0.01]
@@ -63,7 +63,7 @@ Xk = zeros(Nh+1,N);
 
 %% ALGORITHM
 
-for t = 1:N,
+for t = 1:N
 
     % HIDDEN LAYER
     xi = X(:,t);              	% Get input sample

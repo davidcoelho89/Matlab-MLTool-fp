@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 number_of_realizations = 10;
 percentage_for_training = 0.7;
 dataset_name = 'iris';
-model_name = 'ols';
+model_name = 'knn';
 normalization = 'zscore';
 label_encoding = 'bipolar';
 split_method = 'random';

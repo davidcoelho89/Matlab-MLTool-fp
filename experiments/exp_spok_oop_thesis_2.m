@@ -9,9 +9,8 @@ clear;          % Clear all variables
 clc;            % Clear command window
 format long e;  % Output data style (float)
 
-%% CHOOSE EXPERIMENT PARAMETERS AND OBJECTS
+%% EXPERIMENT PARAMETERS AND OBJECTS
 
-number_of_realizations = 02;
 percentage_for_training = 0.7;
 dataset_name = 'iris';
 model_name = 'spok';
@@ -25,15 +24,10 @@ hp_optm_cost_function = 'error';
 hp_optm_weighting_factor = 0.5;
 hp_optm_struct = [];
 
-data_acc = cell(number_of_realizations,1);
-classifier_acc = cell(number_of_realizations,1);
-
 normalizer = dataNormalizer();
 normalizer.normalization = normalization;
 
 statsGen1turn = classificationStatistics1turn();
-classification_stats_tr = classificationStatisticsNturns(number_of_realizations);
-classification_stats_ts = classificationStatisticsNturns(number_of_realizations);
 
 %% LOAD CLASSIFIER AND CHOOSE ITS HYPERPARAMETERS
 
@@ -66,31 +60,48 @@ classifier.gamma = 2;
 dataset = loadClassificationDataset(dataset_name);
 dataset = encodeLabels(dataset,label_encoding);
 
-%% RUN EXPERIMENT
-
-for realization = 1:number_of_realizations
-
-% %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
-
-disp('Turn and Time');
-disp(realization);
-display(datestr(now));
-
-% %%%%%%%%%%%% SPLIT AND NORMALIZE DATASETS %%%%%%%%%%%%%%
+%% HOLD OUT AND NORMALIZATION
 
 datasets = splitDataset(dataset,split_method,percentage_for_training);
+data_tr = datasets.data_tr;
+data_ts = datasets.data_ts;
 
-normalizer = normalizer.fit(datasets.data_tr.input);
-datasets.data_tr.input = normalizer.transform(datasets.data_tr.input);
-datasets.data_ts.input = normalizer.transform(datasets.data_ts.input);
+normalizer = normalizer.fit(data_tr.input);
+data_tr.input = normalizer.transform(data_tr.input);
+data_ts.input = normalizer.transform(data_ts.input);
 
-data_acc{realization} = datasets;
+%% TRAIN, TEST, STATISTICS
+
+% classifier = classifier.fit(data_tr.input,data_tr.output);
+% 
+% classifier = classifier.predict(data_tr.input);
+% stats_tr = statsGen1turn.calculate_all(data_tr.output,classifier.Yh);
+% 
+% classifier = classifier.predict(data_ts.input);
+% stats_ts = statsGen1turn.calculate_all(data_ts.output,classifier.Yh);
+
+%% RESULTS / STATISTICS - SHOW
 
 
 
-end
 
 %% END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

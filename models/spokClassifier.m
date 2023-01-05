@@ -94,10 +94,6 @@ classdef spokClassifier < prototypeBasedClassifier
         max_prototypes = 600;
         min_prototypes = 2;
         video_enabled = 0;
-%         distance_measure = 2;
-%         nearest_neighbors = 1;
-%         knn_aproximation = 'majority_voting';
-%         kernel_type = 'gaussian';
         regularization = 0.001;
         sigma = 2;
         alpha = 1;
@@ -117,11 +113,6 @@ classdef spokClassifier < prototypeBasedClassifier
         times_selected = [];
         video = [];
         
-        yh = [];           % last prediction (partial_fit function)
-        winner = [];       % closest prototype to sample [1 x 1]
-        distance = [];     % distance of sample from each prot [Nk x 1]
-        near_index = [];   % indexes for nearest prototypes [K x 1]
-
     end
 
     methods
@@ -179,7 +170,8 @@ classdef spokClassifier < prototypeBasedClassifier
             Ys = Y;                  % Don't shuffle original data
             [Nc,N] = size(Y);        % Total of classes and samples
             self.Yh = -1*ones(Nc,N); % Initialize outputs
-            iteration = 0;           % 
+            iteration = 0;           % Initialize number of iterations
+
             self.video = struct('cdata',cell(1,N*self.number_of_epochs),...
                                 'colormap', cell(1,N*self.number_of_epochs));
 

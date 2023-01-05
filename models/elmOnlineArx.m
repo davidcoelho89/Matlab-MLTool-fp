@@ -1,6 +1,6 @@
-classdef elmArx < identifierArx
+classdef elmOnlineArx < identifierArx
     %
-    % --- ELM for System Identification ---
+    % --- ELM for Online System Identification ---
     %
     % Properties (Hyperparameters)
     %
@@ -21,6 +21,8 @@ classdef elmArx < identifierArx
     
     % Hyperparameters
     properties
+        
+        forgiving_factor = 1;
         number_of_hidden_neurons = 25;
         non_linearity = 'sigmoid';
     end
@@ -28,6 +30,7 @@ classdef elmArx < identifierArx
     % Parameters
     properties (GetAccess = public, SetAccess = protected)
         W = [];
+        P = [];
         structure = [];
         number_of_layers = [];
     end
@@ -35,7 +38,7 @@ classdef elmArx < identifierArx
     methods
         
         % Constructor
-        function self = elmArx()
+        function self = elmOnlineArx()
             % Set the hyperparameters after initializing!
         end
         
@@ -59,6 +62,37 @@ classdef elmArx < identifierArx
             else
                 self.W{1} = 0.01*(2*rand(self.number_of_hidden_neurons,p)-1);
             end
+            self.W{2} = zeros(No,self.number_of_hidden_neurons + 1);
+            self.P = 1e+4 * eye(self.number_of_hidden_neurons + 1);
+
+        end
+        
+        % Training Function (1 instance)
+        function self = partial_fit(self,x,y)
+            
+            % Need this function for first instance
+            if(isempty(self.W))
+                self = self.initialize_parameters(x,y);
+            end
+            
+            % Need this function for free simulation
+            self = self.hold_last_output_from_fit(y);
+            
+            % Add bias to input
+            if(self.add_bias)
+                x = [1 ; x];
+            end
+            
+            % Get output from hidden layer (input for output layer)
+            Ui = self.W{1} * x;
+            Yi = self.activation_function(Ui,self.non_linearity);
+            xk = [1; Yi];
+            
+            % Update W{2}
+            K = self.P*xk/(self.forgiving_factor + xk'*self.P*xk);
+            error = (y' - xk'*self.W{2}');
+            self.W{2} = self.W{2} + error'*K';
+            self.P = (1/self.forgiving_factor)*(self.P - K*xk'*self.P);
         end
         
         % Training Function (N instances)
@@ -68,19 +102,9 @@ classdef elmArx < identifierArx
             
             self = self.initialize_parameters(X(:,1),Y(:,1));
             
-            if(self.add_bias)
-                X = [ones(1,number_of_samples) ; X];
+            for n = 1:number_of_samples
+                self = self.partial_fit(X(:,n),Y(:,n));
             end
-            
-            Xk = zeros(self.number_of_hidden_neurons+1,number_of_samples);
-            for t = 1:number_of_samples
-                xi = X(:,t);
-                Ui = self.W{1} * xi;
-                Yi = self.activation_function(Ui,self.non_linearity);
-                Xk(:,t) = [1; Yi];
-            end
-            
-            self.W{2} = Y*pinv(Xk);
             
         end
         

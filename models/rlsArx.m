@@ -82,7 +82,7 @@ classdef rlsArx < identifierArx
 
             % Need this function for first instance
             if(isempty(self.W))
-                self = initialize_parameters(x,y);
+                self = self.initialize_parameters(x,y);
             end
 
             % Need this function for free simulation

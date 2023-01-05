@@ -14,7 +14,7 @@ function [OUT] = bubble_sort(V,order)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(order))),
+if ((nargin == 1) || (isempty(order)))
     order = 1;
 end
 
@@ -29,13 +29,13 @@ ind = (1:len);
 %% ALGORITHM
 
 % Encreasing order
-if order == 1,
-    for i = 1:(len - 1),
+if order == 1
+    for i = 1:(len - 1)
         % Restore stop flag
         stop_flag = 1;
         % do bubbling
-        for j = 1:(len - 1),
-            if (V(j) > V(j+1)),
+        for j = 1:(len - 1)
+            if (V(j) > V(j+1))
                 % adjust input vector
                 Vaux = V(j);
                 V(j) = V(j+1);
@@ -49,18 +49,18 @@ if order == 1,
             end
         end
         % breaks if stop flag is set 
-        if stop_flag == 1,
+        if stop_flag == 1
             break;
         end
     end
 % Decreasing order
 else
-    for i = 1:(len - 1),
+    for i = 1:(len - 1)
         % Restore stop flag
         stop_flag = 1;
         % do bubbling
-        for j = 1:(len - 1),
-            if (V(j) < V(j+1)),
+        for j = 1:(len - 1)
+            if (V(j) < V(j+1))
                 % adjust input vector
                 Vaux = V(j);
                 V(j) = V(j+1);
@@ -74,7 +74,7 @@ else
             end
         end
         % breaks if stop flag is set 
-        if stop_flag == 1,
+        if stop_flag == 1
             break;
         end
     end

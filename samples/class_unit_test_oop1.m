@@ -53,7 +53,7 @@ elseif(strcmp(model_name,'lms'))
 elseif(strcmp(model_name,'knn'))
     classifier.distance_measure = 2;
     classifier.nearest_neighbors = 1;
-    classifier.knn_aproximation = 'majority_voting';
+    classifier.knn_aproximation = 'majority_voting'; % 'weighted_knn'
     classifier.kernel_type = 'none';
 
 elseif(strcmp(model_name,'spok'))

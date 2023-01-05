@@ -63,14 +63,14 @@ Cy = HP.Cy;           	% Classes of prototypes
 
 % Get Data
 
-xt = DATA.input;
-yt = DATA.output;
+x = DATA.input;
+y = DATA.output;
 
 % Get problem parameters
 
 [~,m] = size(Cx);       % Dictionary size
 
-[~,c] = max(yt);        % Class of sample (Sequential encoding)
+[~,c] = max(y);         % Class of sample (Sequential encoding)
 
 [~,Cy_seq] = max(Cy);	% Classes of dictionary (Sequential encoding)
 
@@ -100,13 +100,13 @@ else
 
         % Get criterion result
         if Ss == 1
-            OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
+            OUTcrit = ald_criterion(Dx,x,HP,Kinv);
         elseif Ss == 2
-            OUTcrit = coherence_criterion(Dx,xt,HP);
+            OUTcrit = coherence_criterion(Dx,x,HP);
         elseif Ss == 3
-            OUTcrit = novelty_criterion(Dx,Dy,xt,yt,HP);
+            OUTcrit = novelty_criterion(Dx,Dy,x,y,HP);
         elseif Ss == 4
-            OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
+            OUTcrit = surprise_criterion(Dx,Dy,x,y,HP,Kinv);
         end
 
         % Expand or not Dictionary
@@ -116,7 +116,6 @@ else
         
     end
 end
-
 
 %% FILL OUTPUT STRUCTURE
 

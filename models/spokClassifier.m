@@ -130,14 +130,14 @@ classdef spokClassifier < prototypeBasedClassifier
             [~,number_of_prototypes_old] = size(self.Cx);
 
             if (number_of_prototypes_old == 0)
-                % Make a guess (yh = [1 -1 -1 ... -1 -1]' : first class)
+                % Make a guess (yh = [1 -1 ... -1 -1]' : first class)
                 self.yh = -1*ones(number_of_classes,1);
                 self.yh(1) = 1;
                 % Add sample to dictionary
                 self = self.dictionaryGrow(x,y);
             else
                 % Predict Output
-                self = prototypesClassify(self,x);
+                self = self.partial_predict(x);
 
                 % Update number of times a prototype has been the winner
                 self.times_selected(self.winner) = self.times_selected(self.winner) + 1;
@@ -185,6 +185,7 @@ classdef spokClassifier < prototypeBasedClassifier
                     end
 
                     self = self.partial_fit(Xs(:,n),Ys(:,n));
+                    self.Yh(:,n) = self.yh;
 
                 end
 
@@ -197,7 +198,7 @@ classdef spokClassifier < prototypeBasedClassifier
 
                 % Hold last classification labels
                 if(epoch == self.number_of_epochs)
-                    self = self.predict(X,Y);
+                    self = self.predict(X);
                 end
 
             end % end epoch
@@ -205,8 +206,49 @@ classdef spokClassifier < prototypeBasedClassifier
         end % end fit
 
         function self = dictionaryGrow(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+            
+            [~,m] = size(self.Cx);     % Dictionary size
+            [~,c] = max(y);            % Class of sample (Sequential encoding)
+            [~,Cy_seq] = max(self.Cy); % Classes of dictionary (Sequential)
+            mc = sum(Cy_seq == c);     % Number of prototypes from samples' class
+            
+            % Add first element to dictionary (total or from class)
+            if (m == 0 || (Dm == 2 && mc == 0))
+                self = self.addSample(x,y);
+            else
+                % Dont add if number of prototypes is too high
+                if (m < self.max_prototypes)
+                    
+                    if(strcmp(self.design_method,'single_dictionary'))
+                        Dx = self.Cx;
+                        Dy = self.Cy;
+                        Kinverse = self.Kinv;
+                    elseif(strcmp(self.design_method,'one_dicitionary_per_class'))
+                        Dx = self.Cx(:,Cy_seq == c);
+                        Dy = self.Cy(:,Cy_seq == c);
+                        Kinverse = self.Kinvc{c};
+                    end
+                    
+                    % Get criterion result
+                    if Ss == 1
+                        OUTcrit = aldCriterion(self,Dx,x,Kinverse);
+                    elseif Ss == 2
+                        OUTcrit = coherenceCriterion(self,Dx,x);
+                    elseif Ss == 3
+                        OUTcrit = noveltyCriterion(self,Dx,Dy,x,y);
+                    elseif Ss == 4
+                        OUTcrit = surpriseCriterion(self,Dx,Dy,x,y,Kinverse);
+                    end
+                    
+                    % Expand or not Dictionary
+                    if(OUTcrit.result == 1)
+                        self = self.addSample(x,y);
+                    end                 
+                    
+                end
+                
+            end
+            
         end
 
         function self = dictionaryUpdate(self,x,y)

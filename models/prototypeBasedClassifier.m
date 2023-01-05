@@ -41,10 +41,15 @@ classdef prototypeBasedClassifier
     properties (GetAccess = public, SetAccess = protected)
         Cx = [];              % Clusters' centroids (prototypes)
         Cy = [];              % Clusters' labels
-        Yh = [];	          % all predictions (predict function)
-        winners = [];         % The closest prototype for each sample
-        distances = [];       % Distance from prototypes to each sample
-        nearest_indexes = []; % identify nearest prototypes for each sample
+        Yh = [];	          % All predictions (predict function)
+        yh = [];              % Last prediction (partial_predict function)
+        winners = [];         % Closest prototypes to each sample  [1 x N]
+        winner = [];          % Closest prototypes to a sample     [1 x 1]
+        distances = [];       % Distance of prot to each sample    [Nk x N]
+        distance = [];        % Distance of prot to a sample       [Nk x 1]
+        nearest_indexes = []; % Nearest prototypes for each sample [K x N]
+        near_index = [];      % Nearest prototypes for a sample    [K x 1]
+
     end
 
     methods
@@ -64,6 +69,11 @@ classdef prototypeBasedClassifier
         %   "Each classifier has it own function"
         % end
         
+        % Prediction Function (1 instance
+        function self = partial_predict(self,x)
+            
+        end
+
         % Prediction Function (N instances)
         function self = predict(self,X)
 

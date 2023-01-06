@@ -230,14 +230,17 @@ classdef spokClassifier < prototypeBasedClassifier
                     end
                     
                     % Get criterion result
-                    if Ss == 1
+                    if(strcmp(self.sparsification_strategy,'ald'))
                         OUTcrit = aldCriterion(self,Dx,x,Kinverse);
-                    elseif Ss == 2
+                    elseif(strcmp(self.sparsification_strategy,'coherence'))
                         OUTcrit = coherenceCriterion(self,Dx,x);
-                    elseif Ss == 3
+                    elseif(strcmp(self.sparsification_strategy,'novelty'))
                         OUTcrit = noveltyCriterion(self,Dx,Dy,x,y);
-                    elseif Ss == 4
+                    elseif(strcmp(self.sparsification_strategy,'surprise'))
                         OUTcrit = surpriseCriterion(self,Dx,Dy,x,y,Kinverse);
+                    else % use ald as default
+                        self.sparsification_strategy = 'ald';
+                        OUTcrit = aldCriterion(self,Dx,x,Kinverse);
                     end
                     
                     % Expand or not Dictionary
@@ -262,8 +265,74 @@ classdef spokClassifier < prototypeBasedClassifier
         end
 
         function self = addSample(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+            
+            % Initializations
+            ktt = kernelFunction(x,x,self); % kernel of sample and itself
+            Nc = length(y);                 % number of classes
+            [~,c] = max(y);                 % class of sample
+            [~,m] = size(self.Cx);       	% # of prototypes in the dict
+            [~,Dy_seq] = max(self.Cy);      % Sequential classes of dict
+            
+            % Add sample to dictionary
+            self.Cx = [self.Cx,x];
+            self.Cy = [self.Cy,y];
+            
+            % Add variables used to prunning
+            self.score = [self.score,0];
+            self.classification_history = [self.classification_history,0];
+            self.times_selected = [self.times_selected,0];
+            
+            % Update Kernel Matrices
+            
+            if (m == 0)
+
+                % Init Kernel matrix and its inverse for each class
+                self.Kmc = cell(Nc,1);
+                self.Kmc{c} = ktt + self.regularization;
+                self.Kinvc = cell(Nc,1);
+                self.Kinvc{c} = 1/self.Kmc{c};
+                
+                % Init Kernel matrix and its inverse for dataset
+                self.Km = ktt + self.regularization;
+                self.Kinv = 1/self.Km;
+                
+            else
+                
+                % Get number of prototypes from samples' class
+                mc = sum(Dy_seq == c);
+                
+                % Init kernel matrix and its inverse of samples' class
+                if (mc == 0)
+                    self.Kmc{c} = ktt + self.regularization;
+                    self.Kinvc{c} = 1/self.Kmc{c};
+                    
+                % Update kernel matrix and its inverse of samples' class
+                else
+                    % Get auxiliary variables
+                    Cx_c = self.Cx(:,Dy_seq == c); % Inputs from class c
+                    kt_c = kernelVector(Cx_c,x,self);
+                    at_c = self.Kinvc{c}*kt_c;
+                    delta_c = (ktt - kt_c'*at_c) + self.regularization;
+                    % Update Kernel matrix
+                    self.Kmc{c} = [self.Kmc{c}, kt_c; ...
+                                   kt_c', ktt + self.regularization];
+                    % Update Inverse Kernel matrix
+                    self.Kinvc{c} = (1/delta_c)*...
+                                  [delta_c*self.Kinvc{c} + at_c*at_c',-at_c; -at_c', 1];
+                end
+                
+                % Get auxiliary variables
+                kt = kernelVector(self.Cx,x,model);
+                at = self.Kinv * kt;
+                delta = (ktt - kt'*at) + self.regularization;
+                
+                % Update kernel matrix and its inverse for dataset
+                self.Km = [self.Km, kt; kt', ktt + self.regularization];
+                self.Kinv = (1/delta)*[delta*self.Kinv + at*at', -at; -at', 1];
+                
+            end
+            
+            
         end
 
         function self = removeSample(self,x,y)
@@ -276,6 +345,64 @@ classdef spokClassifier < prototypeBasedClassifier
             self = self + x + y;
         end
 
+    end % end methods
+    
+    methods (Static)
+        
+        function ALDout = aldCriterion(self,Dx,x,Kinverse)
+            
+            % Calculate auxiliary variables
+            ktt = kernelFunction(x,x,self);
+            kt = kernelVector(Dx,x,model);
+            
+            % Calculate ald coefficients
+            at = Kinverse * kt;
+            
+            % Calculate "Normalized delta"
+            delta = (ktt - kt'*at);
+            delta = delta + self.regularization;
+            
+            % Calculate Criterion (boolean)
+            result = (delta > v1);
+            
+            % Hold results
+            ALDout.result = result;
+            ALDout.ktt = ktt;
+            ALDout.kt = kt;
+            ALDout.at = at;
+            ALDout.delta = delta;            
+            
+        end
+        
+        function COHout = coherenceCriterion(self,Dx,x)
+            % ToDo - all
+            COHout = self + Dx + x;
+        end
+        
+        function NOVout = noveltyCriterion(self,Dx,Dy,x,y)
+            % ToDo - all
+            NOVout = self + Dx + Dy + x + y;
+        end
+        
+        function SURout = surpriseCriterion(self,Dx,Dy,x,y,Kinverse)
+            % ToDo - all
+            SURout = self + Dx + Dy + x + y + Kinverse;
+        end
+        
     end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

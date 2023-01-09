@@ -255,6 +255,38 @@ classdef spokClassifier < prototypeBasedClassifier
         end
 
         function self = dictionaryUpdate(self,x,y)
+            
+            if(~strcmp(self.update_strategy,'none'))
+                
+                % Get sequential class of sample
+                [~,yt_seq] = max(y);
+                % Find nearest prototype from whole dictionary
+                if(strcmp(self.design_method,'single_dictionary'))
+                    
+                    
+                % Find nearest prototype from class conditional dictionary
+                elseif(strcmp(self.design_method,'one_dicitionary_per_class'))
+                    
+                    
+                end
+                
+                % Find nearest prototype output
+                
+                % Update Closest prototype (new one)
+                
+                % New data to be added
+                
+                % Hold varibles used for prunning
+                
+                % Remove "old" prototype and add "updated" one from dictionary
+                
+                % Get variables for prunning
+                
+                
+            end
+            
+            
+            
             % ToDo - All
             self = self + x + y;
         end

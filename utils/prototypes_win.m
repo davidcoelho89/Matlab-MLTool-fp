@@ -29,7 +29,7 @@ function [c] = prototypes_win(C,sample,PAR)
 
 [~,Nk] = size(C);               % Number of prototypes
 Vdist = zeros(1,Nk);            % Vector of distances
-if (~(isfield(PAR,'dist'))),    % Type of distance
+if (~(isfield(PAR,'dist')))     % Type of distance
     dist = 2;
 else
     dist = PAR.dist;
@@ -39,7 +39,7 @@ end
     
 % Calculate Distance Vector
 
-for i = 1:Nk,
+for i = 1:Nk 
     % Get Prototype
     prot = C(:,i);
     % Calculate distance

@@ -260,19 +260,24 @@ classdef spokClassifier < prototypeBasedClassifier
                 
                 % Get sequential class of sample
                 [~,yt_seq] = max(y);
+
                 % Find nearest prototype from whole dictionary
                 if(strcmp(self.design_method,'single_dictionary'))
-                    
-                    
+                    winner = self.findWinnerPrototype(self.Cx,x,self);
                 % Find nearest prototype from class conditional dictionary
                 elseif(strcmp(self.design_method,'one_dicitionary_per_class'))
-                    
-                    
+                    [~,Dy_seq] = max(self.Cy);
+                    Dx_c = self.Cx(:,Dy_seq == yt_seq);
+                    win_c = self.findWinnerPrototype(Dx_c,x,self);
+                    winner = self.findWinnerPrototype(self.Cx,Dx_c(:,win_c),self);
                 end
                 
                 % Find nearest prototype output
-                
+                y_new = self.Cy(:,winner);
+                [~,y_new_seq] = max(y_new);
+    
                 % Update Closest prototype (new one)
+                
                 
                 % New data to be added
                 

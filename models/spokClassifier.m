@@ -277,23 +277,43 @@ classdef spokClassifier < prototypeBasedClassifier
                 [~,y_new_seq] = max(y_new);
     
                 % Update Closest prototype (new one)
-                
-                
-                % New data to be added
+                if(strcmp(self.update_strategy,'wta'))
+                    x_new = self.Cx(:,win) + self.update_rate*(x - self.Cx(:,win));
+                elseif(strcmp(self.update_strategy,'lvq'))
+                    if(yt_seq == y_new_seq)
+                        x_new = self.Cx(:,win) + self.update_rate*(x - self.Cx(:,win));
+                    else
+                        x_new = self.Cx(:,win) - self.update_rate*(x - self.Cx(:,win));
+                    end
+                elseif(strcmp(self.update_strategy,'wta_der'))
+                    x_new = self.Cx(:,win) + self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,win),self);
+                elseif(strcmp(self.update_strategy,'lvq_der'))
+                    if(yt_seq == y_new_seq)
+                        x_new = self.Cx(:,win) + self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,win),self);
+                    else
+                        x_new = self.Cx(:,win) - self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,win),self);
+                    end
+                end
                 
                 % Hold varibles used for prunning
+                score_aux = self.score(winner);
+                class_hist_aux = self.classification_history(winner);
+                times_selected_aux = self.times_selected(winner);
                 
                 % Remove "old" prototype and add "updated" one from dictionary
+                self = self.removeSample(winner);
+                self = self.addSample(x_new,y_new);
                 
                 % Get variables for prunning
-                
-                
+                self.score(end) = score_aux;
+                self.classification_history(end) = class_hist_aux;
+                self.times_selected(end) = times_selected_aux;
+                                
             end
             
-            
-            
-            % ToDo - All
-            self = self + x + y;
         end
 
         function self = dictionaryPrune(self,x,y)

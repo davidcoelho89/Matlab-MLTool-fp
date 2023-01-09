@@ -15,6 +15,4 @@ for j = 1:N
     kt(j) = kernelFunction(X(:,j),y,model);
 end
 
-%% END
-
 end

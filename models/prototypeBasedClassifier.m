@@ -281,4 +281,40 @@ classdef prototypeBasedClassifier
 
     end % end methods
 
+    methods (Static)
+        
+        function winner = findWinnerPrototype(Cx,sample,self)
+
+            [~,Nk] = size(Cx);
+            Vdist = zeros(1,Nk);
+            
+            for i = 1:Nk
+                Vdist(i) = vectorsDistance(Cx(:,i),sample,self);
+            end
+
+            if(self.distance == 0) % dot product
+                [~,winner] = max(Vdist);
+            else % other distance measures
+                [~,winner] = min(Vdist);
+            end
+
+        end
+
+    end
+
 end % end class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

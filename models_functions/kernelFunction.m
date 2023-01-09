@@ -1,4 +1,4 @@
-function [Kxy] = kernelFunction(x,y,model)
+function [kxy] = kernelFunction(x,y,model)
 
 %
 %  --- HELP about kernelFunction ---
@@ -58,23 +58,23 @@ end
 %% ALGORITHM
 
 if (strcmp(model.kernel_type,'linear'))
-    Kxy = (x' * y + model.theta);
+    kxy = (x' * y + model.theta);
 elseif (strcmp(model.kernel_type,'gaussian'))
-    Kxy = exp(-norm(x-y)^2/(model.sigma^2));
+    kxy = exp(-norm(x-y)^2/(model.sigma^2));
 elseif (strcmp(model.kernel_type,'polynomial'))
-    Kxy = (model.alpha * x' * y + model.theta)^model.gamma;
+    kxy = (model.alpha * x' * y + model.theta)^model.gamma;
 elseif (strcmp(model.kernel_type,'exponential'))
-    Kxy = exp(-norm(x-y)/model.sigma);
+    kxy = exp(-norm(x-y)/model.sigma);
 elseif (strcmp(model.kernel_type,'cauchy'))
-    Kxy = (1 + (norm(x-y)^2)/(model.sigma^2))^(-1);
+    kxy = (1 + (norm(x-y)^2)/(model.sigma^2))^(-1);
 elseif (strcmp(model.kernel_type,'log'))
-    Kxy = -log(1 + (norm(x-y)^model.gamma)/(model.sigma^2));
+    kxy = -log(1 + (norm(x-y)^model.gamma)/(model.sigma^2));
 elseif (strcmp(model.kernel_type,'sigmoid'))
-    Kxy = tanh(model.alpha * x' * y + model.theta);
+    kxy = tanh(model.alpha * x' * y + model.theta);
 elseif (strcmp(model.kernel_type,'kmod'))
-    Kxy = a*(exp(model.gamma/(norm(x-y)^2+model.sigma^2))-1);
+    kxy = a*(exp(model.gamma/(norm(x-y)^2+model.sigma^2))-1);
 else % Use dot product if a wrong option was chosen
-    Kxy = (x' * y);
+    kxy = (x' * y);
 end
 
 %% END

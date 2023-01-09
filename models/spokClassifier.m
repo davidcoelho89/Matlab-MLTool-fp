@@ -130,14 +130,14 @@ classdef spokClassifier < prototypeBasedClassifier
             [~,number_of_prototypes_old] = size(self.Cx);
 
             if (number_of_prototypes_old == 0)
-                % Make a guess (yh = [1 -1 -1 ... -1 -1]' : first class)
+                % Make a guess (yh = [1 -1 ... -1 -1]' : first class)
                 self.yh = -1*ones(number_of_classes,1);
                 self.yh(1) = 1;
                 % Add sample to dictionary
                 self = self.dictionaryGrow(x,y);
             else
                 % Predict Output
-                self = prototypesClassify(self,x);
+                self = self.partial_predict(x);
 
                 % Update number of times a prototype has been the winner
                 self.times_selected(self.winner) = self.times_selected(self.winner) + 1;
@@ -185,6 +185,7 @@ classdef spokClassifier < prototypeBasedClassifier
                     end
 
                     self = self.partial_fit(Xs(:,n),Ys(:,n));
+                    self.Yh(:,n) = self.yh;
 
                 end
 
@@ -197,7 +198,7 @@ classdef spokClassifier < prototypeBasedClassifier
 
                 % Hold last classification labels
                 if(epoch == self.number_of_epochs)
-                    self = self.predict(X,Y);
+                    self = self.predict(X);
                 end
 
             end % end epoch
@@ -205,11 +206,87 @@ classdef spokClassifier < prototypeBasedClassifier
         end % end fit
 
         function self = dictionaryGrow(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+            
+            [~,m] = size(self.Cx);     % Dictionary size
+            [~,c] = max(y);            % Class of sample (Sequential encoding)
+            [~,Cy_seq] = max(self.Cy); % Classes of dictionary (Sequential)
+            mc = sum(Cy_seq == c);     % Number of prototypes from samples' class
+            
+            % Add first element to dictionary (total or from class)
+            if (m == 0 || (Dm == 2 && mc == 0))
+                self = self.addSample(x,y);
+            else
+                % Dont add if number of prototypes is too high
+                if (m < self.max_prototypes)
+                    
+                    if(strcmp(self.design_method,'single_dictionary'))
+                        Dx = self.Cx;
+                        Dy = self.Cy;
+                        Kinverse = self.Kinv;
+                    elseif(strcmp(self.design_method,'one_dicitionary_per_class'))
+                        Dx = self.Cx(:,Cy_seq == c);
+                        Dy = self.Cy(:,Cy_seq == c);
+                        Kinverse = self.Kinvc{c};
+                    end
+                    
+                    % Get criterion result
+                    if(strcmp(self.sparsification_strategy,'ald'))
+                        OUTcrit = aldCriterion(self,Dx,x,Kinverse);
+                    elseif(strcmp(self.sparsification_strategy,'coherence'))
+                        OUTcrit = coherenceCriterion(self,Dx,x);
+                    elseif(strcmp(self.sparsification_strategy,'novelty'))
+                        OUTcrit = noveltyCriterion(self,Dx,Dy,x,y);
+                    elseif(strcmp(self.sparsification_strategy,'surprise'))
+                        OUTcrit = surpriseCriterion(self,Dx,Dy,x,y,Kinverse);
+                    else % use ald as default
+                        self.sparsification_strategy = 'ald';
+                        OUTcrit = aldCriterion(self,Dx,x,Kinverse);
+                    end
+                    
+                    % Expand or not Dictionary
+                    if(OUTcrit.result == 1)
+                        self = self.addSample(x,y);
+                    end                 
+                    
+                end
+                
+            end
+            
         end
 
         function self = dictionaryUpdate(self,x,y)
+            
+            if(~strcmp(self.update_strategy,'none'))
+                
+                % Get sequential class of sample
+                [~,yt_seq] = max(y);
+                % Find nearest prototype from whole dictionary
+                if(strcmp(self.design_method,'single_dictionary'))
+                    
+                    
+                % Find nearest prototype from class conditional dictionary
+                elseif(strcmp(self.design_method,'one_dicitionary_per_class'))
+                    
+                    
+                end
+                
+                % Find nearest prototype output
+                
+                % Update Closest prototype (new one)
+                
+                % New data to be added
+                
+                % Hold varibles used for prunning
+                
+                % Remove "old" prototype and add "updated" one from dictionary
+                
+                % Get variables for prunning
+                
+                
+            end
+            
+            
+            
             % ToDo - All
             self = self + x + y;
         end
@@ -220,8 +297,74 @@ classdef spokClassifier < prototypeBasedClassifier
         end
 
         function self = addSample(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+            
+            % Initializations
+            ktt = kernelFunction(x,x,self); % kernel of sample and itself
+            Nc = length(y);                 % number of classes
+            [~,c] = max(y);                 % class of sample
+            [~,m] = size(self.Cx);       	% # of prototypes in the dict
+            [~,Dy_seq] = max(self.Cy);      % Sequential classes of dict
+            
+            % Add sample to dictionary
+            self.Cx = [self.Cx,x];
+            self.Cy = [self.Cy,y];
+            
+            % Add variables used to prunning
+            self.score = [self.score,0];
+            self.classification_history = [self.classification_history,0];
+            self.times_selected = [self.times_selected,0];
+            
+            % Update Kernel Matrices
+            
+            if (m == 0)
+
+                % Init Kernel matrix and its inverse for each class
+                self.Kmc = cell(Nc,1);
+                self.Kmc{c} = ktt + self.regularization;
+                self.Kinvc = cell(Nc,1);
+                self.Kinvc{c} = 1/self.Kmc{c};
+                
+                % Init Kernel matrix and its inverse for dataset
+                self.Km = ktt + self.regularization;
+                self.Kinv = 1/self.Km;
+                
+            else
+                
+                % Get number of prototypes from samples' class
+                mc = sum(Dy_seq == c);
+                
+                % Init kernel matrix and its inverse of samples' class
+                if (mc == 0)
+                    self.Kmc{c} = ktt + self.regularization;
+                    self.Kinvc{c} = 1/self.Kmc{c};
+                    
+                % Update kernel matrix and its inverse of samples' class
+                else
+                    % Get auxiliary variables
+                    Cx_c = self.Cx(:,Dy_seq == c); % Inputs from class c
+                    kt_c = kernelVector(Cx_c,x,self);
+                    at_c = self.Kinvc{c}*kt_c;
+                    delta_c = (ktt - kt_c'*at_c) + self.regularization;
+                    % Update Kernel matrix
+                    self.Kmc{c} = [self.Kmc{c}, kt_c; ...
+                                   kt_c', ktt + self.regularization];
+                    % Update Inverse Kernel matrix
+                    self.Kinvc{c} = (1/delta_c)*...
+                                  [delta_c*self.Kinvc{c} + at_c*at_c',-at_c; -at_c', 1];
+                end
+                
+                % Get auxiliary variables
+                kt = kernelVector(self.Cx,x,model);
+                at = self.Kinv * kt;
+                delta = (ktt - kt'*at) + self.regularization;
+                
+                % Update kernel matrix and its inverse for dataset
+                self.Km = [self.Km, kt; kt', ktt + self.regularization];
+                self.Kinv = (1/delta)*[delta*self.Kinv + at*at', -at; -at', 1];
+                
+            end
+            
+            
         end
 
         function self = removeSample(self,x,y)
@@ -234,6 +377,64 @@ classdef spokClassifier < prototypeBasedClassifier
             self = self + x + y;
         end
 
+    end % end methods
+    
+    methods (Static)
+        
+        function ALDout = aldCriterion(self,Dx,x,Kinverse)
+            
+            % Calculate auxiliary variables
+            ktt = kernelFunction(x,x,self);
+            kt = kernelVector(Dx,x,model);
+            
+            % Calculate ald coefficients
+            at = Kinverse * kt;
+            
+            % Calculate "Normalized delta"
+            delta = (ktt - kt'*at);
+            delta = delta + self.regularization;
+            
+            % Calculate Criterion (boolean)
+            result = (delta > v1);
+            
+            % Hold results
+            ALDout.result = result;
+            ALDout.ktt = ktt;
+            ALDout.kt = kt;
+            ALDout.at = at;
+            ALDout.delta = delta;            
+            
+        end
+        
+        function COHout = coherenceCriterion(self,Dx,x)
+            % ToDo - all
+            COHout = self + Dx + x;
+        end
+        
+        function NOVout = noveltyCriterion(self,Dx,Dy,x,y)
+            % ToDo - all
+            NOVout = self + Dx + Dy + x + y;
+        end
+        
+        function SURout = surpriseCriterion(self,Dx,Dy,x,y,Kinverse)
+            % ToDo - all
+            SURout = self + Dx + Dy + x + y + Kinverse;
+        end
+        
     end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -15,7 +15,7 @@ number_of_realizations = 10;
 percentage_for_training = 0.5;  
 prediction_type = 0;            % "=0": free simulate. ">0": n-steps ahead
 dataset_name = 'motor_aprbs';  	% 'motor_step' 'motor' 'motor_aprbs'
-model_name = 'elm';             % 'mlp'
+identifier_name = 'elmOnline';	% 'mlp' 'elm' 'elmOnline'
 normalization = 'zscore3';     	% 'none' 'zscore' 'zscore3'
 output_lags = [2,2];            % 2;
 input_lags = [2,2];             % 2;
@@ -88,7 +88,7 @@ dataset = buildRegressionMatrices(datasetTS,output_lags,input_lags);
 
 % Model's Object
 
-model = initializeSysIdModel(model_name);
+model = initializeSysIdModel(identifier_name);
 
 % General Hyperparameters
 
@@ -97,31 +97,31 @@ model.output_lags = dataset.lag_output;
 
 % Specific Hyperparameters
 
-if(strcmp(model_name,'ols'))
+if(strcmp(identifier_name,'ols'))
     model.approximation = 'pinv';
     model.regularization = 0.0001;
     model.add_bias = 1;
     
-elseif(strcmp(model_name,'lms'))
+elseif(strcmp(identifier_name,'lms'))
     model.number_of_epochs = 50;
     model.learning_step = 0.05;
     model.add_bias = 1;
     model.video_enabled = 0;
     
-elseif(strcmp(model_name,'lmm'))
+elseif(strcmp(identifier_name,'lmm'))
     model.number_of_epochs = 5;
     model.learning_step = 0.1;
     model.video_enabled = 0;
     model.add_bias = 1;
     model.Kout = 0.3;
     
-elseif(strcmp(model_name,'rls'))
+elseif(strcmp(identifier_name,'rls'))
     model.number_of_epochs = 5;
         
-elseif(strcmp(model_name,'rlm'))
+elseif(strcmp(identifier_name,'rlm'))
     model.number_of_epochs = 5;
         
-elseif(strcmp(model_name,'mlp'))
+elseif(strcmp(identifier_name,'mlp'))
     model.number_of_epochs = 30;            % 20 a 100
     model.number_of_hidden_neurons = 8;     % 2 a 20
     model.learning_rate = 0.05;             % 0.01 a 0.1
@@ -129,6 +129,14 @@ elseif(strcmp(model_name,'mlp'))
     model.non_linearity = 'sigmoid';        % sigmoid ou tg_hyp ou relu
     model.add_bias = 1;
     model.video_enabled = 0;
+    
+elseif(strcmp(identifier_name,'elmOnline'))
+    model.forgiving_factor = 1;
+    model.number_of_hidden_neurons = 50;
+    model.non_linearity = 'sigmoid';
+    model.number_of_epochs = 1;
+    model.P_init = 100000;
+    model.W_init = 0.01;
 
 end
 

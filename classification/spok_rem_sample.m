@@ -1,8 +1,8 @@
-function [PAR] = spok_rem_sample(HP,win)
+function [PAR] = spok_rem_sample(HP,index)
 
 % --- Remove a Sample from Dictionary and Update its Variables ---
 %
-%   [D] = spok_rem_sample(DATA,HP,criterion_result)
+%   [D] = spok_rem_sample(HP,index)
 %
 %   Input:
 %       HP.
@@ -15,7 +15,7 @@ function [PAR] = spok_rem_sample(HP,win)
 %           score = used for prunning method                    [1 x Nk]
 %           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
-%       win = indicates which prototype should be removed       [cte]
+%       index = indicates which prototype should be removed  	[cte]
 %   Output: 
 %       PAR.
 %           Cx = Attributes of output dictionary                [p x Nk]
@@ -45,9 +45,9 @@ times_selected = HP.times_selected; % Prototypes # of selection
 % Get Problem Variables
 
 [~,m] = size(Cx);                   % hold dictionary size
-xt = Cx(:,win);                     % Get winner prototype input
+xt = Cx(:,index);                     % Get winner prototype input
 
-[~,c] = max(Cy(:,win));             % Get winner prototype class
+[~,c] = max(Cy(:,index));             % Get winner prototype class
 [~,Dy_seq] = max(Cy);               % Get sequential classes of entire dict
 
 Dx_c = Cx(:,Dy_seq == c);           % Get dicionary of prototype's class
@@ -60,21 +60,21 @@ mc = sum(Dy_seq == c);              % Get number of prototypes in class c
 % Remove positions from inverse kernel matrix (entire dict)
 
 ep = zeros(m,1);
-ep(win) = 1;
-u = Km(:,win) - ep;
+ep(index) = 1;
+u = Km(:,index) - ep;
 
 eq = zeros(m,1);
-eq(win) = 1;
+eq(index) = 1;
 v = eq;
 
 Kinv = Kinv + (Kinv * u)*(v' * Kinv) / (1 - v' * Kinv * u);
-Kinv(win,:) = [];
-Kinv(:,win) = [];
+Kinv(index,:) = [];
+Kinv(:,index) = [];
 
 % Remove positions from kernel matrix (entire dict)
 
-Km(win,:) = [];
-Km(:,win) = [];
+Km(index,:) = [];
+Km(:,index) = [];
 
 % Remove positions from inverse kernel matrices (class dict)
 
@@ -96,13 +96,13 @@ Kmc{c}(win_c,:) = [];
 Kmc{c}(:,win_c) = [];
 
 % Remove sample from dictionary
-Cx(:,win) = [];
-Cy(:,win) = [];
+Cx(:,index) = [];
+Cy(:,index) = [];
 
 % Remove variables used to prunning
-score(:,win) = [];
-class_history(:,win) = [];
-times_selected(:,win) = [];
+score(:,index) = [];
+class_history(:,index) = [];
+times_selected(:,index) = [];
 
 %% FILL OUTPUT STRUCTURE
 

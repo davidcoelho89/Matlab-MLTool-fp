@@ -392,9 +392,69 @@ classdef spokClassifier < prototypeBasedClassifier
             
         end
 
-        function self = removeSample(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+        function self = removeSample(self,index)
+            
+            [~,m] = size(self.Cx); % dictionary size (cardinality)
+            prot = self.Cx(:,index);
+            [~,class] = max(self.Cy(:,index));
+            [~,Cy_seq] = max(self.Cy);
+            
+            Dx_c = self.Cx(:,Cy_seq == class); % class conditional prot
+            win_c = self.findWinnerPrototype(Dx_c,prot,self);
+            mc = sum(Cy_seq == class); % number of prototypes of class
+            
+            % Remove positions from inverse kernel matrix (entire dict)
+            
+            ep = zeros(m,1);
+            ep(index) = 1;
+            u = self.Km(:,index) - ep;
+            
+            eq = zeros(m,1);
+            eq(index) = 1;
+            v = eq;
+            
+            self.Kinv = self.Kinv + (self.Kinv * u)*(v' * self.Kinv) / ...
+                                    (1 - v' * self.Kinv * u);
+            self.Kinv(index,:) = [];
+            self.Kinv(:,index) = [];
+            
+            % Remove positions from kernel matrix (entire dict)
+
+            self.Km(index,:) = [];
+            self.Km(:,index) = [];
+            
+            % Remove positions from inverse kernel matrices (class dict)
+            
+            ep = zeros(mc,1);
+            ep(win_c) = 1;
+            u = self.Kmc{class}(:,win_c) - ep;
+            
+            eq = zeros(mc,1);
+            eq(win_c) = 1;
+            v = eq;
+            
+            self.Kinvc{class} = self.Kinvc{class} + (self.Kinvc{class}*u)*...
+                                            (v'*self.Kinvc{class}) / ...
+                                            (1 - v'*self.Kinvc{class}*u);
+            self.Kinvc{class}(win_c,:) = [];
+            self.Kinvc{class}(:,win_c) = [];
+            
+            % Remove positions from kernel matrix (class dict)
+
+            self.Kmc{class}(win_c,:) = [];
+            self.Kmc{class}(:,win_c) = [];
+            
+            % Remove sample from dictionary
+
+            self.Cx(:,index) = [];
+            self.Cy(:,index) = [];
+            
+            % Remove variables used to prunning
+            
+            self.score(:,index) = [];
+            self.classification_history(:,index) = [];
+            self.times_selected(:,index) = [];
+        
         end
 
         function self = updateScore(self,x,y)

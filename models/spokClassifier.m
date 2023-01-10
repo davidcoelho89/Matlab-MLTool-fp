@@ -316,9 +316,39 @@ classdef spokClassifier < prototypeBasedClassifier
             
         end
 
-        function self = dictionaryPrune(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+        function self = dictionaryPrune(self)
+            
+            if(strcmp(self.pruning_strategy,'none'))
+                % does nothing
+            elseif(strcmp(self.pruning_strategy,'drift_based') || ...
+                    strcmp(self.pruning_strategy,'error_score_based'))
+                
+                [~,Dy_seq] = max(self.Cy);   % get sequential label of dict
+                [~,m] = size(self.Cy);       % hold dictionary size
+                
+                for k = 1:m
+                    
+                    if(self.score(k) < self.min_score)
+                        
+                        % number of elements from the same class as the prototypes'
+                        c = Dy_seq(k);
+                        mc = sum(Dy_seq == c);
+                        
+                        % dont rem element if it is the only element of its class
+                        if (mc == 1)
+                            continue;
+                        end
+                        
+                        % Remove Prototype from dictionary (just one per loop)
+                        self = self.removeSample(k);
+                        break;
+                        
+                    end
+                    
+                end
+                
+            end
+            
         end
 
         function self = addSample(self,x,y)
@@ -457,11 +487,127 @@ classdef spokClassifier < prototypeBasedClassifier
         
         end
 
-        function self = updateScore(self,x,y)
-            % ToDo - All
-            self = self + x + y;
-        end
+        function self = updateScore(self,y)
+            
+            if(~strcmp(self.pruning_strategy,'none'))
+                
+                % Get information about predicted output
+                winner = self.winner;
+                nearestIndex = self.nearest_index;
+                [K,~] = size(nearestIndex);
 
+                % hold dictionary size
+                [~,Nk] = size(self.Cy); 
+                
+                % Get current data class, predicted class and prototypes classes
+                [~,yt_class] = max(y);
+                [~,yh_class] = max(self.yh);
+                [~,Dy_class] = max(self.Cy);
+                
+                % number of elements, in the dictionary, of the same class as yt
+                mc = sum(Dy_class == yt_class);
+                
+                % if there are no prototypes from yt class, 
+                if (mc == 0)
+                    % Does nothing
+                    
+                % Drift Based - Update all scores
+                elseif(~strcmp(self.pruning_strategy,'drift_based'))
+                    
+                    for k = 1:Nk
+                        % if it was a hit
+                        if (yt_class == yh_class)
+                            if (k == winner)
+                                self.score(k) = self.score(k) + 1;
+                            elseif (Dy_class(k) == yh_class)
+                                self.score(k) = self.score(k) - 0.1;
+                            else
+                                self.score(k) = self.score(k);
+                            end
+                        % if it was an error
+                        else
+                            if (k == winner)
+                                self.score(k) = self.score(k) - 1;
+                            else
+                                self.score(k) = self.score(k);
+                            end
+                        end
+                    end % end for k
+
+                % Update score of winner
+                elseif(~strcmp(self.pruning_strategy,'error_score_based'))    
+                    
+                    if(K == 1) % nn strategy
+                        
+                        if(Dy_class(winner) == yt_class)
+                            % Update score of winner
+                            if((self.score(winner) < 0) && (self.classification_history(winner) == 1))
+                                self.score(winner) = self.score(winner) + 1;
+                            end
+                            % Update class_history
+                            self.classification_history(winner) = 1;
+                        else
+                            % Update score of winner
+                            if (self.classification_history(winner) == -1)
+                                self.score(winner) = self.score(winner) - 1;
+                            end
+                            % Update class_history
+                            self.classification_history(winner) = -1;
+                        end
+                        
+                    else % knn strategy
+                        
+                        for k = 1:K
+                            
+                            % get index
+                            index = nearestIndex(k);
+                            
+                            % get class of prototype
+                            c = Dy_class(index);
+                            
+                            % if it was a hit
+                            if (yt_class == yh_class)
+                                % prototype has the same class as sample?
+                                if (c == yt_class)
+                                    % Update score
+                                    if((self.score(index) < 0) && (self.classification_history(index) == 1))
+                                        self.score(index) = self.score(index) + 1;
+                                    end
+                                    % Update class_history
+                                    self.classification_history(index) = 1;
+                                    % Stop search
+                                    break;
+                                else
+                                    continue;
+                                end
+                                
+                            % if it was an error
+                            else
+                                % prototype and sample are from different classes?
+                                if (c ~= yt_class)
+                                    % Update score
+                                    if (self.classification_history(index) == -1)
+                                        self.score(index) = self.score(index) - 1;
+                                    end
+                                    % Update class_history
+                                    self.classification_history(index) = -1;
+                                    % Stop search
+                                    break;
+                                else
+                                    continue;
+                                end
+                            end % end "if it was a hit"
+                            
+                        end % end for k = 1:K
+                        
+                    end % end if (K == 1)
+
+                end % end "prunning strategy choice"
+                
+            end % end 'none'
+            
+        end
+        
     end % end methods
     
     methods (Static)

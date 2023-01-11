@@ -1,12 +1,12 @@
-function [kxy] = kernelFunction(x,y,model)
+function [kder] = kernelDerivative(x,w,model)
 
-% --- Kernel between two vectors  ---
+% --- Derivative Measure of kernel distance between two vectors  ---
 %
-%   [kxy] = kernelFunction(x,y,model)
+%   [kder] = kernelDerivative(x,w,PAR)
 % 
 %   Input:
 %       x = vector in original (work) space                     [p x 1]
-%       y = vector in original (work) space                     [p x 1]
+%       w = vector in original (work) space                     [p x 1]
 %       model.
 %           kernel_type =
 %               'linear'
@@ -23,7 +23,7 @@ function [kxy] = kernelFunction(x,y,model)
 %           alpha   (poly / sigmoid)                            [cte]
 %           theta   (lin / poly / sigmoid)                      [cte]
 %   Output:
-%       kxy = kernel measure                                    [cte]
+%       Kdiff = Derivative measure of kernel distance           [p x 1]
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -79,23 +79,41 @@ end
 %% ALGORITHM
 
 if (strcmp(model.kernel_type,'linear'))
-    kxy = (x' * y + model.theta);
+    theta = model.theta;
+    kder = 2*(x - w) + theta;
 elseif (strcmp(model.kernel_type,'gaussian'))
-    kxy = exp(-norm(x-y)^2/(model.sigma^2));
+    sigma = model.sigma;
+    kder = (2/(sigma^2))*exp(-(norm(x-w)^2)/(2*(sigma^2)))*(x - w);
 elseif (strcmp(model.kernel_type,'polynomial'))
-    kxy = (model.alpha * x' * y + model.theta)^model.gamma;
+    alpha = model.alpha;
+    theta = model.theta;
+    gamma = model.gamma;
+    kder = 2*alpha*gamma*(x*(alpha*(w'*x)+theta)^(gamma-1) - ...
+                           w*(alpha*(w'*w)+theta)^(gamma-1));
 elseif (strcmp(model.kernel_type,'exponential'))
-    kxy = exp(-norm(x-y)/model.sigma);
+    sigma = model.sigma;
+    kder = (2/(sigma*norm(x-w)))*exp(-norm(x-w)/sigma)*(x-w);
 elseif (strcmp(model.kernel_type,'cauchy'))
-    kxy = (1 + (norm(x-y)^2)/(model.sigma^2))^(-1);
+    sigma = model.sigma;
+    kder = (4*(sigma^2))*(x-w)/((sigma^2 + norm(x-w)^2)^2);
 elseif (strcmp(model.kernel_type,'log'))
-    kxy = -log(1 + (norm(x-y)^model.gamma)/(model.sigma^2));
+    sigma = model.sigma;
+    %gamma = model.gamma;
+    kder = 4*(x-w)/(sigma^2 + norm(x-w)^2);
 elseif (strcmp(model.kernel_type,'sigmoid'))
-    kxy = tanh(model.alpha * x' * y + model.theta);
+	alpha = model.alpha;
+    theta = model.theta;
+    kder = 2*alpha*((x-w) - ...
+              (x*tanh(alpha*(w'*x)+theta)^2 - w*tanh(alpha*(w'*w)+theta)^2));
 elseif (strcmp(model.kernel_type,'kmod'))
-    kxy = a*(exp(model.gamma/(norm(x-y)^2+model.sigma^2))-1);
+    sigma = model.sigma;
+    gamma = model.gamma;
+    a = 1/(exp(gamma/sigma^2)-1);
+    kder = 4*a*gamma*exp(gamma/(norm(x-w)^2+sigma^2))*(x-w) / ...
+            (norm(x-w)^2+sigma^2)^2;
 else % Use dot product if a wrong option was chosen
-    kxy = (x' * y);
+    theta = model.theta;
+    kder = 2*(x - w) + theta;
 end
 
 %% END

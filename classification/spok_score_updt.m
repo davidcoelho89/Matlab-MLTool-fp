@@ -51,9 +51,9 @@ Cy = HP.Cy;                         % Classes of dictionary
 
 % Get predicted output
 yh = OUTn.y_h;
-win = OUTn.win;
-near_ind = OUTn.near_ind;
-[K,~] = size(near_ind);
+winnner = OUTn.win;
+nearIndex = OUTn.near_ind;
+[K,~] = size(nearIndex);
 
 % Get problem parameters
 [~,Nk] = size(Cy);                  % hold dictionary size
@@ -89,7 +89,7 @@ else
         for k = 1:Nk
             % if it was a hit
             if (yt_class == yh_class)
-                if (k == win)
+                if (k == winnner)
                     score_out(k) = score(k) + 1;
                 elseif (Dy_class(k) == yh_class)
                     score_out(k) = score(k) - 0.1;
@@ -98,7 +98,7 @@ else
                 end
             % if it was an error
             else
-                if (k == win)
+                if (k == winnner)
                     score_out(k) = score(k) - 1;
                 else
                     score_out(k) = score(k);
@@ -111,39 +111,42 @@ else
         
         if (K == 1) % nn strategy
 
-            if(Dy_class(win) == yt_class)
+            if(Dy_class(winnner) == yt_class)
                 % Update score of winner
-                if((score(win) < 0) && (class_history(win) == 1))
-                    score_out(win) = score(win) + 1;
+                if((score(winnner) < 0) && (class_history(winnner) == 1))
+                    score_out(winnner) = score(winnner) + 1;
                 end
                 % Update class_history
-                class_hist_out(win) = 1;
+                class_hist_out(winnner) = 1;
             else
                 % Update score of winner
-                if (class_history(win) == -1)
-                    score_out(win) = score(win) - 1;
+                if (class_history(winnner) == -1)
+                    score_out(winnner) = score(winnner) - 1;
                 end
                 % Update class_history
-                class_hist_out(win) = -1;
+                class_hist_out(winnner) = -1;
             end
             
         else % knn strategy
             
             for k = 1:K
                 
+                % get index
+                index = nearIndex(k);
+                
                 % get class of prototype
-                c = Dy_class(near_ind(k));
+                c = Dy_class(index);
                 
                 % if it was a hit
                 if (yt_class == yh_class)
                     % prototype has the same class as sample?
                     if (c == yt_class)
                         % Update score
-                        if((score(k) < 0) && (class_history(k) == 1))
-                            score_out(k) = score(k) + 1;
+                        if((score(index) < 0) && (class_history(index) == 1))
+                            score_out(index) = score(index) + 1;
                         end
                         % Update class_history
-                        class_hist_out(k) = 1;
+                        class_hist_out(index) = 1;
                         % Stop search
                         break;
                     else
@@ -155,11 +158,11 @@ else
                     % prototype and sample are from different classes?
                     if (c ~= yt_class)
                         % Update score
-                        if (class_history(k) == -1)
-                            score_out(k) = score(k) - 1;
+                        if (class_history(index) == -1)
+                            score_out(index) = score(index) - 1;
                         end
                         % Update class_history
-                        class_hist_out(k) = -1;
+                        class_hist_out(index) = -1;
                         % Stop search
                         break;
                     else

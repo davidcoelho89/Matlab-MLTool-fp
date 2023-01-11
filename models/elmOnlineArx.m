@@ -21,10 +21,13 @@ classdef elmOnlineArx < identifierArx
     
     % Hyperparameters
     properties
-        
         forgiving_factor = 1;
         number_of_hidden_neurons = 25;
         non_linearity = 'sigmoid';
+        number_of_epochs = 1;
+        P_init = 10000;
+        W_init = 0.01;
+        
     end
     
     % Parameters
@@ -58,12 +61,12 @@ classdef elmOnlineArx < identifierArx
             self.W = cell(self.number_of_layers,1);
             
             if(self.add_bias)
-                self.W{1} = 0.01*(2*rand(self.number_of_hidden_neurons,p+1)-1);
+                self.W{1} = self.W_init*(2*rand(self.number_of_hidden_neurons,p+1)-1);
             else
-                self.W{1} = 0.01*(2*rand(self.number_of_hidden_neurons,p)-1);
+                self.W{1} = self.W_init*(2*rand(self.number_of_hidden_neurons,p)-1);
             end
             self.W{2} = zeros(No,self.number_of_hidden_neurons + 1);
-            self.P = 1e+4 * eye(self.number_of_hidden_neurons + 1);
+            self.P = self.P_init * eye(self.number_of_hidden_neurons + 1);
 
         end
         
@@ -102,8 +105,10 @@ classdef elmOnlineArx < identifierArx
             
             self = self.initialize_parameters(X(:,1),Y(:,1));
             
-            for n = 1:number_of_samples
-                self = self.partial_fit(X(:,n),Y(:,n));
+            for epoch = self.number_of_epochs
+                for n = 1:number_of_samples
+                    self = self.partial_fit(X(:,n),Y(:,n));
+                end
             end
             
         end

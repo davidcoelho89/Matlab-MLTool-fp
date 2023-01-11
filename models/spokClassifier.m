@@ -277,28 +277,78 @@ classdef spokClassifier < prototypeBasedClassifier
                 [~,y_new_seq] = max(y_new);
     
                 % Update Closest prototype (new one)
-                
-                
-                % New data to be added
+                if(strcmp(self.update_strategy,'wta'))
+                    x_new = self.Cx(:,win) + self.update_rate*(x - self.Cx(:,win));
+                elseif(strcmp(self.update_strategy,'lvq'))
+                    if(yt_seq == y_new_seq)
+                        x_new = self.Cx(:,win) + self.update_rate*(x - self.Cx(:,win));
+                    else
+                        x_new = self.Cx(:,win) - self.update_rate*(x - self.Cx(:,win));
+                    end
+                elseif(strcmp(self.update_strategy,'wta_der'))
+                    x_new = self.Cx(:,win) + self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,win),self);
+                elseif(strcmp(self.update_strategy,'lvq_der'))
+                    if(yt_seq == y_new_seq)
+                        x_new = self.Cx(:,win) + self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,win),self);
+                    else
+                        x_new = self.Cx(:,win) - self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,win),self);
+                    end
+                end
                 
                 % Hold varibles used for prunning
+                score_aux = self.score(winner);
+                class_hist_aux = self.classification_history(winner);
+                times_selected_aux = self.times_selected(winner);
                 
                 % Remove "old" prototype and add "updated" one from dictionary
+                self = self.removeSample(winner);
+                self = self.addSample(x_new,y_new);
                 
                 % Get variables for prunning
+                self.score(end) = score_aux;
+                self.classification_history(end) = class_hist_aux;
+                self.times_selected(end) = times_selected_aux;
+                                
+            end
+            
+        end
+
+        function self = dictionaryPrune(self)
+            
+            if(strcmp(self.pruning_strategy,'none'))
+                % does nothing
+            elseif(strcmp(self.pruning_strategy,'drift_based') || ...
+                    strcmp(self.pruning_strategy,'error_score_based'))
                 
+                [~,Dy_seq] = max(self.Cy);   % get sequential label of dict
+                [~,m] = size(self.Cy);       % hold dictionary size
+                
+                for k = 1:m
+                    
+                    if(self.score(k) < self.min_score)
+                        
+                        % number of elements from the same class as the prototypes'
+                        c = Dy_seq(k);
+                        mc = sum(Dy_seq == c);
+                        
+                        % dont rem element if it is the only element of its class
+                        if (mc == 1)
+                            continue;
+                        end
+                        
+                        % Remove Prototype from dictionary (just one per loop)
+                        self = self.removeSample(k);
+                        break;
+                        
+                    end
+                    
+                end
                 
             end
             
-            
-            
-            % ToDo - All
-            self = self + x + y;
-        end
-
-        function self = dictionaryPrune(self,x,y)
-            % ToDo - All
-            self = self + x + y;
         end
 
         function self = addSample(self,x,y)
@@ -372,16 +422,192 @@ classdef spokClassifier < prototypeBasedClassifier
             
         end
 
-        function self = removeSample(self,x,y)
-            % ToDo - All
-            self = self + x + y;
+        function self = removeSample(self,index)
+            
+            [~,m] = size(self.Cx); % dictionary size (cardinality)
+            prot = self.Cx(:,index);
+            [~,class] = max(self.Cy(:,index));
+            [~,Cy_seq] = max(self.Cy);
+            
+            Dx_c = self.Cx(:,Cy_seq == class); % class conditional prot
+            win_c = self.findWinnerPrototype(Dx_c,prot,self);
+            mc = sum(Cy_seq == class); % number of prototypes of class
+            
+            % Remove positions from inverse kernel matrix (entire dict)
+            
+            ep = zeros(m,1);
+            ep(index) = 1;
+            u = self.Km(:,index) - ep;
+            
+            eq = zeros(m,1);
+            eq(index) = 1;
+            v = eq;
+            
+            self.Kinv = self.Kinv + (self.Kinv * u)*(v' * self.Kinv) / ...
+                                    (1 - v' * self.Kinv * u);
+            self.Kinv(index,:) = [];
+            self.Kinv(:,index) = [];
+            
+            % Remove positions from kernel matrix (entire dict)
+
+            self.Km(index,:) = [];
+            self.Km(:,index) = [];
+            
+            % Remove positions from inverse kernel matrices (class dict)
+            
+            ep = zeros(mc,1);
+            ep(win_c) = 1;
+            u = self.Kmc{class}(:,win_c) - ep;
+            
+            eq = zeros(mc,1);
+            eq(win_c) = 1;
+            v = eq;
+            
+            self.Kinvc{class} = self.Kinvc{class} + (self.Kinvc{class}*u)*...
+                                            (v'*self.Kinvc{class}) / ...
+                                            (1 - v'*self.Kinvc{class}*u);
+            self.Kinvc{class}(win_c,:) = [];
+            self.Kinvc{class}(:,win_c) = [];
+            
+            % Remove positions from kernel matrix (class dict)
+
+            self.Kmc{class}(win_c,:) = [];
+            self.Kmc{class}(:,win_c) = [];
+            
+            % Remove sample from dictionary
+
+            self.Cx(:,index) = [];
+            self.Cy(:,index) = [];
+            
+            % Remove variables used to prunning
+            
+            self.score(:,index) = [];
+            self.classification_history(:,index) = [];
+            self.times_selected(:,index) = [];
+        
         end
 
-        function self = updateScore(self,x,y)
-            % ToDo - All
-            self = self + x + y;
-        end
+        function self = updateScore(self,y)
+            
+            if(~strcmp(self.pruning_strategy,'none'))
+                
+                % Get information about predicted output
+                winner = self.winner;
+                nearestIndex = self.nearest_index;
+                [K,~] = size(nearestIndex);
 
+                % hold dictionary size
+                [~,Nk] = size(self.Cy); 
+                
+                % Get current data class, predicted class and prototypes classes
+                [~,yt_class] = max(y);
+                [~,yh_class] = max(self.yh);
+                [~,Dy_class] = max(self.Cy);
+                
+                % number of elements, in the dictionary, of the same class as yt
+                mc = sum(Dy_class == yt_class);
+                
+                % if there are no prototypes from yt class, 
+                if (mc == 0)
+                    % Does nothing
+                    
+                % Drift Based - Update all scores
+                elseif(~strcmp(self.pruning_strategy,'drift_based'))
+                    
+                    for k = 1:Nk
+                        % if it was a hit
+                        if (yt_class == yh_class)
+                            if (k == winner)
+                                self.score(k) = self.score(k) + 1;
+                            elseif (Dy_class(k) == yh_class)
+                                self.score(k) = self.score(k) - 0.1;
+                            else
+                                self.score(k) = self.score(k);
+                            end
+                        % if it was an error
+                        else
+                            if (k == winner)
+                                self.score(k) = self.score(k) - 1;
+                            else
+                                self.score(k) = self.score(k);
+                            end
+                        end
+                    end % end for k
+
+                % Update score of winner
+                elseif(~strcmp(self.pruning_strategy,'error_score_based'))    
+                    
+                    if(K == 1) % nn strategy
+                        
+                        if(Dy_class(winner) == yt_class)
+                            % Update score of winner
+                            if((self.score(winner) < 0) && (self.classification_history(winner) == 1))
+                                self.score(winner) = self.score(winner) + 1;
+                            end
+                            % Update class_history
+                            self.classification_history(winner) = 1;
+                        else
+                            % Update score of winner
+                            if (self.classification_history(winner) == -1)
+                                self.score(winner) = self.score(winner) - 1;
+                            end
+                            % Update class_history
+                            self.classification_history(winner) = -1;
+                        end
+                        
+                    else % knn strategy
+                        
+                        for k = 1:K
+                            
+                            % get index
+                            index = nearestIndex(k);
+                            
+                            % get class of prototype
+                            c = Dy_class(index);
+                            
+                            % if it was a hit
+                            if (yt_class == yh_class)
+                                % prototype has the same class as sample?
+                                if (c == yt_class)
+                                    % Update score
+                                    if((self.score(index) < 0) && (self.classification_history(index) == 1))
+                                        self.score(index) = self.score(index) + 1;
+                                    end
+                                    % Update class_history
+                                    self.classification_history(index) = 1;
+                                    % Stop search
+                                    break;
+                                else
+                                    continue;
+                                end
+                                
+                            % if it was an error
+                            else
+                                % prototype and sample are from different classes?
+                                if (c ~= yt_class)
+                                    % Update score
+                                    if (self.classification_history(index) == -1)
+                                        self.score(index) = self.score(index) - 1;
+                                    end
+                                    % Update class_history
+                                    self.classification_history(index) = -1;
+                                    % Stop search
+                                    break;
+                                else
+                                    continue;
+                                end
+                            end % end "if it was a hit"
+                            
+                        end % end for k = 1:K
+                        
+                    end % end if (K == 1)
+
+                end % end "prunning strategy choice"
+                
+            end % end 'none'
+            
+        end
+        
     end % end methods
     
     methods (Static)

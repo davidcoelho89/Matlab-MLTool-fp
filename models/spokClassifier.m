@@ -25,6 +25,8 @@ classdef spokClassifier < prototypeBasedClassifier
     %        = 'none'
     %        = 'wta' (lms, unsupervised)
     %        = 'lvq' (supervised)
+    %        = 'wta_der'
+    %        = 'lvq_der'
     %    - update_rate = <real>
     %        Values ranging from 0 to 1
     %    - pruning_strategy = define how the prototypes will be prunned
@@ -155,8 +157,8 @@ classdef spokClassifier < prototypeBasedClassifier
                 end
 
                 % Prunning Strategy
-                self = self.updateScore(x,y);
-                self = self.dictionaryPrune(x,y);
+                self = self.updateScore(y);
+                self = self.dictionaryPrune();
 
             end
 
@@ -178,6 +180,13 @@ classdef spokClassifier < prototypeBasedClassifier
             for epoch = 1:self.number_of_epochs
 
                 for n = 1:N
+
+%                     clc;
+%                     disp('iteration: ');
+%                     disp(n);
+%                     disp('number of prot: ')
+%                     [~,nProt] = size(self.Cx);
+%                     disp(nProt);
 
                     if(self.video_enabled)
                         iteration = iteration + 1;
@@ -213,7 +222,7 @@ classdef spokClassifier < prototypeBasedClassifier
             mc = sum(Cy_seq == c);     % Number of prototypes from samples' class
             
             % Add first element to dictionary (total or from class)
-            if (m == 0 || (Dm == 2 && mc == 0))
+            if (m == 0 || (mc == 0 && strcmp(self.design_method,'one_dicitionary_per_class')))
                 self = self.addSample(x,y);
             else
                 % Dont add if number of prototypes is too high
@@ -231,16 +240,16 @@ classdef spokClassifier < prototypeBasedClassifier
                     
                     % Get criterion result
                     if(strcmp(self.sparsification_strategy,'ald'))
-                        OUTcrit = aldCriterion(self,Dx,x,Kinverse);
+                        OUTcrit = self.aldCriterion(self,Dx,x,Kinverse);
                     elseif(strcmp(self.sparsification_strategy,'coherence'))
-                        OUTcrit = coherenceCriterion(self,Dx,x);
+                        OUTcrit = self.coherenceCriterion(self,Dx,x);
                     elseif(strcmp(self.sparsification_strategy,'novelty'))
-                        OUTcrit = noveltyCriterion(self,Dx,Dy,x,y);
+                        OUTcrit = self.noveltyCriterion(self,Dx,Dy,x,y);
                     elseif(strcmp(self.sparsification_strategy,'surprise'))
-                        OUTcrit = surpriseCriterion(self,Dx,Dy,x,y,Kinverse);
+                        OUTcrit = self.surpriseCriterion(self,Dx,Dy,x,y,Kinverse);
                     else % use ald as default
                         self.sparsification_strategy = 'ald';
-                        OUTcrit = aldCriterion(self,Dx,x,Kinverse);
+                        OUTcrit = self.aldCriterion(self,Dx,x,Kinverse);
                     end
                     
                     % Expand or not Dictionary
@@ -278,23 +287,23 @@ classdef spokClassifier < prototypeBasedClassifier
     
                 % Update Closest prototype (new one)
                 if(strcmp(self.update_strategy,'wta'))
-                    x_new = self.Cx(:,win) + self.update_rate*(x - self.Cx(:,win));
+                    x_new = self.Cx(:,winner) + self.update_rate*(x - self.Cx(:,winner));
                 elseif(strcmp(self.update_strategy,'lvq'))
                     if(yt_seq == y_new_seq)
-                        x_new = self.Cx(:,win) + self.update_rate*(x - self.Cx(:,win));
+                        x_new = self.Cx(:,winner) + self.update_rate*(x - self.Cx(:,winner));
                     else
-                        x_new = self.Cx(:,win) - self.update_rate*(x - self.Cx(:,win));
+                        x_new = self.Cx(:,winner) - self.update_rate*(x - self.Cx(:,winner));
                     end
                 elseif(strcmp(self.update_strategy,'wta_der'))
-                    x_new = self.Cx(:,win) + self.update_rate*...
-                                             kernelDerivative(x,self.Cx(:,win),self);
+                    x_new = self.Cx(:,winner) + self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,winner),self);
                 elseif(strcmp(self.update_strategy,'lvq_der'))
                     if(yt_seq == y_new_seq)
-                        x_new = self.Cx(:,win) + self.update_rate*...
-                                             kernelDerivative(x,self.Cx(:,win),self);
+                        x_new = self.Cx(:,winner) + self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,winner),self);
                     else
-                        x_new = self.Cx(:,win) - self.update_rate*...
-                                             kernelDerivative(x,self.Cx(:,win),self);
+                        x_new = self.Cx(:,winner) - self.update_rate*...
+                                             kernelDerivative(x,self.Cx(:,winner),self);
                     end
                 end
                 
@@ -354,20 +363,12 @@ classdef spokClassifier < prototypeBasedClassifier
         function self = addSample(self,x,y)
             
             % Initializations
+            
             ktt = kernelFunction(x,x,self); % kernel of sample and itself
             Nc = length(y);                 % number of classes
             [~,c] = max(y);                 % class of sample
             [~,m] = size(self.Cx);       	% # of prototypes in the dict
             [~,Dy_seq] = max(self.Cy);      % Sequential classes of dict
-            
-            % Add sample to dictionary
-            self.Cx = [self.Cx,x];
-            self.Cy = [self.Cy,y];
-            
-            % Add variables used to prunning
-            self.score = [self.score,0];
-            self.classification_history = [self.classification_history,0];
-            self.times_selected = [self.times_selected,0];
             
             % Update Kernel Matrices
             
@@ -409,7 +410,7 @@ classdef spokClassifier < prototypeBasedClassifier
                 end
                 
                 % Get auxiliary variables
-                kt = kernelVector(self.Cx,x,model);
+                kt = kernelVector(self.Cx,x,self);
                 at = self.Kinv * kt;
                 delta = (ktt - kt'*at) + self.regularization;
                 
@@ -418,7 +419,15 @@ classdef spokClassifier < prototypeBasedClassifier
                 self.Kinv = (1/delta)*[delta*self.Kinv + at*at', -at; -at', 1];
                 
             end
+
+            % Add sample to dictionary
+            self.Cx = [self.Cx,x];
+            self.Cy = [self.Cy,y];
             
+            % Add variables used to prunning
+            self.score = [self.score,0];
+            self.classification_history = [self.classification_history,0];
+            self.times_selected = [self.times_selected,0];
             
         end
 
@@ -616,7 +625,7 @@ classdef spokClassifier < prototypeBasedClassifier
             
             % Calculate auxiliary variables
             ktt = kernelFunction(x,x,self);
-            kt = kernelVector(Dx,x,model);
+            kt = kernelVector(Dx,x,self);
             
             % Calculate ald coefficients
             at = Kinverse * kt;
@@ -626,7 +635,7 @@ classdef spokClassifier < prototypeBasedClassifier
             delta = delta + self.regularization;
             
             % Calculate Criterion (boolean)
-            result = (delta > v1);
+            result = (delta > self.v1);
             
             % Hold results
             ALDout.result = result;

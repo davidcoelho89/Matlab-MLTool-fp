@@ -55,6 +55,7 @@
 %           score = used for prunning method                    [1 x Nk]
 %           class_history = used for prunning method           	[1 x Nk]
 %           times_selected = used for prunning method           [1 x Nk]
+%           times_selected_sum = used for debug                 [cte]
 %           VID = frame struct (played by 'video function')     [1 x Nep]
 %           y_h = class prediction                              [Nc x N]
 
@@ -180,6 +181,7 @@ if (~isfield(PAR,'Cx'))
     PAR.score = [];
     PAR.class_history = [];
     PAR.times_selected = [];
+    PAR.times_selected_sum = 0;
 end
 
 VID = struct('cdata',cell(1,N*Ne),'colormap', cell(1,N*Ne));
@@ -267,5 +269,5 @@ end
  
 PAR.VID = VID;
 PAR.y_h = yh;
- 
-%% END
+
+end

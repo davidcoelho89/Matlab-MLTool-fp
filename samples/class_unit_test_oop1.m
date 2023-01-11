@@ -63,7 +63,7 @@ elseif(strcmp(model_name,'spok'))
     classifier.sparsification_strategy = 'ald';
     classifier.v1 = 0.1;
     classifier.v2 = 0.9;
-    classifier.update_strategy = 'lms';
+    classifier.update_strategy = 'wta';
     classifier.update_rate = 0.1;
     classifier.pruning_strategy = 'error_score_based';
     classifier.min_score = -10;

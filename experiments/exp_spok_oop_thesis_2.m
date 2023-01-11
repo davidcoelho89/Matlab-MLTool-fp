@@ -39,7 +39,7 @@ classifier.design_method = 'one_dicitionary_per_class';
 classifier.sparsification_strategy = 'ald';
 classifier.v1 = 0.1;
 classifier.v2 = 0.9;
-classifier.update_strategy = 'lms';
+classifier.update_strategy = 'wta';
 classifier.update_rate = 0.1;
 classifier.pruning_strategy = 'error_score_based';
 classifier.min_score = -10;
@@ -72,13 +72,18 @@ data_ts.input = normalizer.transform(data_ts.input);
 
 %% TRAIN, TEST, STATISTICS
 
-% classifier = classifier.fit(data_tr.input,data_tr.output);
-% 
-% classifier = classifier.predict(data_tr.input);
-% stats_tr = statsGen1turn.calculate_all(data_tr.output,classifier.Yh);
-% 
-% classifier = classifier.predict(data_ts.input);
-% stats_ts = statsGen1turn.calculate_all(data_ts.output,classifier.Yh);
+classifier = classifier.fit(data_tr.input,data_tr.output);
+
+classifier = classifier.predict(data_tr.input);
+stats_tr = statsGen1turn.calculate_all(data_tr.output,classifier.Yh);
+
+classifier = classifier.predict(data_ts.input);
+stats_ts = statsGen1turn.calculate_all(data_ts.output,classifier.Yh);
+
+disp('Classification Accuracy with Training Dataset:');
+disp(stats_tr.acc);
+disp('Classification Accuracy with Test Dataset:');
+disp(stats_ts.acc);
 
 %% RESULTS / STATISTICS - SHOW
 
@@ -86,33 +91,3 @@ data_ts.input = normalizer.transform(data_ts.input);
 
 
 %% END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

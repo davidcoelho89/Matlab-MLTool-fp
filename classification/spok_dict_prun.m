@@ -68,9 +68,16 @@ elseif (Ps == 1 || Ps == 2)
                 continue;
             end
             
+            % Hold number of times the removed prototype was selected
+            HP.times_selected_sum = HP.times_selected_sum + ...
+                                    HP.times_selected(k);
+
             % Remove Prototype from dictionary (just one per loop)
             HP = spok_rem_sample(HP,k);
+
+            % Just remove one prototype per iteration
             break;
+
         end
     end
 

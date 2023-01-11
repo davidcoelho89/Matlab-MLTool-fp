@@ -84,8 +84,11 @@ predict_vector = zeros(Nc,Nttt);	% Hold predicted labels
 
 no_of_correct = zeros(1,Nttt);      % Hold # of correctly classified x
 no_of_errors = zeros(1,Nttt);       % Hold # of misclassified x
-
 accuracy_vector = zeros(1,Nttt);	% Hold Acc / (Acc + Err)
+
+no_of_correct_last1000 = zeros(1,Nttt-1000);
+no_of_errors_last1000 = zeros(1,Nttt-1000);
+accuracy_vector_last1000 = zeros(1,Nttt-1000);
 
 prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
                                     % Last is for the sum
@@ -175,6 +178,16 @@ for n = 1:Nttt
     
     accuracy_vector(n) = no_of_correct(n) / ...
                         (no_of_correct(n) + no_of_errors(n));
+    
+    % Hold Accuracy of last 1000 samples
+
+    if(n > 1000)
+        no_of_correct_last1000(n) = no_of_correct(n) - no_of_correct(n-1000);
+        no_of_errors_last1000(n) = no_of_errors(n) - no_of_errors(n-1000);
+        accuracy_vector_last1000(n) = no_of_correct_last1000(n) / ...
+                                      (no_of_correct_last1000(n) + ...
+                                       no_of_errors_last1000(n) );
+    end
     
     % Hold Number of prototypes per Class
     

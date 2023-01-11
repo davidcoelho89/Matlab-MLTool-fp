@@ -58,15 +58,27 @@ HP.gamma = 2;               % polynomial order (poly 2 or 3)
 
 HPgs = HP;
 
-% Hiperparameters for ALD
-% HPgs.v1 = 2.^linspace(-4,3,8);
-% HPgs.v2 = HPgs.v1(end) + 0.001;
-% HPgs.sigma = 2.^linspace(-10,9,20);
+% Hyperparameters for ALD
+if(HP.Ss == 1)
+    HPgs.v1 = 2.^linspace(-4,3,8);
+    HPgs.v2 = HPgs.v1(end) + 0.001;
+    HPgs.sigma = 2.^linspace(-10,9,20);
 
-% Hiperparameters for Coherence
-HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
-HPgs.v2 = HPgs.v1(end) + 0.001;
-HPgs.sigma = 2.^linspace(-10,9,20);
+% Hyperparameters for Coherence
+elseif(HP.Ss == 2)
+    HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+    HPgs.v2 = HPgs.v1(end) + 0.001;
+    HPgs.sigma = 2.^linspace(-10,9,20);
+
+% Hyperparameters for Novelty
+elseif(HP.Ss == 3)
+    
+    
+% Hyperparameters for Surprise
+elseif(HP.Ss == 4)
+    
+
+end
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 

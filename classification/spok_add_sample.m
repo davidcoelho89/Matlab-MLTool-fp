@@ -46,10 +46,12 @@ sig2n = HP.sig2n;                   % Kernel regularization parameter
 
 Dx = HP.Cx;                         % Attributes of dictionary
 Dy = HP.Cy;                         % Classes of dictionary
+
 Km = HP.Km;                         % Dictionary Kernel Matrix (total)
 Kmc = HP.Kmc;                       % Dictionary Kernel Matrix (class)
 Kinv = HP.Kinv;                     % Dictionary Inv Kernel Matrix (total)
 Kinvc = HP.Kinvc;                   % Dictionary Inv Kernel Matrix (class)
+
 score = HP.score;                   % Prototypes score for prunning
 class_history = HP.class_history;	% Prototypes last classification
 times_selected = HP.times_selected; % Prototypes # of selection
@@ -64,66 +66,72 @@ ktt = kernel_func(xt,xt,HP);    % Kernel function of sample and itself
 
 %% ALGORITHM
 
+% Update Kernel Matrices (just if needed)
+
+if(HP.update_kernel_matrix)
+
+    if (m == 0) % First element of dictionary
+
+        % Build Kernel matrix and its inverse for each class
+        Kmc_out = cell(Nc,1);
+        Kmc_out{c} = ktt + sig2n;
+        Kinvc_out = cell(Nc,1);
+        Kinvc_out{c} = 1/Kmc_out{c};
+
+        % Build Kernel matrix and its inverse for dataset
+        Km_out = ktt + sig2n;
+        Kinv_out = 1/Km_out;
+
+    else
+
+        % Get number of prototypes from samples' class
+        mc = sum(Dy_seq == c);	
+
+        % Build kernel matrix and its inverse of samples' class
+        if (mc == 0)
+            Kmc{c} = ktt + sig2n;
+            Kmc_out = Kmc;
+            Kinvc{c} = 1/Kmc{c};
+            Kinvc_out = Kinvc;
+
+        % Update kernel matrix and its inverse of samples' class
+        else
+            % Get auxiliary variables
+            Dx_c = Dx(:,Dy_seq == c);       % Inputs from class c
+            kt_c = kernel_vect(Dx_c,xt,HP);
+            at_c = Kinvc{c}*kt_c;
+            delta_c = (ktt - kt_c'*at_c) + sig2n;
+            % Update Kernel matrix
+            Kmc{c} = [Kmc{c}, kt_c; kt_c', ktt + sig2n];
+            Kmc_out = Kmc;
+            % Update Inverse Kernel matrix
+            Kinvc{c} = (1/delta_c)* ...
+                       [delta_c*Kinvc{c} + at_c*at_c',-at_c;-at_c',1];
+            Kinvc_out = Kinvc;
+        end
+
+        % Get auxiliary variables
+        kt = kernel_vect(Dx,xt,HP);
+        at = Kinv*kt;
+        delta = (ktt - kt'*at) + sig2n;
+
+        % Update kernel matrix and its inverse for dataset
+        Km_out = [Km, kt; kt', ktt + sig2n];
+        Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
+    end
+
+end
+
 % Add sample to dictionary
+
 Cx_out = [Dx, xt];
 Cy_out = [Dy, yt];
 
 % Add variables used to prunning
+
 score_out = [score,0];
 class_history_out = [class_history,0];
 times_selected_out = [times_selected,0];
-
-% Update Kernel Matrices
-
-if (m == 0)
-
-    % Build Kernel matrix and its inverse for each class
-    Kmc_out = cell(Nc,1);
-    Kmc_out{c} = ktt + sig2n;
-    Kinvc_out = cell(Nc,1);
-    Kinvc_out{c} = 1/Kmc_out{c};
-
-    % Build Kernel matrix and its inverse for dataset
-    Km_out = ktt + sig2n;
-    Kinv_out = 1/Km_out;
-
-else
-
-    % Get number of prototypes from samples' class
-    mc = sum(Dy_seq == c);	
-    
-    % Build kernel matrix and its inverse of samples' class
-    if (mc == 0)
-        Kmc{c} = ktt + sig2n;
-        Kmc_out = Kmc;
-        Kinvc{c} = 1/Kmc{c};
-        Kinvc_out = Kinvc;
-
-    % Update kernel matrix and its inverse of samples' class
-    else
-        % Get auxiliary variables
-        Dx_c = Dx(:,Dy_seq == c);       % Inputs from class c
-        kt_c = kernel_vect(Dx_c,xt,HP);
-        at_c = Kinvc{c}*kt_c;
-        delta_c = (ktt - kt_c'*at_c) + sig2n;
-        % Update Kernel matrix
-        Kmc{c} = [Kmc{c}, kt_c; kt_c', ktt + sig2n];
-        Kmc_out = Kmc;
-        % Update Inverse Kernel matrix
-        Kinvc{c} = (1/delta_c)* ...
-                   [delta_c*Kinvc{c} + at_c*at_c',-at_c;-at_c',1];
-        Kinvc_out = Kinvc;
-    end
-
-    % Get auxiliary variables
-    kt = kernel_vect(Dx,xt,HP);
-    at = Kinv*kt;
-    delta = (ktt - kt'*at) + sig2n;
-
-    % Update kernel matrix and its inverse for dataset
-    Km_out = [Km, kt; kt', ktt + sig2n];
-    Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
-end
 
 %% FILL OUTPUT STRUCTURE
 

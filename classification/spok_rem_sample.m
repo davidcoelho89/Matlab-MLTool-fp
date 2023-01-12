@@ -34,10 +34,12 @@ function [PAR] = spok_rem_sample(HP,index)
 
 Cx = HP.Cx;                         % Attributes of dictionary
 Cy = HP.Cy;                         % Classes of dictionary
+
 Km = HP.Km;                         % Dictionary Kernel Matrix
 Kmc = HP.Kmc;                       % Dictionary Kernel Matrix (class)
 Kinv = HP.Kinv;                     % Dictionary Inverse Kernel Matrix
 Kinvc = HP.Kinvc;                   % Dictionary Inv Kernel Matrix (class)
+
 score = HP.score;                   % Score of each prototype
 class_history = HP.class_history; 	% Classification history of each prototype
 times_selected = HP.times_selected; % Prototypes # of selection
@@ -57,43 +59,47 @@ mc = sum(Dy_seq == c);              % Get number of prototypes in class c
 
 %% ALGORITHM
 
-% Remove positions from inverse kernel matrix (entire dict)
+if(HP.update_kernel_matrix)
 
-ep = zeros(m,1);
-ep(index) = 1;
-u = Km(:,index) - ep;
+    % Remove positions from inverse kernel matrix (entire dict)
 
-eq = zeros(m,1);
-eq(index) = 1;
-v = eq;
+    ep = zeros(m,1);
+    ep(index) = 1;
+    u = Km(:,index) - ep;
 
-Kinv = Kinv + (Kinv * u)*(v' * Kinv) / (1 - v' * Kinv * u);
-Kinv(index,:) = [];
-Kinv(:,index) = [];
+    eq = zeros(m,1);
+    eq(index) = 1;
+    v = eq;
 
-% Remove positions from kernel matrix (entire dict)
+    Kinv = Kinv + (Kinv * u)*(v' * Kinv) / (1 - v' * Kinv * u);
+    Kinv(index,:) = [];
+    Kinv(:,index) = [];
 
-Km(index,:) = [];
-Km(:,index) = [];
+    % Remove positions from kernel matrix (entire dict)
 
-% Remove positions from inverse kernel matrices (class dict)
+    Km(index,:) = [];
+    Km(:,index) = [];
 
-ep = zeros(mc,1);
-ep(win_c) = 1;
-u = Kmc{c}(:,win_c) - ep;
+    % Remove positions from inverse kernel matrices (class dict)
 
-eq = zeros(mc,1);
-eq(win_c) = 1;
-v = eq;
+    ep = zeros(mc,1);
+    ep(win_c) = 1;
+    u = Kmc{c}(:,win_c) - ep;
 
-Kinvc{c} = Kinvc{c} + (Kinvc{c}*u)*(v'*Kinvc{c}) / (1 - v'*Kinvc{c}*u);
-Kinvc{c}(win_c,:) = [];
-Kinvc{c}(:,win_c) = [];
+    eq = zeros(mc,1);
+    eq(win_c) = 1;
+    v = eq;
 
-% Remove positions from kernel matrix (class dict)
+    Kinvc{c} = Kinvc{c} + (Kinvc{c}*u)*(v'*Kinvc{c}) / (1 - v'*Kinvc{c}*u);
+    Kinvc{c}(win_c,:) = [];
+    Kinvc{c}(:,win_c) = [];
 
-Kmc{c}(win_c,:) = [];
-Kmc{c}(:,win_c) = [];
+    % Remove positions from kernel matrix (class dict)
+
+    Kmc{c}(win_c,:) = [];
+    Kmc{c}(:,win_c) = [];
+
+end
 
 % Remove sample from dictionary
 Cx(:,index) = [];

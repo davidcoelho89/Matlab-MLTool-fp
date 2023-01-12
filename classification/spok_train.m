@@ -21,6 +21,8 @@
 %               = 4 -> Surprise
 %           v1 = Sparseness parameter 1                         [cte]
 %           v2 = Sparseness parameter 2                         [cte]
+%           update_kernel_matrix = 0 or 1                       [cte]
+%               = depends on Ss. Ex: "=1" for ALD and Surprise.
 %           Us = Update strategy                                [cte]
 %               = 0 -> do not update prototypes
 %               = 1 -> wta (lms, unsupervised)
@@ -172,16 +174,26 @@ is_static = HP.is_static;   % Verify if data set is static
 PAR = HP;
 
 if (~isfield(PAR,'Cx'))
+
     PAR.Cx = [];
     PAR.Cy = [];
+    
     PAR.Km = [];
     PAR.Kmc = [];
     PAR.Kinv = [];
     PAR.Kinvc = [];
+    
     PAR.score = [];
     PAR.class_history = [];
     PAR.times_selected = [];
     PAR.times_selected_sum = 0;
+    
+    if(PAR.Ss == 1 || PAR.Ss == 4)
+        PAR.update_kernel_matrix = 1;
+    else
+        PAR.update_kernel_matrix = 0;
+    end
+    
 end
 
 VID = struct('cdata',cell(1,N*Ne),'colormap', cell(1,N*Ne));
@@ -193,7 +205,7 @@ yh = -1*ones(Nc,N);
 
 % Update Dictionary
 
-for ep = 1:Ne
+for epoch = 1:Ne
     
     for n = 1:N
 
@@ -250,13 +262,14 @@ for ep = 1:Ne
     end
     
     if(is_static)
+        
         % Shuffle Data
         I = randperm(N);        
         X = X(:,I);     
         Y = Y(:,I);
         
         % Hold last classification labels
-        if (ep == Ne)
+        if (epoch == Ne)
             OUT = spok_classify(DATA,PAR);
             yh = OUT.y_h;
         end

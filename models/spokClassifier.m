@@ -198,16 +198,18 @@ classdef spokClassifier < prototypeBasedClassifier
 
                 end
 
-                % Shuffle Data
                 if(self.is_stationary)
+                    
+                    % Shuffle Data
                     I = randperm(N);
                     Xs = Xs(:,I);
                     Ys = Ys(:,I);
-                end
-
-                % Hold last classification labels
-                if(epoch == self.number_of_epochs)
-                    self = self.predict(X);
+                    
+                    % Hold last classification labels
+                    if(epoch == self.number_of_epochs)
+                        self = self.predict(X);
+                    end
+                    
                 end
 
             end % end epoch

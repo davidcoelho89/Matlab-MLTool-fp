@@ -84,6 +84,8 @@ disp('Classification Accuracy with Training Dataset:');
 disp(stats_tr.acc);
 disp('Classification Accuracy with Test Dataset:');
 disp(stats_ts.acc);
+disp('Times that prototypes were selected during training:');
+disp(sum(classifier.times_selected));
 
 %% RESULTS / STATISTICS - SHOW
 

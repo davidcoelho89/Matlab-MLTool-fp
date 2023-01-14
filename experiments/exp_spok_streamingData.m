@@ -1,29 +1,31 @@
 %% Machine Learning ToolBox
 
-% Spok with various streaming datasets
+% Spok Model testing in various streaming datasets
 % Author: David Nascimento Coelho
-% Last Update: 2021/08/24
+% Last Update: 2023/01/14
 
 %% Choices
 
-% Datasets [28,29,30,33,34,35,36,37,38]
+% Datasets Specification
 
-datasets = 28;  % Which dataset(s) will be used
-OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
-OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score normalization.
+datasets = 28;  % datasets = [28,29,30,33,34,35,36,37,38]
+
 OPT.prob2 = 1;  % Specific choice about dataset
+OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
+OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
 
-% Grid-Search Cross-validation
+% Grid-Search (Test-Then-Train)
 
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
 PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
 
-% Kernels [1,2,5]
+% Which Kernels Will be tested
+
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = 2;
+kernels = 2;          % kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
@@ -43,10 +45,10 @@ HP_gs.K = 1;                   % Number of nearest neighbors (classify)
 HP_gs.knn_type = 2;            % Type of knn aproximation
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
 HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
-% HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
-% HP_gs.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
-% HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
-% HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
+HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_gs.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
+HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
+HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 % Obs: the hyperparameters related to kernel functions are at the pipelines
 

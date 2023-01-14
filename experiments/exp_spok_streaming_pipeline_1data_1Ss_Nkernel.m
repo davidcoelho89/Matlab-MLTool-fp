@@ -47,15 +47,18 @@ if (any(kernels == 1))
 
     str12 = '_lin_';
     
-    if(HP_gs.Ss == 1)
-        HP_gs.v1 = 2.^linspace(-10,10,21);                  % ALD
-    elseif(HP_gs.Ss == 2)
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];   % Coherence
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
     end
     
-    % ToDo - The same thing of v1, to v2! Novelty and Surprise!
-    HP_gs.v2 = HP_gs.v1(end) + 0.001;
-
     HP_gs.Ktype = 1;
     HP_gs.sigma = 2;
     HP_gs.gamma = 2;

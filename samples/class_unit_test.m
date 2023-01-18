@@ -22,7 +22,7 @@ OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
-OPT.hpo = 'none';       % 'grid' ; 'random' ; 
+OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none'
 
 % "Hyperparameters Optimization" Parameters
 
@@ -50,17 +50,21 @@ end
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
-% Get Default Hyperparameters
-HPgs = HP;
+if(~strcmp(OPT.hpo,'none'))
+    
+    % Get Default Hyperparameters
+    HPgs = HP;
 
-% Can put here vectors of hyperparameters to be optimized. 
-% Ex: HPgs.eta = 0.01:0.01:0.1
+    % Get specific Hyperparameters
+    
+    if(strcmp(OPT.alg,'mlp'))
+        HPgs.Nh = {5,10,20,[2,3],[3,3],[4,5]};
+        HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
+        HPgs.Nh = {10,[3,3],[4,5]};
+        HPgs.eta = [0.01,0.05,0.1];
+    end
 
-% MLP
-% HPgs.Nh = {5,10,20,[2,3],[3,3],[4,5]};
-% HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
-% HPgs.Nh = {10,[3,3],[4,5]};
-% HPgs.eta = [0.01,0.05,0.1];
+end
 
 %% ACCUMULATORS
 

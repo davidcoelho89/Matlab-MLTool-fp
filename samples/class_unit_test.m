@@ -22,6 +22,7 @@ OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
+OPT.hpo = 'none';       % 'grid' ; 'random' ; 
 
 % "Hyperparameters Optimization" Parameters
 
@@ -32,21 +33,20 @@ CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-% MLP
-% HP.Nh = 05;     % Number of hidden neurons
-% HP.Ne = 200;	% maximum number of training epochs
-% HP.eta = 0.05;	% Learning step
-% HP.mom = 0.75;	% Moment Factor
-% HP.Nlin = 2;	% Non-linearity
-% HP.Von = 0;     % disable video
-
-% LMS
-HP.Ne = 200;       	% maximum number of training epochs
-HP.eta = 0.05;    	% Learning step
-HP.Von = 0;         % disable video
-
-% OLS
-% HP.aprox = 1;       % type of approximation
+if(strcmp(OPT.alg,'mlp'))
+    HP.Nh = 05;         % Number of hidden neurons
+    HP.Ne = 200;        % maximum number of training epochs
+    HP.eta = 0.05;      % Learning step
+    HP.mom = 0.75;      % Moment Factor
+    HP.Nlin = 2;        % Non-linearity
+    HP.Von = 0;         % disable video
+elseif(strcmp(OPT.alg,'lms'))
+    HP.Ne = 200;       	% maximum number of training epochs
+    HP.eta = 0.05;    	% Learning step
+    HP.Von = 0;         % disable video
+elseif(strcmp(OPT.alg,'ols'))
+    HP.aprox = 1;       % type of approximation
+end
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 
@@ -135,9 +135,13 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
-% Using Grid/Random Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
-% HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+if(strcmp(OPT.hpo,'none'))
+    % Does nothing
+elseif(strcmp(OPT.hpo,'grid'))
+    HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+elseif(strcmp(OPT.hpo,'random'))
+    HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+end
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 

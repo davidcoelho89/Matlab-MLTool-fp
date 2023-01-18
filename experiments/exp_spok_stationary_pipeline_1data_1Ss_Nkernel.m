@@ -1,4 +1,5 @@
-function [] = exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT)
+function [] = exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,...
+                                                             CVp,kernels)
 
 % --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
 %
@@ -10,34 +11,19 @@ function [] = exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT)
 %           prob2 = a specification of the dataset
 %           norm = which normalization will be used
 %           lbl = which labeling strategy will be used
+%       CVp.
+%           max_it = Maximum number of iterations (random search)
+%           fold = number of data partitions for cross validation
+%           cost = Which cost function will be used
+%           lambda = Jpbc = Ds + lambda * Err (prototype-based models)
+%       HP_gs = default hyperparameters
+%       kernels = list of kernels to be used
 %   Output:
 %       "Do not have. Just save structures into a file"
 
 %% DATA LOADING
 
 DATA = data_class_loading(OPT);
-
-%% CROSS VALIDATION OPTIONS
-
-CVp.fold = 5;       % number of data partitions for cross validation
-CVp.type = 2;       % Takes into account also the dicitionary size
-CVp.lambda = 2; 	% Jpbc = Ds + lambda * Err
-
-%% HYPERPARAMETERS - DEFAULT
-
-HP_gs.Dm = 2;
-HP_gs.Ss = 1;
-HP_gs.v1 = 0.8;
-HP_gs.v2 = 0.9;
-HP_gs.Us = 1;
-HP_gs.eta = 0.01;
-HP_gs.Ps = 2;
-HP_gs.min_score = -10;
-HP_gs.max_prot = 600;
-HP_gs.min_prot = 1;
-HP_gs.Von = 0;
-HP_gs.K = 1;
-HP_gs.sig2n = 0.001;
 
 %% FILE NAME - STRINGS
 
@@ -58,141 +44,249 @@ str14 = 'nn.mat';
 
 %% KERNEL = LINEAR
 
-str12 = '_lin_';
+if (any(kernels == 1))
 
-HP_gs.v1 = 2.^linspace(-10,10,21);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 1;
-HP_gs.sigma = 2;
-HP_gs.gamma = 2;
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    str12 = '_lin_';
+    HP_gs.Ktype = 1;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end    
+    
+    HP_gs.sigma = 2;
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
 
-exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+
+end
 
 %% KERNEL = GAUSSIAN
 
-str12 = '_gau_';
+if (any(kernels == 2))
+    
+    str12 = '_gau_';
+    HP_gs.Ktype = 2;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-4,3,8);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        % ToDo - Adjust v1
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end
+    
+    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-HP_gs.v1 = 2.^linspace(-4,3,8);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 2;
-HP_gs.sigma = 2.^linspace(-10,9,20);
-HP_gs.gamma = 2;
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-
-exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+end
 
 %% KERNEL = POLYNOMIAL
 
-str12 = '_pol_';
+if (any(kernels == 3))
+    
+    str12 = '_pol_';
+    HP_gs.Ktype = 3;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-13,6,20);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        % ToDo - Adjust v1
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end
+    
+    HP_gs.sigma = 2;
+    HP_gs.gamma = [2,2.2,2.4,2.6,2.8,3];
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-HP_gs.v1 = 2.^linspace(-13,6,20);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 3;
-HP_gs.sigma = 2;
-HP_gs.gamma = [2,2.2,2.4,2.6,2.8,3];
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+end
 
 %% KERNEL = EXPONENTIAL
 
-% str12 = '_exp_';
-% 
-% HP_gs.v1 = 2.^linspace(-4,3,8);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 4;
-% HP_gs.sigma = 2.^linspace(-10,9,20);
-% HP_gs.gamma = 2;
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% 
-% exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+if (any(kernels == 4))
+
+    str12 = '_exp_';
+    HP_gs.Ktype = 4;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-4,3,8);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        % ToDo - Adjust v1
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end
+    
+    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+
+end
 
 %% KERNEL = CAUCHY
 
-str12 = '_cau_';
+if (any(kernels == 5))
+    
+    str12 = '_cau_';
+    HP_gs.Ktype = 5;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-4,3,8);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        % ToDo - Adjust v1
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end
+        
+    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
 
-HP_gs.v1 = 2.^linspace(-4,3,8);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 5;
-HP_gs.sigma = 2.^linspace(-10,9,20);
-HP_gs.gamma = 2;
-HP_gs.alpha = 1;
-HP_gs.theta = 1;
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+end
 
 %% KERNEL = LOG
 
-% str12 = '_log_';
-% 
-% HP_gs.v1 = -2.^linspace(10,2,9);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 6;
-% HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
-% HP_gs.gamma = 2;
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+if (any(kernels == 6))
+
+    str12 = '_log_';
+    HP_gs.Ktype = 6;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = -2.^linspace(10,2,9);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        % ToDo - Adjust v1
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end
+    
+    HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+
+end
 
 %% KERNEL = SIGMOID
 
-str12 = '_sig_';
+if (any(kernels == 7))
 
-HP_gs.v1 = 2.^linspace(-13,6,20);
-HP_gs.v2 = HP_gs.v1(end) + 0.001;
-HP_gs.Ktype = 7;
-HP_gs.sigma = 2;
-HP_gs.gamma = 2;
-HP_gs.alpha = 2.^linspace(-8,2,11);       
-% HP_gs.theta = 2.^linspace(-8,2,11);
-HP_gs.theta = 0.1;
+    str12 = '_sig_';
+    HP_gs.Ktype = 7;
+    
+    if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-13,6,20);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 2)   % Coherence
+        % ToDo - Adjust v1
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+    elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+    elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+    end
+    
+    HP_gs.sigma = 2;
+    HP_gs.gamma = 2;
+    HP_gs.alpha = 2.^linspace(-8,2,11);       
+    HP_gs.theta = 0.1;
 
-OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                  str9,str10,str11,str12,str13,str14);
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
 
-exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+
+end
 
 %% KERNEL = KMOD
 
-% str12 = '_kmod_';
-% 
-% HP_gs.v1 = 2.^linspace(-13,6,20);
-% HP_gs.v2 = HP_gs.v1(end) + 0.001;
-% HP_gs.Ktype = 8;
-% HP_gs.sigma = 2.^linspace(-8,2,11);
-% HP_gs.gamma = 2.^linspace(-8,2,11);
-% HP_gs.alpha = 1;
-% HP_gs.theta = 1;
-% 
-% OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-%                   str9,str10,str11,str12,str13,str14);
-% 
-% exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+if (any(kernels == 8))
+
+    str12 = '_kmod_';
+    HP_gs.Ktype = 8;
+    
+	if(HP_gs.Ss == 1)       % ALD
+        HP_gs.v1 = 2.^linspace(-13,6,20);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;    
+	elseif(HP_gs.Ss == 2)   % Coherence
+        
+	elseif(HP_gs.Ss == 3)   % Novelty
+        % ToDo - Adjust v1 and v2
+	elseif(HP_gs.Ss == 4)   % Surprise
+        % ToDo - Adjust v1 and v2
+	end
+    
+    HP_gs.sigma = 2.^linspace(-8,2,11);
+    HP_gs.gamma = 2.^linspace(-8,2,11);
+    HP_gs.alpha = 1;
+    HP_gs.theta = 1;
+
+    OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
+                      str9,str10,str11,str12,str13,str14);
+
+    exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
+
+end
 
 %% END

@@ -20,6 +20,8 @@ classdef spokClassifier < prototypeBasedClassifier
     %        = 'surprise'
     %    - v1 = sparsification coefficient 1 <real>
     %    - v2 = sparsification coefficient 2 <real> 
+    %    - update_kernel_matrix -> depends on sparsification_strategy.
+    %        = 0 or 1 [cte]. Ex: "=1" for ALD and Surprise.
     %    - update_strategy
     %        Define how the prototypes will be updated
     %        = 'none'
@@ -110,9 +112,14 @@ classdef spokClassifier < prototypeBasedClassifier
         Kmc = [];
         Kinv = [];
         Kinvc = [];
+        
         score = [];
         classification_history = [];
         times_selected = [];
+        times_selected_sum = 0;
+        
+        update_kernel_matrix = [];
+        
         video = [];
         
     end
@@ -130,6 +137,16 @@ classdef spokClassifier < prototypeBasedClassifier
             number_of_classes = length(y);
 
             [~,number_of_prototypes_old] = size(self.Cx);
+            
+            if(isempty(self.update_kernel_matrix))
+                if(strcmp(self.sparsification_strategy,'ald') || ...
+                   strcmp(self.sparsification_strategy,'surprise'))
+                    self.update_kernel_matrix = 1;
+                else
+                    self.update_kernel_matrix = 0;
+                end
+                    
+            end
 
             if (number_of_prototypes_old == 0)
                 % Make a guess (yh = [1 -1 ... -1 -1]' : first class)
@@ -350,6 +367,10 @@ classdef spokClassifier < prototypeBasedClassifier
                             continue;
                         end
                         
+                        % Hold number of times the removed prototype was selected
+                        self.times_selected_sum = self.times_selected_sum + ...
+                                                  self.times_selected(k);
+                        
                         % Remove Prototype from dictionary (just one per loop)
                         self = self.removeSample(k);
                         break;
@@ -372,56 +393,60 @@ classdef spokClassifier < prototypeBasedClassifier
             [~,m] = size(self.Cx);       	% # of prototypes in the dict
             [~,Dy_seq] = max(self.Cy);      % Sequential classes of dict
             
-            % Update Kernel Matrices
+            % Update Kernel Matrices (just if needed)
             
-            if (m == 0)
+            if(self.update_kernel_matrix)
+                
+                if (m == 0)
 
-                % Init Kernel matrix and its inverse for each class
-                self.Kmc = cell(Nc,1);
-                self.Kmc{c} = ktt + self.regularization;
-                self.Kinvc = cell(Nc,1);
-                self.Kinvc{c} = 1/self.Kmc{c};
-                
-                % Init Kernel matrix and its inverse for dataset
-                self.Km = ktt + self.regularization;
-                self.Kinv = 1/self.Km;
-                
-            else
-                
-                % Get number of prototypes from samples' class
-                mc = sum(Dy_seq == c);
-                
-                % Init kernel matrix and its inverse of samples' class
-                if (mc == 0)
+                    % Init Kernel matrix and its inverse for each class
+                    self.Kmc = cell(Nc,1);
                     self.Kmc{c} = ktt + self.regularization;
+                    self.Kinvc = cell(Nc,1);
                     self.Kinvc{c} = 1/self.Kmc{c};
-                    
-                % Update kernel matrix and its inverse of samples' class
-                else
-                    % Get auxiliary variables
-                    Cx_c = self.Cx(:,Dy_seq == c); % Inputs from class c
-                    kt_c = kernelVector(Cx_c,x,self);
-                    at_c = self.Kinvc{c}*kt_c;
-                    delta_c = (ktt - kt_c'*at_c) + self.regularization;
-                    % Update Kernel matrix
-                    self.Kmc{c} = [self.Kmc{c}, kt_c; ...
-                                   kt_c', ktt + self.regularization];
-                    % Update Inverse Kernel matrix
-                    self.Kinvc{c} = (1/delta_c)*...
-                                  [delta_c*self.Kinvc{c} + at_c*at_c',-at_c; -at_c', 1];
-                end
-                
-                % Get auxiliary variables
-                kt = kernelVector(self.Cx,x,self);
-                at = self.Kinv * kt;
-                delta = (ktt - kt'*at) + self.regularization;
-                
-                % Update kernel matrix and its inverse for dataset
-                self.Km = [self.Km, kt; kt', ktt + self.regularization];
-                self.Kinv = (1/delta)*[delta*self.Kinv + at*at', -at; -at', 1];
-                
-            end
 
+                    % Init Kernel matrix and its inverse for dataset
+                    self.Km = ktt + self.regularization;
+                    self.Kinv = 1/self.Km;
+
+                else
+
+                    % Get number of prototypes from samples' class
+                    mc = sum(Dy_seq == c);
+
+                    % Init kernel matrix and its inverse of samples' class
+                    if (mc == 0)
+                        self.Kmc{c} = ktt + self.regularization;
+                        self.Kinvc{c} = 1/self.Kmc{c};
+
+                    % Update kernel matrix and its inverse of samples' class
+                    else
+                        % Get auxiliary variables
+                        Cx_c = self.Cx(:,Dy_seq == c); % Inputs from class c
+                        kt_c = kernelVector(Cx_c,x,self);
+                        at_c = self.Kinvc{c}*kt_c;
+                        delta_c = (ktt - kt_c'*at_c) + self.regularization;
+                        % Update Kernel matrix
+                        self.Kmc{c} = [self.Kmc{c}, kt_c; ...
+                                       kt_c', ktt + self.regularization];
+                        % Update Inverse Kernel matrix
+                        self.Kinvc{c} = (1/delta_c)*...
+                                      [delta_c*self.Kinvc{c} + at_c*at_c',-at_c; -at_c', 1];
+                    end
+
+                    % Get auxiliary variables
+                    kt = kernelVector(self.Cx,x,self);
+                    at = self.Kinv * kt;
+                    delta = (ktt - kt'*at) + self.regularization;
+
+                    % Update kernel matrix and its inverse for dataset
+                    self.Km = [self.Km, kt; kt', ktt + self.regularization];
+                    self.Kinv = (1/delta)*[delta*self.Kinv + at*at', -at; -at', 1];
+
+                end % end if m == 0
+                
+            end % end if update_kernel_matrix
+            
             % Add sample to dictionary
             self.Cx = [self.Cx,x];
             self.Cy = [self.Cy,y];
@@ -435,55 +460,59 @@ classdef spokClassifier < prototypeBasedClassifier
 
         function self = removeSample(self,index)
             
-            [~,m] = size(self.Cx); % dictionary size (cardinality)
-            prot = self.Cx(:,index);
-            [~,class] = max(self.Cy(:,index));
-            [~,Cy_seq] = max(self.Cy);
-            
-            Dx_c = self.Cx(:,Cy_seq == class); % class conditional prot
-            win_c = self.findWinnerPrototype(Dx_c,prot,self);
-            mc = sum(Cy_seq == class); % number of prototypes of class
-            
-            % Remove positions from inverse kernel matrix (entire dict)
-            
-            ep = zeros(m,1);
-            ep(index) = 1;
-            u = self.Km(:,index) - ep;
-            
-            eq = zeros(m,1);
-            eq(index) = 1;
-            v = eq;
-            
-            self.Kinv = self.Kinv + (self.Kinv * u)*(v' * self.Kinv) / ...
-                                    (1 - v' * self.Kinv * u);
-            self.Kinv(index,:) = [];
-            self.Kinv(:,index) = [];
-            
-            % Remove positions from kernel matrix (entire dict)
+            if(self.update_kernel_matrix)
+                
+                [~,m] = size(self.Cx); % dictionary size (cardinality)
+                prot = self.Cx(:,index);
+                [~,class] = max(self.Cy(:,index));
+                [~,Cy_seq] = max(self.Cy);
 
-            self.Km(index,:) = [];
-            self.Km(:,index) = [];
-            
-            % Remove positions from inverse kernel matrices (class dict)
-            
-            ep = zeros(mc,1);
-            ep(win_c) = 1;
-            u = self.Kmc{class}(:,win_c) - ep;
-            
-            eq = zeros(mc,1);
-            eq(win_c) = 1;
-            v = eq;
-            
-            self.Kinvc{class} = self.Kinvc{class} + (self.Kinvc{class}*u)*...
-                                            (v'*self.Kinvc{class}) / ...
-                                            (1 - v'*self.Kinvc{class}*u);
-            self.Kinvc{class}(win_c,:) = [];
-            self.Kinvc{class}(:,win_c) = [];
-            
-            % Remove positions from kernel matrix (class dict)
+                Dx_c = self.Cx(:,Cy_seq == class); % class conditional prot
+                win_c = self.findWinnerPrototype(Dx_c,prot,self);
+                mc = sum(Cy_seq == class); % number of prototypes of class
 
-            self.Kmc{class}(win_c,:) = [];
-            self.Kmc{class}(:,win_c) = [];
+                % Remove positions from inverse kernel matrix (entire dict)
+
+                ep = zeros(m,1);
+                ep(index) = 1;
+                u = self.Km(:,index) - ep;
+
+                eq = zeros(m,1);
+                eq(index) = 1;
+                v = eq;
+
+                self.Kinv = self.Kinv + (self.Kinv * u)*(v' * self.Kinv) / ...
+                                        (1 - v' * self.Kinv * u);
+                self.Kinv(index,:) = [];
+                self.Kinv(:,index) = [];
+
+                % Remove positions from kernel matrix (entire dict)
+
+                self.Km(index,:) = [];
+                self.Km(:,index) = [];
+
+                % Remove positions from inverse kernel matrices (class dict)
+
+                ep = zeros(mc,1);
+                ep(win_c) = 1;
+                u = self.Kmc{class}(:,win_c) - ep;
+
+                eq = zeros(mc,1);
+                eq(win_c) = 1;
+                v = eq;
+
+                self.Kinvc{class} = self.Kinvc{class} + (self.Kinvc{class}*u)*...
+                                                (v'*self.Kinvc{class}) / ...
+                                                (1 - v'*self.Kinvc{class}*u);
+                self.Kinvc{class}(win_c,:) = [];
+                self.Kinvc{class}(:,win_c) = [];
+
+                % Remove positions from kernel matrix (class dict)
+
+                self.Kmc{class}(win_c,:) = [];
+                self.Kmc{class}(:,win_c) = [];
+                
+            end
             
             % Remove sample from dictionary
 

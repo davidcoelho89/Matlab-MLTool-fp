@@ -2,7 +2,7 @@
 
 % Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/04/11
+% Last Update: 2023/01/23
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -30,10 +30,10 @@ OPT.show_specific_stats = 0;    % roc, class boundary, precision-recall
 
 % Metaparameters
 
-CVp.max_it = 9;         % Maximum number of iterations (random search)
-CVp.fold = 5;           % number of data partitions (cross validation)
-CVp.cost = 1;           % Which cost function will be used
-CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
+MP.max_it = 9;          % Maximum number of iterations (random search)
+MP.fold = 5;            % number of data partitions (cross validation)
+MP.cost = 1;            % Which cost function will be used
+MP.lambda = 0.5;        % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
@@ -149,9 +149,9 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 if(strcmp(OPT.hpo,'none'))
     % Does nothing
 elseif(strcmp(OPT.hpo,'grid'))
-    HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+    HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,MP);
 elseif(strcmp(OPT.hpo,'random'))
-    HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+    HP = random_search_cv(DATAtr,HPgs,class_train,class_test,MP);
 end
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%

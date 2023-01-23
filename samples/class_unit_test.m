@@ -57,6 +57,7 @@ end
 if(~strcmp(OPT.hpo,'none'))
     
     % Get Default Hyperparameters
+    
     HPgs = HP;
 
     % Get specific Hyperparameters

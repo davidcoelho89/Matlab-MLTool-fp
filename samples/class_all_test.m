@@ -78,11 +78,11 @@ STATS_wta = cell(OPT.Nr,1);       	% Acc of Statistics of WTA
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
     
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%% SHUFFLE AND HOLD OUT %%%%%%%%%%%%%%%%%%%%

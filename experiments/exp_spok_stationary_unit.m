@@ -168,11 +168,11 @@ DATAtr = DATA_acc{r}.DATAtr;        % Training Data
 DATAts = DATA_acc{r}.DATAts;      	% Test Data
 
 % Update maximum number of prototypes 
-% (avoid PBC getting all data training points)
+% (avoid PBC getting  half of data training points)
 
 Ntr_samples = length(DATAtr.lbl);
-HP.max_prot = Ntr_samples;
-HPgs.max_prot = Ntr_samples;
+HP.max_prot = Ntr_samples / 2;
+HPgs.max_prot = Ntr_samples / 2;
 
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 

@@ -17,11 +17,11 @@ OPT.Nr = 10;            % Number of repetitions of the algorithm
 OPT.alg = 'spok';	    % Which classifier will be used
 OPT.prob = 06;          % Which problem will be solved / used
 OPT.prob2 = 02;         % More details about a specific data set
-OPT.norm = 3;           % Normalization definition
+OPT.norm = 0;           % Normalization definition
 OPT.lbl = 1;            % Labeling definition. 1: [-1 +1] pattern
 OPT.hold = 2;           % Hold out method
 OPT.ptrn = 0.7;         % Percentage of samples for training
-OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'grid';       % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;               % decides if file will be saved
 OPT.savevideo = 0;              % decides if video will be saved
@@ -33,7 +33,7 @@ OPT.result_analysis = 1;        % show result analysis
 MP.max_it = 09;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
-MP.lambda = 0.5; 	% Jpbc = Ds + lambda * Err
+MP.lambda = 2;    % Jpbc = Ds + lambda * Err
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
@@ -41,7 +41,7 @@ HP.Ne = 01;             	% Maximum number of epochs
 HP.is_static = 1;           % Verify if the dataset is stationary
 HP.Dm = 2;                  % Design Method
 HP.Ss = 1;                  % Sparsification strategy
-HP.v1 = 0.1;                % Sparseness parameter 1 
+HP.v1 = 0.01;               % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
 HP.Us = 0;                  % Update strategy
 HP.eta = 0.1;               % Update rate
@@ -76,6 +76,7 @@ if(HP.Ss == 1)
         % Linear
         HPgs.v1 = 2.^linspace(-10,3,14);
         HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.theta = [0,2.^linspace(-4,3,8)]; % 0.1; 
     elseif HP.Ktype == 2
         % Gaussian
         HPgs.v1 = 2.^linspace(-4,3,8);

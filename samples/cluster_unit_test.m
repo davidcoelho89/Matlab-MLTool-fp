@@ -76,14 +76,14 @@ STATS_acc = cell(OPT.Nr,1);   	% Acc of Statistics
 
 %% CLUSTERING
 
-display('Begin Algorithm');
+disp('Begin Algorithm');
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
-display(datestr(now));
+disp(r);
+disp(datestr(now));
 
 % %%%%%%%%%%%%%%%%%% SHUFFLE DATA %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -102,8 +102,8 @@ STATS_acc{r} = cluster_stats_1turn(DATA,PAR_acc{r});
 
 end
 
-display('Finish Algorithm')
-display(datestr(now));
+disp('Finish Algorithm')
+disp(datestr(now));
 
 %% RESULTS / STATISTICS
 

@@ -2,7 +2,7 @@
 
 % Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2022/04/11
+% Last Update: 2023/01/23
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,22 +14,26 @@ format long e;  % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'ols';        % Which classifier will be used
+OPT.alg = 'mlp';        % Which classifier will be used
 OPT.prob = 06;        	% Which problem will be solved / used
 OPT.prob2 = 30;       	% More details about a specific data set
 OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
-OPT.file = 'fileX.mat';	% file where all the variables will be saved
 OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none'
+OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
-% "Hyperparameters Optimization" Parameters
+OPT.savefile = 0;               % decides if file will be saved
+OPT.savevideo = 0;              % decides if video will be saved
+OPT.show_specific_stats = 0;    % roc, class boundary, precision-recall
 
-CVp.max_it = 9;         % Maximum number of iterations (random search)
-CVp.fold = 5;           % number of data partitions for cross validation
-CVp.cost = 1;           % Which cost function will be used
-CVp.lambda = 0.5;       % Jpbc = Ds + lambda * Err (prototype-based models)
+% Metaparameters
+
+MP.max_it = 9;          % Maximum number of iterations (random search)
+MP.fold = 5;            % number of data partitions (cross validation)
+MP.cost = 1;            % Which cost function will be used
+MP.lambda = 0.5;        % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
@@ -53,6 +57,7 @@ end
 if(~strcmp(OPT.hpo,'none'))
     
     % Get Default Hyperparameters
+    
     HPgs = HP;
 
     % Get specific Hyperparameters
@@ -62,6 +67,8 @@ if(~strcmp(OPT.hpo,'none'))
         HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
         HPgs.Nh = {10,[3,3],[4,5]};
         HPgs.eta = [0.01,0.05,0.1];
+    elseif(strcmp(OPT.alg,'lms'))
+        HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
     end
 
 end
@@ -142,9 +149,9 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 if(strcmp(OPT.hpo,'none'))
     % Does nothing
 elseif(strcmp(OPT.hpo,'grid'))
-    HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+    HP = grid_search_cv(DATAtr,HPgs,class_train,class_test,MP);
 elseif(strcmp(OPT.hpo,'random'))
-    HP = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp);
+    HP = random_search_cv(DATAtr,HPgs,class_train,class_test,MP);
 end
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
@@ -185,38 +192,50 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 %% GRAPHICS - OF LAST TURN
 
-% % Get Data, Parameters, Statistics
-% DATAf.input = [DATAtr.input, DATAts.input];
-% DATAf.output = [DATAtr.output, DATAts.output];
-% PAR = PAR_acc{r};
-% STATS = STATS_ts_acc{r};
-% 
-% % Classifier Decision Boundaries
-% plot_class_boundary(DATA,PAR_acc{r},class_test);
-% 
-% % ROC Curve (one for each class)
-% plot_stats_roc_curve(STATS);
-% 
-% % Precision-Recall (one for each class)
-% plot_stats_precision_recall(STATS)
+if(OPT.show_specific_stats == 1)
 
-% % See Class Boundary Video (of last turn)
-% if (HP.Von == 1),
-%     VID = PAR_acc{r}.VID
-%     figure;
-%     movie(VID)
-% end
+    % Get Data, Parameters, Statistics
+    DATAf.input = [DATAtr.input, DATAts.input];
+    DATAf.output = [DATAtr.output, DATAts.output];
+    PAR = PAR_acc{r};
+    STATS = STATS_ts_acc{r};
+
+    % Classifier Decision Boundaries
+    plot_class_boundary(DATA,PAR_acc{r},class_test);
+
+    % ROC Curve (one for each class)
+    plot_stats_roc_curve(STATS);
+
+    % Precision-Recall (one for each class)
+    plot_stats_precision_recall(STATS)
+    
+end
+
+% See Class Boundary Video (of last turn)
+if(isfield(HP,'Von'))
+    if (HP.Von == 1)
+        VID = PAR_acc{r}.VID;
+        figure;
+        movie(VID)
+    end
+end
 
 %% SAVE VARIABLES AND VIDEO
 
-% % Save All Variables
-% save(OPT.file);
-% 
-% % Save Class Boundary Video (of last turn)
-% v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
-% v.FrameRate = 1;
-% open(v);
-% writeVideo(v,VID);
-% close(v);
+% Save All Variables
+if(OPT.savefile)
+    save(OPT.file);
+end
+
+% Save Class Boundary Video (of last turn)
+if(isfield(HP,'Von'))
+    if (HP.Von == 1 && OPT.savevideo == 1)
+        v = VideoWriter('video.mp4','MPEG-4'); 
+        v.FrameRate = 1;
+        open(v);
+        writeVideo(v,VID);
+        close(v);
+    end
+end
 
 %% END

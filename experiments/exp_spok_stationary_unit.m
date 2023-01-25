@@ -1,53 +1,58 @@
-%% Machine Learning ToolBox
+%% MACHINE LEARNING TOOLBOX
 
 % Spok With one stationary Dataset
 % Author: David Nascimento Coelho
-% Last Update: 2022/08/02
+% Last Update: 2023/01/23
 
 close;          % Close all windows
 clear;          % Clear all variables
 clc;            % Clear command window
-
 format long e;  % Output data style (float)
 
-%% GENERAL DEFINITIONS
+%% CHOOSE EXPERIMENT PARAMETERS
 
 % General options' structure
 
-OPT.Nr = 02;        % Number of repetitions of the algorithm
-OPT.alg = 'spok';	% Which classifier will be used
-OPT.prob = 06;      % Which problem will be solved / used
-OPT.prob2 = 02;     % More details about a specific data set
-OPT.norm = 3;       % Normalization definition
-OPT.lbl = 1;        % Labeling definition. 1: [-1 +1] pattern
-OPT.hold = 2;       % Hold out method
-OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 1;        % Allow hyperparameter optimization
+OPT.Nr = 10;            % Number of repetitions of the algorithm
+OPT.alg = 'spok';	    % Which classifier will be used
+OPT.prob = 06;          % Which problem will be solved / used
+OPT.prob2 = 02;         % More details about a specific data set
+OPT.norm = 0;           % Normalization definition
+OPT.lbl = 1;            % Labeling definition. 1: [-1 +1] pattern
+OPT.hold = 2;           % Hold out method
+OPT.ptrn = 0.7;         % Percentage of samples for training
+OPT.hpo = 'grid';       % 'grid' ; 'random' ; 'none'
 
-% Grid Search Parameters
+OPT.savefile = 0;               % decides if file will be saved
+OPT.savevideo = 0;              % decides if video will be saved
+OPT.show_specific_stats = 0;    % roc, class boundary, precision-recall
+OPT.result_analysis = 1;        % show result analysis
 
-GSp.fold = 5;       % number of data partitions for cross validation
-GSp.type = 2;       % Takes into account also the dicitionary size
-GSp.lambda = 0.2; 	% Jpbc = Ds + lambda * Err
+% Metaparameters
 
-%% HYPERPARAMETERS - DEFAULT
+MP.max_it = 09;   	% Maximum number of iterations (random search)
+MP.fold = 5;     	% number of data partitions (cross validation)
+MP.cost = 2;        % Takes into account also the dicitionary size
+MP.lambda = 2;    % Jpbc = Ds + lambda * Err
 
-HP.Ne = 05;             	% Maximum number of epochs
+%% CHOOSE FIXED HYPERPARAMETERS 
+
+HP.Ne = 01;             	% Maximum number of epochs
 HP.is_static = 1;           % Verify if the dataset is stationary
 HP.Dm = 2;                  % Design Method
-HP.Ss = 2;                  % Sparsification strategy
-HP.v1 = 0.8;                % Sparseness parameter 1 
+HP.Ss = 1;                  % Sparsification strategy
+HP.v1 = 0.01;               % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
-HP.Us = 1;                  % Update strategy
+HP.Us = 0;                  % Update strategy
 HP.eta = 0.1;               % Update rate
-HP.Ps = 2;                  % Prunning strategy
+HP.Ps = 0;                  % Prunning strategy
 HP.min_score = -10;         % Score that leads the sample to be pruned
-HP.max_prot = 20;           % Max number of prototypes
+HP.max_prot = Inf;          % Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
+HP.Ktype = 1;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
@@ -56,27 +61,85 @@ HP.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
+if(~strcmp(OPT.hpo,'none'))
+
+% Get Default Hyperparameters
+
 HPgs = HP;
 
-% Hyperparameters for ALD
+% Get specific Hyperparameters
+
+% ALD
 if(HP.Ss == 1)
-    HPgs.v1 = 2.^linspace(-4,3,8);
-    HPgs.v2 = HPgs.v1(end) + 0.001;
-    HPgs.sigma = 2.^linspace(-10,9,20);
+    
+    if HP.Ktype == 1
+        % Linear
+        HPgs.v1 = 2.^linspace(-10,3,14);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.theta = [0,2.^linspace(-4,3,8)]; % 0.1; 
+    elseif HP.Ktype == 2
+        % Gaussian
+        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,5,14);
+    elseif HP.Ktype == 3
+        % Polynomial
+        HP_gs.v1 = 2.^linspace(-13,6,20);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+    elseif HP.Ktype == 4
+        % Exponential
+        HP_gs.v1 = 2.^linspace(-4,3,8);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,5,14);
+    elseif HP.Ktype == 5
+        % Cauchy
+        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,5,14);
+    elseif HP.Ktype == 6
+        % Log
+        HP_gs.v1 = -2.^linspace(10,2,9);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
+    elseif HP.Ktype == 7
+        % Sigmoid
+        HP_gs.v1 = 2.^linspace(-13,6,20);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HP_gs.alpha = 2.^linspace(-8,2,11);
+    elseif HP.Ktype == 8
+        % Kmod
+        HP_gs.v1 = 2.^linspace(-13,6,20);
+        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HP_gs.sigma = 2.^linspace(-8,2,11);
+        HP_gs.gamma = 2.^linspace(-8,2,11);
+    end
 
-% Hyperparameters for Coherence
+% COHERENCE
 elseif(HP.Ss == 2)
-    HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
-    HPgs.v2 = HPgs.v1(end) + 0.001;
-    HPgs.sigma = 2.^linspace(-10,9,20);
+    
+    if HP.Ktype == 1
+        % Linear
+        HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+    elseif HP.Ktype == 2
+        % Gaussian
+        HPgs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-10,9,20);
+    end
 
-% Hyperparameters for Novelty
+% NOVELTY
 elseif(HP.Ss == 3)
     
     
-% Hyperparameters for Surprise
+    
+% SURPRISE
 elseif(HP.Ss == 4)
     
+    
+
+end
 
 end
 
@@ -88,7 +151,7 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 % plot_data_pairplot(DATA);           % See pairplot of attributes
 
-%% ACCUMULATORS
+%% ACCUMULATORS AND HANDLERS
 
 NAMES = {'train','test'};           % Acc of names for plots
 DATA_acc = cell(OPT.Nr,1);       	% Acc of Data
@@ -96,6 +159,14 @@ PAR_acc = cell(OPT.Nr,1);         	% Acc of Parameters and Hyperparameters
 STATS_tr_acc = cell(OPT.Nr,1);   	% Acc of Statistics of training data
 STATS_ts_acc = cell(OPT.Nr,1);   	% Acc of Statistics of test data
 nSTATS_all = cell(2,1);             % Acc of General statistics
+
+algorithm_name = upper(OPT.alg);
+
+train_string = strcat(OPT.alg,'_train');
+model_train = str2func(train_string);
+
+test_string = strcat(OPT.alg,'_classify');
+model_classify = str2func(test_string);
 
 %% VIDEO NAME AND FILE NAME
 
@@ -123,6 +194,13 @@ display(datestr(now));
 DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
 DATAtr = DATA_acc{r}.DATAtr;        % Training Data
 DATAts = DATA_acc{r}.DATAts;      	% Test Data
+
+% Update maximum number of prototypes 
+% (avoid PBC getting  half of data training points)
+
+Ntr_samples = length(DATAtr.lbl);
+HP.max_prot = Ntr_samples / 2;
+HPgs.max_prot = Ntr_samples / 2;
 
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 
@@ -155,13 +233,18 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
-% Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,GSp);
+if(strcmp(OPT.hpo,'none'))
+    % Does nothing
+elseif(strcmp(OPT.hpo,'grid'))
+    HP = grid_search_cv(DATAtr,HPgs,model_train,model_classify,MP);
+elseif(strcmp(OPT.hpo,'random'))
+    HP = random_search_cv(DATAtr,HPgs,model_train,model_classify,MP);
+end
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
 % Save video of last training
-if r == OPT.Nr
+if ((r == OPT.Nr) && (OPT.savevideo == 1))
     HP.Von = 1;
 end
 
@@ -201,39 +284,52 @@ class_stats_ncomp(nSTATS_all,NAMES);
 
 %% GRAPHICS - OF LAST TURN
 
-% Get Data, Parameters, Statistics
-DATAf.input = [DATAtr.input, DATAts.input];
-DATAf.output = [DATAtr.output, DATAts.output];
-PAR = PAR_acc{r};
-STATS = STATS_ts_acc{r};
+if(OPT.show_specific_stats == 1)
+    
+    % Get Data, Parameters, Statistics
+    DATAf.input = [DATAtr.input, DATAts.input];
+    DATAf.output = [DATAtr.output, DATAts.output];
+    PAR = PAR_acc{r};
+    STATS = STATS_ts_acc{r};
+    
+    % Classifier Decision Boundaries
+    plot_class_boundary(DATAf,PAR,model_classify);
+    
+    % ROC Curve (one for each class)
+    plot_stats_roc_curve(STATS);
+    
+    % Precision-Recall (one for each class)
+    plot_stats_precision_recall(STATS)
 
-% Classifier Decision Boundaries
-plot_class_boundary(DATAf,PAR,@spok_classify);
-
-% ROC Curve (one for each class)
-plot_stats_roc_curve(STATS);
-
-% Precision-Recall (one for each class)
-plot_stats_precision_recall(STATS)
+end
 
 % See Class Boundary Video (of last turn)
-% if (HP.Von == 1),
-%     VID = PAR_acc{r}.VID
-%     figure;
-%     movie(VID)
-% end
+if (HP.Von == 1)
+    VID = PAR_acc{r}.VID;
+    figure;
+    movie(VID)
+end
+
+if (OPT.result_analysis == 1)
+    spoknn_stationary_results_analysis;
+end
 
 %% SAVE VARIABLES AND VIDEO
 
 % % Save All Variables
-% save(OPT.filename);
-% 
-% % Save Class Boundary Video (of last turn)
-% v = VideoWriter('video.mp4','MPEG-4'); % v = VideoWriter('video.avi');
-% v.FrameRate = 1;
-% VID = PAR_acc{r}.VID;
-% open(v);
-% writeVideo(v,VID);
-% close(v);
+
+if(OPT.savefile)
+    save(OPT.filename);
+end
+
+% Save Class Boundary Video (of last turn)
+if (HP.Von == 1 && OPT.savevideo == 1)
+    v = VideoWriter('video.mp4','MPEG-4');
+    v.FrameRate = 1;
+    VID = PAR_acc{r}.VID;
+    open(v);
+    writeVideo(v,VID);
+    close(v);
+end
 
 %% END

@@ -21,7 +21,7 @@ OPT.norm = 3;           % Normalization definition
 OPT.lbl = 1;            % Labeling definition. 1: [-1 +1] pattern
 OPT.hold = 2;           % Hold out method
 OPT.ptrn = 0.7;         % Percentage of samples for training
-OPT.hpo = 'random';       % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'random';     % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;               % decides if file will be saved
 OPT.savevideo = 0;              % decides if video will be saved
@@ -52,7 +52,7 @@ HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 1;               % Kernel Type (2: Gaussian / see kernel_func())
+HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
@@ -76,12 +76,12 @@ if(HP.Ss == 1)
         % Linear
         HPgs.v1 = 2.^linspace(-10,3,14);
         HPgs.v2 = HPgs.v1(end) + 0.001;
-        HPgs.theta = [0,2.^linspace(-4,3,8)]; % 0.1; 
+        HPgs.theta = [0,2.^linspace(-4,3,8)];
     elseif HP.Ktype == 2
         % Gaussian
-        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v1 = 2.^linspace(-6,3,10);
         HPgs.v2 = HPgs.v1(end) + 0.001;
-        HPgs.sigma = 2.^linspace(-8,5,14);
+        HPgs.sigma = 2.^linspace(-6,5,12);
     elseif HP.Ktype == 3
         % Polynomial
         HP_gs.v1 = 2.^linspace(-13,6,20);

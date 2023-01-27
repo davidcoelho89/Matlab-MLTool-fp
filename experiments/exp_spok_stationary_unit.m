@@ -17,11 +17,11 @@ OPT.Nr = 10;            % Number of repetitions of the algorithm
 OPT.alg = 'spok';	    % Which classifier will be used
 OPT.prob = 06;          % Which problem will be solved / used
 OPT.prob2 = 02;         % More details about a specific data set
-OPT.norm = 0;           % Normalization definition
+OPT.norm = 3;           % Normalization definition
 OPT.lbl = 1;            % Labeling definition. 1: [-1 +1] pattern
 OPT.hold = 2;           % Hold out method
 OPT.ptrn = 0.7;         % Percentage of samples for training
-OPT.hpo = 'grid';       % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'random';       % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;               % decides if file will be saved
 OPT.savevideo = 0;              % decides if video will be saved
@@ -30,10 +30,10 @@ OPT.result_analysis = 1;        % show result analysis
 
 % Metaparameters
 
-MP.max_it = 09;   	% Maximum number of iterations (random search)
+MP.max_it = 100;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
-MP.lambda = 2;    % Jpbc = Ds + lambda * Err
+MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
@@ -170,7 +170,7 @@ model_classify = str2func(test_string);
 
 %% VIDEO NAME AND FILE NAME
 
-OPT.filename = strcat(DATA.name,'_',OPT.alg,'_hpo',int2str(OPT.hpo),...
+OPT.filename = strcat(DATA.name,'_',OPT.alg,'_hpo_',OPT.hpo,...
                       '_norm',int2str(OPT.norm),'_Dm',int2str(HP.Dm),...
                       '_Ss',int2str(HP.Ss),'_Us',int2str(HP.Us),...
                       '_Ps',int2str(HP.Ps),'_kernel',int2str(HP.Ktype),...

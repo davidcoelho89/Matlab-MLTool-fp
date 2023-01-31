@@ -33,13 +33,13 @@ OPT.result_analysis = 1;        % show result analysis
 MP.max_it = 100;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
-MP.lambda = 0.5;    % Jpbc = Ds + lambda * Err
+MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
 HP.Ne = 01;             	% Maximum number of epochs
 HP.is_static = 1;           % Verify if the dataset is stationary
-HP.Dm = 1;                  % Design Method
+HP.Dm = 2;                  % Design Method
 HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.01;               % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
@@ -84,15 +84,15 @@ if(HP.Ss == 1)
         HPgs.sigma = 2.^linspace(-6,5,12);
     elseif HP.Ktype == 3
         % Polynomial
-        HP_gs.v1 = 2.^linspace(-13,6,20);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-        HP_gs.alpha = 2.^linspace(-8,2,11); % 1;
-        HP_gs.theta = [0,2.^linspace(-4,3,8)]; % 0;
+        HPgs.v1 = 2.^linspace(-13,6,20);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+        HPgs.alpha = 2.^linspace(-8,2,11); % 1;
+        HPgs.theta = [0,2.^linspace(-4,3,8)]; % 0;
     elseif HP.Ktype == 4
         % Exponential
-        HP_gs.v1 = 2.^linspace(-4,3,8);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
         HPgs.sigma = 2.^linspace(-8,5,14);
     elseif HP.Ktype == 5
         % Cauchy
@@ -101,20 +101,20 @@ if(HP.Ss == 1)
         HPgs.sigma = 2.^linspace(-8,5,14);
     elseif HP.Ktype == 6
         % Log
-        HP_gs.v1 = -2.^linspace(10,2,9);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
+        HPgs.v1 = -2.^linspace(10,2,9);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = [0.001 0.01 0.1 1 2 5];
     elseif HP.Ktype == 7
         % Sigmoid
-        HP_gs.v1 = 2.^linspace(-13,6,20);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.alpha = 2.^linspace(-8,2,11);
+        HPgs.v1 = 2.^linspace(-13,6,20);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.alpha = 2.^linspace(-8,2,11);
     elseif HP.Ktype == 8
         % Kmod
-        HP_gs.v1 = 2.^linspace(-13,6,20);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.sigma = 2.^linspace(-8,2,11);
-        HP_gs.gamma = 2.^linspace(-8,2,11);
+        HPgs.v1 = 2.^linspace(-13,6,20);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,2,11);
+        HPgs.gamma = 2.^linspace(-8,2,11);
     end
 
 % COHERENCE

@@ -17,7 +17,7 @@ OPT.Nr = 10;            % Number of repetitions of the algorithm
 OPT.alg = 'spok';	    % Which classifier will be used
 OPT.prob = 06;          % Which problem will be solved / used
 OPT.prob2 = 02;         % More details about a specific data set
-OPT.norm = 3;           % Normalization definition
+OPT.norm = 0;           % Normalization definition
 OPT.lbl = 1;            % Labeling definition. 1: [-1 +1] pattern
 OPT.hold = 2;           % Hold out method
 OPT.ptrn = 0.7;         % Percentage of samples for training
@@ -52,7 +52,7 @@ HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
+HP.Ktype = 3;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
@@ -84,13 +84,15 @@ if(HP.Ss == 1)
         HPgs.sigma = 2.^linspace(-6,5,12);
     elseif HP.Ktype == 3
         % Polynomial
-        HP_gs.v1 = 2.^linspace(-13,6,20);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+        HPgs.v1 = 2.^linspace(-13,6,20);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+        HPgs.alpha = 2.^linspace(-8,2,11); % 1;
+        HPgs.theta = [0,2.^linspace(-4,3,8)]; % 0;
     elseif HP.Ktype == 4
         % Exponential
-        HP_gs.v1 = 2.^linspace(-4,3,8);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
+        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
         HPgs.sigma = 2.^linspace(-8,5,14);
     elseif HP.Ktype == 5
         % Cauchy
@@ -99,20 +101,20 @@ if(HP.Ss == 1)
         HPgs.sigma = 2.^linspace(-8,5,14);
     elseif HP.Ktype == 6
         % Log
-        HP_gs.v1 = -2.^linspace(10,2,9);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
+        HPgs.v1 = -2.^linspace(10,2,9);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = [0.001 0.01 0.1 1 2 5];
     elseif HP.Ktype == 7
         % Sigmoid
-        HP_gs.v1 = 2.^linspace(-13,6,20);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.alpha = 2.^linspace(-8,2,11);
+        HPgs.v1 = 2.^linspace(-13,6,20);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.alpha = 2.^linspace(-8,2,11);
     elseif HP.Ktype == 8
         % Kmod
-        HP_gs.v1 = 2.^linspace(-13,6,20);
-        HP_gs.v2 = HP_gs.v1(end) + 0.001;
-        HP_gs.sigma = 2.^linspace(-8,2,11);
-        HP_gs.gamma = 2.^linspace(-8,2,11);
+        HPgs.v1 = 2.^linspace(-13,6,20);
+        HPgs.v2 = HPgs.v1(end) + 0.001;
+        HPgs.sigma = 2.^linspace(-8,2,11);
+        HPgs.gamma = 2.^linspace(-8,2,11);
     end
 
 % COHERENCE

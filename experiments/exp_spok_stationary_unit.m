@@ -33,13 +33,13 @@ OPT.result_analysis = 1;        % show result analysis
 MP.max_it = 100;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
-MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
+MP.lambda = 0.5;    % Jpbc = Ds + lambda * Err
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
 HP.Ne = 01;             	% Maximum number of epochs
 HP.is_static = 1;           % Verify if the dataset is stationary
-HP.Dm = 2;                  % Design Method
+HP.Dm = 1;                  % Design Method
 HP.Ss = 1;                  % Sparsification strategy
 HP.v1 = 0.01;               % Sparseness parameter 1 
 HP.v2 = 0.9;                % Sparseness parameter 2
@@ -52,7 +52,7 @@ HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 3;               % Kernel Type (2: Gaussian / see kernel_func())
+HP.Ktype = 4;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)

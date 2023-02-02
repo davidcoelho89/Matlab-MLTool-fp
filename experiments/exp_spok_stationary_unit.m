@@ -52,7 +52,7 @@ HP.min_prot = 1;            % Min number of prototypes
 HP.Von = 0;                 % Enable / disable video 
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
-HP.Ktype = 4;               % Kernel Type (2: Gaussian / see kernel_func())
+HP.Ktype = 7;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
@@ -91,19 +91,20 @@ if(HP.Ss == 1)
         HPgs.theta = [0,2.^linspace(-4,3,8)]; % 0;
     elseif HP.Ktype == 4
         % Exponential
-        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v1 = 2.^linspace(-8,6,15);
         HPgs.v2 = HPgs.v1(end) + 0.001;
-        HPgs.sigma = 2.^linspace(-8,5,14);
+        HPgs.sigma = 2.^linspace(-8,6,15);
     elseif HP.Ktype == 5
         % Cauchy
-        HPgs.v1 = 2.^linspace(-4,3,8);
+        HPgs.v1 = 2.^linspace(-8,6,15);
         HPgs.v2 = HPgs.v1(end) + 0.001;
-        HPgs.sigma = 2.^linspace(-8,5,14);
+        HPgs.sigma = 2.^linspace(-8,6,15);
     elseif HP.Ktype == 6
         % Log
-        HPgs.v1 = -2.^linspace(10,2,9);
+        HPgs.v1 = -2.^linspace(10,1,10);
         HPgs.v2 = HPgs.v1(end) + 0.001;
-        HPgs.sigma = [0.001 0.01 0.1 1 2 5];
+        HPgs.sigma = 2.^linspace(-8,6,15);
+        HPgs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
     elseif HP.Ktype == 7
         % Sigmoid
         HPgs.v1 = 2.^linspace(-13,6,20);

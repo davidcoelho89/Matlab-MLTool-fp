@@ -110,12 +110,13 @@ if(HP.Ss == 1)
         HPgs.v1 = 2.^linspace(-13,6,20);
         HPgs.v2 = HPgs.v1(end) + 0.001;
         HPgs.alpha = 2.^linspace(-8,2,11);
+        HPgs.theta = [0.001, 0.005, 0.01, 0.05, 0.1];
     elseif HP.Ktype == 8
         % Kmod
         HPgs.v1 = 2.^linspace(-13,6,20);
         HPgs.v2 = HPgs.v1(end) + 0.001;
-        HPgs.sigma = 2.^linspace(-8,2,11);
-        HPgs.gamma = 2.^linspace(-8,2,11);
+        HPgs.sigma = 2.^linspace(-8,6,15);
+        HPgs.gamma = 2.^linspace(-8,6,15);
     end
 
 % COHERENCE

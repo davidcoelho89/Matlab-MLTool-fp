@@ -1,4 +1,4 @@
-function [] = test_MotFail_3(OPT,CVp,REJp)
+function [] = exp_MotFail_3(OPT,CVp,REJp)
 
 % --- Function Used to Run Different Types of Motor Combinantions ---
 
@@ -134,11 +134,11 @@ mlm_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % Display, at Command Window, each repeat
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -371,7 +371,7 @@ Mat_boxplot4 = [];
 Mat_boxplot5 = [];
 Mat_boxplot6 = [];
 
-if OLSp.on == 1,
+if OLSp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'OLS'};
@@ -383,7 +383,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(ols_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(ols_out_rj)];
 end
 
-if BAYp.on == 1,
+if BAYp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'BAY'};
@@ -395,7 +395,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(bay_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(bay_out_rj)];
 end
 
-if PSp.on == 1,
+if PSp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'PS'};
@@ -407,7 +407,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(ps_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(ps_out_rj)];
 end
 
-if MLPp.on == 1,
+if MLPp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'MLP'};
@@ -419,7 +419,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(mlp_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(mlp_out_rj)];
 end
 
-if ELMp.on == 1,
+if ELMp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'ELM'};
@@ -431,7 +431,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(elm_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(elm_out_rj)];
 end
 
-if SVMp.on == 1,
+if SVMp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'SVM'};
@@ -443,7 +443,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(svm_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(svm_out_rj)];
 end
 
-if LSSVMp.on == 1,
+if LSSVMp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'LSSVM'};
@@ -455,7 +455,7 @@ Mat_boxplot5 = [Mat_boxplot5 accuracy_mult(lssvm_out_rj)];
 Mat_boxplot6 = [Mat_boxplot6 accuracy_bin(lssvm_out_rj)];
 end
 
-if MLMp.on == 1,
+if MLMp.on == 1
 [~,n_labels] = size(labels);
 n_labels = n_labels+1;
 labels(1,n_labels) = {'MLM'};

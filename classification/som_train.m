@@ -13,16 +13,17 @@ function [PARout] = som_train(DATA,PAR)
 %           Nk = number of prototypes (neurons)             [1 x Nd]
 %                (Nd = dimenions)
 %           init = type of initialization for prototypes    [cte]
-%               1: C = zeros
-%               2: C = randomly picked from data
-%               3: C = mean of randomly choosen data
-%               4: C = between max and min values of atrib
+%               1: Cx = zeros
+%               2: Cx = randomly picked from data
+%               3: Cx = mean of randomly choosen data
+%               4: Cx = between max and min values of atrib
 %           dist = type of distance                         [cte]
 %               0: Dot product
-%               inf: Chebyshev distance
+%               inf:  Chebyshev distance
 %               -inf: Minimum Minkowski distance
-%               1: Manhattam (city-block) distance
-%               2: Euclidean distance
+%               1:    Manhattam (city-block) distance
+%               2:    Euclidean distance
+%               >2:   Minkowsky distance
 %           learn = type of learning step                   [cte]
 %               1: N = No (constant)
 %               2: N = No*(1-(t/tmax))
@@ -56,7 +57,7 @@ function [PARout] = som_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Nep = 200;     	% max number of epochs
     PARaux.Nk = [4 3];    	% number of neurons (prototypes)
     PARaux.init = 02;     	% neurons' initialization
@@ -71,54 +72,59 @@ if ((nargin == 1) || (isempty(PAR))),
     PARaux.lbl = 1;         % Neurons' labeling function
     PARaux.Von = 0;         % disable video 
     PARaux.K = 1;           % nearest neighbor scheme
+    PARaux.knn_type = 1;    % Majority voting for knn
     PARaux.Ktype = 0;       % Non-kernelized Algorithm
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'Nep'))),
+    if (~(isfield(PAR,'Nep')))
         PAR.Nep = 200;
     end
-    if (~(isfield(PAR,'Nk'))),
+    if (~(isfield(PAR,'Nk')))
         PAR.Nk = [4 3];
     end
-    if (~(isfield(PAR,'init'))),
+    if (~(isfield(PAR,'init')))
         PAR.init = 2;
     end
-    if (~(isfield(PAR,'dist'))),
+    if (~(isfield(PAR,'dist')))
         PAR.dist = 2;
     end
-    if (~(isfield(PAR,'learn'))),
+    if (~(isfield(PAR,'learn')))
         PAR.learn = 2;
     end
-    if (~(isfield(PAR,'No'))),
+    if (~(isfield(PAR,'No')))
         PAR.No = 0.7;
     end
-    if (~(isfield(PAR,'Nt'))),
+    if (~(isfield(PAR,'Nt')))
         PAR.Nt = 0.01;
     end
-    if (~(isfield(PAR,'Nn'))),
+    if (~(isfield(PAR,'Nn')))
         PAR.Nn = 1;
     end
-    if (~(isfield(PAR,'neig'))),
+    if (~(isfield(PAR,'neig')))
         PAR.neig = 2;
     end
-    if (~(isfield(PAR,'Vo'))),
+    if (~(isfield(PAR,'Vo')))
         PAR.Vo = 0.8;
     end
-    if (~(isfield(PAR,'Vt'))),
+    if (~(isfield(PAR,'Vt')))
         PAR.Vt = 0.3;
     end
-    if (~(isfield(PAR,'lbl'))),
+    if (~(isfield(PAR,'lbl')))
         PAR.lbl = 1;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
-    if (~(isfield(PAR,'Ktype'))),
-        PAR.Ktype = 0;
-    end
-    if (~(isfield(PAR,'K'))),
+    if (~(isfield(PAR,'K')))
         PAR.K = 1;
     end
+    if (~(isfield(PAR,'knn_type')))
+        PAR.knn_type = 1;
+    end
+    if (~(isfield(PAR,'Ktype')))
+        PAR.Ktype = 0;
+    end
+
 end
 
 %% ALGORITHM

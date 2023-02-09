@@ -2,7 +2,7 @@ function [PARout] = ksom_gd_cluster(DATA,PAR)
 
 % --- KSOM-GD Clustering Function ---
 %
-%   [PARout] = ksom_gd_train(DATA,PAR)
+%   [PARout] = ksom_gd_cluster(DATA,PAR)
 % 
 %   Input:
 %       DATA.

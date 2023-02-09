@@ -1,6 +1,6 @@
 function [PARout] = prototypes_label(DATA,OUT_CL)
 
-% --- Clusters' Labeling Function ---
+% --- Prototypes' Labeling Function ---
 %
 %   [PARout] = prototypes_label(DATA,OUT_CL)
 % 
@@ -16,6 +16,7 @@ function [PARout] = prototypes_label(DATA,OUT_CL)
 %               -inf: Minimum Minkowski distance
 %               1: Manhattam (city-block) distance
 %               2: Euclidean distance
+%               >2: Minkowsky distance
 %           ind = cluster index for each sample                 [1 x Ntr]
 %           lbl = type of labeling                              [cte]
 %               1: Majority voting
@@ -23,7 +24,6 @@ function [PARout] = prototypes_label(DATA,OUT_CL)
 %               3: Minimum distance
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
-%           order = kernel hyperparameter ( see kernel_func() ) [cte]
 %           alpha = kernel hyperparameter ( see kernel_func() ) [cte]
 %           theta = kernel hyperparameter ( see kernel_func() ) [cte]
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
@@ -73,7 +73,7 @@ if lbl_type == 1      % Majority Voting Method
     % Set Labels
     for k = 1:Nk(1)
         [~,class] = max(counter(k,:));	% Get class with max no of votes
-        labels(k) = class;               % label prototypes
+        labels(k) = class;             	% label prototypes
     end
     
 elseif lbl_type == 2	% Average Distance Method
@@ -139,7 +139,7 @@ end
 
 %% FILL OUTPUT STRUCTURE
 
-PARout = OUT_CL;            % Get parameters from training data
-PARout.Cy = Cy;      % Set neuron's labels
+PARout = OUT_CL; 	% Get parameters from training data
+PARout.Cy = Cy;     % Set neuron's labels
 
 %% END

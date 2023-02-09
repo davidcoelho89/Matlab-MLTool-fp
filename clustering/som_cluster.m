@@ -12,16 +12,17 @@ function [PARout] = som_cluster(DATA,PAR)
 %           Nk = number of prototypes (neurons)             [1 x Nd]
 %                (Nd = dimenions)
 %           init = type of initialization for prototypes    [cte]
-%               1: C = zeros
-%               2: C = randomly picked from data
-%               3: C = mean of randomly choosen data
-%               4: C = between max and min values of atrib
+%               1: Cx = zeros
+%               2: Cx = randomly picked from data
+%               3: Cx = mean of randomly choosen data
+%               4: Cx = between max and min values of atrib
 %           dist = type of distance                         [cte]
 %               0: Dot product
 %               inf: Chebyshev distance
 %               -inf: Minimum Minkowski distance
 %               1: Manhattam (city-block) distance
 %               2: Euclidean distance
+%               >2: Minkowsky distance
 %           learn = type of learning step                   [cte]
 %               1: N = No (constant)
 %               2: N = No*(1-(t/tmax))
@@ -45,7 +46,7 @@ function [PARout] = som_cluster(DATA,PAR)
 %       PARout.
 %       	Cx = clusters centroids (prototypes)            [p x Nk]
 %           R = prototypes' grid positions                  [Nd x Nk]
-%           ind = cluster index for each sample             [1 x N]
+%           ind = cluster index for each sample             [Nd x Ntr]
 %           SSE = Sum of Squared Errors for each epoch      [1 x Nep]
 %           VID = frame struct (played by 'video function')	[1 x Nep]
 
@@ -53,7 +54,7 @@ function [PARout] = som_cluster(DATA,PAR)
 
 if ((nargin == 1) || (isempty(PAR)))
     PARaux.Nep = 200;     	% max number of epochs
-    PARaux.Nk = [4 3];   	% number of neurons (prototypes)
+    PARaux.Nk = [5 4];   	% number of neurons (prototypes)
     PARaux.init = 2;     	% neurons' initialization
     PARaux.dist = 2;      	% type of distance
     PARaux.learn = 2;     	% type of learning step
@@ -65,7 +66,6 @@ if ((nargin == 1) || (isempty(PAR)))
     PARaux.Vt = 0.3;      	% final neighborhood constant
     PARaux.lbl = 1;         % Neurons' labeling function
     PARaux.Von = 0;         % disable video 
-    PARaux.K = 1;           % Number of nearest neighbors (classify)
     PARaux.Ktype = 0;       % Non-kernelized Algorithm
     PAR = PARaux;
 else
@@ -107,9 +107,6 @@ else
     end
     if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
-    end
-    if (~(isfield(PAR,'K')))
-        PAR.K = 1;
     end
     if (~(isfield(PAR,'Ktype')))
         PAR.Ktype = 0;
@@ -220,12 +217,12 @@ for ep = 1:Nep
         xn = X(:,i);                                % Training Sample
         win = prototypes_win(Cx,xn,PAR);            % Winner Neuron Index
         n = prototypes_learn(learn,tmax,t,No,Nt);	% Learning Step
-        
+        r_win = R(:,win); % Grid positions of winner prototype
+
         % Uptade Neurons (Prototypes)
         for k = 1:Nk
-            % Get grid positions of winner and current prototype
+            % Get grid positions of current prototype
             r_k = R(:,k);
-            r_win = R(:,win);
             % Calculate Neighborhood function
             h = som_f_neig(neig,r_k,r_win,Nn,t,tmax,Vo,Vt);
             % Update function

@@ -14,14 +14,29 @@ function [c] = prototypes_win(C,sample,PAR)
 %               -inf: Minimum Minkowski distance
 %               1: Manhattam (city-block) distance
 %               2: Euclidean distance
+%               >2: Minkowsky distance
 %           Ktype = kernel type ( see kernel_func() )           [cte]
 %           sigma = kernel hyperparameter ( see kernel_func() ) [cte]
-%           order = kernel hyperparameter ( see kernel_func() ) [cte]
 %           alpha = kernel hyperparameter ( see kernel_func() ) [cte]
 %           theta = kernel hyperparameter ( see kernel_func() ) [cte]
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
 %   Output:
 %       c = closest prototype to sample                         [cte]
+
+%% SET DEFAULT HYPERPARAMETERS
+
+if ((nargin == 2) || (isempty(PAR)))
+    PARaux.dist = 2;
+    PARaux.Ktype = 0;
+    PAR = PARaux;
+else
+    if (~(isfield(PAR,'dist')))
+        PAR.dist = 2;
+    end
+    if (~(isfield(PAR,'Ktype')))
+        PAR.Ktype = 0;
+    end
+end
 
 %% INITIALIZATION
 
@@ -29,11 +44,8 @@ function [c] = prototypes_win(C,sample,PAR)
 
 [~,Nk] = size(C);               % Number of prototypes
 Vdist = zeros(1,Nk);            % Vector of distances
-if (~(isfield(PAR,'dist')))     % Type of distance
-    dist = 2;
-else
-    dist = PAR.dist;
-end
+dist = PAR.dist;                % Type of distance
+Ktype = PAR.Ktype;              % Kernel type
 
 %% ALGORITHM
     
@@ -49,7 +61,7 @@ end
 % Choose Closest (winner) Prototype
 
 % dot product
-if(dist == 0)
+if(dist == 0 && Ktype == 0)
     [~,win] = max(Vdist);
 % Other distances
 else

@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 50;        % Number of repetitions of each algorithm
+OPT.Nr = 03;        % Number of repetitions of each algorithm
 OPT.alg = 'ksom';   % Which Classifier will be used
 OPT.prob = 06;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
@@ -125,6 +125,9 @@ hold_acc = cell(OPT.Nr,1);          % Acc of labels and data division
 
 som_out_tr = cell(OPT.Nr,1);        % Acc of training data output
 som_out_ts = cell(OPT.Nr,1);        % Acc of test data output
+som_stats_tr_acc = cell(OPT.Nr,1);  % 
+som_stats_ts_acc = cell(OPT.Nr,1);  % 
+
 som_Mconf_sum = zeros(Nc,Nc);       % Aux var for mean confusion matrix calc
 
 ksomgd_out_tr = cell(OPT.Nr,1);	    % Acc of training data output
@@ -212,41 +215,43 @@ PAR_ksom_ef = ksom_ef_train(DATAtr,HP_ksomef);
 % SOM
 
 [OUTtr] = som_classify(DATAtr,PAR_SOM);
-OUTtr.nf = normal_or_fail(OUTtr.Mconf);
-som_out_tr{r,1} = OUTtr;                            % training set results
+som_out_tr{r,1} = OUTtr;                            
+som_stats_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
+OUTtr.nf = normal_or_fail(som_stats_tr_acc{r}.Mconf);
 
-[OUTts] = som2d_classify(DATAts,PAR_SOM);
-OUTts.nf = normal_or_fail(OUTts.Mconf);
+[OUTts] = som_classify(DATAts,PAR_SOM);
+% OUTts.nf = normal_or_fail(OUTts.Mconf);
 som_out_ts{r,1} = OUTts;                            % test set results
+som_stats_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 SOMp_acc{r} = PAR_SOM;                              % hold parameters
-som_Mconf_sum = som_Mconf_sum + OUTts.Mconf;        % hold confusion matrix
+% som_Mconf_sum = som_Mconf_sum + OUTts.Mconf;        % hold confusion matrix
 
 % KSOM-GD
 
 [OUTtr] = ksom_gd_classify(DATAtr,PAR_ksom_gd);
-OUTtr.nf = normal_or_fail(OUTtr.Mconf);
+% OUTtr.nf = normal_or_fail(OUTtr.Mconf);
 ksomgd_out_tr{r,1} = OUTtr;                     	% training set results
 
 [OUTts] = ksom_gd_classify(DATAts,PAR_ksom_gd);
-OUTts.nf = normal_or_fail(OUTts.Mconf);
+% OUTts.nf = normal_or_fail(OUTts.Mconf);
 ksomgd_out_ts{r,1} = OUTts;                      	% test set results
 
 KSOM1p_acc{r} = PAR_ksom_gd;                       	% hold parameters
-ksomgd_Mconf_sum = ksomgd_Mconf_sum + OUTts.Mconf;	% hold confusion matrix
+% ksomgd_Mconf_sum = ksomgd_Mconf_sum + OUTts.Mconf;	% hold confusion matrix
 
 % KSOM-EF
 
 [OUTtr] = ksom_ef_classify(DATAtr,PAR_ksom_ef);
-OUTtr.nf = normal_or_fail(OUTtr.Mconf);
+% OUTtr.nf = normal_or_fail(OUTtr.Mconf);
 ksomef_out_tr{r,1} = OUTtr;                      	% training set results
 
 [OUTts] = ksom_ef_classify(DATAts,PAR_ksom_ef);
-OUTts.nf = normal_or_fail(OUTts.Mconf);
+% OUTts.nf = normal_or_fail(OUTts.Mconf);
 ksomef_out_ts{r,1} = OUTts;                     	% test set results
 
 KSOM4p_acc{r} = PAR_ksom_ef;                      	% hold parameters
-ksomef_Mconf_sum = ksomef_Mconf_sum + OUTts.Mconf;	% hold confusion matrix
+% ksomef_Mconf_sum = ksomef_Mconf_sum + OUTts.Mconf;	% hold confusion matrix
 
 end
 

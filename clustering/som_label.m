@@ -16,6 +16,7 @@ function [PARout] = som_label(DATA,OUT_CL)
 %               -inf: Minimum Minkowski distance
 %               1: Manhattam (city-block) distance
 %               2: Euclidean distance
+%               >2: Minkowsky distance
 %           ind = cluster index for each sample                 [1 x Ntr]
 %           lbl = type of labeling                              [cte]
 %               1: Majority voting

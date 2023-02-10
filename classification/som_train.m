@@ -18,7 +18,7 @@ function [PARout] = som_train(DATA,PAR)
 %               3: Cx = mean of randomly choosen data
 %               4: Cx = between max and min values of atrib
 %           dist = type of distance                         [cte]
-%               0: Dot product
+%               0:    Dot product
 %               inf:  Chebyshev distance
 %               -inf: Minimum Minkowski distance
 %               1:    Manhattam (city-block) distance
@@ -33,9 +33,9 @@ function [PARout] = som_train(DATA,PAR)
 %           Nt = final learning step                        [cte]
 %           Nn = number of neighbors (for training)         [cte]
 %           neig = type of neighborhood function            [cte]
-%               1: if winner, h = 1, else h = 0.
-%               2: if neighbor, h = exp (-(||ri -ri*||^2)/(V^2))
-%               	where: V = Vo*((Vt/Vo)^(t/tmax))
+%               1: if winner, or neighbor, h = 1, else h = 0.
+%               2: if neighbor, h = exp (-(||ri - ri*||^2)/(V^2))
+%                     where: V = Vo*((Vt/Vo)^(t/tmax))
 %               3: Decreasing function 1. Init with 3 neig
 %           Vo = initial neighborhood parameter             [cte]
 %           Vt = final neighborhood parameter               [cte]
@@ -44,13 +44,17 @@ function [PARout] = som_train(DATA,PAR)
 %               2: Average distance
 %               3: Minimum distance
 %           Von = enable or disable video                   [cte]
-%           K = number of nearest neighbors                 [cte]
+%           K = Number of nearest neighbors (classify)    	[cte]
+%           knn_type = Type of knn aproximation            	[cte]
+%               1: Majority Voting
+%               2: Weighted KNN
 %           Ktype = Kernel Type                             [cte]
 %               = 0 -> non-kernelized algorithm
 %   Output:
 %       PARout.
 %       	Cx = clusters centroids (prototypes)            [p x Nk]
 %           Cy = class of each prototype/neuron             [Nc x Nk]
+%           R = prototypes' grid positions                  [Nd x Nk]
 %           ind = cluster index for each sample             [Nd x Ntr]
 %           SSE = Sum of Squared Errors for each epoch      [1 x Nep]
 %           VID = frame struct (played by 'video function')	[1 x Nep]

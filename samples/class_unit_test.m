@@ -80,7 +80,7 @@ DATA_acc = cell(OPT.Nr,1);       	% Acc of Data
 PAR_acc = cell(OPT.Nr,1);         	% Acc of Parameters and Hyperparameters
 STATS_tr_acc = cell(OPT.Nr,1);   	% Acc of Statistics of training data
 STATS_ts_acc = cell(OPT.Nr,1);   	% Acc of Statistics of test data
-nSTATS_all = cell(2,1);             % Acc of General statistics
+nSTATS_all = cell(length(NAMES),1,1); % Acc of General statistics
 
 %% HANDLERS FOR CLASSIFICATION FUNCTIONS
 

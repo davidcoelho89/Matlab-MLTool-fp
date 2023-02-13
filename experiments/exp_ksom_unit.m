@@ -247,6 +247,10 @@ end
 
 %% RESULTS / STATISTICS
 
+% ToDo - Calculate "Binary" Statistics for comparison
+% - Define which classes will be in class "1"
+% - Calculate statistics from already calculated Mconf
+
 % Statistics for n turns
 
 som_nstats_tr = class_stats_nturns(som_stats_tr_acc);
@@ -274,19 +278,9 @@ class_stats_ncomp(nstats_all_tr,NAMES);
 
 class_stats_ncomp(nstats_all_ts,NAMES);
 
-% Mean Confusion Matrix
-
-% som_Mconf_sum = som_Mconf_sum / OPT.Nr;
-% ksomgd_Mconf_sum = ksomgd_Mconf_sum / OPT.Nr;
-% ksomef_Mconf_sum = ksomef_Mconf_sum / OPT.Nr;
-% 
 % som_Mconf_sum2 = [som_Mconf_sum(1,1) sum(som_Mconf_sum(1,2:end)) ; sum(som_Mconf_sum(2:end,1)) sum(sum(som_Mconf_sum(2:end,2:end)))];
 % ksomgd_Mconf_sum2 = [ksomgd_Mconf_sum(1,1) sum(ksomgd_Mconf_sum(1,2:end)) ; sum(ksomgd_Mconf_sum(2:end,1)) sum(sum(ksomgd_Mconf_sum(2:end,2:end)))];
 % ksomef_Mconf_sum2 = [ksomef_Mconf_sum(1,1) sum(ksomef_Mconf_sum(1,2:end)) ; sum(ksomef_Mconf_sum(2:end,1)) sum(sum(ksomef_Mconf_sum(2:end,2:end)))];
-
-% Calculate "Binary" Statistics
-% - Define which classes will be in class "1" and "2"
-% - Calculate statistics from already calculated Mconf
 
 %% GRAPHICS - CONSTRUCT
 

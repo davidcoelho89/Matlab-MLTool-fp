@@ -25,19 +25,20 @@ if (nargin == 1)
 end
 
 % Init Outputs
-Mat_boxplot1 = zeros(n_turns,n_models);
-Mat_boxplot2 = zeros(n_turns,n_models);
-% Mat_boxplot3 = zeros(n_turns,n_models);
+Mat_boxplot_acc = zeros(n_turns,n_models);
+Mat_boxplot_err = zeros(n_turns,n_models);
+% Mat_boxplot_mcc = zeros(n_turns,n_models);
+% Mat_boxplo4 = zeros(n_turns,n_models);
 
 %% ALGORITHM
 
 % Box Plot - Accuracy
 
 for i = 1:n_models
-    Mat_boxplot1(:,i) = STATS{i}.acc';
+    Mat_boxplot_acc(:,i) = STATS{i}.acc';
 end
 
-figure; boxplot(Mat_boxplot1, 'label', NAMES);
+figure; boxplot(Mat_boxplot_acc, 'label', NAMES);
 set(gcf,'color',[1 1 1])        % Removes Gray Background
 ylabel('Accuracy')
 xlabel('Classifiers')
@@ -45,17 +46,17 @@ title('Classification Results')
 axis ([0 n_models+1 -0.05 1.05])
 
 hold on
-media1 = mean(Mat_boxplot1);    % Mean Accuracy rate
+media1 = mean(Mat_boxplot_acc);
 plot(media1,'*k')
 hold off
 
 % Box Plot - Error
 
 for i = 1:n_models
-    Mat_boxplot2(:,i) = STATS{i}.err';
+    Mat_boxplot_err(:,i) = STATS{i}.err';
 end
 
-figure; boxplot(Mat_boxplot2, 'label', NAMES);
+figure; boxplot(Mat_boxplot_err, 'label', NAMES);
 set(gcf,'color',[1 1 1])        % Removes Gray Background
 ylabel('Error')
 xlabel('Classifiers')
@@ -63,7 +64,7 @@ title('Classification Results')
 axis ([0 n_models+1 -0.05 1.05])
 
 hold on
-media1 = mean(Mat_boxplot2);    % Mean Accuracy rate
+media1 = mean(Mat_boxplot_err);
 plot(media1,'*k')
 hold off
 
@@ -71,11 +72,11 @@ hold off
 
 % for i = 1:n_models,
 %     for j = 1:n_turns,
-%         Mat_boxplot3(j,i) = STATS{i}.mcc{j}(1);
+%         Mat_boxplot_mcc(j,i) = STATS{i}.mcc{j}(1);
 %     end
 % end
 % 
-% figure; boxplot(Mat_boxplot3, 'label', NAMES);
+% figure; boxplot(Mat_boxplot_mcc, 'label', NAMES);
 % set(gcf,'color',[1 1 1])        % Removes Gray Background
 % ylabel('Mcc')
 % xlabel('Classifiers')
@@ -83,11 +84,29 @@ hold off
 % axis ([0 n_models+1 -0.05 1.05])
 % 
 % hold on
-% media1 = mean(Mat_boxplot2);    % Mean Accuracy rate
+% media1 = mean(Mat_boxplot_mcc);
 % plot(media1,'*k')
 % hold off
 
 % Box Plot - Auc (for class 1)
+
+% for i = 1:n_models,
+%     for j = 1:n_turns,
+%         Mat_boxplot_auc(j,i) = STATS{i}.mcc{j}(1);
+%     end
+% end
+% 
+% figure; boxplot(Mat_boxplot_auc, 'label', NAMES);
+% set(gcf,'color',[1 1 1])        % Removes Gray Background
+% ylabel('Auc')
+% xlabel('Classifiers')
+% title('Area under the Curve')
+% axis ([0 n_models+1 -0.05 1.05])
+% 
+% hold on
+% media1 = mean(Mat_boxplot_auc);
+% plot(media1,'*k')
+% hold off
 
 %% FILL OUTPUT STRUCTURE
 

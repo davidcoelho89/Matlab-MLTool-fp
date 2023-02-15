@@ -21,7 +21,7 @@ OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
-OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none' ; pso
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 OPT.savefile = 0;               % decides if file will be saved

@@ -65,8 +65,6 @@ if(~strcmp(OPT.hpo,'none'))
     if(strcmp(OPT.alg,'mlp'))
         HPgs.Nh = {5,10,20,[2,3],[3,3],[4,5]};
         HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
-        HPgs.Nh = {10,[3,3],[4,5]};
-        HPgs.eta = [0.01,0.05,0.1];
     elseif(strcmp(OPT.alg,'lms'))
         HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
     end

@@ -71,17 +71,21 @@ err_median = 0;             % median error rate
 err_std = 0;                % standard deviation of error rate
 err_cv = 0;                 % Coefficient of Variation of error rate
 
-roc_t = cell(1,t);          % threshold of roc curve
-roc_tpr = cell(1,t);        % true positive rate
-roc_spec = cell(1,t);       % specificity
-roc_fpr = cell(1,t);        % false positive rate
-roc_prec = cell(1,t);       % precision
-roc_rec = cell(1,t);        % recall
+if(isfield(STATS_acc{1},'roc_t'))
+    
+    roc_t = cell(1,t);          % threshold of roc curve
+    roc_tpr = cell(1,t);        % true positive rate
+    roc_spec = cell(1,t);       % specificity
+    roc_fpr = cell(1,t);        % false positive rate
+    roc_prec = cell(1,t);       % precision
+    roc_rec = cell(1,t);        % recall
 
-fsc = cell(1,t);            % f1-score
-auc = cell(1,t);            % area under the curve
+    fsc = cell(1,t);            % f1-score
+    auc = cell(1,t);            % area under the curve
 
-mcc = cell(1,t);            % Matthews Correlation Coef
+    mcc = cell(1,t);            % Matthews Correlation Coef
+    
+end
 
 %% ALGORITHM
 
@@ -112,15 +116,18 @@ for i = 1:t
         err_min = STATS.err;
     end
     % ROC parameters
-    roc_t{i} = STATS.roc_t;
-    roc_tpr{i} = STATS.roc_tpr;
-    roc_spec{i} = STATS.roc_spec;
-    roc_fpr{i}  = STATS.roc_fpr;
-    roc_prec{i} = STATS.roc_prec;
-    roc_rec{i} = STATS.roc_rec;
-    fsc{i} = STATS.fsc;
-    auc{i} = STATS.auc;
-    mcc{i} = STATS.mcc;
+    if(isfield(STATS,'roc_t'))
+        roc_t{i} = STATS.roc_t;
+        roc_tpr{i} = STATS.roc_tpr;
+        roc_spec{i} = STATS.roc_spec;
+        roc_fpr{i}  = STATS.roc_fpr;
+        roc_prec{i} = STATS.roc_prec;
+        roc_rec{i} = STATS.roc_rec;
+        fsc{i} = STATS.fsc;
+        auc{i} = STATS.auc;
+        mcc{i} = STATS.mcc;
+    end
+    
 end
 
 % Mean Confusion matrix
@@ -143,6 +150,7 @@ err_cv = err_cv + (err_std / err_mean);
 
 nSTATS.Mconf_sum = Mconf_sum;
 nSTATS.Mconf_mean = Mconf_mean;
+
 nSTATS.acc = acc;
 nSTATS.acc_max = acc_max;
 nSTATS.acc_max_i = acc_max_index;
@@ -152,6 +160,7 @@ nSTATS.acc_mean = acc_mean;
 nSTATS.acc_median = acc_median;
 nSTATS.acc_std = acc_std;
 nSTATS.acc_cv = acc_cv;
+
 nSTATS.err = err;
 nSTATS.err_max = err_max;
 nSTATS.err_max_i = err_max_index;
@@ -161,14 +170,17 @@ nSTATS.err_mean = err_mean;
 nSTATS.err_median = err_median;
 nSTATS.err_std = err_std;
 nSTATS.err_cv = err_cv;
-nSTATS.roc_t = roc_t;
-nSTATS.roc_tpr = roc_tpr;
-nSTATS.roc_spec = roc_spec;
-nSTATS.roc_fpr = roc_fpr;
-nSTATS.roc_prec = roc_prec;
-nSTATS.roc_rec = roc_rec;
-nSTATS.fsc = fsc;
-nSTATS.auc = auc;
-nSTATS.mcc = mcc;
+
+if(isfield(STATS_acc{1},'roc_t'))
+    nSTATS.roc_t = roc_t;
+    nSTATS.roc_tpr = roc_tpr;
+    nSTATS.roc_spec = roc_spec;
+    nSTATS.roc_fpr = roc_fpr;
+    nSTATS.roc_prec = roc_prec;
+    nSTATS.roc_rec = roc_rec;
+    nSTATS.fsc = fsc;
+    nSTATS.auc = auc;
+    nSTATS.mcc = mcc;
+end
 
 %% END

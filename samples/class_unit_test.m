@@ -21,7 +21,7 @@ OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
-OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none' ; pso
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 OPT.savefile = 0;               % decides if file will be saved
@@ -65,8 +65,6 @@ if(~strcmp(OPT.hpo,'none'))
     if(strcmp(OPT.alg,'mlp'))
         HPgs.Nh = {5,10,20,[2,3],[3,3],[4,5]};
         HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
-        HPgs.Nh = {10,[3,3],[4,5]};
-        HPgs.eta = [0.01,0.05,0.1];
     elseif(strcmp(OPT.alg,'lms'))
         HPgs.eta = [0.01,0.02,0.03,0.04,0.05,0.1];
     end

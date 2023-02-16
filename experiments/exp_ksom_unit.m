@@ -26,6 +26,9 @@ OPT.hpo = 'none';   % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;   % decides if file will be saved
 
+OPT.calculate_bin = 0;  % decides to calculate binary statistics
+OPT.class_1_vect = 1;   % [2,3] which classes belongs together
+
 % Prototypes' labeling definition
 
 prot_lbl = 1;               % = 1 / 2 / 3
@@ -251,7 +254,7 @@ end
 % - Define which classes will be in class "1"
 % - Calculate statistics from already calculated Mconf
 
-% Statistics for n turns
+% Statistics for n turns (multiclass)
 
 som_nstats_tr = class_stats_nturns(som_stats_tr_acc);
 som_nstats_ts = class_stats_nturns(som_stats_ts_acc);
@@ -261,6 +264,23 @@ ksomgd_nstats_ts = class_stats_nturns(ksomgd_stats_ts_acc);
 
 ksomef_nstats_tr = class_stats_nturns(ksomef_stats_tr_acc);
 ksomef_nstats_ts = class_stats_nturns(ksomef_stats_ts_acc);
+
+% Statistics for n turns (binary)
+
+som_stats_tr_bin_acc = calculate_binary_stats(som_stats_tr_acc,OPT.class_1_vect);
+som_stats_ts_bin_acc = calculate_binary_stats(som_stats_ts_acc,OPT.class_1_vect);
+som_nstats_tr_bin = class_stats_nturns(som_stats_tr_bin_acc);
+som_nstats_ts_bin = class_stats_nturns(som_stats_ts_bin_acc);
+
+ksomgd_stats_tr_bin_acc = calculate_binary_stats(ksomgd_stats_tr_acc,OPT.class_1_vect);
+ksomgd_stats_ts_bin_acc = calculate_binary_stats(ksomgd_stats_ts_acc,OPT.class_1_vect);
+ksomgd_nstats_tr_bin = class_stats_nturns(ksomgd_stats_tr_bin_acc);
+ksomgd_nstats_ts_bin = class_stats_nturns(ksomgd_stats_ts_bin_acc);
+
+ksomef_stats_tr_bin_acc = calculate_binary_stats(ksomef_stats_tr_acc,OPT.class_1_vect);
+ksomef_stats_ts_bin_acc = calculate_binary_stats(ksomef_stats_ts_acc,OPT.class_1_vect);
+ksomef_nstats_tr_bin = class_stats_nturns(ksomef_stats_tr_bin_acc);
+ksomef_nstats_ts_bin = class_stats_nturns(ksomef_stats_ts_bin_acc);
 
 % Get all Statistics in one Cell
 
@@ -272,126 +292,20 @@ nstats_all_ts{1,1} = som_nstats_ts;
 nstats_all_ts{2,1} = ksomgd_nstats_ts;
 nstats_all_ts{3,1} = ksomef_nstats_ts;
 
+nstats_all_tr_bin{1,1} = som_nstats_tr_bin;
+nstats_all_tr_bin{2,1} = ksomgd_nstats_tr_bin;
+nstats_all_tr_bin{3,1} = ksomef_nstats_tr_bin;
+
+nstats_all_ts_bin{1,1} = som_nstats_ts_bin;
+nstats_all_ts_bin{2,1} = ksomgd_nstats_ts_bin;
+nstats_all_ts_bin{3,1} = ksomef_nstats_ts_bin;
+
 % Compare Training and Test Statistics
 
 class_stats_ncomp(nstats_all_tr,NAMES);
-
 class_stats_ncomp(nstats_all_ts,NAMES);
-
-% som_Mconf_sum2 = [som_Mconf_sum(1,1) sum(som_Mconf_sum(1,2:end)) ; sum(som_Mconf_sum(2:end,1)) sum(sum(som_Mconf_sum(2:end,2:end)))];
-% ksomgd_Mconf_sum2 = [ksomgd_Mconf_sum(1,1) sum(ksomgd_Mconf_sum(1,2:end)) ; sum(ksomgd_Mconf_sum(2:end,1)) sum(sum(ksomgd_Mconf_sum(2:end,2:end)))];
-% ksomef_Mconf_sum2 = [ksomef_Mconf_sum(1,1) sum(ksomef_Mconf_sum(1,2:end)) ; sum(ksomef_Mconf_sum(2:end,1)) sum(sum(ksomef_Mconf_sum(2:end,2:end)))];
-
-%% GRAPHICS - CONSTRUCT
-
-% Init labels' cells and Init boxplot matrix
-
-% labels = {};
-% 
-% Mat_boxplot1 = []; % Train Multiclass
-% Mat_boxplot2 = []; % Train Binary
-% Mat_boxplot3 = []; % Test Multiclass
-% Mat_boxplot4 = []; % Test Binary
-% 
-% % SOM-2D
-% 
-% [~,n_labels] = size(labels);
-% n_labels = n_labels+1;
-% labels(1,n_labels) = {'SOM 2D'};
-% Mat_boxplot1 = [Mat_boxplot1 accuracy_mult(som_out_tr)];
-% Mat_boxplot2 = [Mat_boxplot2 accuracy_bin(som_out_tr)];
-% Mat_boxplot3 = [Mat_boxplot3 accuracy_mult(som_out_ts)];
-% Mat_boxplot4 = [Mat_boxplot4 accuracy_bin(som_out_ts)];
-% 
-% % KSOM-GD
-% 
-% [~,n_labels] = size(labels);
-% n_labels = n_labels+1;
-% labels(1,n_labels) = {'KSOM-GD'};
-% Mat_boxplot1 = [Mat_boxplot1 accuracy_mult(ksomgd_out_tr)];
-% Mat_boxplot2 = [Mat_boxplot2 accuracy_bin(ksomgd_out_tr)];
-% Mat_boxplot3 = [Mat_boxplot3 accuracy_mult(ksomgd_out_ts)];
-% Mat_boxplot4 = [Mat_boxplot4 accuracy_bin(ksomgd_out_ts)];
-% 
-% % KSOM-EF
-% 
-% [~,n_labels] = size(labels);
-% n_labels = n_labels+1;
-% labels(1,n_labels) = {'KSOM-EF'};
-% Mat_boxplot1 = [Mat_boxplot1 accuracy_mult(ksomef_out_tr)];
-% Mat_boxplot2 = [Mat_boxplot2 accuracy_bin(ksomef_out_tr)];
-% Mat_boxplot3 = [Mat_boxplot3 accuracy_mult(ksomef_out_ts)];
-% Mat_boxplot4 = [Mat_boxplot4 accuracy_bin(ksomef_out_ts)];
-
-%% GRAPHICS - DISPLAY
-
-% % BOXPLOT 1
-% figure; boxplot(Mat_boxplot1, 'label', labels);
-% set(gcf,'color',[1 1 1])        % Tira o fundo Cinza do Matlab
-% ylabel('Accuracy')              % label eixo y
-% xlabel('Classifiers')           % label eixo x
-% title('Classifiers Comparison') % Titulo
-% axis ([0 n_labels+1 0 1.05])	% Eixos
-% 
-% hold on
-% media1 = mean(Mat_boxplot1);    % Taxa de acerto média
-% max1 = max(Mat_boxplot1);       % Taxa máxima de acerto
-% plot(media1,'*k')
-% hold off
-% 
-% % BOXPLOT 2
-% figure; boxplot(Mat_boxplot2, 'label', labels);
-% set(gcf,'color',[1 1 1])        % Tira o fundo Cinza do Matlab
-% ylabel('Accuracy')              % label eixo y
-% xlabel('Classifiers')           % label eixo x
-% title('Classifiers Comparison') % Titulo
-% axis ([0 n_labels+1 0 1.05])	% Eixos
-% 
-% hold on
-% media2 = mean(Mat_boxplot2);    % Taxa de acerto média
-% max2 = max(Mat_boxplot2);       % Taxa máxima de acerto
-% plot(media2,'*k')
-% hold off
-% 
-% % BOXPLOT 3
-% figure; boxplot(Mat_boxplot3, 'label', labels);
-% set(gcf,'color',[1 1 1])        % Tira o fundo Cinza do Matlab
-% ylabel('Accuracy')              % label eixo y
-% xlabel('Classifiers')           % label eixo x
-% title('Classifiers Comparison') % Titulo
-% axis ([0 n_labels+1 0 1.05])	% Eixos
-% 
-% hold on
-% media3 = mean(Mat_boxplot3);    % Taxa de acerto média
-% max3 = max(Mat_boxplot3);       % Taxa máxima de acerto
-% plot(media3,'*k')
-% hold off
-% 
-% % BOXPLOT 4
-% figure; boxplot(Mat_boxplot4, 'label', labels);
-% set(gcf,'color',[1 1 1])        % Tira o fundo Cinza do Matlab
-% ylabel('Accuracy')              % label eixo y
-% xlabel('Classifiers')           % label eixo x
-% title('Classifiers Comparison') % Titulo
-% axis ([0 n_labels+1 0 1.05])	% Eixos
-% 
-% hold on
-% media4 = mean(Mat_boxplot4);    % Taxa de acerto média
-% max4 = max(Mat_boxplot4);       % Taxa máxima de acerto
-% plot(media4,'*k')
-% hold off
-
-%% BEST AND WORST MCONF
-
-% results_to_test = som2_out_ts;
-% 
-% x1 = accuracy_bin(results_to_test);
-% 
-% [~,max_mconf] = max(x1);
-% [~,min_mconf] = min(x1);
-% 
-% Mconf_max = results_to_test{max_mconf,1}.Mconf;
-% Mconf_min = results_to_test{min_mconf,1}.Mconf;
+class_stats_ncomp(nstats_all_tr_bin,NAMES);
+class_stats_ncomp(nstats_all_ts_bin,NAMES);
 
 %% SAVE DATA
 

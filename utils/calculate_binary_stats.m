@@ -8,21 +8,6 @@ STATS_acc_out = cell(number_of_repetitions,1);
 
 [number_of_classes,~] = size(STATS_acc_in{1}.Mconf);
 
-% -------- DEBUG
-
-% class_1_vect = [2,3];
-% STATS_acc_in = som_stats_tr_acc;
-% som_stats_tr_bin_acc = calculate_binary_stats(STATS_acc_in,class_1_vect);
-
-disp('number of repetitions ');
-disp(number_of_repetitions);
-disp('number of classes ');
-disp(number_of_classes);
-disp('Classes belonging to "class 1" ');
-disp(class_1_vect);
-
-% --------
-
 %% ALGORITHM
 
 for n = 1:number_of_repetitions
@@ -45,8 +30,8 @@ for n = 1:number_of_repetitions
                 col = 2;
             end
 
-            STATS_acc_out{n}.Mconf(lin,col) = STATS_acc_out{n}.Mconf(lin,col) + ...
-                                              Mconf_in(i,j);
+            STATS_acc_out{n}.Mconf(lin,col) = ...
+                 STATS_acc_out{n}.Mconf(lin,col) + Mconf_in(i,j);
         end
     end
 

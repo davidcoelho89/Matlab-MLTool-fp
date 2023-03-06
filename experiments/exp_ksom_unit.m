@@ -26,7 +26,7 @@ OPT.hpo = 'none';   % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;   % decides if file will be saved
 
-OPT.calculate_bin = 0;  % decides to calculate binary statistics
+OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Prototypes' labeling definition
@@ -132,21 +132,18 @@ som_out_tr = cell(OPT.Nr,1);          % Acc of training data output
 som_out_ts = cell(OPT.Nr,1);          % Acc of test data output
 som_stats_tr_acc = cell(OPT.Nr,1);    % Acc of training statistics
 som_stats_ts_acc = cell(OPT.Nr,1);    % Acc of test statistics
-som_Mconf_sum = zeros(Nc,Nc);         % Aux var for mean conf mat calc
 
 KSOMGDp_acc = cell(OPT.Nr,1);         % Acc Parameters of KSOM-GD
 ksomgd_out_tr = cell(OPT.Nr,1);	      % Acc of training data output
 ksomgd_out_ts = cell(OPT.Nr,1);	      % Acc of test data output
 ksomgd_stats_tr_acc = cell(OPT.Nr,1); % Acc of training statistics
 ksomgd_stats_ts_acc = cell(OPT.Nr,1); % Acc of test statistics
-ksomgd_Mconf_sum = zeros(Nc,Nc);      % Aux var for mean conf mat calc
 
 KSOMEFp_acc = cell(OPT.Nr,1);           % Acc Parameters of KSOM-EF
 ksomef_out_tr = cell(OPT.Nr,1);	        % Acc of training data output
 ksomef_out_ts = cell(OPT.Nr,1);	        % Acc of test data output
 ksomef_stats_tr_acc = cell(OPT.Nr,1);   % Acc of training statistics
 ksomef_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
-ksomef_Mconf_sum = zeros(Nc,Nc);        % Aux var for mean conf mat calc
 
 %% FILE NAME
 
@@ -250,10 +247,6 @@ end
 
 %% RESULTS / STATISTICS
 
-% ToDo - Calculate "Binary" Statistics for comparison
-% - Define which classes will be in class "1"
-% - Calculate statistics from already calculated Mconf
-
 % Statistics for n turns (multiclass)
 
 som_nstats_tr = class_stats_nturns(som_stats_tr_acc);
@@ -266,6 +259,8 @@ ksomef_nstats_tr = class_stats_nturns(ksomef_stats_tr_acc);
 ksomef_nstats_ts = class_stats_nturns(ksomef_stats_ts_acc);
 
 % Statistics for n turns (binary)
+
+if(OPT.calculate_bin == 1)
 
 som_stats_tr_bin_acc = calculate_binary_stats(som_stats_tr_acc,OPT.class_1_vect);
 som_stats_ts_bin_acc = calculate_binary_stats(som_stats_ts_acc,OPT.class_1_vect);
@@ -282,6 +277,8 @@ ksomef_stats_ts_bin_acc = calculate_binary_stats(ksomef_stats_ts_acc,OPT.class_1
 ksomef_nstats_tr_bin = class_stats_nturns(ksomef_stats_tr_bin_acc);
 ksomef_nstats_ts_bin = class_stats_nturns(ksomef_stats_ts_bin_acc);
 
+end
+
 % Get all Statistics in one Cell
 
 nstats_all_tr{1,1} = som_nstats_tr;
@@ -292,6 +289,8 @@ nstats_all_ts{1,1} = som_nstats_ts;
 nstats_all_ts{2,1} = ksomgd_nstats_ts;
 nstats_all_ts{3,1} = ksomef_nstats_ts;
 
+if(OPT.calculate_bin == 1)
+
 nstats_all_tr_bin{1,1} = som_nstats_tr_bin;
 nstats_all_tr_bin{2,1} = ksomgd_nstats_tr_bin;
 nstats_all_tr_bin{3,1} = ksomef_nstats_tr_bin;
@@ -300,12 +299,19 @@ nstats_all_ts_bin{1,1} = som_nstats_ts_bin;
 nstats_all_ts_bin{2,1} = ksomgd_nstats_ts_bin;
 nstats_all_ts_bin{3,1} = ksomef_nstats_ts_bin;
 
+end
+
 % Compare Training and Test Statistics
 
 class_stats_ncomp(nstats_all_tr,NAMES);
 class_stats_ncomp(nstats_all_ts,NAMES);
+
+if(OPT.calculate_bin == 1)
+    
 class_stats_ncomp(nstats_all_tr_bin,NAMES);
 class_stats_ncomp(nstats_all_ts_bin,NAMES);
+
+end
 
 %% SAVE DATA
 

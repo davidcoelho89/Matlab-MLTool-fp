@@ -2,7 +2,7 @@
 
 % KSOM-EF Comparison Tests
 % Author: David Nascimento Coelho
-% Last Update: 2023/03/02
+% Last Update: 2023/03/05
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -16,7 +16,7 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksomef'; % Which Classifier will be used
-OPT.prob = 06;      % Which problem will be solved / used
+OPT.prob = 07;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
 OPT.norm = 0;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
@@ -26,7 +26,7 @@ OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;   % decides if file will be saved
 
-OPT.calculate_bin = 0;  % decides to calculate binary statistics
+OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Prototypes' labeling definition
@@ -499,7 +499,18 @@ class_stats_ncomp(nstats_all_ts,NAMES);
 %% SAVE DATA
 
 if(OPT.savefile)
-    save(OPT.filename);
+    variables.nstats_all_tr = nstats_all_tr;
+    variables.nstats_all_ts = nstats_all_ts;
+    variables.ksomef_lin_par_acc = ksomef_lin_par_acc;
+    variables.ksomef_gau_par_acc = ksomef_gau_par_acc;
+    variables.ksomef_pol_par_acc = ksomef_pol_par_acc;
+    variables.ksomef_exp_par_acc = ksomef_exp_par_acc;
+    variables.ksomef_cau_par_acc = ksomef_cau_par_acc;
+    variables.ksomef_log_par_acc = ksomef_log_par_acc;
+    variables.ksomef_sig_par_acc = ksomef_sig_par_acc;
+    variables.ksomef_kmo_par_acc = ksomef_kmo_par_acc;
+    save(OPT.filename,'variables');
+    clear variables;
 end
 
 %% END

@@ -17,8 +17,8 @@ format long e;  % Output data style (float)
 OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 07;      % Which problem will be solved / used
-OPT.prob2 = 01;     % When it needs an specification of data set
-OPT.norm = 0;       % Normalization definition
+OPT.prob2 = 02;     % When it needs an specification of data set
+OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 02;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
@@ -60,7 +60,7 @@ HP_ksomef_lin.knn_type = 2;      % Type of knn aproximation
 HP_ksomef_lin.Ktype = 1;         % Type of Kernel
 HP_ksomef_lin.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomef_lin.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_lin.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
+HP_ksomef_lin.theta = 0;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomef_lin.gamma = 2;       	 % polynomial order (poly 2 or 3)
 
 HP_ksomef_gau.lbl = prot_lbl;    % Neurons' labeling function
@@ -79,7 +79,7 @@ HP_ksomef_gau.Von = 0;           % disable video
 HP_ksomef_gau.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomef_gau.knn_type = 2;      % Type of knn aproximation
 HP_ksomef_gau.Ktype = 2;         % Type of Kernel
-HP_ksomef_gau.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomef_gau.sigma = 0.5;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomef_gau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomef_gau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomef_gau.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -142,7 +142,7 @@ HP_ksomef_cau.Von = 0;           % disable video
 HP_ksomef_cau.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomef_cau.knn_type = 2;      % Type of knn aproximation
 HP_ksomef_cau.Ktype = 5;         % Type of Kernel
-HP_ksomef_cau.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomef_cau.sigma = 0.5;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomef_cau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomef_cau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomef_cau.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -315,7 +315,7 @@ ksomef_kmo_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
-OPT.filename = strcat(DATA.name,'_','ksomef','_hpo_',OPT.hpo,...
+OPT.filename = strcat(DATA.name,'_prob2_',OPT.prob2,'_ksomef','_hpo_',OPT.hpo,...
                       '_norm',int2str(OPT.norm),'_1nn');
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST

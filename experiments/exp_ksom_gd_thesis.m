@@ -499,7 +499,18 @@ class_stats_ncomp(nstats_all_ts,NAMES);
 %% SAVE DATA
 
 if(OPT.savefile)
-    save(OPT.filename);
+    variables.nstats_all_tr = nstats_all_tr;
+    variables.nstats_all_ts = nstats_all_ts;
+    variables.ksomgd_lin_par_acc = ksomgd_lin_par_acc;
+    variables.ksomgd_gau_par_acc = ksomgd_gau_par_acc;
+    variables.ksomgd_pol_par_acc = ksomgd_pol_par_acc;
+    variables.ksomgd_exp_par_acc = ksomgd_exp_par_acc;
+    variables.ksomgd_cau_par_acc = ksomgd_cau_par_acc;
+    variables.ksomgd_log_par_acc = ksomgd_log_par_acc;
+    variables.ksomgd_sig_par_acc = ksomgd_sig_par_acc;
+    variables.ksomgd_kmo_par_acc = ksomgd_kmo_par_acc;
+    save(OPT.filename,'variables');
+    clear variables;
 end
 
 %% END

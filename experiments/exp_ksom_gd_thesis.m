@@ -17,8 +17,8 @@ format long e;  % Output data style (float)
 OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksomgd'; % Which Classifier will be used
 OPT.prob = 07;      % Which problem will be solved / used
-OPT.prob2 = 02;     % When it needs an specification of data set
-OPT.norm = 0;       % Normalization definition
+OPT.prob2 = 01;     % When it needs an specification of data set
+OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 02;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training

@@ -26,7 +26,7 @@ OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 1;   % decides if file will be saved
 
-OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
+OPT.calculate_bin = 1;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Prototypes' labeling definition
@@ -470,6 +470,52 @@ ksomgd_sig_nstats_ts = class_stats_nturns(ksomgd_sig_stats_ts_acc);
 ksomgd_kmo_nstats_tr = class_stats_nturns(ksomgd_kmo_stats_tr_acc);
 ksomgd_kmo_nstats_ts = class_stats_nturns(ksomgd_kmo_stats_ts_acc);
 
+% Statistics for n turns (binary)
+
+if(OPT.calculate_bin == 1)
+
+ksomgd_lin_stats_tr_bin_acc = calculate_binary_stats(ksomgd_lin_stats_tr_acc,OPT.class_1_vect);
+ksomgd_lin_stats_ts_bin_acc = calculate_binary_stats(ksomgd_lin_stats_ts_acc,OPT.class_1_vect);
+ksomgd_lin_nstats_tr_bin = class_stats_nturns(ksomgd_lin_stats_tr_bin_acc);
+ksomgd_lin_nstats_ts_bin = class_stats_nturns(ksomgd_lin_stats_ts_bin_acc);
+
+ksomgd_gau_stats_tr_bin_acc = calculate_binary_stats(ksomgd_gau_stats_tr_acc,OPT.class_1_vect);
+ksomgd_gau_stats_ts_bin_acc = calculate_binary_stats(ksomgd_gau_stats_ts_acc,OPT.class_1_vect);
+ksomgd_gau_nstats_tr_bin = class_stats_nturns(ksomgd_gau_stats_tr_bin_acc);
+ksomgd_gau_nstats_ts_bin = class_stats_nturns(ksomgd_gau_stats_ts_bin_acc);
+
+ksomgd_pol_stats_tr_bin_acc = calculate_binary_stats(ksomgd_pol_stats_tr_acc,OPT.class_1_vect);
+ksomgd_pol_stats_ts_bin_acc = calculate_binary_stats(ksomgd_pol_stats_ts_acc,OPT.class_1_vect);
+ksomgd_pol_nstats_tr_bin = class_stats_nturns(ksomgd_pol_stats_tr_bin_acc);
+ksomgd_pol_nstats_ts_bin = class_stats_nturns(ksomgd_pol_stats_ts_bin_acc);
+
+ksomgd_exp_stats_tr_bin_acc = calculate_binary_stats(ksomgd_exp_stats_tr_acc,OPT.class_1_vect);
+ksomgd_exp_stats_ts_bin_acc = calculate_binary_stats(ksomgd_exp_stats_ts_acc,OPT.class_1_vect);
+ksomgd_exp_nstats_tr_bin = class_stats_nturns(ksomgd_exp_stats_tr_bin_acc);
+ksomgd_exp_nstats_ts_bin = class_stats_nturns(ksomgd_exp_stats_ts_bin_acc);
+
+ksomgd_cau_stats_tr_bin_acc = calculate_binary_stats(ksomgd_cau_stats_tr_acc,OPT.class_1_vect);
+ksomgd_cau_stats_ts_bin_acc = calculate_binary_stats(ksomgd_cau_stats_ts_acc,OPT.class_1_vect);
+ksomgd_cau_nstats_tr_bin = class_stats_nturns(ksomgd_cau_stats_tr_bin_acc);
+ksomgd_cau_nstats_ts_bin = class_stats_nturns(ksomgd_cau_stats_ts_bin_acc);
+
+ksomgd_log_stats_tr_bin_acc = calculate_binary_stats(ksomgd_log_stats_tr_acc,OPT.class_1_vect);
+ksomgd_log_stats_ts_bin_acc = calculate_binary_stats(ksomgd_log_stats_ts_acc,OPT.class_1_vect);
+ksomgd_log_nstats_tr_bin = class_stats_nturns(ksomgd_log_stats_tr_bin_acc);
+ksomgd_log_nstats_ts_bin = class_stats_nturns(ksomgd_log_stats_ts_bin_acc);
+
+ksomgd_sig_stats_tr_bin_acc = calculate_binary_stats(ksomgd_sig_stats_tr_acc,OPT.class_1_vect);
+ksomgd_sig_stats_ts_bin_acc = calculate_binary_stats(ksomgd_sig_stats_ts_acc,OPT.class_1_vect);
+ksomgd_sig_nstats_tr_bin = class_stats_nturns(ksomgd_sig_stats_tr_bin_acc);
+ksomgd_sig_nstats_ts_bin = class_stats_nturns(ksomgd_sig_stats_ts_bin_acc);
+
+ksomgd_kmo_stats_tr_bin_acc = calculate_binary_stats(ksomgd_kmo_stats_tr_acc,OPT.class_1_vect);
+ksomgd_kmo_stats_ts_bin_acc = calculate_binary_stats(ksomgd_kmo_stats_ts_acc,OPT.class_1_vect);
+ksomgd_kmo_nstats_tr_bin = class_stats_nturns(ksomgd_kmo_stats_tr_bin_acc);
+ksomgd_kmo_nstats_ts_bin = class_stats_nturns(ksomgd_kmo_stats_ts_bin_acc);
+
+end
+
 % Get all Statistics in one Cell
 
 nstats_all_tr{1,1} = ksomgd_lin_nstats_tr;
@@ -490,11 +536,39 @@ nstats_all_ts{6,1} = ksomgd_log_nstats_ts;
 nstats_all_ts{7,1} = ksomgd_sig_nstats_ts;
 nstats_all_ts{8,1} = ksomgd_kmo_nstats_ts;
 
+if(OPT.calculate_bin == 1)
+
+nstats_all_tr_bin{1,1} = ksomgd_lin_nstats_tr_bin;
+nstats_all_tr_bin{2,1} = ksomgd_gau_nstats_tr_bin;
+nstats_all_tr_bin{3,1} = ksomgd_pol_nstats_tr_bin;
+nstats_all_tr_bin{4,1} = ksomgd_exp_nstats_tr_bin;
+nstats_all_tr_bin{5,1} = ksomgd_cau_nstats_tr_bin;
+nstats_all_tr_bin{6,1} = ksomgd_log_nstats_tr_bin;
+nstats_all_tr_bin{7,1} = ksomgd_sig_nstats_tr_bin;
+nstats_all_tr_bin{8,1} = ksomgd_kmo_nstats_tr_bin;
+
+nstats_all_ts_bin{1,1} = ksomgd_lin_nstats_ts_bin;
+nstats_all_ts_bin{2,1} = ksomgd_gau_nstats_ts_bin;
+nstats_all_ts_bin{3,1} = ksomgd_pol_nstats_ts_bin;
+nstats_all_ts_bin{4,1} = ksomgd_exp_nstats_ts_bin;
+nstats_all_ts_bin{5,1} = ksomgd_cau_nstats_ts_bin;
+nstats_all_ts_bin{6,1} = ksomgd_log_nstats_ts_bin;
+nstats_all_ts_bin{7,1} = ksomgd_sig_nstats_ts_bin;
+nstats_all_ts_bin{8,1} = ksomgd_kmo_nstats_ts_bin;
+
+end
+
 % Compare Training and Test Statistics
 
 class_stats_ncomp(nstats_all_tr,NAMES);
-
 class_stats_ncomp(nstats_all_ts,NAMES);
+
+if(OPT.calculate_bin == 1)
+    
+class_stats_ncomp(nstats_all_tr_bin,NAMES);
+class_stats_ncomp(nstats_all_ts_bin,NAMES);
+
+end
 
 %% SAVE DATA
 

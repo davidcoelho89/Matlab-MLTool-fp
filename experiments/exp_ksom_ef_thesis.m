@@ -17,12 +17,12 @@ format long e;  % Output data style (float)
 OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 07;      % Which problem will be solved / used
-OPT.prob2 = 01;     % When it needs an specification of data set
+OPT.prob2 = 02;     % When it needs an specification of data set
 OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 02;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 'none'; % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;   % decides if file will be saved
 
@@ -315,7 +315,7 @@ ksomef_kmo_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
-OPT.filename = strcat(DATA.name,'_','ksomef','_hpo_',OPT.hpo,...
+OPT.filename = strcat(DATA.name,'_prob2_',OPT.prob2,'_ksomef','_hpo_',OPT.hpo,...
                       '_norm',int2str(OPT.norm),'_1nn');
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST

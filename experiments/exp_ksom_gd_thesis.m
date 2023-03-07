@@ -15,7 +15,7 @@ format long e;  % Output data style (float)
 % General options' structure
 
 OPT.Nr = 05;        % Number of repetitions of each algorithm
-OPT.alg = 'ksom';   % Which Classifier will be used
+OPT.alg = 'ksomgd'; % Which Classifier will be used
 OPT.prob = 06;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
 OPT.norm = 0;       % Normalization definition
@@ -58,7 +58,7 @@ HP_ksomgd_lin.Von = 0;           % disable video
 HP_ksomgd_lin.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_lin.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_lin.Ktype = 1;         % Type of Kernel
-HP_ksomgd_lin.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_lin.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_lin.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_lin.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_lin.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -79,7 +79,7 @@ HP_ksomgd_gau.Von = 0;           % disable video
 HP_ksomgd_gau.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_gau.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_gau.Ktype = 2;         % Type of Kernel
-HP_ksomgd_gau.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_gau.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_gau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_gau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_gau.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -100,7 +100,7 @@ HP_ksomgd_pol.Von = 0;           % disable video
 HP_ksomgd_pol.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_pol.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_pol.Ktype = 3;         % Type of Kernel
-HP_ksomgd_pol.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_pol.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_pol.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_pol.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_pol.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -121,7 +121,7 @@ HP_ksomgd_exp.Von = 0;           % disable video
 HP_ksomgd_exp.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_exp.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_exp.Ktype = 4;         % Type of Kernel
-HP_ksomgd_exp.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_exp.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_exp.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_exp.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_exp.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -142,7 +142,7 @@ HP_ksomgd_cau.Von = 0;           % disable video
 HP_ksomgd_cau.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_cau.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_cau.Ktype = 5;         % Type of Kernel
-HP_ksomgd_cau.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_cau.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_cau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_cau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_cau.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -163,7 +163,7 @@ HP_ksomgd_log.Von = 0;           % disable video
 HP_ksomgd_log.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_log.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_log.Ktype = 6;         % Type of Kernel
-HP_ksomgd_log.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_log.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_log.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_log.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_log.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -184,7 +184,7 @@ HP_ksomgd_sig.Von = 0;           % disable video
 HP_ksomgd_sig.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_sig.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_sig.Ktype = 7;         % Type of Kernel
-HP_ksomgd_sig.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_sig.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_sig.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_sig.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_sig.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -205,7 +205,7 @@ HP_ksomgd_kmo.Von = 0;           % disable video
 HP_ksomgd_kmo.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_kmo.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_kmo.Ktype = 8;         % Type of Kernel
-HP_ksomgd_kmo.sigma = 2;     	 % Kernel width (gauss, exp, cauchy, log, kmod)
+HP_ksomgd_kmo.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_kmo.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_kmo.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_kmo.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -495,7 +495,6 @@ nstats_all_ts{8,1} = ksomgd_kmo_nstats_ts;
 class_stats_ncomp(nstats_all_tr,NAMES);
 
 class_stats_ncomp(nstats_all_ts,NAMES);
-
 
 %% SAVE DATA
 

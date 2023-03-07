@@ -2,7 +2,7 @@
 
 % KSOM-GD Comparison Tests
 % Author: David Nascimento Coelho
-% Last Update: 2023/03/02
+% Last Update: 2023/03/05
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -16,15 +16,15 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksomgd'; % Which Classifier will be used
-OPT.prob = 06;      % Which problem will be solved / used
+OPT.prob = 07;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
-OPT.norm = 0;       % Normalization definition
+OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 02;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 'random';  % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'none'; % 'grid' ; 'random' ; 'none'
 
-OPT.savefile = 0;   % decides if file will be saved
+OPT.savefile = 1;   % decides if file will be saved
 
 OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
@@ -60,7 +60,7 @@ HP_ksomgd_lin.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_lin.Ktype = 1;         % Type of Kernel
 HP_ksomgd_lin.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_lin.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_lin.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_lin.theta = 0;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_lin.gamma = 2;       	 % polynomial order (poly 2 or 3)
 
 HP_ksomgd_gau.lbl = prot_lbl;    % Neurons' labeling function
@@ -79,7 +79,7 @@ HP_ksomgd_gau.Von = 0;           % disable video
 HP_ksomgd_gau.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_gau.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_gau.Ktype = 2;         % Type of Kernel
-HP_ksomgd_gau.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_gau.sigma = 0.5;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_gau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_gau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_gau.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -142,7 +142,7 @@ HP_ksomgd_cau.Von = 0;           % disable video
 HP_ksomgd_cau.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomgd_cau.knn_type = 2;      % Type of knn aproximation
 HP_ksomgd_cau.Ktype = 5;         % Type of Kernel
-HP_ksomgd_cau.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_cau.sigma = 0.5;     	 % Kernel width (gau, exp, cauchy, log, kmod)
 HP_ksomgd_cau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
 HP_ksomgd_cau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
 HP_ksomgd_cau.gamma = 2;       	 % polynomial order (poly 2 or 3)
@@ -499,7 +499,18 @@ class_stats_ncomp(nstats_all_ts,NAMES);
 %% SAVE DATA
 
 if(OPT.savefile)
-    save(OPT.filename);
+    variables.nstats_all_tr = nstats_all_tr;
+    variables.nstats_all_ts = nstats_all_ts;
+    variables.ksomgd_lin_par_acc = ksomgd_lin_par_acc;
+    variables.ksomgd_gau_par_acc = ksomgd_gau_par_acc;
+    variables.ksomgd_pol_par_acc = ksomgd_pol_par_acc;
+    variables.ksomgd_exp_par_acc = ksomgd_exp_par_acc;
+    variables.ksomgd_cau_par_acc = ksomgd_cau_par_acc;
+    variables.ksomgd_log_par_acc = ksomgd_log_par_acc;
+    variables.ksomgd_sig_par_acc = ksomgd_sig_par_acc;
+    variables.ksomgd_kmo_par_acc = ksomgd_kmo_par_acc;
+    save(OPT.filename,'variables');
+    clear variables;
 end
 
 %% END

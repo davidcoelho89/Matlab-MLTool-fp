@@ -315,8 +315,8 @@ ksomef_kmo_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
-OPT.filename = strcat(DATA.name,'_prob2_',OPT.prob2,'_ksomef','_hpo_',OPT.hpo,...
-                      '_norm',int2str(OPT.norm),'_1nn');
+OPT.filename = strcat(DATA.name,'_prob2_',int2str(OPT.prob2),'_ksomef',...
+                      '_hpo_',OPT.hpo,'_norm',int2str(OPT.norm),'_1nn');
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 

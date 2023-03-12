@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 01;                % Which problem will be solved / used
+OPT.Nr = 50;                  % Number of repetitions of each algorithm
+OPT.prob = 07;                % Which problem will be solved / used
 OPT.prob2 = 01;               % When it needs an specification of data set
 OPT.norm = 3;                 % Normalization definition
-OPT.lbl = 0;                  % Data labeling definition
-OPT.Nr = 50;                  % Number of repetitions of each algorithm
+OPT.lbl = 1;                  % Data labeling definition
 OPT.hold = 01;                % Hold out method
 OPT.ptrn = 0.7;               % Percentage of samples for training
 OPT.file = 'wsom2017_f1.mat'; % file where all the variables will be saved  

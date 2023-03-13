@@ -22,7 +22,7 @@ OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 'none'; % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 1;   % decides if file will be saved
 

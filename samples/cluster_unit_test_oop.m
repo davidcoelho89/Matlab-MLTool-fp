@@ -11,11 +11,18 @@ format long e;  % Output data style (float)
 
 %% CHOOSE EXPERIMENT PARAMETERS
 
+number_of_realizations = 10;
+dataset_name = 'iris';
+model_name = 'wta';
+normalization = 'zscore';
+
+normalizer = dataNormalizer();
+normalizer.normalization = normalization;
 
 
-%% CHOOSE FIXED HYPERPARAMETERS 
+%% LOAD CLUSTERING MODEL AND CHOOSE ITS HYPERPARAMETERS
 
-
+clusteringModel = initializeClusteringModel(model_name);
 
 %% CHOOSE HYPERPARAMETERS TO BE OPTIMIZED
 

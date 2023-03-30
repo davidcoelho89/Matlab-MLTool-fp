@@ -23,6 +23,13 @@ elseif(strcmp(dataset_name,'dermatology'))
     dataset.output = loaded_data(:,end)';
     dataset.lbl = dataset.output;
     dataset.name = 'dermatology';
+elseif(strcmp(dataset_name,'two_moons'))
+    loaded_data = load('data_two_moons.dat');
+    dataset.input = loaded_data(:,1:2)';
+    loaded_data(502:end,3) = 2;
+    dataset.output = loaded_data(:,3)';
+    dataset.lbl = dataset.output;
+    dataset.name = 'twoMoons';
 else
     disp('Unrecognized name. Iris dataset was loaded.')
     loaded_data = importdata('data_iris.m');

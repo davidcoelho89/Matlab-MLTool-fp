@@ -19,7 +19,6 @@ normalization = 'zscore';
 normalizer = dataNormalizer();
 normalizer.normalization = normalization;
 
-
 %% LOAD CLUSTERING MODEL AND CHOOSE ITS HYPERPARAMETERS
 
 clusteringModel = initializeClusteringModel(model_name);

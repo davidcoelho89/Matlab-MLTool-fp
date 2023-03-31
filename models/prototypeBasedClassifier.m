@@ -303,18 +303,3 @@ classdef prototypeBasedClassifier
     end
 
 end % end class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

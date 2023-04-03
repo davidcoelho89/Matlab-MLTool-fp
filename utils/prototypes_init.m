@@ -15,8 +15,8 @@ function [Cx] = prototypes_init(DATA,PAR)
 %               2: Forgy Method (randomly choose k observations from data set)
 %               3: Randomly assign a cluster to each observation, than
 %                  update clusters' centers
-%               4: prototype's values randomly choosed between min and
-%                  max values of data's atributtes.
+%               4: prototype's attvalues randomly choosed between min and
+%                  max values of data's attributes.
 %   Output:
 %       Cx = prototypes matrix [p x Nk]
 

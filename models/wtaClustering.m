@@ -41,10 +41,10 @@ classdef wtaClustering
     properties
         distance_measure = 2;
         kernel_type = 'none';
-        number_of_epochs = 200;
+        number_of_epochs = 20;
         number_of_prototypes = 20;
         initialization_type = 'random_samples';
-        learning_type = 2;
+        learning_type = 4;
         learning_step_initial = 0.7;
         learning_step_final = 0.01;
         video_enabled = 0;
@@ -58,7 +58,7 @@ classdef wtaClustering
         Yh = [];
         yh = [];
         video_structure = [];
-        sum_of_squared_errors = [];
+        sse_per_epoch = [];
     end
 
     methods
@@ -76,9 +76,11 @@ classdef wtaClustering
 
             if(strcmp(self.initialization_type,'zeros'))
                 % Does nothing: already initialized with zeros 
+            
             elseif(strcmp(self.initialization_type,'random_samples'))
                 I = randperm(N);
-                self.Cx = X(:,I(1:Nk));
+                self.Cx = X(:,I(1:self.number_of_prototypes));
+            
             elseif(strcmp(self.initialization_type,'calculate_centers'))
                 samples_in_cluster = zeros(1,self.number_of_prototypes);
                 I = rand(1,N);
@@ -90,6 +92,7 @@ classdef wtaClustering
                 for i = 1:self.number_of_prototypes
                     self.Cx(:,i) = self.Cx(:,i) / samples_in_cluster(i);
                 end
+                
             elseif(strcmp(self.initialization_type,'random_attributes'))
                 % Calculate min and max value of parameters
                 [pmin,~] = min(X,[],2);
@@ -113,8 +116,11 @@ classdef wtaClustering
             t = 0;
             
             self = self.initialize_prototypes(X);
+            
             self.distances = zeros(self.number_of_prototypes,N);
-            self.sum_of_squared_errors = zeros(1,self.number_of_epochs);
+            
+            self.sse_per_epoch = zeros(1,self.number_of_epochs);
+            
             self.video_structure = struct('cdata',...
                                           cell(1,self.number_of_epochs),...
                                           'colormap',...
@@ -133,13 +139,13 @@ classdef wtaClustering
                 % Get Winner Neuron, update Learning Step, update prototypes
                 for i = 1:N
                     t = t+1;
-                    n = calculateLearningStep(self,tmax,t);
+                    n = self.calculateLearningStep(t,tmax);
                     winner = self.findWinnerPrototype(X(:,i));
                     self.Cx(:,winner) = self.Cx(:,winner) + ...
                                         n * (X(:,i) - self.Cx(:,winner));
                 end
 
-                self.sum_of_squared_errors(epoch) = self.calculate_sse(self,X);
+                self.sse_per_epoch(epoch) = self.calculate_sse(self,X);
 
             end
 
@@ -147,20 +153,38 @@ classdef wtaClustering
 
         % Prediction Function (1 instance)
         function self = partial_predict(self,x)
-            % Todo - All
-            self = self + x;
+           self.yh = self.findWinnerPrototype(x);
         end
 
         % Prediction Function (N instances)
         function self = predict(self,X)
-            % Todo - All
-            self = self + X;
+            [~,N] = size(X);
+            self.Yh = zeros(1,N);
+            for n = 1:N
+                self = self.partial_predict(X(:,n));
+                self.Yh(n) = self.yh;
+            end
         end
         
-    end % end methods
-
-    methods (Static)
+        % Learning Step
+        function n = calculateLearningStep(self,t,tmax)
+            
+            No = self.learning_step_initial;
+            Nt = self.learning_step_final;
+            
+            if self.learning_type == 1
+                n = No;
+            elseif self.learning_type == 2
+                n = No*(1-(t/tmax));
+            elseif self.learning_type == 3
+                n = No/(1+t);
+            elseif self.learning_type == 4
+                n = No*((Nt/No)^(t/tmax));
+            end
+            
+        end
         
+        % Winner Prototype
         function winner = findWinnerPrototype(self,sample)
 
             [~,Nk] = size(self.Cx);
@@ -177,16 +201,34 @@ classdef wtaClustering
             end
 
         end
+        
+        
+        
+    end % end methods
 
+    methods (Static)
+        
         function sse = calculate_sse(self,X)
-            % ToDo - all
-            sse = self + X;
-        end
+            
+            sse = 0;
+            
+            [~,N] = size(X);
 
-        function n = calculateLearningStep(self,t,tmax)
-            n = self + t + tmax;
+            for n = 1:N
+                winner = findWinnerPrototype(self,X(:,n));
+                sse = sse + sum((self.Cx(:,winner) - X(:,n)).^2);
+            end
+            
         end
-
+        
     end
 
 end % end class
+
+
+
+
+
+
+
+

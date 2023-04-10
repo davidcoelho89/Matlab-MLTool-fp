@@ -16,7 +16,7 @@ Nd = length(Cin_size) - 1;  % number of dimensions
 
 %% ALGORITHM
 
-if(Nd == 1),
+if(Nd == 1)
     Cout = Cin;
 else
     k = prod(Cin_size(2:end));

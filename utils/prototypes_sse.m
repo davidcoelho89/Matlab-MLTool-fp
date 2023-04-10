@@ -29,7 +29,7 @@ SSE = 0;    % accumulate value of squared error sum
 
 %% ALGORITHM
 
-for i = 1:N,
+for i = 1:N
     xn = input(:,i);                  	% get a sample
     win = prototypes_win(C,xn,PAR);     % index of closest prototype
     Cx = C(:,win);                      % closest prototype

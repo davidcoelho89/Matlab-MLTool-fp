@@ -1,8 +1,8 @@
-function [] = plot_clusters_data(DATA,OUT_CL,OPTION)
+function [] = plotClustersAndData(dataset,model,OPTIONS)
 
 % --- Plot clusters Organization and Data ---
 %
-%   [] = plot_clusters_data(DATA,OUT_CL,OPTION)
+%   [] = plotClustersAndData(DATA,OUT_CL,OPTION)
 %
 %   Input:
 %       DATA.
@@ -23,19 +23,9 @@ if (nargin == 2)
     Xaxis = 1;
     Yaxis = 2;
 else
-    Xaxis = OPTION.Xaxis;
-    Yaxis = OPTION.Yaxis;
+    Xaxis = OPTIONS.Xaxis;
+    Yaxis = OPTIONS.Yaxis;
 end
-
-% Get Data
-X = DATA.input;
-
-% Get index and Clusters prototypes
-index = OUT_CL.ind;
-Cx = OUT_CL.Cx;
-
-% Get number of prototypes
-[~,Nk] = size(Cx);
 
 % Main types of colors and markers
 color_array =  {'r','y','m','c','g','b','k','w'};
@@ -57,6 +47,7 @@ title ('2D of Clusters Distribution');
 
 % Plot Data
 
+[~,Nk] = size(model.Cx);
 for i = 1:Nk
 
     % Define Color
@@ -70,18 +61,18 @@ for i = 1:Nk
     marker = marker_array{1};
 
     % Get samples from especific cluster
-    samples = find(index == i);
+    samples = find(model.Yh == i);
     
     % Plot samples
-    plot(X(Xaxis,samples),...
-         X(Yaxis,samples),...
+    plot(dataset.input(Xaxis,samples),...
+         dataset.input(Yaxis,samples),...
          marker,'MarkerFaceColor',...
          plot_color)
 end    
 
 % Plot prototypes
 
-plot(Cx(Xaxis,:),Cx(Yaxis,:),'k*')
+plot(model.Cx(Xaxis,:),model.Cx(Yaxis,:),'k*')
 
 % Finish Figure
 

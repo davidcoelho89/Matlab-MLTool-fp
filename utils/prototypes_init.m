@@ -15,8 +15,8 @@ function [Cx] = prototypes_init(DATA,PAR)
 %               2: Forgy Method (randomly choose k observations from data set)
 %               3: Randomly assign a cluster to each observation, than
 %                  update clusters' centers
-%               4: prototype's values randomly choosed between min and
-%                  max values of data's atributtes.
+%               4: prototype's attvalues randomly choosed between min and
+%                  max values of data's attributes.
 %   Output:
 %       Cx = prototypes matrix [p x Nk]
 
@@ -55,11 +55,11 @@ elseif (init == 3)
     I = rand(1,N);
     index = ceil(Nk*I);
     % calculate centroids
-    for i = 1:N,
+    for i = 1:N
         n_samples(index(i)) = n_samples(index(i)) + 1;
         Cx(:,index(i)) = Cx(:,index(i)) + X(:,i);
     end
-    for i = 1:Nk,
+    for i = 1:Nk
         Cx(:,i) = Cx(:,i) / n_samples(i);
     end
 
@@ -69,7 +69,7 @@ elseif (init == 4)
     [pmin,~] = min(X,[],2);
     [pmax,~] = max(X,[],2);
     % generate vectors
-    for i = 1:Nk,
+    for i = 1:Nk
         Cx(:,i) = pmin + (pmax - pmin).*rand(p,1);
     end
 

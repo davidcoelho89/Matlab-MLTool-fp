@@ -45,11 +45,11 @@ MSQE = 0;               % Mean squared quantization error
 
 % SSQE and MSQE
 
-for i = 1:N,
+for i = 1:N
     xn = X(:,i);                        	% get sample
-    if(length(c_dim) == 1),
+    if(length(c_dim) == 1)
         cx = Cx(:,ind(1,i));              	% get prototype
-    elseif (length(c_dim) == 2),
+    elseif (length(c_dim) == 2)
         cx = zeros(p,1);
         cx(1:p) = Cx(:,ind(1,i),ind(2,i));	% get prototype
     end

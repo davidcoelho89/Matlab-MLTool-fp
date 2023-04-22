@@ -115,10 +115,12 @@ times_selected(:,index) = [];
 PAR = HP;
 PAR.Cx = Cx;
 PAR.Cy = Cy;
-PAR.Km = Km;
-PAR.Kmc = Kmc;
-PAR.Kinv = Kinv;
-PAR.Kinvc = Kinvc;
+if(HP.update_kernel_matrix)
+    PAR.Km = Km;
+    PAR.Kmc = Kmc;
+    PAR.Kinv = Kinv;
+    PAR.Kinvc = Kinvc;
+end
 PAR.score = score;
 PAR.class_history = class_history;
 PAR.times_selected = times_selected;

@@ -18,7 +18,7 @@ function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
 %       PSp.
 %           fold = % number of data partitions for cross validation
 %                        presented to the algorithm
-%           type = type of cross validation                         [cte]
+%           cost = type of cross validation                         [cte]
 %               1: takes into account just accurary
 %               2: takes into account also the dicitionary size
 %           lambda = trade-off between error and dictionary size    [0 - 1]
@@ -55,6 +55,8 @@ DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
 DATAtr = DATA_acc{r}.DATAtr;        % Training Data
 DATAts = DATA_acc{r}.DATAts;      	% Test Data
 
+HPgs.max_prot = floor( ((CVp.fold-1) / CVp.fold) * size(DATAtr.input, 2) );
+
 % %%%%%%%%%%%%%%%%% NORMALIZE DATA %%%%%%%%%%%%%%%%%%%%%%%
 
 % Get Normalization Parameters
@@ -86,8 +88,9 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
-% Using Grid Search and Cross-Validation
-HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
+% Using Random Search and Cross-Validation
+% HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
+HP = random_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 

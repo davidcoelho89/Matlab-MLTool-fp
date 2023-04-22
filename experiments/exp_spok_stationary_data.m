@@ -38,7 +38,7 @@ HP_gs.Ne = 01;                 % Number of epochs
 HP_gs.is_static = 1;           % Verify if the dataset is stationary
 HP_gs.Dm = 1;                  % Design Method
 
-HP_gs.Ss = 3;                  % Sparsification strategy
+HP_gs.Ss = 4;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
 HP_gs.v2 = 0.9;                % Sparseness parameter 2
 

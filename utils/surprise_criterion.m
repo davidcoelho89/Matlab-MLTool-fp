@@ -1,4 +1,4 @@
-function [SURout] = surprise_criterion(Dx,Dy,xt,yt,Kinv,HP)
+function [SURout] = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv)
 
 % --- Apply the surprise criterion between a dictionary and a sample ---
 %

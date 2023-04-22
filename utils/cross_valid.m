@@ -129,6 +129,7 @@ end
 if(restriction1)
     restriction2 = 1;
     mean_error = 1;
+    mean_accuracy = 0;
 else
     
     mean_accuracy = accuracy / Nfold;

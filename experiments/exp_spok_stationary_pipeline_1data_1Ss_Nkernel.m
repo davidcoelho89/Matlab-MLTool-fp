@@ -39,7 +39,7 @@ str9 = int2str(HP_gs.Us);
 str10 = '_Ps';
 str11 = int2str(HP_gs.Ps);
 % str12 = '_<kernel>_';
-str13 = int2str(HP_gs.K);
+str13 = int2str(HP_gs.K(1));
 str14 = 'nn.mat';
 
 %% KERNEL = LINEAR

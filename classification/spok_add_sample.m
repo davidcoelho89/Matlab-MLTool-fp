@@ -119,7 +119,7 @@ if(HP.update_kernel_matrix)
         Km_out = [Km, kt; kt', ktt + sig2n];
         Kinv_out = (1/delta)*[delta*Kinv + at*at', -at; -at', 1];
     end
-
+    
 end
 
 % Add sample to dictionary
@@ -138,10 +138,12 @@ times_selected_out = [times_selected,0];
 PAR = HP;
 PAR.Cx = Cx_out;
 PAR.Cy = Cy_out;
-PAR.Km = Km_out;
-PAR.Kmc = Kmc_out;
-PAR.Kinv = Kinv_out;
-PAR.Kinvc = Kinvc_out;
+if(HP.update_kernel_matrix)
+    PAR.Km = Km_out;
+    PAR.Kmc = Kmc_out;
+    PAR.Kinv = Kinv_out;
+    PAR.Kinvc = Kinvc_out;
+end
 PAR.score = score_out;
 PAR.class_history = class_history_out;
 PAR.times_selected = times_selected_out;

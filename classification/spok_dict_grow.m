@@ -95,7 +95,11 @@ else
         elseif (Dm == 2)
             Dx = Cx(:,Cy_seq == c);
             Dy = Cy(:,Cy_seq == c);
-            Kinv = HP.Kinvc{c};
+            if(HP.update_kernel_matrix)
+                Kinv = HP.Kinvc{c};
+            else
+                Kinv = [];
+            end
         end
 
         % Get criterion result

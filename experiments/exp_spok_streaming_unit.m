@@ -39,7 +39,7 @@ PSp.lambda = 2; 	 % Jpbc = Ds + lambda * Err
 %% HYPERPARAMETERS - DEFAULT
 
 HP.Ne = 01;                 % Number of epochs
-HP.is_static = 0;           % Verify if the dataset is stationary
+HP.is_static = 0;           % Confirm or not that the dataset is stationary
 HP.Dm = 2;                  % Design Method
 
 HP.Ss = 1;                  % Sparsification strategy
@@ -54,9 +54,12 @@ HP.min_score = -10;         % Score that leads the sample to be pruned
 
 HP.max_prot = 600;          % Max number of prototypes
 HP.min_prot = 1;            % Min number of prototypes
+
 HP.Von = 0;                 % Enable / disable video 
+
 HP.K = 1;                   % Number of nearest neighbors (classify)
 HP.knn_type = 2;            % Type of knn aproximation
+
 HP.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
 HP.sig2n = 0.001;           % Kernel Regularization parameter
 HP.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)

@@ -121,17 +121,24 @@ for fold = 1:Nfold
 
     % Accumulate Accuracy rate
     accuracy = accuracy + STATS_ts.acc;
-
+    
 end
 
-% Get accuracy and error
+% Dont need to calculate restriction2 and/or error, if 
+% there is a prohibited combination of hyperparameters
+if(restriction1)
+    restriction2 = 1;
+    mean_error = 1;
+    mean_accuracy = 0;
+else
+    
+    mean_accuracy = accuracy / Nfold;
+    mean_error = 1 - mean_accuracy;
 
-accuracy = accuracy / Nfold;    % Mean Accuracy
-error = 1 - accuracy;           % Mean Error
-
-% Restriction 2: About combination of parameters after training
-
-restriction2 = restriction_par_final(DATAtr,PAR,class_train);
+    % Restriction 2: About combination of parameters after training
+    restriction2 = restriction_par_final(DATAtr,PAR,class_train);    
+    
+end
 
 % Generate measure (value to be minimized)
 
@@ -140,7 +147,7 @@ if (cost == 1)
     if(restriction1 || restriction2)
         measure = 1;        % Maximum Error
     else
-        measure = error;    % Error Measure
+        measure = mean_error;    % Error Measure
     end
     
 elseif (cost == 2)
@@ -151,7 +158,7 @@ elseif (cost == 2)
     if(restriction1 || restriction2)
         measure = 1 + lambda;           % Maximum value
     else
-        measure = Ds + lambda * error;  % Measure
+        measure = Ds + lambda * mean_error;  % Measure
     end
     
 end
@@ -159,8 +166,8 @@ end
 %% FILL OUTPUT STRUCTURE
 
 CVout.measure = measure;
-CVout.acc = accuracy;
-CVout.err = error;
+CVout.acc = mean_accuracy;
+CVout.err = mean_error;
 CVout.Ds = Ds;
 
 %% END

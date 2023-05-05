@@ -134,7 +134,7 @@ elseif(strcmp(model_name,'mlp'))
 
 elseif(strcmp(model_name,'mlpLm'))
     model.non_linearity = 'sigmoid';
-    model.number_of_hidden_neurons = 5;
+    model.number_of_hidden_neurons = 7;
     model.minMSE = 1;
     model.minGRAD = 0.1;
     model.number_of_epochs = 1000;

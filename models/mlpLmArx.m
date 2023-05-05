@@ -1,44 +1,9 @@
 classdef mlpLmArx < identifierArx
-    %
-    % --- MLP (with Levemberg Marquardt) for System Identification ---
-    %
-    % Properties (Hyperparameters)
-    %
-    %   - add_bias = 0 or 1. Add bias or not.
-    %   - prediction_type "=0": free simulate. ">0": n-steps ahead
-    %   - output_lags = indicates number of lags for each output
-    %
-    % Properties (Parameters)
-    %
-    %   - Yh = matrix that holds all predictions  [Noutputs x Nsamples]
-    %   - yh = vector that holds last prediction  [Noutputs x 1]
-    %   - last_predictions_memory = vector holding past values of predictions
-    %
-    % Methods
-    %
-    %   - mlpArx()                  % Constructor 
-    %   - predict(self,X)           % Prediction function (N instances)
-    %   - partial_predict(self,x)   % Prediction function (1 instance)
-    %
-    %   - update_output_memory_from_prediction(self)
-    %   - update_regression_vector_from_memory(self,x)
-    %
-    %   - self = initialize_parameters(self,x,y)
-    %   - self = partial_fit(self,x,y)
-    %   - self = fit(self,X,Y)
-    %
-    %   - self = calculate_output(self,x)
-    %   - number_of_outputs = get_number_of_outputs(self)
-    % 
-    %   - Yi = activation_function(Ui,non_linearity)
-    %   - Di = function_derivate(Yi,non_linearity)
-    %
-    % ----------------------------------------------------------------
-    
+        
     % Hyperparameters
     properties
         
-        non_linearity = 'sigmoid';
+        non_linearity = 'hyperbolic_tangent';
         number_of_hidden_neurons = 5;
         minMSE = 1;
         minGRAD = 0.1;
@@ -101,12 +66,7 @@ classdef mlpLmArx < identifierArx
             self = self.initialize_parameters(X(:,1),Y(:,1));
 
             % Init error and cost function
-            self = self.calculate_output(X);
-            self.Yh = self.yh;
-            disp('size of Y');
-            disp(size(Y));
-            disp('size of Yh');
-            disp(size(Yh));
+            self = self.calculate_output_batch(X);
             self.error = Y - self.Yh;
             costx = 0.5*sum(self.error.^2);
 
@@ -126,8 +86,8 @@ classdef mlpLmArx < identifierArx
                     zk = param + pk;
                     self = self.devectorization(self,zk);
                     
-                    self = self.calculate_output(X);
-                    self.Yh = self.yh;
+                    % Calculate error and cost function
+                    self = self.calculate_output_batch(X);
                     self.error = Y - self.Yh;
                     costz = 0.5*sum(self.error.^2);
 
@@ -160,8 +120,25 @@ classdef mlpLmArx < identifierArx
                 disp('Max. iteration condition is satisfied');
             end
 
-            self = self.calculate_output(X);
-            self.Yh = self.yh;
+            self = self.calculate_output_batch(X);
+        end
+
+        % Needed for training MLP with Levemberg-Marquardt
+        function self = calculate_output_batch(self,X)
+            
+            self.out_layer1 = self.Win*X + self.bin;
+            
+            Zi = (2./(1+exp(-2*self.out_layer1)))-1; % [-1,1] (tg hiperb)
+            % Zi = 1./(1+exp(-out_layer1)); % [0,1] (sigmoide logistic)
+            % Zi = (1-exp(-out_layer1))./(1+exp(-out_layer1)); % [-1,1] (tg hiperb)
+            % Zi = tansig(netin);
+
+            self.out_layer2 = self.Wout*Zi + self.bout;
+
+            self.Yh = purelin(self.out_layer2);
+            % self.Yh = 1./(1+exp(-netout)); % [0,1] (sigmoide logistic)
+            % self.Yh = (1-exp(-netout))./(1+exp(-netout)); % [-1,1] (tg hiperb)
+
         end
         
         % Need to be implemented for any ArxModel
@@ -171,7 +148,6 @@ classdef mlpLmArx < identifierArx
 
         % Need to be implemented for any ArxModel
         function self = calculate_output(self,x)
-
             self.out_layer1 = self.Win*x + self.bin;
             Zi = (2./(1+exp(-2*self.out_layer1)))-1; % [-1,1] (tg hiperb)
             self.out_layer2 = self.Wout*Zi + self.bout;
@@ -199,25 +175,48 @@ classdef mlpLmArx < identifierArx
         function self = mlpJacobian(self,X)
             
             [~,p] = size(self.Win);
+            disp('number of inputs');
+            disp(p);
             [No,~] = size(self.Wout);
+            disp('number of outputs');
+            disp(No);
             [~,N] = size(X);
 
-            self.J = zeros(N, self.Nhidden*(p+1+No) + No);
+            self.J = zeros(N, self.number_of_hidden_neurons*(p+1+No) + No);
 
             for i = 1:N
 
+                % for debug
+                disp('size of out_layer1')
+                disp( size(self.out_layer1(:,i)) );
+
                 Zi = ((2./(1+exp(-2*self.out_layer1(:,i))))-1);
-                
+
+                % for debug
+                disp('size of Zi')
+                disp( size(Zi) );
+
                 dWout = -(1-tansig(self.out_layer2(:,i)).^2)*Zi; % [-1,1] (tg hiperb)
                 % dWout = -1./(1+exp(-netin(:,i)));  % Saida entre [0,1] (sigmoide logistica)
                 % dWout = -(1-exp(-netin(:,i)))./(1+exp(-netin(:,i))); % Saida entre [-1,1] (tg hp)
                 % dWout = -((2./(1+exp(-2*netin(:,i))))-1); % Saida entre [-1,1] (tg hp)
                 % dWout = -tansig(netin(:,i)
 
+                % for debug
+                disp('size of dWout')
+                disp( size(dWout) );
+
                 dbout = -1;
                 % dbout = sum(-(1-tansig(self.out_layer2(:,i)).^2));
 
-                dWin = -((self.Wout'.*(1-tansig(self.out_layer1(:,i)).^2)))*X(:,i);
+                % for debug
+                disp('size of 1-tansig(self.out_layer1(:,i)).^2');
+                disp( size( (1-tansig(self.out_layer1(:,i)).^2) ) );
+                disp('size of -(self.Wout.*(1-tansig(self.out_layer1(:,i)).^2))');
+                disp( size( -(self.Wout.*(1-tansig(self.out_layer1(:,i)).^2)) ) );
+
+                dWin = -(self.Wout.*(1-tansig(self.out_layer1(:,i)).^2))*X(:,i);
+                %dWin = -(self.Wout'.*(1-tansig(self.out_layer1(:,i)).^2))*X(:,i);
                 dbin = sum(-self.Wout'.*(1-tansig(self.out_layer1(:,i)).^2),2);
 
                 self.J(i,:) = [dWin(:); dbin(:); dWout(:); dbout(:)];

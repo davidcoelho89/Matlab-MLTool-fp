@@ -196,7 +196,8 @@ classdef mlpLmArx < identifierArx
                 disp('size of Zi')
                 disp( size(Zi) );
 
-                dWout = -(1-tansig(self.out_layer2(:,i)).^2)*Zi; % [-1,1] (tg hiperb)
+                dWout = -(1-tansig(self.out_layer2(:,i)).^2)*Zi'; % [-1,1] (tg hiperb)
+                % dWout = -(1-tansig(self.out_layer2(:,i)).^2)*Zi; % [-1,1] (tg hiperb)
                 % dWout = -1./(1+exp(-netin(:,i)));  % Saida entre [0,1] (sigmoide logistica)
                 % dWout = -(1-exp(-netin(:,i)))./(1+exp(-netin(:,i))); % Saida entre [-1,1] (tg hp)
                 % dWout = -((2./(1+exp(-2*netin(:,i))))-1); % Saida entre [-1,1] (tg hp)
@@ -217,7 +218,9 @@ classdef mlpLmArx < identifierArx
 
                 dWin = -(self.Wout.*(1-tansig(self.out_layer1(:,i)).^2))*X(:,i);
                 %dWin = -(self.Wout'.*(1-tansig(self.out_layer1(:,i)).^2))*X(:,i);
-                dbin = sum(-self.Wout'.*(1-tansig(self.out_layer1(:,i)).^2),2);
+                
+                dbin = -1;
+                % dbin = sum(-self.Wout'.*(1-tansig(self.out_layer1(:,i)).^2),2);
 
                 self.J(i,:) = [dWin(:); dbin(:); dWout(:); dbout(:)];
 

@@ -42,7 +42,7 @@ classdef mlpArx < identifierArx
         number_of_hidden_neurons = 8;
         learning_rate = 0.05;
         moment_factor = 0.75;
-        non_linearity = 'sigmoid';
+        non_linearity = 'hyperbolic_tangent';
         video_enabled = 0;
         
     end

@@ -27,7 +27,7 @@ DATA = data_class_loading(OPT);
 %% FILE NAME - STRINGS
 
 str1 = DATA.name;
-str2 = '_isk2nn_hpo1_norm';
+str2 = '_spok_hpo1_norm';
 str3 = int2str(OPT.norm);
 str4 = '_Dm';
 str5 = int2str(HP_gs.Dm);

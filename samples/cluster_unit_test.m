@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 11;              % Which problem will be solved / used
+OPT.prob = 09;              % Which problem will be solved / used
 OPT.prob2 = 01;             % More details about a specific data set
 OPT.norm = 3;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
@@ -27,14 +27,15 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 % Handlers for clustering functions
 
-cluster_name = 'SOM';
-cluster_alg = @som_cluster;
-label_alg = @som_label;
+cluster_name = 'WTA';
+cluster_alg = @wta_cluster;
+label_alg = @wta_label;
 
 %% CHOOSE HYPERPARAMETERS
 
 HP.Nep = 100;     	% max number of epochs
-HP.Nk = [3 3];    	% number of neurons (prototypes)
+% HP.Nk = [3 3];    	% number of neurons (prototypes)
+HP.Nk = 10;         % number of neurons (prototypes)
 HP.init = 2;     	% neurons' initialization
 HP.dist = 2;      	% type of distance
 HP.learn = 2;     	% type of learning step
@@ -66,7 +67,7 @@ DATA.Xmin = min(DATA.input,[],2);	% min value
 DATA.Xmed = mean(DATA.input,2);     % mean value
 DATA.Xdp = std(DATA.input,[],2);	% std value
 
-% figure; plot_data_pairplot(DATA)
+figure; plot_data_pairplot(DATA)
 
 %% ACCUMULATORS
 
@@ -123,6 +124,7 @@ plot_clusters_data(DATA,PAR_acc{r});
 plot_clusters_neigborhood(DATA,PAR_acc{r});
 
 % Voronoi Cells (of last turn)
+PAR_acc{r}.dist = 1;
 plot_clusters_voronoi(DATA,PAR_acc{r});
 
 % Labeled Prototypes' Grid (of last turn)

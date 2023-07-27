@@ -19,7 +19,7 @@ function [] = plot_class_boundary(DATA,PAR,class_test,OPTION)
 %% INITIALIZATION
 
 % Get chosen attributes
-if(nargin == 3),
+if(nargin == 3)
     p1 = 1;
     p2 = 2;
 else
@@ -62,7 +62,7 @@ xaxis_values = linspace(x1_min,x1_max,grid_len);
 yaxis_values = linspace(x2_min,x2_max,grid_len);
 
 % Get points of hyperplane (horizontal)
-for i = 1:grid_len,
+for i = 1:grid_len
     
     % set p1 attribute value
     xn(p1) = xaxis_values(i);
@@ -73,7 +73,7 @@ for i = 1:grid_len,
     OUTts = class_test(DATAts,PAR);
     [~,class_prev] = max(OUTts.y_h);
 
-    for j = 2:grid_len,
+    for j = 2:grid_len
         xn(p2) = yaxis_values(j);         	% set p2 attribute value
         DATAts.input = xn;                  % build data in struct
         OUTts = class_test(DATAts,PAR);     % get classifier output

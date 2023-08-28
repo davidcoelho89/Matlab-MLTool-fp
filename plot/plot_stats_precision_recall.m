@@ -24,7 +24,7 @@ roc_rec = STATS.roc_rec;
 
 %% ALGORITHM
 
-for c = 1:Nc,
+for c = 1:Nc
     figure;
     hold on
     plot(roc_rec(c,:),roc_prec(c,:),'r.-');

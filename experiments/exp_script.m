@@ -67,7 +67,7 @@ format long e;
 %% Write to Excel or Text Software
 
 % load patients.mat
-% T = table(LastName,Age,Weight,Smoker);
+% T = table(LastName,Age,Weight,Smoker); 
 % T(1:5,:)
 % 
 % filename = 'patientdata.xlsx';

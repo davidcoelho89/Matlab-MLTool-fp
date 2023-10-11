@@ -326,7 +326,7 @@ format long e;
 % Sw = zeros(p,p);
 % Sb = zeros(p,p);
 % 
-% % Calculate Individula Measures and Scatter Matrices
+% % Calculate Individual Measures and Scatter Matrices
 % 
 % for j = 1:Nc,
 %     Xi{j} = X(:,(Y == j));
@@ -665,17 +665,6 @@ format long e;
 % figure; boxplot(X,'labels',classifier_names)
 % ylabel('Accuracy')
 % title('Classifers Results')
-
-%% Weighted Knn
-
-% K = 5;
-% Nc = 3;
-% lbls_near = [[-1;-1;1], [-1;1;-1], [-1;1;-1] [1;-1;-1] [1;-1;-1]];
-% votes = zeros(1,Nc);
-% for k = 1:K,
-% 	[~,class] = max(lbls_near(:,k));
-% 	votes(class) = votes(class) + 1;
-% end
 
 %% Recursive Calculate Average and Variance
 

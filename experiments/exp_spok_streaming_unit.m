@@ -150,7 +150,7 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 %% GRID SEARCH FOR HYPERPARAMETERS OPTIMIZATION
 
 disp('begin hyperparameters optimization')
-display(datestr(now));
+display(datetime("now"));
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
@@ -161,7 +161,7 @@ PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
 %% PRESEQUENTIAL (TEST-THAN-TRAIN)
 
 disp('begin Test-than-train')
-display(datestr(now));
+display(datetime("now"));
 
 figure; % new figure for video ploting
 
@@ -171,7 +171,7 @@ for n = 1:Nttt
     
     if(mod(n,1000) == 0)
         disp(n);
-        disp(datestr(now));
+        display(datetime("now"));
     end
     
     % Get current data

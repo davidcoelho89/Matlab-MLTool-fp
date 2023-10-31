@@ -1,4 +1,4 @@
-function [PARout] = mlp_estimate(DATA,PAR)
+function [PAR] = mlp_estimate(DATA,HP)
 
 % --- MLP Regression Training ---
 %
@@ -35,7 +35,7 @@ function [PARout] = mlp_estimate(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR)))
+if ((nargin == 1) || (isempty(HP)))
     PARaux.Nh = 10;             % Number of hidden neurons
     PARaux.Ne = 200;            % Maximum training epochs
     PARaux.eta = 0.05;          % Learning Step
@@ -44,35 +44,35 @@ if ((nargin == 1) || (isempty(PAR)))
     PARaux.add_bias = 1;        % Add bias to input
     PARaux.Von = 0;             % Disable video
     PARaux.prediction_type = 1; % 1-step ahead prediction
-    PAR = PARaux;
+    HP = PARaux;
     
 else
-    if (~(isfield(PAR,'Nh')))
-        PAR.Nh = 10;
+    if (~(isfield(HP,'Nh')))
+        HP.Nh = 10;
     end
-    if (~(isfield(PAR,'Ne')))
-        PAR.Ne = 200;
+    if (~(isfield(HP,'Ne')))
+        HP.Ne = 200;
     end
-    if (~(isfield(PAR,'eta')))
-        PAR.eta = 0.05;
+    if (~(isfield(HP,'eta')))
+        HP.eta = 0.05;
     end
-    if (~(isfield(PAR,'mom')))
-        PAR.mom = 0.75;
+    if (~(isfield(HP,'mom')))
+        HP.mom = 0.75;
     end
-    if (~(isfield(PAR,'Nlin')))
-        PAR.Nlin = 2;
+    if (~(isfield(HP,'Nlin')))
+        HP.Nlin = 2;
     end
-    if (~(isfield(PAR,'add_bias')))
-        PAR.add_bias = 1;
+    if (~(isfield(HP,'add_bias')))
+        HP.add_bias = 1;
     end
-    if (~(isfield(PAR,'add_bias')))
-        PAR.add_bias = 1;
+    if (~(isfield(HP,'add_bias')))
+        HP.add_bias = 1;
     end
-    if (~(isfield(PAR,'Von')))
-        PAR.Von = 0;
+    if (~(isfield(HP,'Von')))
+        HP.Von = 0;
     end
-    if (~(isfield(PAR,'prediction_type')))
-        PAR.prediction_type = 1;
+    if (~(isfield(HP,'prediction_type')))
+        HP.prediction_type = 1;
     end
 end
 
@@ -83,13 +83,13 @@ X = DATA.input;             % Input Matrix
 Y = DATA.output;            % Output Matrix
 
 % Hyperparameters Initialization
-Nep = PAR.Ne;            	% Number of training epochs
-Nh = PAR.Nh;                % Number of hidden neurons
-eta = PAR.eta;            	% learning rate 
-mom = PAR.mom;            	% Moment Factor
-Nlin = PAR.Nlin;          	% Non-linearity
-Von = PAR.Von;            	% Enable or disable video
-add_bias = PAR.add_bias;    % Add bias to input (or not)
+Nep = HP.Ne;            	% Number of training epochs
+Nh = HP.Nh;                % Number of hidden neurons
+eta = HP.eta;            	% learning rate 
+mom = HP.mom;            	% Moment Factor
+Nlin = HP.Nlin;          	% Non-linearity
+Von = HP.Von;            	% Enable or disable video
+add_bias = HP.add_bias;    % Add bias to input (or not)
 
 % Problem Initialization
 [No,~] = size(Y);           % Number of Outputs (Regression and Neurons)
@@ -111,9 +111,9 @@ delta = cell(NL,1);         % local gradient of each layer
 W = cell(NL,1);             % Weight Matrices
 W_old = cell(NL,1);         % Necessary for moment factor
 
-if (isfield(PAR,'W'))       % if already initialized
+if (isfield(HP,'W'))       % if already initialized
     for i = 1:NL
-        W{i} = PAR.W{i};
+        W{i} = HP.W{i};
     end
 else                        % Initialize randomly
     for i = 1:NL
@@ -135,11 +135,11 @@ VID = struct('cdata',cell(1,Nep),'colormap', cell(1,Nep));
 for ep = 1:Nep   % for each epoch
 
     % Update Parameters
-    PAR.W = W;
+    HP.W = W;
     
     % Save frame of the current epoch
     if (Von)
-        VID(ep) = get_frame_hyperplane(DATA,PAR,@mlp_classify);
+        VID(ep) = get_frame_hyperplane(DATA,HP,@mlp_classify);
     end
     
     % Shuffle Data
@@ -202,10 +202,10 @@ end   % end of all epochs
 
 %% FILL OUTPUT STRUCTURE
 
-PARout = PAR;
-PARout.W = W;
-PARout.MQEtr = MQEtr;
-PARout.VID = VID;
-PARout.lag_output = DATA.lag_output;
+PAR = HP;
+PAR.W = W;
+PAR.MQEtr = MQEtr;
+PAR.VID = VID;
+PAR.lag_output = DATA.lag_output;
 
 %% END

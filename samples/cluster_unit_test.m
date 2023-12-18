@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 09;              % Which problem will be solved / used
+OPT.prob = 41;              % Which problem will be solved / used
 OPT.prob2 = 01;             % More details about a specific data set
-OPT.norm = 3;               % Normalization definition
+OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 02;                % Number of repetitions of the algorithm
+OPT.Nr = 01;                % Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.8;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
@@ -27,9 +27,9 @@ OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 % Handlers for clustering functions
 
-cluster_name = 'WTA';
-cluster_alg = @wta_cluster;
-label_alg = @wta_label;
+cluster_name = 'kmeans';
+cluster_alg = @kmeans_cluster;
+label_alg = @kmeans_label;
 
 %% CHOOSE HYPERPARAMETERS
 
@@ -97,9 +97,11 @@ DATA.lbl = DATA.lbl(:,I);
 
 OUT_CL = cluster_alg(DATA,HP);
 
-PAR_acc{r} = label_alg(DATA,OUT_CL);
+% PAR_acc{r} = label_alg(DATA,OUT_CL);
 
-STATS_acc{r} = cluster_stats_1turn(DATA,PAR_acc{r});
+% STATS_acc{r} = cluster_stats_1turn(DATA,PAR_acc{r});
+
+PAR_acc{r} = OUT_CL;
 
 end
 
@@ -110,7 +112,7 @@ disp(datestr(now));
 
 % Statistics for n turns
 
-nSTATS = cluster_stats_nturns(STATS_acc);
+% nSTATS = cluster_stats_nturns(STATS_acc);
 
 %% GRAPHICS
 

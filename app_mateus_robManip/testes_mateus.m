@@ -14,10 +14,10 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 41;              % Which problem will be solved / used
+OPT.prob = 09;              % Which problem will be solved / used
 OPT.prob2 = 01;             % More details about a specific data set
 OPT.norm = 0;               % Normalization definition
-OPT.lbl = 1;                % Labeling definition
+OPT.lbl = 0;                % Labeling definition
 OPT.Nr = 01;                % Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.8;             % Percentage of samples for training
@@ -52,7 +52,14 @@ HP.Ktype = 0;       % Non-kernelized Algorithm
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION
 
-DATA = data_class_loading(OPT);         % Load Data Set
+% DATA = data_class_loading(OPT);         % Load Data Set
+
+load dataset_robo_menor.mat;
+DATA.input = dataset20mmmenor(:,6:8)';
+[~,N] = size(DATA.input);
+DATA.output = ones(1,N);
+DATA.lbl = DATA.output;
+datasets = cell(1,HP.Nk);
 
 DATA = label_encode(DATA,OPT);          % adjust labels for the problem
 
@@ -84,29 +91,29 @@ for r = 1:OPT.Nr
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp(r);
-display(datetime("now"));
+disp(datestr(now));
 
 % %%%%%%%%%%%%%%%%%% SHUFFLE DATA %%%%%%%%%%%%%%%%%%%%%%%%
 
-I = randperm(size(DATA.input,2));
-DATA.input = DATA.input(:,I);
-DATA.output = DATA.output(:,I);
-DATA.lbl = DATA.lbl(:,I);
+% I = randperm(size(DATA.input,2));
+% DATA.input = DATA.input(:,I);
+% DATA.output = DATA.output(:,I);
+% DATA.lbl = DATA.lbl(:,I);
 
 % %%%%%%%%%%%% CLUSTERING AND LABELING %%%%%%%%%%%%%%%%%%%
 
 OUT_CL = cluster_alg(DATA,HP);
 
+PAR_acc{r} = OUT_CL;
+
 % PAR_acc{r} = label_alg(DATA,OUT_CL);
 
 % STATS_acc{r} = cluster_stats_1turn(DATA,PAR_acc{r});
 
-PAR_acc{r} = OUT_CL;
-
 end
 
 disp('Finish Algorithm')
-display(datetime("now"));
+disp(datestr(now));
 
 %% RESULTS / STATISTICS
 
@@ -133,6 +140,14 @@ plot_clusters_voronoi(DATA,PAR_acc{r});
 plot_clusters_grid(PAR_acc{r});
 
 %% SAVE VARIABLES AND VIDEO
+
+index = OUT_CL.ind;
+for i = 1:OUT_CL.Nk
+    samples = find(index == i);
+    datasets{i} = dataset20mmmenor(samples,:);
+end
+j = 2;
+figure; plot(datasets{j}(:,6),datasets{j}(:,7),'.');
 
 % % Save All Variables
 % save(OPT.file);

@@ -74,7 +74,7 @@ for realization = 1:number_of_realizations
 
 disp('Turn and Time');
 disp(realization);
-display(datestr(now));
+display(datetime("now"));
 
 % %%%%%%%%%%%% SPLIT AND NORMALIZE DATASETS %%%%%%%%%%%%%%
 

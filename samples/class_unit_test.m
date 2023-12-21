@@ -9,7 +9,7 @@ clear;          % Clear all variables
 clc;            % Clear command window
 format long e;  % Output data style (float)
 
-%% CHOOSE EXPERIMENT PARAMETERS
+%% CHOOSE EXPERIMENT PARAMETERS (METAPARAMETERS)
 
 % General options' structure
 

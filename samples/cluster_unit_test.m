@@ -84,7 +84,7 @@ for r = 1:OPT.Nr
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp(r);
-disp(datestr(now));
+display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%% SHUFFLE DATA %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -106,7 +106,7 @@ PAR_acc{r} = OUT_CL;
 end
 
 disp('Finish Algorithm')
-disp(datestr(now));
+display(datetime("now"));
 
 %% RESULTS / STATISTICS
 

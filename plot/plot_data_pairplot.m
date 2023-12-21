@@ -23,13 +23,13 @@ function plot_data_pairplot(DATA,label,mode)
 
 X = DATA.input';                    % Input matrix
 [~,p] = size(X);                    % Number of attributes
-if (p > 10),                        % Restrict number of attributes
+if (p > 10)                         % Restrict number of attributes
     p = 10;
 end
 
 Y = DATA.output';                   % output matrix
 [~,Nc] = size(Y);
-if(Nc == 1),
+if(Nc == 1)
     Nclasses = length(unique(Y));	% Number of classes
 else
     Nclasses = Nc;

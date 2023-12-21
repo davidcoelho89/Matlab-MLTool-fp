@@ -14,11 +14,11 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 09;              % Which problem will be solved / used
+OPT.prob = 41;              % Which problem will be solved / used
 OPT.prob2 = 01;             % More details about a specific data set
-OPT.norm = 3;               % Normalization definition
+OPT.norm = 0;               % Normalization definition
 OPT.lbl = 1;                % Labeling definition
-OPT.Nr = 02;                % Number of repetitions of the algorithm
+OPT.Nr = 01;                % Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.8;             % Percentage of samples for training
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
@@ -84,7 +84,7 @@ for r = 1:OPT.Nr
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp(r);
-disp(datestr(now));
+display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%% SHUFFLE DATA %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -97,20 +97,22 @@ DATA.lbl = DATA.lbl(:,I);
 
 OUT_CL = cluster_alg(DATA,HP);
 
-PAR_acc{r} = label_alg(DATA,OUT_CL);
+% PAR_acc{r} = label_alg(DATA,OUT_CL);
 
-STATS_acc{r} = cluster_stats_1turn(DATA,PAR_acc{r});
+% STATS_acc{r} = cluster_stats_1turn(DATA,PAR_acc{r});
+
+PAR_acc{r} = OUT_CL;
 
 end
 
 disp('Finish Algorithm')
-disp(datestr(now));
+display(datetime("now"));
 
 %% RESULTS / STATISTICS
 
 % Statistics for n turns
 
-nSTATS = cluster_stats_nturns(STATS_acc);
+% nSTATS = cluster_stats_nturns(STATS_acc);
 
 %% GRAPHICS
 

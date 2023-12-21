@@ -31,14 +31,14 @@ C = PAR.Cx;
 clusters = cell(1,Nk);
 Nsamples = zeros(1,Nk);
 
-for k = 1:Nk,
+for k = 1:Nk
     clusters{k} = X(:,indexes == k);
     Nsamples(k) = length(find(indexes == k));
 end
 
 %% ALGORITHM
 
-if Nk == 1,
+if Nk == 1
     DUNN = NaN;
 else
     %Find centroids combination

@@ -46,6 +46,7 @@ function [DATAout] = data_class_loading(OPTION)
 %           38: Rialto
 %           39: Spam
 %           40: Beats Dataset
+%           41: Robot Manipulator dataset
 %       OPTION.prob2 = specify data set
 %           databases that use this field: 03, 07, 08, 10, 19 
 %   Output:
@@ -357,6 +358,13 @@ switch (choice)
         DATA.name = 'spam';
     case 40 % Beats
         DATA = data_beats_gen(OPTION);
+    case 41 % Robot Manipulator
+        loaded_data = load('robmanip_data.mat');
+        DATA.input = loaded_data.datasetlimitado20mm(:,6:8)';
+        [~,N] = size(DATA.input);
+        DATA.output = ones(1,N);
+        DATA.lbl = DATA.output;
+        DATA.name = 'robManip';
     otherwise
         % None of the sets
         disp('Unknown Data Base. Void Structure Created')

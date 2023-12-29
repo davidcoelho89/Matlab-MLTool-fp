@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 05;        % Number of repetitions of each algorithm
+OPT.Nr = 05;        % Number of experiment realizations
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 10;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
@@ -28,6 +28,7 @@ OPT.savefile = 1;   % decides if file will be saved
 
 OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
+                        % (for binary statistics)
 
 % Prototypes' labeling strategy
 
@@ -73,18 +74,18 @@ HP_ksomef_gau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
 HP_ksomef_gau.gamma = 2;       	% polynomial order (poly 2 or 3)
 
 HP_ksomef_pol = HP_common;      % Get common HP
-HP_ksomef_pol.Ktype = 3;         % Type of Kernel
-HP_ksomef_pol.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_pol.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_pol.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_pol.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomef_pol.Ktype = 3;        % Type of Kernel
+HP_ksomef_pol.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomef_pol.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomef_pol.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomef_pol.gamma = 2;       	% polynomial order (poly 2 or 3)
 
 HP_ksomef_exp = HP_common;      % Get common HP
-HP_ksomef_exp.Ktype = 4;         % Type of Kernel
-HP_ksomef_exp.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_exp.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_exp.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_exp.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomef_exp.Ktype = 4;        % Type of Kernel
+HP_ksomef_exp.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomef_exp.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomef_exp.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomef_exp.gamma = 2;       	% polynomial order (poly 2 or 3)
 
 HP_ksomef_cau = HP_common;      % Get common HP
 HP_ksomef_cau.Ktype = 5;        % Type of Kernel
@@ -161,9 +162,11 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% ACCUMULATORS AND HANDLERS
 
-data_acc = cell(OPT.Nr,1);         	% Acc of labels and data division
+% Acc of labels and data division
+data_acc = cell(OPT.Nr,1);         	
 
-NAMES = {'Linear','Gaussian',...    % Acc of names for plots
+% Acc of names for plots
+NAMES = {'Linear','Gaussian',...    
          'Polynomial', 'Exponential',...
          'Cauchy', 'Log',...
          'Sigmoid', 'Kmod'};    

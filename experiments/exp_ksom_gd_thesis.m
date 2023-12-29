@@ -14,9 +14,9 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 05;        % Number of repetitions of each algorithm
+OPT.Nr = 05;        % Number of experiment realizations
 OPT.alg = 'ksomgd'; % Which Classifier will be used
-OPT.prob = 07;      % Which problem will be solved / used
+OPT.prob = 22;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
 OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
@@ -28,10 +28,11 @@ OPT.savefile = 1;   % decides if file will be saved
 
 OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
+                        % (for binary statistics)
 
 % Prototypes' labeling definition
 
-prot_lbl = 1;               % = 1 / 2 / 3
+prot_lbl = 1;               % = 1 (MV) / 2 (AD) / 3 (MD)
 
 % Metaparameters
 
@@ -42,173 +43,77 @@ MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-HP_ksomgd_lin.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_lin.ep = 200;          % max number of epochs
-HP_ksomgd_lin.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_lin.init = 02;         % neurons' initialization
-HP_ksomgd_lin.dist = 02;    	 % type of distance
-HP_ksomgd_lin.learn = 02;   	 % type of learning step
-HP_ksomgd_lin.No = 0.7;     	 % initial learning step
-HP_ksomgd_lin.Nt = 0.01;         % final learning step
-HP_ksomgd_lin.Nn = 01;           % number of neighbors
-HP_ksomgd_lin.neig = 03;         % type of neighbor function
-HP_ksomgd_lin.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_lin.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_lin.Von = 0;           % disable video
-HP_ksomgd_lin.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_lin.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_lin.Ktype = 1;         % Type of Kernel
-HP_ksomgd_lin.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_lin.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_lin.theta = 0;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_lin.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_common.lbl = prot_lbl;       % Neurons' labeling function;
+HP_common.ep = 50;              % max number of epochs
+HP_common.lin.k = [5 4];        % number of neurons (prototypes)
+HP_common.init = 02;            % neurons' initialization
+HP_common.dist = 02;            % type of distance
+HP_common.learn = 02;           % type of learning step
+HP_common.No = 0.7;             % initial learning step
+HP_common.Nt = 0.01;            % final learning step
+HP_common.Nn = 01;              % number of neighbors
+HP_common.neig = 03;            % type of neighbor function
+HP_common.Vo = 0.8;             % initial neighbor constant
+HP_common.Vt = 0.3;             % final neighbor constant
+HP_common.Von = 0;              % disable video
+HP_common.K = 1;                % Number of nearest neighbors (classify)
+HP_common.knn_type = 2;         % Type of knn aproximation
 
-HP_ksomgd_gau.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_gau.ep = 200;          % max number of epochs
-HP_ksomgd_gau.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_gau.init = 02;         % neurons' initialization
-HP_ksomgd_gau.dist = 02;    	 % type of distance
-HP_ksomgd_gau.learn = 02;   	 % type of learning step
-HP_ksomgd_gau.No = 0.7;     	 % initial learning step
-HP_ksomgd_gau.Nt = 0.01;         % final learning step
-HP_ksomgd_gau.Nn = 01;           % number of neighbors
-HP_ksomgd_gau.neig = 03;         % type of neighbor function
-HP_ksomgd_gau.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_gau.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_gau.Von = 0;           % disable video
-HP_ksomgd_gau.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_gau.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_gau.Ktype = 2;         % Type of Kernel
-HP_ksomgd_gau.sigma = 0.5;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_gau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_gau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_gau.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_lin = HP_common;      % Get common HP
+HP_ksomgd_lin.Ktype = 1;        % Type of Kernel
+HP_ksomgd_lin.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_lin.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_lin.theta = 0;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_lin.gamma = 2;       	% polynomial order (poly 2 or 3)
 
-HP_ksomgd_pol.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_pol.ep = 200;          % max number of epochs
-HP_ksomgd_pol.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_pol.init = 02;         % neurons' initialization
-HP_ksomgd_pol.dist = 02;    	 % type of distance
-HP_ksomgd_pol.learn = 02;   	 % type of learning step
-HP_ksomgd_pol.No = 0.7;     	 % initial learning step
-HP_ksomgd_pol.Nt = 0.01;         % final learning step
-HP_ksomgd_pol.Nn = 01;           % number of neighbors
-HP_ksomgd_pol.neig = 03;         % type of neighbor function
-HP_ksomgd_pol.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_pol.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_pol.Von = 0;           % disable video
-HP_ksomgd_pol.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_pol.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_pol.Ktype = 3;         % Type of Kernel
-HP_ksomgd_pol.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_pol.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_pol.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_pol.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_gau = HP_common;      % Get common HP
+HP_ksomgd_gau.Ktype = 2;        % Type of Kernel
+HP_ksomgd_gau.sigma = 0.5;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_gau.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_gau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_gau.gamma = 2;       	% polynomial order (poly 2 or 3)
 
-HP_ksomgd_exp.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_exp.ep = 200;          % max number of epochs
-HP_ksomgd_exp.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_exp.init = 02;         % neurons' initialization
-HP_ksomgd_exp.dist = 02;    	 % type of distance
-HP_ksomgd_exp.learn = 02;   	 % type of learning step
-HP_ksomgd_exp.No = 0.7;     	 % initial learning step
-HP_ksomgd_exp.Nt = 0.01;         % final learning step
-HP_ksomgd_exp.Nn = 01;           % number of neighbors
-HP_ksomgd_exp.neig = 03;         % type of neighbor function
-HP_ksomgd_exp.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_exp.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_exp.Von = 0;           % disable video
-HP_ksomgd_exp.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_exp.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_exp.Ktype = 4;         % Type of Kernel
-HP_ksomgd_exp.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_exp.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_exp.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_exp.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_pol = HP_common;      % Get common HP
+HP_ksomgd_pol.Ktype = 3;        % Type of Kernel
+HP_ksomgd_pol.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_pol.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_pol.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_pol.gamma = 2;       	% polynomial order (poly 2 or 3)
 
-HP_ksomgd_cau.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_cau.ep = 200;          % max number of epochs
-HP_ksomgd_cau.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_cau.init = 02;         % neurons' initialization
-HP_ksomgd_cau.dist = 02;    	 % type of distance
-HP_ksomgd_cau.learn = 02;   	 % type of learning step
-HP_ksomgd_cau.No = 0.7;     	 % initial learning step
-HP_ksomgd_cau.Nt = 0.01;         % final learning step
-HP_ksomgd_cau.Nn = 01;           % number of neighbors
-HP_ksomgd_cau.neig = 03;         % type of neighbor function
-HP_ksomgd_cau.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_cau.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_cau.Von = 0;           % disable video
-HP_ksomgd_cau.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_cau.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_cau.Ktype = 5;         % Type of Kernel
-HP_ksomgd_cau.sigma = 0.5;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_cau.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_cau.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_cau.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_exp = HP_common;      % Get common HP
+HP_ksomgd_exp.Ktype = 4;        % Type of Kernel
+HP_ksomgd_exp.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_exp.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_exp.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_exp.gamma = 2;       	% polynomial order (poly 2 or 3)
 
-HP_ksomgd_log.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_log.ep = 200;          % max number of epochs
-HP_ksomgd_log.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_log.init = 02;         % neurons' initialization
-HP_ksomgd_log.dist = 02;    	 % type of distance
-HP_ksomgd_log.learn = 02;   	 % type of learning step
-HP_ksomgd_log.No = 0.7;     	 % initial learning step
-HP_ksomgd_log.Nt = 0.01;         % final learning step
-HP_ksomgd_log.Nn = 01;           % number of neighbors
-HP_ksomgd_log.neig = 03;         % type of neighbor function
-HP_ksomgd_log.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_log.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_log.Von = 0;           % disable video
-HP_ksomgd_log.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_log.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_log.Ktype = 6;         % Type of Kernel
-HP_ksomgd_log.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_log.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_log.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_log.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_cau = HP_common;      % Get common HP
+HP_ksomgd_cau.Ktype = 5;        % Type of Kernel
+HP_ksomgd_cau.sigma = 0.5;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_cau.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_cau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_cau.gamma = 2;       	% polynomial order (poly 2 or 3)
 
-HP_ksomgd_sig.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_sig.ep = 200;          % max number of epochs
-HP_ksomgd_sig.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_sig.init = 02;         % neurons' initialization
-HP_ksomgd_sig.dist = 02;    	 % type of distance
-HP_ksomgd_sig.learn = 02;   	 % type of learning step
-HP_ksomgd_sig.No = 0.7;     	 % initial learning step
-HP_ksomgd_sig.Nt = 0.01;         % final learning step
-HP_ksomgd_sig.Nn = 01;           % number of neighbors
-HP_ksomgd_sig.neig = 03;         % type of neighbor function
-HP_ksomgd_sig.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_sig.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_sig.Von = 0;           % disable video
-HP_ksomgd_sig.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_sig.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_sig.Ktype = 7;         % Type of Kernel
-HP_ksomgd_sig.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_sig.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_sig.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_sig.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_log = HP_common;      % Get common HP
+HP_ksomgd_log.Ktype = 6;        % Type of Kernel
+HP_ksomgd_log.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_log.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_log.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_log.gamma = 2;       	% polynomial order (poly 2 or 3)
 
-HP_ksomgd_kmo.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd_kmo.ep = 200;          % max number of epochs
-HP_ksomgd_kmo.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd_kmo.init = 02;         % neurons' initialization
-HP_ksomgd_kmo.dist = 02;    	 % type of distance
-HP_ksomgd_kmo.learn = 02;   	 % type of learning step
-HP_ksomgd_kmo.No = 0.7;     	 % initial learning step
-HP_ksomgd_kmo.Nt = 0.01;         % final learning step
-HP_ksomgd_kmo.Nn = 01;           % number of neighbors
-HP_ksomgd_kmo.neig = 03;         % type of neighbor function
-HP_ksomgd_kmo.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd_kmo.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd_kmo.Von = 0;           % disable video
-HP_ksomgd_kmo.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd_kmo.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd_kmo.Ktype = 8;         % Type of Kernel
-HP_ksomgd_kmo.sigma = 2;     	 % Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomgd_kmo.alpha = 0.1;    	 % Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomgd_kmo.theta = 0.1;     	 % Dot product adding (poly 1 / sigm 0.1)
-HP_ksomgd_kmo.gamma = 2;       	 % polynomial order (poly 2 or 3)
+HP_ksomgd_sig = HP_common;      % Get common HP
+HP_ksomgd_sig.Ktype = 7;        % Type of Kernel
+HP_ksomgd_sig.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_sig.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_sig.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_sig.gamma = 2;       	% polynomial order (poly 2 or 3)
+
+HP_ksomgd_kmo = HP_common;      % Get common HP
+HP_ksomgd_kmo.Ktype = 8;        % Type of Kernel
+HP_ksomgd_kmo.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
+HP_ksomgd_kmo.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
+HP_ksomgd_kmo.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
+HP_ksomgd_kmo.gamma = 2;       	% polynomial order (poly 2 or 3)
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
@@ -258,10 +163,12 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 %% ACCUMULATORS AND HANDLERS
 
 data_acc = cell(OPT.Nr,1);         	% Acc of labels and data division
+
 NAMES = {'Linear','Gaussian',...    % Acc of names for plots
          'Polynomial', 'Exponential',...
          'Cauchy', 'Log',...
-         'Sigmoid', 'Kmod'};    
+         'Sigmoid', 'Kmod'};
+
 nstats_all_tr = cell(length(NAMES),1);
 nstats_all_ts = cell(length(NAMES),1);
 

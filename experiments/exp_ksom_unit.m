@@ -121,23 +121,23 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% ACCUMULATORS AND HANDLERS
 
-data_acc = cell(OPT.Nr,1);            % Acc of labels and data division
-NAMES = {'som','ksomgd','ksomef'};    % Acc of names for plots
+data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
+NAMES = {'som','ksomgd','ksomef'};      % Acc of names for plots
 
 nstats_all_tr = cell(length(NAMES),1);
 nstats_all_ts = cell(length(NAMES),1);
 
-SOMp_acc = cell(OPT.Nr,1);	          % Acc Parameters of SOM
-som_out_tr = cell(OPT.Nr,1);          % Acc of training data output
-som_out_ts = cell(OPT.Nr,1);          % Acc of test data output
-som_stats_tr_acc = cell(OPT.Nr,1);    % Acc of training statistics
-som_stats_ts_acc = cell(OPT.Nr,1);    % Acc of test statistics
+SOMp_acc = cell(OPT.Nr,1);	            % Acc Parameters of SOM
+som_out_tr = cell(OPT.Nr,1);            % Acc of training data output
+som_out_ts = cell(OPT.Nr,1);            % Acc of test data output
+som_stats_tr_acc = cell(OPT.Nr,1);      % Acc of training statistics
+som_stats_ts_acc = cell(OPT.Nr,1);      % Acc of test statistics
 
-KSOMGDp_acc = cell(OPT.Nr,1);         % Acc Parameters of KSOM-GD
-ksomgd_out_tr = cell(OPT.Nr,1);	      % Acc of training data output
-ksomgd_out_ts = cell(OPT.Nr,1);	      % Acc of test data output
-ksomgd_stats_tr_acc = cell(OPT.Nr,1); % Acc of training statistics
-ksomgd_stats_ts_acc = cell(OPT.Nr,1); % Acc of test statistics
+KSOMGDp_acc = cell(OPT.Nr,1);           % Acc Parameters of KSOM-GD
+ksomgd_out_tr = cell(OPT.Nr,1);	        % Acc of training data output
+ksomgd_out_ts = cell(OPT.Nr,1);	        % Acc of test data output
+ksomgd_stats_tr_acc = cell(OPT.Nr,1);   % Acc of training statistics
+ksomgd_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 KSOMEFp_acc = cell(OPT.Nr,1);           % Acc Parameters of KSOM-EF
 ksomef_out_tr = cell(OPT.Nr,1);	        % Acc of training data output
@@ -157,7 +157,7 @@ for r = 1:OPT.Nr
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp(r);
-display(datestr(now));
+display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
 

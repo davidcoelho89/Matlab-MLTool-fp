@@ -111,7 +111,7 @@ ROC_t = -1:disc:1;  % Threshold vector
 if classType == 1
     
     ROC_TPR = [];       % True Positive Rate (sensitivity)
-    ROC_SPEC = [];      % Specificity
+    ROC_SPEC = [];       % Specificity
     ROC_FPR = [];       % False Positive Rate (1 - specificity)
     ROC_PREC = [];      % Precision (positive predictive value)
     ROC_REC = [];       % Recall (used for unbalanced data)
@@ -132,7 +132,7 @@ else
     FSC = zeros(Nc,1);
     MCC = zeros(Nc,1);
     
-    % One ROC curve for each classifier
+    % One ROC curve for each class
     
     for c = 1:Nc
         
@@ -186,8 +186,9 @@ else
             
             if (t == 0)
                 % Get f1-score
-                FSC(c) = 2 * ROC_PREC(c,cont) * ROC_REC(c,cont) / ...
-                        ( ROC_PREC(c,cont) + ROC_REC(c,cont) );
+                den = ROC_PREC(c,cont) + ROC_REC(c,cont);
+                FSC(c) = 2 * ROC_PREC(c,cont) * ROC_REC(c,cont) / den;
+
                 % Get Matthews Correlation Coefficient
                 sum1 = TP + FP; sum2 = TP + FN;
                 sum3 = TN + FP; sum4 = TN + FN;

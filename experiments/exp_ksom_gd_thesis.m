@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 05;        % Number of repetitions of each algorithm
+OPT.Nr = 05;        % Number of experiment realizations
 OPT.alg = 'ksomgd'; % Which Classifier will be used
 OPT.prob = 22;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set

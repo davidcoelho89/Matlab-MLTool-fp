@@ -362,14 +362,6 @@ STATS.Mconfs = Mconfs;
 STATS.acc = acc;
 STATS.err = err;
 
-% STATS.roc_t = ROC_t;
-% STATS.roc_tpr = ROC_TPR;
-% STATS.roc_spec = ROC_SPEC;
-% STATS.roc_fpr = ROC_FPR;
-% STATS.roc_prec = ROC_PREC;
-% STATS.roc_rec = ROC_REC;
-% STATS.auc = AUC;
-
 STATS.fsc_per_class = f1_score_per_class;
 STATS.fsc_micro = f1_score_micro;
 STATS.fsc_macro = f1_score_macro;
@@ -378,5 +370,13 @@ STATS.fsc_weighted = f1_score_weighted;
 STATS.mcc_per_class = mcc_per_class;
 STATS.mcc_mean = mcc_mean;
 STATS.mcc_multiclass = mcc_multiclass;
+
+% STATS.roc_t = ROC_t;
+% STATS.roc_tpr = ROC_TPR;
+% STATS.roc_spec = ROC_SPEC;
+% STATS.roc_fpr = ROC_FPR;
+% STATS.roc_prec = ROC_PREC;
+% STATS.roc_rec = ROC_REC;
+% STATS.auc = AUC;
 
 %% END

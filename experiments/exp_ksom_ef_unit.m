@@ -14,13 +14,13 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 03;        % Number of repetitions of each algorithm
+OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksom';   % Which Classifier will be used
-OPT.prob = 06;      % Which problem will be solved / used
+OPT.prob = 07;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
 OPT.norm = 0;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
-OPT.hold = 02;      % Hold out method
+OPT.hold = 01;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
 OPT.hpo = 'none';   % 'grid' ; 'random' ; 'none'
 

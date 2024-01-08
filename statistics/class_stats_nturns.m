@@ -40,11 +40,11 @@ function [nSTATS] = class_stats_nturns(STATS_acc)
 %           roc_prec = precision                    [1 x t]
 %           roc_rec = recall                        [1 x t]
 %
+%           auc = area under the curve              [1 x t]
+%
 %           fsc = f1-score                          [1 x t]
 %
 %           mcc = Matthews Correlation Coef         [1 x t]
-%
-%           auc = area under the curve              [1 x t]
 
 %% INITIALIZATIONS
 
@@ -130,13 +130,13 @@ for i = 1:t
         err_max_index = i;
         err_max = STATS.err;
     end
-    if (STATS.fsc > fsc_max)
+    if (STATS.fsc_macro > fsc_max)
         fsc_max_index = i;
-        fsc_max = STATS.fsc;
+        fsc_max = STATS.fsc_macro;
     end
-    if (STATS.mcc > mcc_max)
+    if (STATS.mcc_multiclass > mcc_max)
         mcc_max_index = i;
-        mcc_max = STATS.mcc;
+        mcc_max = STATS.mcc_multiclass;
     end
     % Minimum Accuracy / Error / F-score / Mcc
     if (STATS.acc < acc_min)
@@ -147,13 +147,13 @@ for i = 1:t
         err_min_index = i;
         err_min = STATS.err;
     end
-    if (STATS.fsc < fsc_min)
+    if (STATS.fsc_macro < fsc_min)
         fsc_min_index = i;
-        fsc_min = STATS.fsc;
+        fsc_min = STATS.fsc_macro;
     end
-    if (STATS.mcc < mcc_min)
+    if (STATS.mcc_multiclass < mcc_min)
         mcc_min_index = i;
-        mcc_min = STATS.mcc;
+        mcc_min = STATS.mcc_multiclass;
     end
     % ROC parameters
     if(isfield(STATS,'roc_t'))
@@ -164,8 +164,6 @@ for i = 1:t
         roc_prec{i} = STATS.roc_prec;
         roc_rec{i} = STATS.roc_rec;
         auc{i} = STATS.auc;
-        fsc{i} = STATS.fsc;
-        mcc{i} = STATS.mcc;
     end
     
 end
@@ -196,7 +194,6 @@ mcc_mean = mcc_mean + mean(mcc);
 mcc_median = mcc_median + median(mcc);
 mcc_std = mcc_std + std(mcc);
 mcc_cv = mcc_cv + (mcc_std / mcc_mean);
-
 
 %% FILL OUTPUT STRUCTURE
 
@@ -250,9 +247,7 @@ if(isfield(STATS_acc{1},'roc_t'))
     nSTATS.roc_fpr = roc_fpr;
     nSTATS.roc_prec = roc_prec;
     nSTATS.roc_rec = roc_rec;
-    nSTATS.fsc = fsc;
     nSTATS.auc = auc;
-    nSTATS.mcc = mcc;
 end
 
 %% END

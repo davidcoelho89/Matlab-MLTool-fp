@@ -1,9 +1,11 @@
-function [] = exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,...
-                                                              PSp,kernels)
+function [] = exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT, ...
+                                                            HP_gs, ...
+                                                            PSp, ...
+                                                            kernels)
 
 % --- Pipeline used to test spok model with 1 dataset and N Kernels ---
 %
-%   [] = exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HPgs,PSp)
+%   [] = exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HPgs,PSp,Kernels)
 %
 %   Input:
 %       OPT.
@@ -55,9 +57,11 @@ if (any(kernels == 1))
         HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
     
     HP_gs.sigma = 2;
@@ -79,16 +83,18 @@ if (any(kernels == 2))
     str12 = '_gau_';
     HP_gs.Ktype = 2;
     
-    if(HP_gs.Ss == 1)
-        HP_gs.v1 = 2.^linspace(-4,3,8);                     % ALD
+    if(HP_gs.Ss == 1)        % ALD
+        HP_gs.v1 = 2.^linspace(-4,3,8);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
-    elseif(HP_gs.Ss == 2)
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	% Coherence
+    elseif(HP_gs.Ss == 2)   % Coherence
+        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
     
     HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -117,9 +123,11 @@ if (any(kernels == 3))
         % ToDo - Adjust v1
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
 
     HP_gs.sigma = 2;
@@ -148,9 +156,11 @@ if (any(kernels == 4))
         % ToDo - Adjust v1
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
     
     HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -179,9 +189,11 @@ if (any(kernels == 5))
         HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];	
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
     
     HP_gs.sigma = 2.^linspace(-10,9,20);
@@ -210,9 +222,11 @@ if (any(kernels == 6))
         % ToDo - Adjust v1
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
     
     HP_gs.sigma = [0.001 0.01 0.1 1 2 5];
@@ -241,10 +255,12 @@ if (any(kernels == 7))
         % ToDo - Adjust v1
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
-    end    
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
+    end  
 
     HP_gs.sigma = 2;
     HP_gs.gamma = 2;
@@ -272,9 +288,11 @@ if (any(kernels == 8))
         % ToDo - Adjust v1
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     elseif(HP_gs.Ss == 4)   % Surprise
-        % ToDo - Adjust v1 and v2
+        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v2 = HP_gs.v1 + 0.001;
     end
     
     HP_gs.sigma = 2.^linspace(-8,2,11);

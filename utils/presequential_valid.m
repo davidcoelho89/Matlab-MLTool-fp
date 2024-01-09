@@ -26,6 +26,8 @@ function [PVout] = presequential_valid(DATA,HP,class_train,class_test,PSp)
 %           acc = mean accuracy for data set and parameters
 %           err = mean error for data set and parameters
 %           Ds = percentage of prototypes compared to the dataset
+%           Nneurons = number of neurons (NN based)
+%           Nsv = number of support vectors (SVC based)
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -41,7 +43,7 @@ else
         PSp.cost = 1;
     end
     if (~(isfield(PSp,'lambda')))
-        PSp.lambda = 0.5;
+        PSp.lambda = 2;
     end
 end
 
@@ -61,6 +63,8 @@ lambda = PSp.lambda;            % trade-off between error and other par
 
 accuracy = 0;                   % Init accurary
 Ds = 0;                         % Init # prototypes (dictionary size)
+Nneurons = 0;                   % Init # of neurons (for ANNs)
+Nsv = 0;                        % Init # of support vectors (for SVMs)
 
 % Init Parameters
 
@@ -155,5 +159,7 @@ PVout.measure = measure;    % Metric using chosen hyperparemeters
 PVout.acc = accuracy;       % Accuracy of trained model
 PVout.err = error;          % Error of trained model
 PVout.Ds = Ds;              % Dictionary Size
+PVout.Nneurons = Nneurons;  % Number of neurons
+PVout.Nsv = Nsv;            % Number of support vectors
 
 %% END

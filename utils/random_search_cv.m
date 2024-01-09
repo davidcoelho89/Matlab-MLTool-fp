@@ -81,7 +81,7 @@ for turn = 1:max_iterations
             HP_probe.(HP_name) = HP_values{index};	% Get HP value
         else
             HP_probe.(HP_name) = HP_values(index);	% Get HP value
-        end       
+        end
     end
     
     % Cross Validation

@@ -16,8 +16,8 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 05;        % Number of repetitions of each algorithm
 OPT.alg = 'ksom';   % Which Classifier will be used
-OPT.prob = 06;      % Which problem will be solved / used
-OPT.prob2 = 01;     % When it needs an specification of data set
+OPT.prob = 07;      % Which problem will be solved / used
+OPT.prob2 = 02;     % When it needs an specification of data set
 OPT.norm = 0;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
@@ -62,8 +62,10 @@ HP_ksomef.sigma = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
 
 %% CHOOSE HYPERPARAMETERS - FOR OPTIMIZATION
 
+HP_ksomef_gs = HP_ksomef;   % Get default HP
+
 if(~strcmp(OPT.hpo,'none'))
-    HP_ksomef_gs = HP_ksomef;
+    % Do nothing
 else
     % ToDo - Define search space of parameters
 end

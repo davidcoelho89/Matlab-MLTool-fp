@@ -146,7 +146,7 @@ prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
 
 window_size = 1000;                 
 correctly_predicted_vector = zeros(1,window_size);
-accuracy_current_window = zeros(1,Nttt);
+accuracy_inside_window = zeros(1,Nttt);
 
 VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
@@ -157,7 +157,7 @@ display(datetime("now"));
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
+PAR = random_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
 
 % PAR.max_prot = 1000;
 
@@ -234,14 +234,14 @@ for n = 1:Nttt
         else
             correctly_predicted_vector(n) = 0;
         end
-        accuracy_current_window(n) = sum(correctly_predicted_vector)/window_size;
+        accuracy_inside_window(n) = sum(correctly_predicted_vector)/window_size;
     else
         if (y_lbl == yh_lbl)
             correctly_predicted_vector(n) = 1;
         else
             correctly_predicted_vector(n) = 0;
         end
-        accuracy_current_window(n) = sum(correctly_predicted_vector(1:n))/n;
+        accuracy_inside_window(n) = sum(correctly_predicted_vector(1:n))/n;
     end
 
     % Hold Number of prototypes per Class
@@ -325,7 +325,7 @@ hold off
 % Error rate in current window
 figure;
 hold on
-plot(x,1-accuracy_current_window,'r-');
+plot(x,1-accuracy_inside_window,'r-');
 title_char = strcat('Error Rate in Current Window of ', ...
                     int2str(window_size), ...
                     ' Samples');

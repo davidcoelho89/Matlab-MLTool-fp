@@ -97,16 +97,14 @@ HP_ksomef.sigma = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
-if(~strcmp(OPT.hpo,'none'))
-
 HP_som_gs = HP_som;
-
 HP_ksomgd_gs = HP_ksomgd;
-
 HP_ksomef_gs = HP_ksomef;
 
-% ToDo - Define grid of parameters
-
+if(~strcmp(OPT.hpo,'none'))
+    % Do nothing
+else
+    % ToDo - Define search space of parameters
 end
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION

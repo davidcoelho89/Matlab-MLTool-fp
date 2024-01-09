@@ -22,7 +22,7 @@ OPT.norm = 0;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 'none';   % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 1;   % decides if file will be saved
 
@@ -57,7 +57,7 @@ HP_ksomef.Vt = 0.3;          % final neighbor constant
 HP_ksomef.Von = 0;           % disable video
 HP_ksomef.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomef.knn_type = 2; 	 % Type of knn aproximation
-HP_ksomef.Ktype = 2;         % Type of Kernel
+HP_ksomef.Ktype = 1;         % Type of Kernel
 HP_ksomef.sigma = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
 
 %% CHOOSE HYPERPARAMETERS - FOR OPTIMIZATION
@@ -67,7 +67,28 @@ HP_ksomef_gs = HP_ksomef;   % Get default HP
 if(~strcmp(OPT.hpo,'none'))
     % Do nothing
 else
-    % ToDo - Define search space of parameters
+    if HP_ksomef.Ktype == 1
+        HP_ksomef_gs.theta = [0,2.^linspace(-10,10,21)];
+    elseif HP_ksomef.Ktype == 2
+        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
+    elseif HP_ksomef.Ktype == 3
+        HP_ksomef_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+        HP_ksomef_gs.alpha = 2.^linspace(-10,10,21);
+        HP_ksomef_gs.theta = [0,2.^linspace(-10,10,21)];
+    elseif HP_ksomef.Ktype == 4
+        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
+    elseif HP_ksomef.Ktype == 5
+        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
+    elseif HP_ksomef.Ktype == 6
+        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
+        HP_ksomef_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+    elseif HP_ksomef.Ktype == 7
+        HP_ksomef_gs.alpha = 2.^linspace(-10,10,21);
+        HP_ksomef_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
+    elseif HP_ksomef.Ktype == 8
+        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
+        HP_ksomef_gs.gamma = 2.^linspace(-10,10,21);
+    end
 end
 
 %% DATA LOADING, PRE-PROCESSING, VISUALIZATION

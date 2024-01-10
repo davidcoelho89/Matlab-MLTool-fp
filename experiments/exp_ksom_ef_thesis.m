@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 05;        % Number of repetitions of each algorithm
+OPT.Nr = 05;        % Number of experiment realizations
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 10;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
@@ -162,9 +162,11 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% ACCUMULATORS AND HANDLERS
 
-data_acc = cell(OPT.Nr,1);         	% Acc of labels and data division
+% Acc of labels and data division
+data_acc = cell(OPT.Nr,1);         	
 
-NAMES = {'Linear','Gaussian',...    % Acc of names for plots
+% Acc of names for plots
+NAMES = {'Linear','Gaussian',...    
          'Polynomial', 'Exponential',...
          'Cauchy', 'Log',...
          'Sigmoid', 'Kmod'};    

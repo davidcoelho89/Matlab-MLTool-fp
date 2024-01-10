@@ -47,7 +47,7 @@ for r = 1:OPT.Nr
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp(r);
-display(datestr(now));
+display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -89,7 +89,6 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 % %%%%%%%%%%% HYPERPARAMETER OPTIMIZATION %%%%%%%%%%%%%%%%
 
 % Using Random Search and Cross-Validation
-% HP = grid_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
 HP = random_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
 
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%

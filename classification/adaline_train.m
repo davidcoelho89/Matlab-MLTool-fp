@@ -20,19 +20,19 @@ function [PARout] = adaline_train(DATA,PAR)
 
 %% SET DEFAULT HYPERPARAMETERS
 
-if ((nargin == 1) || (isempty(PAR))),
+if ((nargin == 1) || (isempty(PAR)))
     PARaux.Ne = 200;       	% maximum number of training epochs
     PARaux.eta = 0.05;    	% Learning step
     PARaux.Von = 0;         % disable video 
     PAR = PARaux;
 else
-    if (~(isfield(PAR,'Ne'))),
+    if (~(isfield(PAR,'Ne')))
         PAR.Ne = 200;
     end
-    if (~(isfield(PAR,'eta'))),
+    if (~(isfield(PAR,'eta')))
         PAR.eta = 0.05;
     end
-    if (~(isfield(PAR,'Von'))),
+    if (~(isfield(PAR,'Von')))
         PAR.Von = 0;
     end
 end

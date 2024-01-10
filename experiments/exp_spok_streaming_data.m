@@ -14,7 +14,7 @@ OPT.prob2 = 1;  % Specific choice about dataset
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
 
-% Grid-Search (Test-Then-Train)
+% Random-Search (Test-Then-Train)
 
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size

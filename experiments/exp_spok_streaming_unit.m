@@ -139,12 +139,15 @@ predict_vector = zeros(Nc,Nttt);	% Hold predicted labels
 
 no_of_correct = zeros(1,Nttt);      % Hold # of correctly classified x
 no_of_errors = zeros(1,Nttt);       % Hold # of misclassified x
-
 accuracy_vector = zeros(1,Nttt);	% Hold Acc / (Acc + Err)
 
 prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
                                     % Last is for the sum
-                                    
+
+window_size = 1000;                 
+correctly_predicted_vector = zeros(1,window_size);
+accuracy_inside_window = zeros(1,Nttt);
+
 VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 %% GRID SEARCH FOR HYPERPARAMETERS OPTIMIZATION
@@ -154,7 +157,7 @@ display(datetime("now"));
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-PAR = grid_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
+PAR = random_search_ttt(DATAhpo,HP_gs,@spok_train,@spok_classify,PSp);
 
 % PAR.max_prot = 1000;
 
@@ -222,6 +225,25 @@ for n = 1:Nttt
     accuracy_vector(n) = no_of_correct(n) / ...
                         (no_of_correct(n) + no_of_errors(n));
     
+    % Hold accuracy of current window
+
+    if n > window_size
+        correctly_predicted_vector(1:n-1) = correctly_predicted_vector(2:n);
+        if (y_lbl == yh_lbl)
+            correctly_predicted_vector(n) = 1;
+        else
+            correctly_predicted_vector(n) = 0;
+        end
+        accuracy_inside_window(n) = sum(correctly_predicted_vector)/window_size;
+    else
+        if (y_lbl == yh_lbl)
+            correctly_predicted_vector(n) = 1;
+        else
+            correctly_predicted_vector(n) = 0;
+        end
+        accuracy_inside_window(n) = sum(correctly_predicted_vector(1:n))/n;
+    end
+
     % Hold Number of prototypes per Class
     
     [~,lbls] = max(PAR.Cy);
@@ -290,11 +312,24 @@ plot(x,no_of_correct,'b-');
 title('number of hits and errors')
 hold off
 
-% Percentage of Misclassified
+% Total error rate
 figure;
 hold on
 plot(x,1-accuracy_vector,'r-');
-title('Percentage of samples misclassified')
+title('Total Error Rate')
+xlabel('Time step')
+ylabel('Error Rate')
+axis([-1 length(x) -0.1 1.1])
+hold off
+
+% Error rate in current window
+figure;
+hold on
+plot(x,1-accuracy_inside_window,'r-');
+title_char = strcat('Error Rate in Current Window of ', ...
+                    int2str(window_size), ...
+                    ' Samples');
+title(title_char)
 xlabel('Time step')
 ylabel('Error Rate')
 axis([-1 length(x) -0.1 1.1])

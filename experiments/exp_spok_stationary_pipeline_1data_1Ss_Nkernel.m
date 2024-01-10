@@ -53,7 +53,7 @@ if (any(kernels == 1))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -66,7 +66,7 @@ if (any(kernels == 1))
     HP_gs.sigma = 2;
     HP_gs.gamma = 2;
     HP_gs.alpha = 1;
-    HP_gs.theta = [0,2.^linspace(-4,3,8)];
+    HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
@@ -88,7 +88,7 @@ if (any(kernels == 2))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -98,7 +98,7 @@ if (any(kernels == 2))
         HP_gs.v2 = HP_gs.v1 + 2^(-10);
     end    
     
-    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.sigma = 2.^linspace(-10,10,21);
     HP_gs.gamma = 2;
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
@@ -123,7 +123,7 @@ if (any(kernels == 3))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -135,8 +135,8 @@ if (any(kernels == 3))
     
     HP_gs.sigma = 2;
    	HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-	HP_gs.alpha = 2.^linspace(-8,2,11);
-   	HP_gs.theta = [0,2.^linspace(-4,3,8)];
+	HP_gs.alpha = 2.^linspace(-10,10,21);
+   	HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
@@ -158,7 +158,7 @@ if (any(kernels == 4))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -168,7 +168,7 @@ if (any(kernels == 4))
         HP_gs.v2 = HP_gs.v1 + 2^(-10);
     end    
     
-    HP_gs.sigma = 2.^linspace(-10,9,20);
+    HP_gs.sigma = 2.^linspace(-10,10,21);
     HP_gs.gamma = 2;
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
@@ -193,7 +193,7 @@ if (any(kernels == 5))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -225,10 +225,10 @@ if (any(kernels == 6))
     HP_gs.Ktype = 6;
     
     if(HP_gs.Ss == 1)       % ALD
-        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v1 = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)]; 
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -238,7 +238,7 @@ if (any(kernels == 6))
         HP_gs.v2 = HP_gs.v1 + 2^(-10);
     end    
     
-    HP_gs.sigma = 2.^linspace(-8,6,15);
+    HP_gs.sigma = 2.^linspace(-10,10,21);
 	HP_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
@@ -263,7 +263,7 @@ if (any(kernels == 7))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -275,8 +275,8 @@ if (any(kernels == 7))
     
     HP_gs.sigma = 2;
     HP_gs.gamma = 2;
-    HP_gs.alpha = 2.^linspace(-8,2,11);
-	HP_gs.theta = [0.001, 0.005, 0.01, 0.05, 0.1];
+    HP_gs.alpha = 2.^linspace(-10,10,21);
+	HP_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
                       str9,str10,str11,str12,str13,str14);
@@ -298,7 +298,7 @@ if (any(kernels == 8))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 2)   % Coherence
-        HP_gs.v1 = [0.001 0.01 0.1 0.3 0.5 0.7 0.9 0.99];
+        HP_gs.v1 = [0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.99 0.999];
         HP_gs.v2 = HP_gs.v1(end) + 0.001;
     elseif(HP_gs.Ss == 3)   % Novelty
         HP_gs.v1 = 2.^linspace(-10,10,21);
@@ -308,8 +308,8 @@ if (any(kernels == 8))
         HP_gs.v2 = HP_gs.v1 + 2^(-10);
     end    
     
-	HP_gs.sigma = 2.^linspace(-8,6,15);
-	HP_gs.gamma = 2.^linspace(-8,6,15);
+	HP_gs.sigma = 2.^linspace(-10,10,21);
+	HP_gs.gamma = 2.^linspace(-10,10,21);
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
 

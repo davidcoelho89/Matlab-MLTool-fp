@@ -86,9 +86,10 @@ no_of_correct = zeros(1,Nttt);      % Hold # of correctly classified x
 no_of_errors = zeros(1,Nttt);       % Hold # of misclassified x
 accuracy_vector = zeros(1,Nttt);	% Hold Acc / (Acc + Err)
 
-no_of_correct_last1000 = zeros(1,Nttt-1000);
-no_of_errors_last1000 = zeros(1,Nttt-1000);
-accuracy_vector_last1000 = zeros(1,Nttt-1000);
+window_size = 1000;
+no_of_correct_inside_window = zeros(1,Nttt-window_size);
+no_of_errors_inside_window = zeros(1,Nttt-window_size);
+accuracy_vector_inside_window = zeros(1,Nttt-window_size);
 
 prot_per_class = zeros(Nc+1,Nttt);	% Hold number of prot per class
                                     % Last is for the sum
@@ -98,7 +99,7 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 %% CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
 
 disp('begin grid search')
-disp(datestr(now));
+display(datetime("now"));
 
 % Grid Search Parameters
 
@@ -110,7 +111,7 @@ end
 
 % Get Hyperparameters Optimized and the Prototypes Initialized
 
-PAR = grid_search_ttt(DATAhpo,HPgs,@spok_train,@spok_classify,PSp);
+PAR = random_search_ttt(DATAhpo,HPgs,@spok_train,@spok_classify,PSp);
 
 % Change maximum number of prototypes
 
@@ -128,7 +129,7 @@ for n = 1:Nttt
     
     if(mod(n,1000) == 0)
         disp(n);
-        disp(datestr(now));
+        display(datetime("now"));
     end
     
     % Get current data
@@ -179,14 +180,16 @@ for n = 1:Nttt
     accuracy_vector(n) = no_of_correct(n) / ...
                         (no_of_correct(n) + no_of_errors(n));
     
-    % Hold Accuracy of last 1000 samples
+    % Hold Accuracy of last window size of samples
 
-    if(n > 1000)
-        no_of_correct_last1000(n) = no_of_correct(n) - no_of_correct(n-1000);
-        no_of_errors_last1000(n) = no_of_errors(n) - no_of_errors(n-1000);
-        accuracy_vector_last1000(n) = no_of_correct_last1000(n) / ...
-                                      (no_of_correct_last1000(n) + ...
-                                       no_of_errors_last1000(n) );
+    if(n > window_size)
+        no_of_correct_inside_window(n) = no_of_correct(n) - ...
+                                         no_of_correct(n-window_size);
+        no_of_errors_inside_window(n) = no_of_errors(n) - ...
+                                        no_of_errors(n-window_size);
+        accuracy_vector_inside_window(n) = no_of_correct_inside_window(n) / ...
+                                          (no_of_correct_inside_window(n) + ...
+                                           no_of_errors_inside_window(n) );
     end
     
     % Hold Number of prototypes per Class

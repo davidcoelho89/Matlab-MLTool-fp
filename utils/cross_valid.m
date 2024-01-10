@@ -25,6 +25,10 @@ function [CVout] = cross_valid(DATAtr,HP_probe,class_train,class_test,CVp)
 %           acc = mean accuracy for data set and parameters
 %           err = mean error for data set and parameters
 %           Ds = percentage of prototypes compared to the dataset
+%           Nneurons = number of neurons (NN based)
+%           Nsv = number of support vectors (SVC based)
+%           fsc = F1-score
+%           mcc = Matthews Correlation Coefficient
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -40,7 +44,7 @@ else
         CVp.cost = 1;
     end
     if (~(isfield(CVp,'lambda')))
-        CVp.lambda = 0.5;
+        CVp.lambda = 2;
     end
 end
 
@@ -63,6 +67,10 @@ lambda = CVp.lambda;    % trade-off between error and dictionary size
 
 accuracy = 0;          	% Init accurary
 Ds = 0;                 % Dictionary Size
+Nneurons = 0;           % Init # of neurons (NN based)
+Nsv = 0;                % Init # of support vectors (SVC based)
+fsc = 0;                % Init F1-score measure
+mcc = -1;               % Init Matthews Correlation Coefficient
 
 %% ALGORITHM
 
@@ -160,14 +168,24 @@ elseif (cost == 2)
     else
         measure = Ds + lambda * mean_error;  % Measure
     end
+
+elseif (cost == 3)
+    % ToDo - all
+
+elseif (cost == 4)
+    % ToDo - all
     
 end
 
 %% FILL OUTPUT STRUCTURE
 
-CVout.measure = measure;
-CVout.acc = mean_accuracy;
-CVout.err = mean_error;
-CVout.Ds = Ds;
+CVout.measure = measure;    % Metric using chosen hyperparemeters
+CVout.acc = mean_accuracy;  % Accuracy of trained model
+CVout.err = mean_error;     % Error of trained model
+CVout.Ds = Ds;              % Dictionary Size
+CVout.Nneurons = Nneurons;  % Number of neurons
+CVout.Nsv = Nsv;            % Number of support vectors
+CVout.fsc = fsc;            % F1-score measure
+CVout.mcc = mcc;            % Matthews Correlation Coefficient Measure
 
 %% END

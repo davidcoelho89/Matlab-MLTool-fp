@@ -29,7 +29,7 @@ vector_priori = zeros(1,Nc);    % Hold number of samples from each class
 
 [~,Ylbl] = max(Y);
 
-for c = 1:Nc,
+for c = 1:Nc
     vector_priori(c) = sum(Ylbl == c);
 end
 

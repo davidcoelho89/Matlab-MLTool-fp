@@ -27,8 +27,8 @@ end
 % Init Outputs
 Mat_boxplot_acc = zeros(n_turns,n_models);
 Mat_boxplot_err = zeros(n_turns,n_models);
-% Mat_boxplot_mcc = zeros(n_turns,n_models);
-% Mat_boxplo4 = zeros(n_turns,n_models);
+Mat_boxplot_fsc = zeros(n_turns,n_models);
+Mat_boxplot_mcc = zeros(n_turns,n_models);
 
 %% ALGORITHM
 
@@ -46,8 +46,7 @@ title('Classification Results')
 axis ([0 n_models+1 -0.05 1.05])
 
 hold on
-media1 = mean(Mat_boxplot_acc);
-plot(media1,'*k')
+plot(mean(Mat_boxplot_acc),'*k')
 hold off
 
 % Box Plot - Error
@@ -64,49 +63,42 @@ title('Classification Results')
 axis ([0 n_models+1 -0.05 1.05])
 
 hold on
-media1 = mean(Mat_boxplot_err);
-plot(media1,'*k')
+plot(mean(Mat_boxplot_err),'*k')
 hold off
 
-% Box Plot - Mcc (for class 1)
+% Box Plot - F1-score
 
-% for i = 1:n_models,
-%     for j = 1:n_turns,
-%         Mat_boxplot_mcc(j,i) = STATS{i}.mcc{j}(1);
-%     end
-% end
-% 
-% figure; boxplot(Mat_boxplot_mcc, 'label', NAMES);
-% set(gcf,'color',[1 1 1])        % Removes Gray Background
-% ylabel('Mcc')
-% xlabel('Classifiers')
-% title('Matthews Correlation Coefficient')
-% axis ([0 n_models+1 -0.05 1.05])
-% 
-% hold on
-% media1 = mean(Mat_boxplot_mcc);
-% plot(media1,'*k')
-% hold off
+for i = 1:n_models
+    Mat_boxplot_fsc(:,i) = STATS{i}.fsc';
+end
 
-% Box Plot - Auc (for class 1)
+figure; boxplot(Mat_boxplot_fsc, 'label', NAMES);
+set(gcf,'color',[1 1 1])        % Removes Gray Background
+ylabel('F1-Score (macro-averaged)')
+xlabel('Classifiers')
+title('Classification Results')
+axis ([0 n_models+1 -0.05 1.05])
 
-% for i = 1:n_models,
-%     for j = 1:n_turns,
-%         Mat_boxplot_auc(j,i) = STATS{i}.mcc{j}(1);
-%     end
-% end
-% 
-% figure; boxplot(Mat_boxplot_auc, 'label', NAMES);
-% set(gcf,'color',[1 1 1])        % Removes Gray Background
-% ylabel('Auc')
-% xlabel('Classifiers')
-% title('Area under the Curve')
-% axis ([0 n_models+1 -0.05 1.05])
-% 
-% hold on
-% media1 = mean(Mat_boxplot_auc);
-% plot(media1,'*k')
-% hold off
+hold on
+plot(mean(Mat_boxplot_fsc),'*k')
+hold off
+
+% Box Plot - Matthews Correlation Coefficient
+
+for i = 1:n_models
+    Mat_boxplot_mcc(:,i) = STATS{i}.mcc';
+end
+
+figure; boxplot(Mat_boxplot_mcc, 'label', NAMES);
+set(gcf,'color',[1 1 1])        % Removes Gray Background
+ylabel('MCC (multiclass)')
+xlabel('Classifiers')
+title('Classification Results')
+axis ([0 n_models+1 -0.05 1.05])
+
+hold on
+plot(mean(Mat_boxplot_mcc),'*k')
+hold off
 
 %% FILL OUTPUT STRUCTURE
 

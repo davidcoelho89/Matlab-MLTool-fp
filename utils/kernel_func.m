@@ -107,7 +107,6 @@ elseif (Ktype == 7)     % Sigmoid
 elseif (Ktype == 8)     % Kmod
     sigma = PAR.sigma;
     gamma = PAR.gamma;
-    a = 1/(exp(gamma/sigma^2)-1);
 end
 
 %% ALGORITHM
@@ -127,6 +126,7 @@ elseif (Ktype == 6)     % Log
 elseif (Ktype == 7)     % Sigmoid (hyperbolic tangent)
     Kxy = tanh(alpha * x' * y + theta);
 elseif (Ktype == 8)     % Kmod
+    a = 1/(exp(gamma/sigma^2)-1);
     Kxy = a*(exp(gamma/(norm(x-y)^2+sigma^2))-1);
 else                    % Use dot product if a wrong option was chosen
     Kxy = (x' * y);

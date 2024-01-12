@@ -18,7 +18,8 @@ OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 10;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
-OPT.norm = 3;       % Normalization definition
+OPT.norm = 3;       % Normali
+% zation definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training

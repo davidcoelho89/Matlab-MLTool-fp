@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% KSOM-EF Comparison Tests
+% KSOM-EF Comparison with N Kernels
 % Author: David Nascimento Coelho
-% Last Update: 2023/03/05
+% Last Update: 2024/01/12
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,11 +14,12 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 05;        % Number of experiment realizations
+OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 10;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
-OPT.norm = 3;       % Normalization definition
+OPT.norm = 3;       % Normali
+% zation definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
@@ -61,92 +62,73 @@ HP_common.knn_type = 2;         % Type of knn aproximation
 
 HP_ksomef_lin = HP_common;      % Get common HP
 HP_ksomef_lin.Ktype = 1;        % Type of Kernel
-HP_ksomef_lin.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_lin.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_lin.theta = 0;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_lin.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_lin.theta = 0;     	% Dot product adding
 
 HP_ksomef_gau = HP_common;      % Get common HP
 HP_ksomef_gau.Ktype = 2;        % Type of Kernel
-HP_ksomef_gau.sigma = 0.5;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_gau.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_gau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_gau.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_gau.sigma = 0.5;     	% Kernel width
 
 HP_ksomef_pol = HP_common;      % Get common HP
 HP_ksomef_pol.Ktype = 3;        % Type of Kernel
-HP_ksomef_pol.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_pol.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_pol.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_pol.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_pol.alpha = 1;    	% Dot product multiplier
+HP_ksomef_pol.theta = 1;     	% Dot product adding
+HP_ksomef_pol.gamma = 2;       	% Polynomial order
 
 HP_ksomef_exp = HP_common;      % Get common HP
 HP_ksomef_exp.Ktype = 4;        % Type of Kernel
-HP_ksomef_exp.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_exp.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_exp.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_exp.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_exp.sigma = 0.5;     	% Kernel width
 
 HP_ksomef_cau = HP_common;      % Get common HP
 HP_ksomef_cau.Ktype = 5;        % Type of Kernel
-HP_ksomef_cau.sigma = 0.5;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_cau.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_cau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_cau.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_cau.sigma = 0.5;     	% Kernel width
 
 HP_ksomef_log = HP_common;      % Get common HP
 HP_ksomef_log.Ktype = 6;        % Type of Kernel
-HP_ksomef_log.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_log.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_log.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_log.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_log.sigma = 2;     	% Kernel width
+HP_ksomef_log.gamma = 2;       	% Exponential order
 
 HP_ksomef_sig = HP_common;      % Get common HP
 HP_ksomef_sig.Ktype = 7;        % Type of Kernel
-HP_ksomef_sig.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_sig.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_sig.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_sig.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_sig.alpha = 0.1;    	% Dot product multiplier
+HP_ksomef_sig.theta = 0.1;     	% Dot product adding
 
 HP_ksomef_kmo = HP_common;      % Get common HP
 HP_ksomef_kmo.Ktype = 8;        % Type of Kernel
-HP_ksomef_kmo.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_kmo.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_kmo.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_kmo.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_kmo.sigma = 2;     	% Kernel width
+HP_ksomef_kmo.gamma = 2;       	% Exponential order
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
 if(~strcmp(OPT.hpo,'none'))
 
 HPgs_ksomef_lin = HP_ksomef_lin;
-HPgs_ksomef_lin.theta = [0,2.^linspace(-4,3,8)];
+HPgs_ksomef_lin.theta = [0,2.^linspace(-10,10,21)];
 
 HPgs_ksomef_gau = HP_ksomef_gau;
-HPgs_ksomef_gau.sigma = 2.^linspace(-6,5,12);
+HPgs_ksomef_gau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_pol = HP_ksomef_pol;
 HPgs_ksomef_pol.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-HPgs_ksomef_pol.alpha = 2.^linspace(-8,2,11); % 1;
-HPgs_ksomef_pol.theta = [0,2.^linspace(-4,3,8)]; % 0;
+HPgs_ksomef_pol.alpha = 2.^linspace(-10,10,21);
+HPgs_ksomef_pol.theta = [0,2.^linspace(-10,10,21)];
 
 HPgs_ksomef_exp = HP_ksomef_exp;
-HPgs_ksomef_exp.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomef_exp.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_cau = HP_ksomef_cau;
-HPgs_ksomef_cau.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomef_cau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_log = HP_ksomef_log;
-HPgs_ksomef_log.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomef_log.sigma = 2.^linspace(-10,10,21);
 HPgs_ksomef_log.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
 
 HPgs_ksomef_sig = HP_ksomef_sig;
-HPgs_ksomef_sig.alpha = 2.^linspace(-8,2,11);
-HPgs_ksomef_sig.theta = [0.001, 0.005, 0.01, 0.05, 0.1];
+HPgs_ksomef_sig.alpha = 2.^linspace(-10,10,21);
+HPgs_ksomef_sig.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
 HPgs_ksomef_kmo = HP_ksomef_kmo;
-HPgs_ksomef_kmo.sigma = 2.^linspace(-8,6,15);
-HPgs_ksomef_kmo.gamma = 2.^linspace(-8,6,15);
+HPgs_ksomef_kmo.sigma = 2.^linspace(-10,10,21);
+HPgs_ksomef_kmo.gamma = 2.^linspace(-10,10,21);
 
 end
 

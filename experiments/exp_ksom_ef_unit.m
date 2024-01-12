@@ -63,9 +63,7 @@ HP_ksomef.Ktype = 1;         % Type of Kernel
 
 HP_ksomef_gs = HP_ksomef;   % Get default HP
 
-if(strcmp(OPT.hpo,'none'))
-    % Do nothing
-else
+if(~strcmp(OPT.hpo,'none'))
     if HP_ksomef.Ktype == 1
         HP_ksomef_gs.theta = [0,2.^linspace(-10,10,21)];
     elseif HP_ksomef.Ktype == 2

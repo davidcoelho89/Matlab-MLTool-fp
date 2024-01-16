@@ -58,7 +58,7 @@ HP_ksomef.Vt = 0.3;          % final neighbor constant
 HP_ksomef.Von = 0;           % disable video
 HP_ksomef.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomef.knn_type = 2; 	 % Type of knn aproximation
-HP_ksomef.Ktype = 2;         % Type of Kernel
+HP_ksomef.Ktype = 1;         % Type of Kernel
 
 %% CHOOSE HYPERPARAMETERS - FOR OPTIMIZATION
 

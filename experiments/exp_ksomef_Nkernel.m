@@ -32,7 +32,7 @@ OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Prototypes' labeling strategy
 
-prot_lbl = 1;               % = 1 (MV) / 2 (AD) / 3 (MD)
+prot_lbl = 3;               % = 1 (MV) / 2 (AD) / 3 (MD)
 
 % Metaparameters
 
@@ -44,7 +44,7 @@ MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 %% CHOOSE FIXED HYPERPARAMETERS 
 
 HP_common.lbl = prot_lbl;       % Neurons' labeling function;
-HP_common.ep = 50;              % max number of epochs
+HP_common.Nep = 50;             % max number of epochs
 HP_common.k = [5 4];            % number of neurons (prototypes)
 HP_common.init = 02;            % neurons' initialization
 HP_common.dist = 02;            % type of distance

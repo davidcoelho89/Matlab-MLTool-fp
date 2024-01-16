@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% KSOM-EF Comparison Tests
+% KSOM-EF Comparison with N Kernels
 % Author: David Nascimento Coelho
-% Last Update: 2023/03/05
+% Last Update: 2024/01/12
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,7 +14,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 05;        % Number of experiment realizations
+OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'ksomef'; % Which Classifier will be used
 OPT.prob = 10;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
@@ -36,7 +36,7 @@ prot_lbl = 1;               % = 1 (MV) / 2 (AD) / 3 (MD)
 
 % Metaparameters
 
-MP.max_it = 020;   	% Maximum number of iterations (random search)
+MP.max_it = 100;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
 MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
@@ -45,7 +45,7 @@ MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 HP_common.lbl = prot_lbl;       % Neurons' labeling function;
 HP_common.ep = 50;              % max number of epochs
-HP_common.lin.k = [5 4];        % number of neurons (prototypes)
+HP_common.k = [5 4];            % number of neurons (prototypes)
 HP_common.init = 02;            % neurons' initialization
 HP_common.dist = 02;            % type of distance
 HP_common.learn = 02;           % type of learning step
@@ -61,92 +61,81 @@ HP_common.knn_type = 2;         % Type of knn aproximation
 
 HP_ksomef_lin = HP_common;      % Get common HP
 HP_ksomef_lin.Ktype = 1;        % Type of Kernel
-HP_ksomef_lin.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_lin.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_lin.theta = 0;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_lin.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_lin.theta = 0;     	% Dot product adding
 
 HP_ksomef_gau = HP_common;      % Get common HP
 HP_ksomef_gau.Ktype = 2;        % Type of Kernel
-HP_ksomef_gau.sigma = 0.5;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_gau.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_gau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_gau.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_gau.sigma = 0.5;     	% Kernel width
 
 HP_ksomef_pol = HP_common;      % Get common HP
 HP_ksomef_pol.Ktype = 3;        % Type of Kernel
-HP_ksomef_pol.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_pol.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_pol.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_pol.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_pol.alpha = 1;    	% Dot product multiplier
+HP_ksomef_pol.theta = 1;     	% Dot product adding
+HP_ksomef_pol.gamma = 2;       	% Polynomial order
 
 HP_ksomef_exp = HP_common;      % Get common HP
 HP_ksomef_exp.Ktype = 4;        % Type of Kernel
-HP_ksomef_exp.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_exp.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_exp.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_exp.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_exp.sigma = 0.5;     	% Kernel width
 
 HP_ksomef_cau = HP_common;      % Get common HP
 HP_ksomef_cau.Ktype = 5;        % Type of Kernel
-HP_ksomef_cau.sigma = 0.5;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_cau.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_cau.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_cau.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_cau.sigma = 0.5;     	% Kernel width
 
 HP_ksomef_log = HP_common;      % Get common HP
 HP_ksomef_log.Ktype = 6;        % Type of Kernel
-HP_ksomef_log.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_log.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_log.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_log.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_log.sigma = 2;     	% Kernel width
+HP_ksomef_log.gamma = 2;       	% Exponential order
 
 HP_ksomef_sig = HP_common;      % Get common HP
 HP_ksomef_sig.Ktype = 7;        % Type of Kernel
-HP_ksomef_sig.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_sig.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_sig.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_sig.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_sig.alpha = 0.1;    	% Dot product multiplier
+HP_ksomef_sig.theta = 0.1;     	% Dot product adding
 
 HP_ksomef_kmo = HP_common;      % Get common HP
 HP_ksomef_kmo.Ktype = 8;        % Type of Kernel
-HP_ksomef_kmo.sigma = 2;     	% Kernel width (gau, exp, cauchy, log, kmod)
-HP_ksomef_kmo.alpha = 0.1;    	% Dot product multiplier (poly 1 / sigm 0.1)
-HP_ksomef_kmo.theta = 0.1;     	% Dot product adding (poly 1 / sigm 0.1)
-HP_ksomef_kmo.gamma = 2;       	% polynomial order (poly 2 or 3)
+HP_ksomef_kmo.sigma = 2;     	% Kernel width
+HP_ksomef_kmo.gamma = 2;       	% Exponential order
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
 if(~strcmp(OPT.hpo,'none'))
 
 HPgs_ksomef_lin = HP_ksomef_lin;
-HPgs_ksomef_lin.theta = [0,2.^linspace(-4,3,8)];
-
+HPgs_ksomef_lin.k = {HP_ksomef_lin.k};
+HPgs_ksomef_lin.theta = [0,2.^linspace(-10,10,21)];
+    
 HPgs_ksomef_gau = HP_ksomef_gau;
-HPgs_ksomef_gau.sigma = 2.^linspace(-6,5,12);
+HPgs_ksomef_gau.k = {HP_ksomef_gau.k};
+HPgs_ksomef_gau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_pol = HP_ksomef_pol;
+HPgs_ksomef_pol.k = {HP_ksomef_pol.k};
 HPgs_ksomef_pol.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-HPgs_ksomef_pol.alpha = 2.^linspace(-8,2,11); % 1;
-HPgs_ksomef_pol.theta = [0,2.^linspace(-4,3,8)]; % 0;
+HPgs_ksomef_pol.alpha = 2.^linspace(-10,10,21);
+HPgs_ksomef_pol.theta = [0,2.^linspace(-10,10,21)];
 
 HPgs_ksomef_exp = HP_ksomef_exp;
-HPgs_ksomef_exp.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomef_exp.k = {HP_ksomef_exp.k};
+HPgs_ksomef_exp.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_cau = HP_ksomef_cau;
-HPgs_ksomef_cau.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomef_cau.k = {HP_ksomef_cau.k};
+HPgs_ksomef_cau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_log = HP_ksomef_log;
-HPgs_ksomef_log.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomef_log.k = {HP_ksomef_log.k};
+HPgs_ksomef_log.sigma = 2.^linspace(-10,10,21);
 HPgs_ksomef_log.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
 
 HPgs_ksomef_sig = HP_ksomef_sig;
-HPgs_ksomef_sig.alpha = 2.^linspace(-8,2,11);
-HPgs_ksomef_sig.theta = [0.001, 0.005, 0.01, 0.05, 0.1];
+HPgs_ksomef_sig.k = {HP_ksomef_sig.k};
+HPgs_ksomef_sig.alpha = 2.^linspace(-10,10,21);
+HPgs_ksomef_sig.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
 HPgs_ksomef_kmo = HP_ksomef_kmo;
-HPgs_ksomef_kmo.sigma = 2.^linspace(-8,6,15);
-HPgs_ksomef_kmo.gamma = 2.^linspace(-8,6,15);
+HPgs_ksomef_kmo.k = {HP_ksomef_kmo.k};
+HPgs_ksomef_kmo.sigma = 2.^linspace(-10,10,21);
+HPgs_ksomef_kmo.gamma = 2.^linspace(-10,10,21);
 
 end
 
@@ -162,15 +151,16 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% ACCUMULATORS AND HANDLERS
 
-% Acc of labels and data division
-data_acc = cell(OPT.Nr,1);         	
-
 % Acc of names for plots
 NAMES = {'Linear','Gaussian',...    
          'Polynomial', 'Exponential',...
          'Cauchy', 'Log',...
          'Sigmoid', 'Kmod'};    
 
+% Acc of labels and data division
+data_acc = cell(OPT.Nr,1);         	
+
+% Group Stats from Tr and Ts
 nstats_all_tr = cell(length(NAMES),1);
 nstats_all_ts = cell(length(NAMES),1);
 
@@ -224,8 +214,14 @@ ksomef_kmo_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
-OPT.filename = strcat(DATA.name,'_prob2_',int2str(OPT.prob2),'_ksomef',...
-                      '_hpo_',OPT.hpo,'_norm',int2str(OPT.norm),'_1nn');
+OPT.filename = strcat(DATA.name,'_',int2str(OPT.prob2),'_ksomef', ...
+                      '_hpo_',OPT.hpo, ...
+                      '_norm',int2str(OPT.norm), ...
+                      '_lbl_',int2str(prot_lbl), ...
+                      '_nn_',int2str(HP_common.K), ...
+                      '_Nep_', int2str(HP_common.Nep), ...
+                      '_Nprot_',int2str(prod(HP_common.k)), ...
+                      '_Kt_all');
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 
@@ -482,16 +478,58 @@ end
 %% SAVE DATA
 
 if(OPT.savefile)
+    
     variables.nstats_all_tr = nstats_all_tr;
     variables.nstats_all_ts = nstats_all_ts;
+
     variables.ksomef_lin_par_acc = ksomef_lin_par_acc;
+    variables.ksomef_lin_out_tr_acc = ksomef_lin_out_tr_acc;
+    variables.ksomef_lin_stats_tr_acc = ksomef_lin_stats_tr_acc;
+    variables.ksomef_lin_out_ts_acc = ksomef_lin_out_ts_acc;
+    variables.ksomef_lin_stats_ts_acc = ksomef_lin_stats_ts_acc;
+
     variables.ksomef_gau_par_acc = ksomef_gau_par_acc;
+    variables.ksomef_gau_out_tr_acc = ksomef_gau_out_tr_acc;
+    variables.ksomef_gau_stats_tr_acc = ksomef_gau_stats_tr_acc;
+    variables.ksomef_gau_out_ts_acc = ksomef_gau_out_ts_acc;
+    variables.ksomef_gau_stats_ts_acc = ksomef_gau_stats_ts_acc;
+
     variables.ksomef_pol_par_acc = ksomef_pol_par_acc;
+    variables.ksomef_pol_out_tr_acc = ksomef_pol_out_tr_acc;
+    variables.ksomef_pol_stats_tr_acc = ksomef_pol_stats_tr_acc;
+    variables.ksomef_pol_out_ts_acc = ksomef_pol_out_ts_acc;
+    variables.ksomef_pol_stats_ts_acc = ksomef_pol_stats_ts_acc;
+
     variables.ksomef_exp_par_acc = ksomef_exp_par_acc;
+    variables.ksomef_exp_out_tr_acc = ksomef_exp_out_tr_acc;
+    variables.ksomef_exp_stats_tr_acc = ksomef_exp_stats_tr_acc;
+    variables.ksomef_exp_out_ts_acc = ksomef_exp_out_ts_acc;
+    variables.ksomef_exp_stats_ts_acc = ksomef_exp_stats_ts_acc;
+    
     variables.ksomef_cau_par_acc = ksomef_cau_par_acc;
+    variables.ksomef_cau_out_tr_acc = ksomef_cau_out_tr_acc;
+    variables.ksomef_cau_stats_tr_acc = ksomef_cau_stats_tr_acc;
+    variables.ksomef_cau_out_ts_acc = ksomef_cau_out_ts_acc;
+    variables.ksomef_cau_stats_ts_acc = ksomef_cau_stats_ts_acc;
+
     variables.ksomef_log_par_acc = ksomef_log_par_acc;
+    variables.ksomef_log_out_tr_acc = ksomef_log_out_tr_acc;
+    variables.ksomef_log_stats_tr_acc = ksomef_log_stats_tr_acc;
+    variables.ksomef_log_out_ts_acc = ksomef_log_out_ts_acc;
+    variables.ksomef_log_stats_ts_acc = ksomef_log_stats_ts_acc;
+
     variables.ksomef_sig_par_acc = ksomef_sig_par_acc;
+    variables.ksomef_sig_out_tr_acc = ksomef_sig_out_tr_acc;
+    variables.ksomef_sig_stats_tr_acc = ksomef_sig_stats_tr_acc;
+    variables.ksomef_sig_out_ts_acc = ksomef_sig_out_ts_acc;
+    variables.ksomef_sig_stats_ts_acc = ksomef_sig_stats_ts_acc;
+    
     variables.ksomef_kmo_par_acc = ksomef_kmo_par_acc;
+    variables.ksomef_kmo_out_tr_acc = ksomef_kmo_out_tr_acc;
+    variables.ksomef_kmo_stats_tr_acc = ksomef_kmo_stats_tr_acc;
+    variables.ksomef_kmo_out_ts_acc = ksomef_kmo_out_ts_acc;
+    variables.ksomef_kmo_stats_ts_acc = ksomef_kmo_stats_ts_acc;
+
     disp(variables);
     save(OPT.filename,'variables');
     clear variables;

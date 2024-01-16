@@ -14,15 +14,15 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 03;        % Number of repetitions of each algorithm
+OPT.Nr = 03;        % Number of experiment realizations
 OPT.alg = 'ksom';   % Which Classifier will be used
 OPT.prob = 06;      % Which problem will be solved / used
 OPT.prob2 = 01;     % When it needs an specification of data set
-OPT.norm = 0;       % Normalization definition
+OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 02;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training
-OPT.hpo = 'none';   % 'grid' ; 'random' ; 'none'
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 OPT.savefile = 0;   % decides if file will be saved
 
@@ -42,58 +42,32 @@ MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-HP_som.lbl = prot_lbl;      % Neurons' labeling function
-HP_som.ep = 200;            % max number of epochs
-HP_som.k = [5 4];           % number of neurons (prototypes)
-HP_som.init = 02;           % neurons' initialization
-HP_som.dist = 02;           % type of distance
-HP_som.learn = 02;          % type of learning step
-HP_som.No = 0.7;            % initial learning step
-HP_som.Nt = 0.01;           % final learnin step
-HP_som.Nn = 01;             % number of neighbors
-HP_som.neig = 03;           % type of neighborhood function
-HP_som.Vo = 0.8;            % initial neighborhood constant
-HP_som.Vt = 0.3;            % final neighborhood constant
-HP_som.Von = 0;             % disable video
-HP_som.K = 1;            	% Number of nearest neighbors (classify)
-HP_som.knn_type = 2;        % Type of knn aproximation
+HP_common.lbl = prot_lbl;   % Neurons' labeling function
+HP_common.ep = 200;         % max number of epochs
+HP_common.k = [5 4];        % number of neurons (prototypes)
+HP_common.init = 02;        % neurons' initialization
+HP_common.dist = 02;        % type of distance
+HP_common.learn = 02;       % type of learning step
+HP_common.No = 0.7;         % initial learning step
+HP_common.Nt = 0.01;        % final learnin step
+HP_common.Nn = 01;          % number of neighbors
+HP_common.neig = 03;        % type of neighborhood function
+HP_common.Vo = 0.8;         % initial neighborhood constant
+HP_common.Vt = 0.3;         % final neighborhood constant
+HP_common.Von = 0;          % disable video
+HP_common.K = 1;            % Number of nearest neighbors (classify)
+HP_common.knn_type = 2;     % Type of knn aproximation
+
+HP_som = HP_common;         % Get common HP
 HP_som.Ktype = 0;           % Non-kernelized Algorithm
 
-HP_ksomgd.lbl = prot_lbl;    % Neurons' labeling function
-HP_ksomgd.ep = 200;          % max number of epochs
-HP_ksomgd.k = [5 4];         % number of neurons (prototypes)
-HP_ksomgd.init = 02;         % neurons' initialization
-HP_ksomgd.dist = 02;    	 % type of distance
-HP_ksomgd.learn = 02;   	 % type of learning step
-HP_ksomgd.No = 0.7;     	 % initial learning step
-HP_ksomgd.Nt = 0.01;         % final learning step
-HP_ksomgd.Nn = 01;           % number of neighbors
-HP_ksomgd.neig = 03;         % type of neighbor function
-HP_ksomgd.Vo = 0.8;          % initial neighbor constant
-HP_ksomgd.Vt = 0.3;     	 % final neighbor constant
-HP_ksomgd.Von = 0;           % disable video
-HP_ksomgd.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomgd.knn_type = 2;      % Type of knn aproximation
-HP_ksomgd.Ktype = 1;         % Type of Kernel
-HP_ksomgd.sigma = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
+HP_ksomgd = HP_common;      % Get common HP
+HP_ksomgd.Ktype = 2;        % Type of Kernel
+HP_ksomgd.sigma = 0.5;   	% Kernel width
 
-HP_ksomef.lbl = prot_lbl;	 % Neurons' labeling function
-HP_ksomef.ep = 200;          % max number of epochs
-HP_ksomef.k = [5 4];         % number of neurons (prototypes)
-HP_ksomef.init = 02;         % neurons' initialization
-HP_ksomef.dist = 02;         % type of distance
-HP_ksomef.learn = 02;        % type of learning step
-HP_ksomef.No = 0.7;          % initial learning step
-HP_ksomef.Nt = 0.01;         % final learning step
-HP_ksomef.Nn = 01;           % number of neighbors
-HP_ksomef.neig = 03;         % type of neighbor function
-HP_ksomef.Vo = 0.8;          % initial neighbor constant
-HP_ksomef.Vt = 0.3;          % final neighbor constant
-HP_ksomef.Von = 0;           % disable video
-HP_ksomef.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomef.knn_type = 2; 	 % Type of knn aproximation
-HP_ksomef.Ktype = 1;         % Type of Kernel
-HP_ksomef.sigma = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
+HP_ksomef = HP_common;      % Get common HP
+HP_ksomef.Ktype = 2;        % Type of Kernel
+HP_ksomef.sigma = 0.5;      % Kernel width
 
 %% HYPERPARAMETERS - FOR OPTIMIZATION
 
@@ -102,8 +76,6 @@ HP_ksomgd_gs = HP_ksomgd;
 HP_ksomef_gs = HP_ksomef;
 
 if(~strcmp(OPT.hpo,'none'))
-    % Do nothing
-else
     % ToDo - Define search space of parameters
 end
 

@@ -64,25 +64,49 @@ end
 
 % Init Auxiliary Variables
 
-max_iterations = CVp.max_it;    % Maximum number of iterations
+indexes_matrix = rand(HP_number,CVp.max_it);
+for i = 1:HP_number
+    indexes_matrix(i,:) = ceil(indexes_matrix(i,:)*HP_index_max(i));
+end
+
+% Debug: verify values of randomly generated indexes
+
+% histogram(indexes_matrix(HP_number,:));
 
 %% ALGORITHM
 
-for turn = 1:max_iterations
+for turn = 1:CVp.max_it
     
     % Define Hyperparameters that will be tested
     
     for i = 1:HP_number
-        HP_name = HP_names{i};                  % Get HP name
-        HP_values = HPgs.(HP_name);             % Get HP values vector
-        ind_rand = randperm(HP_index_max(i));   % Get random indexes
-        index = ind_rand(1);                    % Get first random index
+        HP_name = HP_names{i};
+        HP_values = HPgs.(HP_name);
         if(iscell(HP_values))
-            HP_probe.(HP_name) = HP_values{index};	% Get HP value
+            HP_probe.(HP_name) = HP_values{indexes_matrix(i,turn)};
         else
-            HP_probe.(HP_name) = HP_values(index);	% Get HP value
+            HP_probe.(HP_name) = HP_values(indexes_matrix(i,turn));	
         end
     end
+
+%     for i = 1:HP_number
+%         
+%         HP_name = HP_names{i};                  % Get HP name
+%         HP_values = HPgs.(HP_name);             % Get HP values vector
+%         
+%         if(HP_index_max(i)) == 1
+%             index = 1;
+%         else
+%             ind_rand = randperm(HP_index_max(i));   % Get rand indexes
+%             index = ind_rand(1);                    % Get first rand index
+%         end
+%         
+%         if(iscell(HP_values))
+%             HP_probe.(HP_name) = HP_values{index};	% Get HP value
+%         else
+%             HP_probe.(HP_name) = HP_values(index);	% Get HP value
+%         end
+%     end
     
     % Cross Validation
     

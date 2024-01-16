@@ -12,10 +12,11 @@ format long e;  % Output data style (float)
 
 %% MOTOR FAILURE (02 - balanced), KSOMEF, HPO RANDOM, ONE KERNEL
 
+% Just need to modify the number after Kt (from 1 to 8)
 results = load('motorFailure_prob2_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Kt_1.mat');
 
 NAMES = results.NAMES;
-
+disp(NAMES);
 
 %% MOTOR FAILURE (01 - unbalanced), KSOMEF, HPO RANDOM, VARIOUS KERNELS
 

@@ -73,10 +73,17 @@ for turn = 1:max_iterations
     % Define Hyperparameters that will be tested
     
     for i = 1:HP_number
+        
         HP_name = HP_names{i};                  % Get HP name
         HP_values = HPgs.(HP_name);             % Get HP values vector
-        ind_rand = randperm(HP_index_max(i));   % Get random indexes
-        index = ind_rand(1);                    % Get first random index
+        
+        if(HP_index_max(i)) == 1
+            index = 1;
+        else
+            ind_rand = randperm(HP_index_max(i));   % Get rand indexes
+            index = ind_rand(1);                    % Get first rand index
+        end
+        
         if(iscell(HP_values))
             HP_probe.(HP_name) = HP_values{index};	% Get HP value
         else

@@ -32,13 +32,12 @@ function [nSTATS] = class_stats_nturns(STATS_acc)
 %           err_cv = Coefficient of variation       [cte]
 %
 %           roc_t = threshold                       [1 x t]
-%           roc_tpr = true positive rate            [1 x t]
-%           (a.k.a. recall, sensitivity)
-%           roc_spec = specificity                  [1 x t]
-%           (a.k.a. true negative rate) 
-%           roc_fpr = false positive rate           [1 x t]
 %           roc_prec = precision                    [1 x t]
 %           roc_rec = recall                        [1 x t]
+%             (a.k.a. TPR or Sensitivity)
+%           roc_spec = specificity                  [1 x t]
+%             (a.k.a. TNR)
+%           roc_fpr = false positive rate           [1 x t]
 %
 %           auc = area under the curve              [1 x t]
 %
@@ -100,11 +99,10 @@ mcc_cv = 0;                 % Coefficient of Variation of mcc
 if(isfield(STATS_acc{1},'roc_t'))
 
     roc_t = cell(1,t);          % threshold of roc curve
-    roc_tpr = cell(1,t);        % true positive rate
-    roc_spec = cell(1,t);       % specificity
-    roc_fpr = cell(1,t);        % false positive rate
     roc_prec = cell(1,t);       % precision
     roc_rec = cell(1,t);        % recall
+    roc_spec = cell(1,t);       % specificity
+    roc_fpr = cell(1,t);        % false positive rate
     auc = cell(1,t);            % area under the curve
 
 end
@@ -158,11 +156,10 @@ for i = 1:t
     % ROC parameters
     if(isfield(STATS,'roc_t'))
         roc_t{i} = STATS.roc_t;
-        roc_tpr{i} = STATS.roc_tpr;
-        roc_spec{i} = STATS.roc_spec;
-        roc_fpr{i}  = STATS.roc_fpr;
         roc_prec{i} = STATS.roc_prec;
         roc_rec{i} = STATS.roc_rec;
+        roc_spec{i} = STATS.roc_spec;
+        roc_fpr{i}  = STATS.roc_fpr;
         auc{i} = STATS.auc;
     end
     
@@ -242,11 +239,10 @@ nSTATS.mcc_cv = mcc_cv;
 
 if(isfield(STATS_acc{1},'roc_t'))
     nSTATS.roc_t = roc_t;
-    nSTATS.roc_tpr = roc_tpr;
-    nSTATS.roc_spec = roc_spec;
-    nSTATS.roc_fpr = roc_fpr;
     nSTATS.roc_prec = roc_prec;
     nSTATS.roc_rec = roc_rec;
+    nSTATS.roc_spec = roc_spec;
+    nSTATS.roc_fpr = roc_fpr;
     nSTATS.auc = auc;
 end
 

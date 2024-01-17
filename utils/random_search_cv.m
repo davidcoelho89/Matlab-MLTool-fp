@@ -6,21 +6,23 @@ function [HPoptm] = random_search_cv(DATAtr,HPgs,class_train,class_test,CVp)
 %
 %   Input:
 %       DATAtr.
-%           input = training attributes                            [p x N]
-%           output = training labels                               [Nc x N]
-%       HPgs = hyperparameters for random search                   [struct]
+%           input = training attributes                                 [p x N]
+%           output = training labels                                    [Nc x N]
+%       HPgs = hyperparameters for random search                        [struct]
 %              (vectors or cells containing values that can be tested)
 %       class_train = handler for classifier's training function
 %       class_test = handler for classifier's test function       
 %       CVp.
-%           max_it = maximum number of iterations                   [cte]
-%           fold = number of data partitions for cross validation	[cte]
-%           cost = Which cost function will be used                 [cte]
+%           max_it = maximum number of iterations                       [cte]
+%           fold = number of data partitions for cross validation	    [cte]
+%           cost = Which cost function will be used                     [cte]
 %               1: Error (any classifier)
 %               2: Error and dictionary size (prototype based)
 %               3: Error and number of SV (SVC based)
 %               4: Error and number of neurons (NN based)
-%           lambda = trade-off between error and other parameters  	[cte]
+%               5: Error, dictionary size, f1-score
+%           lambda = trade-off between error and other parameters  	    [cte]
+%           gamma = trade-off between f1s (or mcc) and other parameters [cte]
 %   Output:
 %       HPoptm = Optimum hyperparameters of classifier for dataset [struct]
 
@@ -31,6 +33,7 @@ if ((nargin == 4) || (isempty(CVp)))
     CVp.fold = 5;
     CVp.cost = 1;
     CVp.lambda = 0.5;
+    CVp.gamma = 0.1;
 else
     if (~(isfield(CVp,'max_it')))
         CVp.max_it = 10;
@@ -43,6 +46,9 @@ else
     end
     if (~(isfield(CVp,'lambda')))
         CVp.lambda = 0.5;
+    end
+    if (~(isfield(CVp,'gamma')))
+        CVp.gamma = 0.1;
     end
 end
 
@@ -88,25 +94,6 @@ for turn = 1:CVp.max_it
             HP_probe.(HP_name) = HP_values(indexes_matrix(i,turn));	
         end
     end
-
-%     for i = 1:HP_number
-%         
-%         HP_name = HP_names{i};                  % Get HP name
-%         HP_values = HPgs.(HP_name);             % Get HP values vector
-%         
-%         if(HP_index_max(i)) == 1
-%             index = 1;
-%         else
-%             ind_rand = randperm(HP_index_max(i));   % Get rand indexes
-%             index = ind_rand(1);                    % Get first rand index
-%         end
-%         
-%         if(iscell(HP_values))
-%             HP_probe.(HP_name) = HP_values{index};	% Get HP value
-%         else
-%             HP_probe.(HP_name) = HP_values(index);	% Get HP value
-%         end
-%     end
     
     % Cross Validation
     

@@ -236,7 +236,7 @@ if (any(kernels == 6))
         HP_gs.v1 = 2.^linspace(-10,10,21);
         HP_gs.v2 = HP_gs.v1 + 2^(-10);
     elseif(HP_gs.Ss == 4)   % Surprise
-        HP_gs.v1 = 2.^linspace(-10,10,21);
+        HP_gs.v1 = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
         HP_gs.v2 = HP_gs.v1 + 2^(-10);
     end
     

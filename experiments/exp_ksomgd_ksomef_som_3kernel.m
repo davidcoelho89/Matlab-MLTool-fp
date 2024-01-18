@@ -14,18 +14,31 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.prob = 01;                % Which problem will be solved / used
-OPT.prob2 = 01;               % When it needs an specification of data set
-OPT.norm = 3;                 % Normalization definition
-OPT.lbl = 0;                  % Data labeling definition
-OPT.Nr = 50;                  % Number of repetitions of each algorithm
-OPT.hold = 01;                % Hold out method
-OPT.ptrn = 0.7;               % Percentage of samples for training
-OPT.file = 'wsom2017_f1.mat'; % file where all the variables will be saved  
+OPT.Nr = 03;        % Number of experiment realizations
+OPT.alg = 'ksom';   % Which Classifier will be used
+OPT.prob = 06;      % Which problem will be solved / used
+OPT.prob2 = 01;     % When it needs an specification of data setOPT.norm = 3;                 % Normalization definition
+OPT.norm = 3;       % Normalization definition
+OPT.lbl = 1;        % Data labeling definition
+OPT.hold = 02;      % Hold out method
+OPT.ptrn = 0.7;     % Percentage of samples for training
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
+
+OPT.savefile = 0;   % decides if file will be saved
+
+OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
+OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Prototypes' labeling definition
 
 prot_lbl = 1;               % = 1 / 2 / 3
+
+% Metaparameters
+
+MP.max_it = 100;   	% Maximum number of iterations (random search)
+MP.fold = 5;     	% number of data partitions (cross validation)
+MP.cost = 2;        % Takes into account also the dicitionary size
+MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 %% DATA LOADING AND PRE-PROCESSING
 
@@ -33,157 +46,90 @@ DATA = data_class_loading(OPT);     % Load Data Set
 DATA = normalize(DATA,OPT);         % normalize the attributes' matrix
 DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
-%% HYPERPARAMETERS - DEFAULT
+%% CHOOSE FIXED HYPERPARAMETERS 
 
-SOM2p_acc = cell(OPT.Nr,1);	 % Init of Acc Hyperparameters of SOM-2D
-PAR_SOM2d.lbl = prot_lbl;	 % Neurons' labeling function
-PAR_SOM2d.ep = 200;          % max number of epochs
-PAR_SOM2d.k = [5 4];         % number of neurons (prototypes)
-PAR_SOM2d.init = 02;         % neurons' initialization
-PAR_SOM2d.dist = 02;         % type of distance
-PAR_SOM2d.learn = 02;        % type of learning step
-PAR_SOM2d.No = 0.7;          % initial learning step
-PAR_SOM2d.Nt = 0.01;         % final learnin step
-PAR_SOM2d.Nn = 01;      	 % number of neighbors
-PAR_SOM2d.neig = 03;         % type of neighborhood function
-PAR_SOM2d.Vo = 0.8;          % initial neighborhood constant
-PAR_SOM2d.Vt = 0.3;          % final neighborhood constant
-PAR_SOM2d.Von = 0;           % disable video
+HP_common.lbl = prot_lbl;       % Neurons' labeling function
+HP_common.ep = 200;             % max number of epochs
+HP_common.k = [5 4];            % number of neurons (prototypes)
+HP_common.init = 02;            % neurons' initialization
+HP_common.dist = 02;            % type of distance
+HP_common.learn = 02;           % type of learning step
+HP_common.No = 0.7;             % initial learning step
+HP_common.Nt = 0.01;            % final learnin step
+HP_common.Nn = 01;              % number of neighbors
+HP_common.neig = 03;            % type of neighborhood function
+HP_common.Vo = 0.8;             % initial neighborhood constant
+HP_common.Vt = 0.3;             % final neighborhood constant
+HP_common.Von = 0;              % disable video
+HP_common.K = 1;                % Number of nearest neighbors (classify)
+HP_common.knn_type = 2;         % Type of knn aproximation
 
-KSOM1p_acc = cell(OPT.Nr,1); % Init of Acc Hyperparameters of KSOM-GD1
-PAR_ksom_gd1.lbl = prot_lbl; % Neurons' labeling function
-PAR_ksom_gd1.ep = 200;  	 % max number of epochs
-PAR_ksom_gd1.k = [5 4];   	 % number of neurons (prototypes)
-PAR_ksom_gd1.init = 02;   	 % neurons' initialization
-PAR_ksom_gd1.dist = 02;    	 % type of distance
-PAR_ksom_gd1.learn = 02;   	 % type of learning step
-PAR_ksom_gd1.No = 0.7;     	 % initial learning step
-PAR_ksom_gd1.Nt = 0.01;   	 % final learning step
-PAR_ksom_gd1.Nn = 01;     	 % number of neighbors
-PAR_ksom_gd1.neig = 03;   	 % type of neighbor function
-PAR_ksom_gd1.Vo = 0.8;    	 % initial neighbor constant
-PAR_ksom_gd1.Vt = 0.3;     	 % final neighbor constant
-PAR_ksom_gd1.Kt = 1;       	 % Type of Kernel
-PAR_ksom_gd1.sig2 = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
-PAR_ksom_gd1.Von = 0;        % disable video
+PAR_SOM2d = HP_common;          % Get common HP
+PAR_SOM2d.Ktype = 0;            % Non-kernelized Algorithm
 
-KSOM2p_acc = cell(OPT.Nr,1); % Init of Acc Hyperparameters of KSOM-GD2
-PAR_ksom_gd2.lbl = prot_lbl; % Neurons' labeling function
-PAR_ksom_gd2.ep = 200;    	 % max number of epochs
-PAR_ksom_gd2.k = [5 4];   	 % number of neurons (prototypes)
-PAR_ksom_gd2.init = 02;   	 % neurons' initialization
-PAR_ksom_gd2.dist = 02; 	 % type of distance
-PAR_ksom_gd2.learn = 02;  	 % type of learning step
-PAR_ksom_gd2.No = 0.7;   	 % initial learning step
-PAR_ksom_gd2.Nt = 0.01;   	 % final learning step
-PAR_ksom_gd2.Nn = 01;     	 % number of neighbors
-PAR_ksom_gd2.neig = 03;   	 % type of neighbor function
-PAR_ksom_gd2.Vo = 0.8;     	 % initial neighbor constant
-PAR_ksom_gd2.Vt = 0.3;     	 % final neighbor constant
-PAR_ksom_gd2.Kt = 2;       	 % Type of Kernel
-PAR_ksom_gd2.sig2 = 0.5;   	 % Variance (gaussian, log, cauchy kernel)
-PAR_ksom_gd2.Von = 0;      	 % disable video
+PAR_ksom_gd1 = HP_common;       % Get common HP
+PAR_ksom_gd1.Ktype = 1;         % Type of Kernel
+PAR_ksom_gd1.theta = 0;   	    % Dot product adding
 
-KSOM3p_acc = cell(OPT.Nr,1); % Init of Acc Hyperparameters of KSOM-GD3
-PAR_ksom_gd3.lbl = prot_lbl; % Neurons' labeling function
-PAR_ksom_gd3.ep = 200;       % max number of epochs
-PAR_ksom_gd3.k = [5 4];      % number of neurons (prototypes)
-PAR_ksom_gd3.init = 02;      % neurons' initialization
-PAR_ksom_gd3.dist = 02;      % type of distance
-PAR_ksom_gd3.learn = 02;     % type of learning step
-PAR_ksom_gd3.No = 0.7;       % initial learning step
-PAR_ksom_gd3.Nt = 0.01;      % final learning step
-PAR_ksom_gd3.Nn = 01;        % number of neighbors
-PAR_ksom_gd3.neig = 03;      % type of neighbor function
-PAR_ksom_gd3.Vo = 0.8;       % initial neighbor constant
-PAR_ksom_gd3.Vt = 0.3;       % final neighbor constant
-PAR_ksom_gd3.Kt = 3;         % Type of Kernel
-PAR_ksom_gd3.sig2 = 0.5;     % Variance (gaussian, log, cauchy kernel)
-PAR_ksom_gd3.Von = 0;        % disable video
+PAR_ksom_gd2 = HP_common;       % Get common HP
+PAR_ksom_gd2.Ktype = 2;         % Type of Kernel
+PAR_ksom_gd2.sigma = 0.5;  	    % Kernel width
 
-KSOM4p_acc = cell(OPT.Nr,1); % Init of Acc Hyperparameters of KSOM-EF1
-PAR_ksom_ef1.lbl = prot_lbl; % Neurons' labeling function
-PAR_ksom_ef1.ep = 200;       % max number of epochs
-PAR_ksom_ef1.k = [5 4];      % number of neurons (prototypes)
-PAR_ksom_ef1.init = 02;      % neurons' initialization
-PAR_ksom_ef1.dist = 02;      % type of distance
-PAR_ksom_ef1.learn = 02;     % type of learning step
-PAR_ksom_ef1.No = 0.7;       % initial learning step
-PAR_ksom_ef1.Nt = 0.01;      % final learning step
-PAR_ksom_ef1.Nn = 01;        % number of neighbors
-PAR_ksom_ef1.neig = 03;      % type of neighbor function
-PAR_ksom_ef1.Vo = 0.8;       % initial neighbor constant
-PAR_ksom_ef1.Vt = 0.3;       % final neighbor constant
-PAR_ksom_ef1.Kt = 1;         % Type of Kernel
-PAR_ksom_ef1.sig2 = 0.5;     % Variance (gaussian, log, cauchy kernel)
-PAR_ksom_ef1.Von = 0;        % disable video
+PAR_ksom_gd3 = HP_common;       % Get common HP
+PAR_ksom_gd3.Ktype = 3;         % Type of Kernel
+PAR_ksom_gd3.alpha = 1;    	    % Dot product multiplier
+PAR_ksom_gd3.theta = 1;     	% Dot product adding
+PAR_ksom_gd3.gamma = 2;       	% polynomial order
 
-KSOM5p_acc = cell(OPT.Nr,1); % Init of Acc Hyperparameters of KSOM-EF2
-PAR_ksom_ef2.lbl = prot_lbl; % Neurons' labeling function
-PAR_ksom_ef2.ep = 200;       % max number of epochs
-PAR_ksom_ef2.k = [5 4];      % number of neurons (prototypes)
-PAR_ksom_ef2.init = 02;      % neurons' initialization
-PAR_ksom_ef2.dist = 02;      % type of distance
-PAR_ksom_ef2.learn = 02;     % type of learning step
-PAR_ksom_ef2.No = 0.7;       % initial learning step
-PAR_ksom_ef2.Nt = 0.01;      % final learning step
-PAR_ksom_ef2.Nn = 01;        % number of neighbors
-PAR_ksom_ef2.neig = 03;      % type of neighbor function
-PAR_ksom_ef2.Vo = 0.8;       % initial neighbor constant
-PAR_ksom_ef2.Vt = 0.3;       % final neighbor constant
-PAR_ksom_ef2.Kt = 2;         % Type of Kernel
-PAR_ksom_ef2.sig2 = 0.5;     % Variance (gaussian, log, cauchy kernel)
-PAR_ksom_ef2.Von = 0;        % disable video
+PAR_ksom_ef1 = HP_common;       % Get common HP
+PAR_ksom_ef1.Ktype = 1;         % Type of Kernel
+PAR_ksom_ef1.theta = 0;   	    % Dot product adding
 
-KSOM6p_acc = cell(OPT.Nr,1); % Init of Acc Hyperparameters of KSOM-EF3
-PAR_ksom_ef3.lbl = prot_lbl; % Neurons' labeling function
-PAR_ksom_ef3.ep = 200;       % max number of epochs
-PAR_ksom_ef3.k = [5 4];      % number of neurons (prototypes)
-PAR_ksom_ef3.init = 02;      % neurons' initialization
-PAR_ksom_ef3.dist = 02;      % type of distance
-PAR_ksom_ef3.learn = 02;     % type of learning step
-PAR_ksom_ef3.No = 0.7;       % initial learning step
-PAR_ksom_ef3.Nt = 0.01;      % final learning step
-PAR_ksom_ef3.Nn = 01;        % number of neighbors
-PAR_ksom_ef3.neig = 03;      % type of neighbor function
-PAR_ksom_ef3.Vo = 0.8;       % initial neighbor constant
-PAR_ksom_ef3.Vt = 0.3;       % final neighbor constant
-PAR_ksom_ef3.Kt = 3;         % Type of Kernel
-PAR_ksom_ef3.sig2 = 0.5;     % Variance (gaussian, log, cauchy kernel)
-PAR_ksom_ef3.Von = 0;        % disable video
+PAR_ksom_ef2 = HP_common;       % Get common HP
+PAR_ksom_ef2.Ktype = 2;         % Type of Kernel
+PAR_ksom_ef2.sigma = 0.5;  	    % Kernel width
 
-%% CLASSIFIERS' RESULTS INIT
+PAR_ksom_ef3 = HP_common;       % Get common HP
+PAR_ksom_ef3.Ktype = 3;         % Type of Kernel
+PAR_ksom_ef3.alpha = 1;    	    % Dot product multiplier
+PAR_ksom_ef3.theta = 1;     	% Dot product adding
+PAR_ksom_ef3.gamma = 2;       	% polynomial order
+
+%% ACCUMULATORS
 
 hold_acc = cell(OPT.Nr,1);          % Acc of labels and data division
 
+SOM2p_acc = cell(OPT.Nr,1);	        % Acc Hyperparameters of SOM-2D
 som2_out_tr = cell(OPT.Nr,1);       % Acc of training data output
 som2_out_ts = cell(OPT.Nr,1);       % Acc of test data output
 som2_Mconf_sum = zeros(Nc,Nc);      % Aux var for mean confusion matrix calc
 
-ksomps_out_tr = cell(OPT.Nr,1);     % Acc of training data output
-ksomps_out_ts = cell(OPT.Nr,1);     % Acc of test data output
-ksomps_Mconf_sum = zeros(Nc,Nc);    % Aux var for mean confusion matrix calc
-
+KSOM1p_acc = cell(OPT.Nr,1);        % Acc Hyperparameters of KSOM-GD2
 ksomgd1_out_tr = cell(OPT.Nr,1);	% Acc of training data output
 ksomgd1_out_ts = cell(OPT.Nr,1);	% Acc of test data output
 ksomgd1_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
+KSOM2p_acc = cell(OPT.Nr,1);        % Acc Hyperparameters of KSOM-GD2
 ksomgd2_out_tr = cell(OPT.Nr,1);	% Acc of training data output
 ksomgd2_out_ts = cell(OPT.Nr,1);	% Acc of test data output
 ksomgd2_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
+KSOM3p_acc = cell(OPT.Nr,1);        % Acc Hyperparameters of KSOM-GD3
 ksomgd3_out_tr = cell(OPT.Nr,1);	% Acc of training data output
 ksomgd3_out_ts = cell(OPT.Nr,1);	% Acc of test data output
 ksomgd3_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
+KSOM4p_acc = cell(OPT.Nr,1);        % Acc Hyperparameters of KSOM-EF2
 ksomef1_out_tr = cell(OPT.Nr,1);	% Acc of training data output
 ksomef1_out_ts = cell(OPT.Nr,1);	% Acc of test data output
 ksomef1_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
+KSOM5p_acc = cell(OPT.Nr,1);        % Acc Hyperparameters of KSOM-EF2
 ksomef2_out_tr = cell(OPT.Nr,1);	% Acc of training data output
 ksomef2_out_ts = cell(OPT.Nr,1);	% Acc of test data output
 ksomef2_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
 
+KSOM6p_acc = cell(OPT.Nr,1);        % Acc Hyperparameters of KSOM-EF3
 ksomef3_out_tr = cell(OPT.Nr,1);	% Acc of training data output
 ksomef3_out_ts = cell(OPT.Nr,1);	% Acc of test data output
 ksomef3_Mconf_sum = zeros(Nc,Nc);   % Aux var for mean confusion matrix calc
@@ -195,7 +141,7 @@ for r = 1:OPT.Nr
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
 disp(r);
-display(datestr(now));
+display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
 

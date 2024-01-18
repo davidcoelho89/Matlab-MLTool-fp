@@ -6,21 +6,24 @@ function [HPoptm] = grid_search_ttt(DATA,HPgs,class_train,class_test,PSp)
 %
 %   Input:
 %       DATA.
-%           input = training attributes                            [p x N]
-%           output = training labels                               [Nc x N]
-%       HPgs = hyperparameters for grid search                     [struct]
+%           input = training attributes                                 [p x N]
+%           output = training labels                                    [Nc x N]
+%       HPgs = hyperparameters for grid search                          [struct]
 %              (vectors or cells containing values that will be tested)
 %       class_train = handler for classifier's training function
 %       class_test = handler for classifier's test function       
 %       PSp.
-%           repetitions = number of times the data is               [cte]
+%           repetitions = number of times the data is                   [cte]
 %                         presented to the algorithm
-%           cost = Which cost function will be used                 [cte]
+%           cost = Which cost function will be used                     [cte]
 %               1: Error (any classifier)
 %               2: Error and dictionary size (prototype based)
 %               3: Error and number of SV (SVC based)
 %               4: Error and number of neurons (NN based)
-%           lambda = trade-off between error and other parameters  	[cte]
+%               5: Error, dictionary size, f1-score
+%           lambda = trade-off between error and other parameters  	    [cte]
+%           gamma = trade-off between f1s (or mcc) and other parameters [cte]
+
 %   Output:
 %       HPoptm = optimum hyperparameters of classifier for data set
 
@@ -30,6 +33,7 @@ if ((nargin == 4) || (isempty(PSp)))
     PSp.repetitions = 1;
     PSp.cost = 1;
     PSp.lambda = 0.5;
+    PSp.gamma = 0.1;
 else
     if (~(isfield(PSp,'repetitions')))
         PSp.repetitions = 1;
@@ -39,6 +43,9 @@ else
     end
     if (~(isfield(PSp,'lambda')))
         PSp.lambda = 0.5;
+    end
+    if (~(isfield(PSp,'gamma')))
+        PSp.gamma = 0.1;
     end
 end
 

@@ -6,20 +6,22 @@ function [PVout] = presequential_valid(DATA,HP,class_train,class_test,PSp)
 %
 %   Input:
 %       DATA.
-%           input = Matrix of training attributes             	[p x N]
-%           output = Matrix of training labels                 	[Nc x N]
+%           input = Matrix of training attributes             	        [p x N]
+%           output = Matrix of training labels                 	        [Nc x N]
 %       HP = set of HyperParameters to be tested
 %       class_train = handler for classifier's training function
 %       class_test = handler for classifier's classification function       
 %       PSp.
-%           repetitions = number of times the data is           	[cte]
+%           repetitions = number of times the data is           	    [cte]
 %                         presented to the algorithm
-%           cost = Which cost function will be used                 [cte]
+%           cost = Which cost function will be used                     [cte]
 %               1: Error (any classifier)
 %               2: Error and dictionary size (prototype based)
 %               3: Error and number of SV (SVC based)
 %               4: Error and number of neurons (NN based)
-%           lambda = trade-off between error and other parameters  	[cte]
+%               5: Error, dictionary size, f1-score
+%           lambda = trade-off between error and other parameters  	    [cte]
+%           gamma = trade-off between f1s (or mcc) and other parameters [cte]
 %   Output:
 %       PSout.
 %           measure = measure to be minimized
@@ -28,13 +30,16 @@ function [PVout] = presequential_valid(DATA,HP,class_train,class_test,PSp)
 %           Ds = percentage of prototypes compared to the dataset
 %           Nneurons = number of neurons (NN based)
 %           Nsv = number of support vectors (SVC based)
+%           fsc = F1-score
+%           mcc = Matthews Correlation Coefficient
 
 %% SET DEFAULT HYPERPARAMETERS
 
 if ((nargin == 4) || (isempty(PSp)))
-    PSp.repetitions = 1; % 1 repetition
-    PSp.cost = 1;        % Error (any classifier)
-    PSp.lambda = 0.5;    % More weight for dictionary size
+    PSp.repetitions = 1;    % 1 repetition
+    PSp.cost = 1;           % Error (any classifier)
+    PSp.lambda = 2;         % More weight for error
+    PSp.gamma = 0.1;        % Small weight for mcc or f1s
 else
     if (~(isfield(PSp,'repetitions')))
         PSp.repetitions = 1;
@@ -44,6 +49,9 @@ else
     end
     if (~(isfield(PSp,'lambda')))
         PSp.lambda = 2;
+    end
+    if (~(isfield(PSp,'gamma')))
+        PSp.gamma = 0.1;
     end
 end
 
@@ -149,6 +157,15 @@ elseif(cost == 2)
     else
         measure = Ds + lambda * error;   % Measure
     end
+    
+elseif (cost == 3)
+    % ToDo - all
+
+elseif (cost == 4)
+    % ToDo - all
+
+elseif (cost == 5)
+    % ToDo - all
     
 end
 

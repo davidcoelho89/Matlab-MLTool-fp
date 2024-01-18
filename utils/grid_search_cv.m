@@ -6,22 +6,24 @@ function [HPoptm] = grid_search_cv(DATAtr,HPgs,class_train,class_test,CVp)
 %
 %   Input:
 %       DATAtr.
-%           input = training attributes                            [p x N]
-%           output = training labels                               [Nc x N]
-%       HPgs = hyperparameters for grid search                     [struct]
+%           input = training attributes                                 [p x N]
+%           output = training labels                                    [Nc x N]
+%       HPgs = hyperparameters for grid search                          [struct]
 %              (vectors or cells containing values that will be tested)
 %       class_train = handler for classifier's training function
 %       class_test = handler for classifier's test function       
 %       CVp.
-%           fold = number of data partitions for cross validation	[cte]
-%           cost = Which cost function will be used                 [cte]
+%           fold = number of data partitions for cross validation	    [cte]
+%           cost = Which cost function will be used                     [cte]
 %               1: Error (any classifier)
 %               2: Error and dictionary size (prototype based)
 %               3: Error and number of SV (SVC based)
 %               4: Error and number of neurons (NN based)
-%           lambda = trade-off between error and other parameters  	[cte]
+%               5: Error, dictionary size, f1-score
+%           lambda = trade-off between error and other parameters       [cte]
+%           gamma = trade-off between f1s (or mcc) and other parameters [cte]
 %   Output:
-%       HPoptm = Optimum hyperparameters of classifier for dataset [struct]
+%       HPoptm = Optimum hyperparameters of classifier for dataset      [struct]
 
 %% SET DEFAULT HYPERPARAMETERS
 
@@ -29,6 +31,7 @@ if ((nargin == 4) || (isempty(CVp)))
     CVp.fold = 5;
     CVp.cost = 1;
     CVp.lambda = 0.5;
+    CVp.gamma = 0.1;
 else
     if (~(isfield(CVp,'fold')))
         CVp.fold = 5;
@@ -38,6 +41,9 @@ else
     end
     if (~(isfield(CVp,'lambda')))
         CVp.lambda = 0.5;
+    end
+    if (~(isfield(CVp,'gamma')))
+        CVp.gamma = 0.1;
     end
 end
 
@@ -82,7 +88,7 @@ for turn = 1:max_iterations
     
     CVout = cross_valid(DATAtr,HP_probe,class_train,class_test,CVp);
 
-    % Define new optimum HP
+    % Define New Optimum HyperParameters
     
     if (turn == 1)
         HPoptm = HP_probe;

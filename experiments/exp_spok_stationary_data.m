@@ -73,7 +73,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % Iris                          => 06: 150 / 04 / 03
 % Easiest. Used for debug.
 
-% Motor Failure                 => 07: 504 / 06 / 02
+% Motor Failure (prob2 = 2)     => 07: 504 / 06 / 02
 % Short-circuit
 
 % Vertebral Column              => 10: xx / xx / xx

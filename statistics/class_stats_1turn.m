@@ -6,33 +6,35 @@ function [STATS] = class_stats_1turn(DATA,OUT,BIN)
 % 
 %   Input:
 %    	DATA.
-%           output = actual labels          [1 x N] or [Nc x N]
+%           output = actual labels              [1 x N] or [Nc x N]
 %     	OUT.
-%           y_h = estimated labels          [1 x N] or [Nc x N]
+%           y_h = estimated labels              [1 x N] or [Nc x N]
 %       BIN.
-%           class1 = +1 binary class        [1 x Nc1]
-%           class2 = -1 binary class        [1 x Nc2]
+%           class1 = +1 binary class            [1 x Nc1]
+%           class2 = -1 binary class            [1 x Nc2]
 %   Output:
 %       STATS.
-%           Y = actual labels               [1 x N] or [Nc x N]
-%           Yh = estimated labels           [1 x N] or [Nc x N]
-%       	Mconf = confusion matrix        [Nc x Nc]
-%           Mconfs = one vs all Mconf       {1 x Nc} [2 x 2] (cell)
-%           acc = % of accuracy             [cte]
-%           err = 1 - % accuracy           	[cte]
-%           roc_t = threshold               [1 x len]
-%           roc_tpr = true positive rate    [Nc x len] (sensitivity)
-%           roc_spec = specificity          [Nc x len]
-%           roc_fpr = false positive rate   [Nc x len] (1 - specificity)
-%           roc_prec = precision            [Nc x len]
-%           roc_rec = recall                [Nc x len]
-%           auc = area under the curve      [Nc x 1]
-%           fsc_per_class = f1-score        [Nc x 1]
-%           fsc_micro = fsc micro avg       [cte]
-%           fsc_macro = fsc macro avg       [cte]
-%           fsc_weighted = fsc weighted avg [cte]
-%           mcc_per_class = Matthews Correlation Coef [Nc x 1]
-%           mcc_mean = mean mcc             [cte]
+%           Y = actual labels                   [1 x N] or [Nc x N]
+%           Yh = estimated labels               [1 x N] or [Nc x N]
+%       	Mconf = confusion matrix            [Nc x Nc]
+%           Mconfs = one vs all Mconf           {1 x Nc} [2 x 2] (cell)
+%           acc = % of accuracy                 [cte]
+%           err = 1 - % accuracy           	    [cte]
+%           roc_t = threshold                   [1 x len]
+%           roc_prec = precision                [Nc x len]
+%           roc_rec = recall                    [Nc x len]
+%             (a.k.a. TPR or Sensitivity)
+%           roc_spec = specificity              [Nc x len]
+%             (a.k.a. TNR)
+%           roc_fpr = false positive rate       [Nc x len]
+%           auc = area under the curve          [Nc x 1]
+%           fsc_per_class = f1-score            [Nc x 1]
+%           fsc_micro = fsc micro avg           [cte]
+%           fsc_macro = fsc macro avg           [cte]
+%           fsc_weighted = fsc weighted avg     [cte]
+%           mcc_per_class = Matthews Corr Coef  [Nc x 1]
+%           mcc_mean                            [cte]
+%           mcc_multiclass                      [cte]
 
 %% INITIALIZATIONS
 
@@ -161,11 +163,10 @@ fp_bin = zeros(Nc,1);
 tn_bin = zeros(Nc,1);
 fn_bin = zeros(Nc,1);
 
-tpr_bin = zeros(Nc,1);
-spec_bin = zeros(Nc,1);
-fpr_bin = zeros(Nc,1);
 prec_bin = zeros(Nc,1);
 rec_bin = zeros(Nc,1);
+spec_bin = zeros(Nc,1);
+fpr_bin = zeros(Nc,1);
 
 for c = 1:Nc
     
@@ -175,17 +176,16 @@ for c = 1:Nc
     tn_bin(c) = Mconfs{c}(2,2);
     fn_bin(c) = Mconfs{c}(2,1);
 
-    % PRECISION, RECALL (TPR), SPECIFICITY, FPR
+    % PRECISION, RECALL
     if tp_bin(c) == 0
         prec_bin(c) = 0;
         rec_bin(c) = 0;
-        tpr_bin(c) = 0;
     else
         prec_bin(c) = tp_bin(c) / (tp_bin(c) + fp_bin(c));
         rec_bin(c) = tp_bin(c) / (tp_bin(c) + fn_bin(c));
-        tpr_bin(c) = tp_bin(c) / (tp_bin(c) + fn_bin(c));
     end
     
+    % SPECIFICITY, FPR
     if tn_bin(c) == 0
         spec_bin(c) = 0;
         fpr_bin(c) = 1;
@@ -267,11 +267,10 @@ mcc_multiclass = num_mcc / den_mcc;
 % 
 % if classType == 1
 % 
-%     ROC_TPR = [];       % True Positive Rate (sensitivity)
-%     ROC_SPEC = [];       % Specificity
-%     ROC_FPR = [];       % False Positive Rate (1 - specificity)
 %     ROC_PREC = [];      % Precision (positive predictive value)
 %     ROC_REC = [];       % Recall (used for unbalanced data)
+%     ROC_SPEC = [];      % Specificity
+%     ROC_FPR = [];       % False Positive Rate (1 - specificity)
 % 
 % % [0 1] or [-1 +1] Classification
 % 
@@ -279,11 +278,10 @@ mcc_multiclass = num_mcc / den_mcc;
 % 
 %     % Init outputs
 % 
-%     ROC_TPR = zeros(Nc,len);
-%     ROC_SPEC = zeros(Nc,len);
-%     ROC_FPR = zeros(Nc,len);
 %     ROC_PREC = zeros(Nc,len);
 %     ROC_REC = zeros(Nc,len);
+%     ROC_SPEC = zeros(Nc,len);
+%     ROC_FPR = zeros(Nc,len);
 % 
 %     % One ROC curve for each class
 % 
@@ -331,11 +329,10 @@ mcc_multiclass = num_mcc / den_mcc;
 %             FN = Mconf_roc(2,1);
 % 
 %             % Get ROC curve vectors
-%             ROC_TPR(c,cont)  = TP / (TP + FN);
-%             ROC_SPEC(c,cont) = TN / (TN + FP);
-%             ROC_FPR(c,cont)  = 1 - (TN / (TN + FP));
 %             ROC_PREC(c,cont) = TP / (TP + FP);
 %             ROC_REC(c,cont)  = TP / (TP + FN);
+%             ROC_SPEC(c,cont) = TN / (TN + FP);
+%             ROC_FPR(c,cont)  = 1 - (TN / (TN + FP));
 % 
 %         end
 % 
@@ -372,11 +369,10 @@ STATS.mcc_mean = mcc_mean;
 STATS.mcc_multiclass = mcc_multiclass;
 
 % STATS.roc_t = ROC_t;
-% STATS.roc_tpr = ROC_TPR;
-% STATS.roc_spec = ROC_SPEC;
-% STATS.roc_fpr = ROC_FPR;
 % STATS.roc_prec = ROC_PREC;
 % STATS.roc_rec = ROC_REC;
+% STATS.roc_spec = ROC_SPEC;
+% STATS.roc_fpr = ROC_FPR;
 % STATS.auc = AUC;
 
 %% END

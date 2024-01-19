@@ -2,7 +2,7 @@
 
 % KSOM-EF Comparison with N Kernels
 % Author: David Nascimento Coelho
-% Last Update: 2024/01/12
+% Last Update: 2024/01/19
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -40,6 +40,7 @@ MP.max_it = 100;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
 MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
+MP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
@@ -103,7 +104,7 @@ if(~strcmp(OPT.hpo,'none'))
 HPgs_ksomef_lin = HP_ksomef_lin;
 HPgs_ksomef_lin.Nk = {HP_ksomef_lin.Nk};
 HPgs_ksomef_lin.theta = [0,2.^linspace(-10,10,21)];
-    
+
 HPgs_ksomef_gau = HP_ksomef_gau;
 HPgs_ksomef_gau.Nk = {HP_ksomef_gau.Nk};
 HPgs_ksomef_gau.sigma = 2.^linspace(-10,10,21);
@@ -163,6 +164,8 @@ data_acc = cell(OPT.Nr,1);
 % Group Stats from Tr and Ts
 nstats_all_tr = cell(length(NAMES),1);
 nstats_all_ts = cell(length(NAMES),1);
+
+% Individual Accumulators
 
 ksomef_lin_par_acc = cell(OPT.Nr,1);        % Acc Parameters of KSOM-EF
 ksomef_lin_out_tr_acc = cell(OPT.Nr,1);     % Acc of training data output
@@ -478,7 +481,7 @@ end
 %% SAVE DATA
 
 if(OPT.savefile)
-    
+
     variables.nstats_all_tr = nstats_all_tr;
     variables.nstats_all_ts = nstats_all_ts;
 

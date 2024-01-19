@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% KSOM-GD Comparison Tests
+% KSOM-GD Comparison with N Kernels
 % Author: David Nascimento Coelho
-% Last Update: 2023/03/05
+% Last Update: 2024/01/19
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -16,8 +16,8 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'ksomgd'; % Which Classifier will be used
-OPT.prob = 22;      % Which problem will be solved / used
-OPT.prob2 = 01;     % When it needs an specification of data set
+OPT.prob = 07;      % Which problem will be solved / used
+OPT.prob2 = 02;     % When it needs an specification of data set
 OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
@@ -30,22 +30,23 @@ OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
                         % (for binary statistics)
 
-% Prototypes' labeling definition
+% Prototypes' labeling strategy
 
 prot_lbl = 1;               % = 1 (MV) / 2 (AD) / 3 (MD)
 
 % Metaparameters
 
-MP.max_it = 020;   	% Maximum number of iterations (random search)
+MP.max_it = 100;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
 MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
+MP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
 HP_common.lbl = prot_lbl;       % Neurons' labeling function;
-HP_common.ep = 50;              % max number of epochs
-HP_common.lin.k = [5 4];        % number of neurons (prototypes)
+HP_common.Nep = 50;             % max number of epochs
+HP_common.Nk = [5 4];           % number of neurons (prototypes)
 HP_common.init = 02;            % neurons' initialization
 HP_common.dist = 02;            % type of distance
 HP_common.learn = 02;           % type of learning step
@@ -101,33 +102,41 @@ HP_ksomgd_kmo.gamma = 2;       	% Exponential order
 if(~strcmp(OPT.hpo,'none'))
 
 HPgs_ksomgd_lin = HP_ksomgd_lin;
-HPgs_ksomgd_lin.theta = [0,2.^linspace(-4,3,8)];
+HPgs_ksomgd_lin.Nk = {HP_ksomgd_lin.Nk};
+HPgs_ksomgd_lin.theta = [0,2.^linspace(-10,10,21)];
 
 HPgs_ksomgd_gau = HP_ksomgd_gau;
-HPgs_ksomgd_gau.sigma = 2.^linspace(-6,5,12);
+HPgs_ksomgd_gau.Nk = {HP_ksomgd_gau.Nk};
+HPgs_ksomgd_gau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomgd_pol = HP_ksomgd_pol;
+HPgs_ksomgd_pol.Nk = {HP_ksomgd_pol.Nk};
 HPgs_ksomgd_pol.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-HPgs_ksomgd_pol.alpha = 2.^linspace(-8,2,11); % 1;
-HPgs_ksomgd_pol.theta = [0,2.^linspace(-4,3,8)]; % 0;
+HPgs_ksomgd_pol.alpha = 2.^linspace(-10,10,21);
+HPgs_ksomgd_pol.theta = [0,2.^linspace(-10,10,21)];
 
 HPgs_ksomgd_exp = HP_ksomgd_exp;
-HPgs_ksomgd_exp.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomgd_exp.Nk = {HP_ksomgd_exp.Nk};
+HPgs_ksomgd_exp.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomgd_cau = HP_ksomgd_cau;
-HPgs_ksomgd_cau.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomgd_cau.Nk = {HP_ksomgd_cau.Nk};
+HPgs_ksomgd_cau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomgd_log = HP_ksomgd_log;
-HPgs_ksomgd_log.sigma = 2.^linspace(-8,6,15);
+HPgs_ksomgd_log.Nk = {HP_ksomgd_log.Nk};
+HPgs_ksomgd_log.sigma = 2.^linspace(-10,10,21);
 HPgs_ksomgd_log.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
 
 HPgs_ksomgd_sig = HP_ksomgd_sig;
-HPgs_ksomgd_sig.alpha = 2.^linspace(-8,2,11);
-HPgs_ksomgd_sig.theta = [0.001, 0.005, 0.01, 0.05, 0.1];
+HPgs_ksomgd_sig.Nk = {HP_ksomgd_sig.Nk};
+HPgs_ksomgd_sig.alpha = 2.^linspace(-10,10,21);
+HPgs_ksomgd_sig.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
 HPgs_ksomgd_kmo = HP_ksomgd_kmo;
-HPgs_ksomgd_kmo.sigma = 2.^linspace(-8,6,15);
-HPgs_ksomgd_kmo.gamma = 2.^linspace(-8,6,15);
+HPgs_ksomgd_kmo.Nk = {HP_ksomgd_kmo.Nk};
+HPgs_ksomgd_kmo.sigma = 2.^linspace(-10,10,21);
+HPgs_ksomgd_kmo.gamma = 2.^linspace(-10,10,21);
 
 end
 
@@ -143,15 +152,20 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% ACCUMULATORS AND HANDLERS
 
-data_acc = cell(OPT.Nr,1);         	% Acc of labels and data division
-
-NAMES = {'Linear','Gaussian',...    % Acc of names for plots
+% Acc of names for plots
+NAMES = {'Linear','Gaussian',...    
          'Polynomial', 'Exponential',...
          'Cauchy', 'Log',...
-         'Sigmoid', 'Kmod'};
+         'Sigmoid', 'Kmod'};    
 
+% Acc of labels and data division
+data_acc = cell(OPT.Nr,1);         	
+
+% Group Stats from Tr and Ts
 nstats_all_tr = cell(length(NAMES),1);
 nstats_all_ts = cell(length(NAMES),1);
+
+% Individual Accumulators
 
 ksomgd_lin_par_acc = cell(OPT.Nr,1);        % Acc Parameters of KSOM-GD
 ksomgd_lin_out_tr_acc = cell(OPT.Nr,1);     % Acc of training data output
@@ -203,8 +217,14 @@ ksomgd_kmo_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
-OPT.filename = strcat(DATA.name,'_prob2_',int2str(OPT.prob2),'_ksomgd',...
-                      '_hpo_',OPT.hpo,'_norm',int2str(OPT.norm),'_1nn');
+OPT.filename = strcat(DATA.name,'_',int2str(OPT.prob2),'_ksomef', ...
+                      '_hpo_',OPT.hpo, ...
+                      '_norm_',int2str(OPT.norm), ...
+                      '_lbl_',int2str(prot_lbl), ...
+                      '_nn_',int2str(HP_common.K), ...
+                      '_Nep_', int2str(HP_common.Nep), ...
+                      '_Nprot_',int2str(prod(HP_common.Nk)), ...
+                      '_Kt_all');
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 
@@ -461,16 +481,58 @@ end
 %% SAVE DATA
 
 if(OPT.savefile)
+
     variables.nstats_all_tr = nstats_all_tr;
     variables.nstats_all_ts = nstats_all_ts;
+
     variables.ksomgd_lin_par_acc = ksomgd_lin_par_acc;
+    variables.ksomgd_lin_out_tr_acc = ksomgd_lin_out_tr_acc;
+    variables.ksomgd_lin_stats_tr_acc = ksomgd_lin_stats_tr_acc;
+    variables.ksomgd_lin_out_ts_acc = ksomgd_lin_out_ts_acc;
+    variables.ksomgd_lin_stats_ts_acc = ksomgd_lin_stats_ts_acc;
+
     variables.ksomgd_gau_par_acc = ksomgd_gau_par_acc;
+    variables.ksomgd_gau_out_tr_acc = ksomgd_gau_out_tr_acc;
+    variables.ksomgd_gau_stats_tr_acc = ksomgd_gau_stats_tr_acc;
+    variables.ksomgd_gau_out_ts_acc = ksomgd_gau_out_ts_acc;
+    variables.ksomgd_gau_stats_ts_acc = ksomgd_gau_stats_ts_acc;
+
     variables.ksomgd_pol_par_acc = ksomgd_pol_par_acc;
+    variables.ksomgd_pol_out_tr_acc = ksomgd_pol_out_tr_acc;
+    variables.ksomgd_pol_stats_tr_acc = ksomgd_pol_stats_tr_acc;
+    variables.ksomgd_pol_out_ts_acc = ksomgd_pol_out_ts_acc;
+    variables.ksomgd_pol_stats_ts_acc = ksomgd_pol_stats_ts_acc;
+
     variables.ksomgd_exp_par_acc = ksomgd_exp_par_acc;
+    variables.ksomgd_exp_out_tr_acc = ksomgd_exp_out_tr_acc;
+    variables.ksomgd_exp_stats_tr_acc = ksomgd_exp_stats_tr_acc;
+    variables.ksomgd_exp_out_ts_acc = ksomgd_exp_out_ts_acc;
+    variables.ksomgd_exp_stats_ts_acc = ksomgd_exp_stats_ts_acc;
+    
     variables.ksomgd_cau_par_acc = ksomgd_cau_par_acc;
+    variables.ksomgd_cau_out_tr_acc = ksomgd_cau_out_tr_acc;
+    variables.ksomgd_cau_stats_tr_acc = ksomgd_cau_stats_tr_acc;
+    variables.ksomgd_cau_out_ts_acc = ksomgd_cau_out_ts_acc;
+    variables.ksomgd_cau_stats_ts_acc = ksomgd_cau_stats_ts_acc;
+
     variables.ksomgd_log_par_acc = ksomgd_log_par_acc;
+    variables.ksomgd_log_out_tr_acc = ksomgd_log_out_tr_acc;
+    variables.ksomgd_log_stats_tr_acc = ksomgd_log_stats_tr_acc;
+    variables.ksomgd_log_out_ts_acc = ksomgd_log_out_ts_acc;
+    variables.ksomgd_log_stats_ts_acc = ksomgd_log_stats_ts_acc;
+
     variables.ksomgd_sig_par_acc = ksomgd_sig_par_acc;
+    variables.ksomgd_sig_out_tr_acc = ksomgd_sig_out_tr_acc;
+    variables.ksomgd_sig_stats_tr_acc = ksomgd_sig_stats_tr_acc;
+    variables.ksomgd_sig_out_ts_acc = ksomgd_sig_out_ts_acc;
+    variables.ksomgd_sig_stats_ts_acc = ksomgd_sig_stats_ts_acc;
+    
     variables.ksomgd_kmo_par_acc = ksomgd_kmo_par_acc;
+    variables.ksomgd_kmo_out_tr_acc = ksomgd_kmo_out_tr_acc;
+    variables.ksomgd_kmo_stats_tr_acc = ksomgd_kmo_stats_tr_acc;
+    variables.ksomgd_kmo_out_ts_acc = ksomgd_kmo_out_ts_acc;
+    variables.ksomgd_kmo_stats_ts_acc = ksomgd_kmo_stats_ts_acc;
+
     save(OPT.filename,'variables');
     clear variables;
 end

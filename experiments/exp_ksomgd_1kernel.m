@@ -1,6 +1,6 @@
 %% Machine Learning ToolBox
 
-% KSOM-EF Unit Test
+% KSOM-GD Unit Test
 % Author: David Nascimento Coelho
 % Last Update: 2024/01/12
 
@@ -15,7 +15,7 @@ format long e;  % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;        % Number of experiment realizations
-OPT.alg = 'ksomef'; % Which Classifier will be used
+OPT.alg = 'ksomgd'; % Which Classifier will be used
 OPT.prob = 07;      % Which problem will be solved / used
 OPT.prob2 = 02;     % When it needs an specification of data set
 OPT.norm = 3;       % Normalization definition
@@ -44,52 +44,52 @@ MP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc
 
 %% CHOOSE FIXED HYPERPARAMETERS
 
-HP_ksomef.lbl = prot_lbl;	 % Neurons' labeling function
-HP_ksomef.Nep = 50;          % max number of epochs
-HP_ksomef.Nk = [5 4];        % number of neurons (prototypes)
-HP_ksomef.init = 02;         % neurons' initialization
-HP_ksomef.dist = 02;         % type of distance
-HP_ksomef.learn = 02;        % type of learning step
-HP_ksomef.No = 0.7;          % initial learning step
-HP_ksomef.Nt = 0.01;         % final learning step
-HP_ksomef.Nn = 01;           % number of neighbors
-HP_ksomef.neig = 03;         % type of neighbor function
-HP_ksomef.Vo = 0.8;          % initial neighbor constant
-HP_ksomef.Vt = 0.3;          % final neighbor constant
-HP_ksomef.Von = 0;           % disable video
-HP_ksomef.K = 1;         	 % Number of nearest neighbors (classify)
-HP_ksomef.knn_type = 2; 	 % Type of knn aproximation
-HP_ksomef.Ktype = 6;         % Type of Kernel
+HP_ksomgd.lbl = prot_lbl;	 % Neurons' labeling function
+HP_ksomgd.Nep = 50;          % max number of epochs
+HP_ksomgd.Nk = [5 4];        % number of neurons (prototypes)
+HP_ksomgd.init = 02;         % neurons' initialization
+HP_ksomgd.dist = 02;         % type of distance
+HP_ksomgd.learn = 02;        % type of learning step
+HP_ksomgd.No = 0.7;          % initial learning step
+HP_ksomgd.Nt = 0.01;         % final learning step
+HP_ksomgd.Nn = 01;           % number of neighbors
+HP_ksomgd.neig = 03;         % type of neighbor function
+HP_ksomgd.Vo = 0.8;          % initial neighbor constant
+HP_ksomgd.Vt = 0.3;          % final neighbor constant
+HP_ksomgd.Von = 0;           % disable video
+HP_ksomgd.K = 1;         	 % Number of nearest neighbors (classify)
+HP_ksomgd.knn_type = 2; 	 % Type of knn aproximation
+HP_ksomgd.Ktype = 6;         % Type of Kernel
 
 %% CHOOSE HYPERPARAMETERS - FOR OPTIMIZATION
 
-HP_ksomef_gs = HP_ksomef;   % Get default HP
+HP_ksomgd_gs = HP_ksomgd;   % Get default HP
 
 if(~strcmp(OPT.hpo,'none'))
 
-    HP_ksomef_gs.Nk = {HP_ksomef.Nk};
+    HP_ksomgd_gs.Nk = {HP_ksomgd.Nk};
 
-    if HP_ksomef.Ktype == 1
-        HP_ksomef_gs.theta = [0,2.^linspace(-10,10,21)];
-    elseif HP_ksomef.Ktype == 2
-        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
-    elseif HP_ksomef.Ktype == 3
-        HP_ksomef_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-        HP_ksomef_gs.alpha = 2.^linspace(-10,10,21);
-        HP_ksomef_gs.theta = [0,2.^linspace(-10,10,21)];
-    elseif HP_ksomef.Ktype == 4
-        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
-    elseif HP_ksomef.Ktype == 5
-        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
-    elseif HP_ksomef.Ktype == 6
-        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
-        HP_ksomef_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
-    elseif HP_ksomef.Ktype == 7
-        HP_ksomef_gs.alpha = 2.^linspace(-10,10,21);
-        HP_ksomef_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
-    elseif HP_ksomef.Ktype == 8
-        HP_ksomef_gs.sigma = 2.^linspace(-10,10,21);
-        HP_ksomef_gs.gamma = 2.^linspace(-10,10,21);
+    if HP_ksomgd.Ktype == 1
+        HP_ksomgd_gs.theta = [0,2.^linspace(-10,10,21)];
+    elseif HP_ksomgd.Ktype == 2
+        HP_ksomgd_gs.sigma = 2.^linspace(-10,10,21);
+    elseif HP_ksomgd.Ktype == 3
+        HP_ksomgd_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+        HP_ksomgd_gs.alpha = 2.^linspace(-10,10,21);
+        HP_ksomgd_gs.theta = [0,2.^linspace(-10,10,21)];
+    elseif HP_ksomgd.Ktype == 4
+        HP_ksomgd_gs.sigma = 2.^linspace(-10,10,21);
+    elseif HP_ksomgd.Ktype == 5
+        HP_ksomgd_gs.sigma = 2.^linspace(-10,10,21);
+    elseif HP_ksomgd.Ktype == 6
+        HP_ksomgd_gs.sigma = 2.^linspace(-10,10,21);
+        HP_ksomgd_gs.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
+    elseif HP_ksomgd.Ktype == 7
+        HP_ksomgd_gs.alpha = 2.^linspace(-10,10,21);
+        HP_ksomgd_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
+    elseif HP_ksomgd.Ktype == 8
+        HP_ksomgd_gs.sigma = 2.^linspace(-10,10,21);
+        HP_ksomgd_gs.gamma = 2.^linspace(-10,10,21);
     end
 end
 
@@ -111,22 +111,22 @@ data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
 
 nstats_all = cell(length(NAMES),1);     % Group Stats from Tr and Ts
 
-ksomef_par_acc = cell(OPT.Nr,1);        % Acc Parameters of KSOM-EF
-ksomef_out_tr_acc = cell(OPT.Nr,1);     % Acc of training data output
-ksomef_out_ts_acc = cell(OPT.Nr,1);     % Acc of test data output
-ksomef_stats_tr_acc = cell(OPT.Nr,1);   % Acc of training statistics
-ksomef_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
+ksomgd_par_acc = cell(OPT.Nr,1);        % Acc Parameters of KSOM-gd
+ksomgd_out_tr_acc = cell(OPT.Nr,1);     % Acc of training data output
+ksomgd_out_ts_acc = cell(OPT.Nr,1);     % Acc of test data output
+ksomgd_stats_tr_acc = cell(OPT.Nr,1);   % Acc of training statistics
+ksomgd_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
-OPT.filename = strcat(DATA.name,'_',int2str(OPT.prob2),'_ksomef',...
+OPT.filename = strcat(DATA.name,'_',int2str(OPT.prob2),'_ksomgd',...
                       '_hpo_',OPT.hpo, ...
                       '_norm_',int2str(OPT.norm), ...
                       '_lbl_',int2str(prot_lbl), ...
-                      '_nn_',int2str(HP_ksomef.K), ...
-                      '_Nep_', int2str(HP_ksomef.Nep), ...
-                      '_Nprot_',int2str(prod(HP_ksomef.Nk)), ...
-                      '_Kt_',int2str(HP_ksomef.Ktype) ...
+                      '_nn_',int2str(HP_ksomgd.K), ...
+                      '_Nep_', int2str(HP_ksomgd.Nep), ...
+                      '_Nprot_',int2str(prod(HP_ksomgd.Nk)), ...
+                      '_Kt_',int2str(HP_ksomgd.Ktype) ...
                       );
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
@@ -180,21 +180,21 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 if(strcmp(OPT.hpo,'none'))
     % Does nothing
 elseif(strcmp(OPT.hpo,'random'))
-    HP_ksomef = random_search_cv(DATAtr,HP_ksomef_gs,...
-                                 @ksom_ef_train,@ksom_ef_classify,MP);
+    HP_ksomgd = random_search_cv(DATAtr,HP_ksomgd_gs,...
+                                 @ksom_gd_train,@ksom_gd_classify,MP);
 end
 
 % %%%%%%%%%%%%%% CLASSIFIERS' TRAINING %%%%%%%%%%%%%%%%%%%
 
-ksomef_par_acc{r} = ksom_ef_train(DATAtr,HP_ksomef);
+ksomgd_par_acc{r} = ksom_gd_train(DATAtr,HP_ksomgd);
 
 % %%%%%%%%%%%%%%%%% CLASSIFIERS' TEST %%%%%%%%%%%%%%%%%%%%
 
-ksomef_out_tr_acc{r} = ksom_ef_classify(DATAtr,ksomef_par_acc{r});
-ksomef_stats_tr_acc{r} = class_stats_1turn(DATAtr,ksomef_out_tr_acc{r});
+ksomgd_out_tr_acc{r} = ksom_gd_classify(DATAtr,ksomgd_par_acc{r});
+ksomgd_stats_tr_acc{r} = class_stats_1turn(DATAtr,ksomgd_out_tr_acc{r});
 
-ksomef_out_ts_acc{r} = ksom_ef_classify(DATAts,ksomef_par_acc{r});
-ksomef_stats_ts_acc{r} = class_stats_1turn(DATAts,ksomef_out_ts_acc{r});
+ksomgd_out_ts_acc{r} = ksom_gd_classify(DATAts,ksomgd_par_acc{r});
+ksomgd_stats_ts_acc{r} = class_stats_1turn(DATAts,ksomgd_out_ts_acc{r});
 
 end
 
@@ -202,8 +202,8 @@ end
 
 % Statistics for n turns (multiclass)
 
-ksomef_nstats_tr = class_stats_nturns(ksomef_stats_tr_acc);
-ksomef_nstats_ts = class_stats_nturns(ksomef_stats_ts_acc);
+ksomgd_nstats_tr = class_stats_nturns(ksomgd_stats_tr_acc);
+ksomgd_nstats_ts = class_stats_nturns(ksomgd_stats_ts_acc);
 
 % Statistics for n turns (binary)
 
@@ -213,8 +213,8 @@ end
 
 % Get all Statistics in one Cell
 
-nstats_all{1,1} = ksomef_nstats_tr;
-nstats_all{2,1} = ksomef_nstats_ts;
+nstats_all{1,1} = ksomgd_nstats_tr;
+nstats_all{2,1} = ksomgd_nstats_ts;
 
 % Compare Training and Test Statistics
 

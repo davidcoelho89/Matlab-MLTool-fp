@@ -85,7 +85,7 @@ if ((nargin == 1) || (isempty(PAR)))
     PAR = PARaux;
 else
     if (~(isfield(PAR,'Nep')))
-        PAR.Nep = 200;
+        PAR.Nep = 50;
     end
     if (~(isfield(PAR,'Nk')))
         PAR.Nk = [5 4];

@@ -62,8 +62,8 @@ function [PARout] = som_train(DATA,PAR)
 %% SET DEFAULT HYPERPARAMETERS
 
 if ((nargin == 1) || (isempty(PAR)))
-    PARaux.Nep = 200;     	% max number of epochs
-    PARaux.Nk = [4 3];    	% number of neurons (prototypes)
+    PARaux.Nep = 50;     	% max number of epochs
+    PARaux.Nk = [5 4];    	% number of neurons (prototypes)
     PARaux.init = 02;     	% neurons' initialization
     PARaux.dist = 02;      	% type of distance
     PARaux.learn = 02;     	% type of learning step
@@ -81,10 +81,10 @@ if ((nargin == 1) || (isempty(PAR)))
     PAR = PARaux;
 else
     if (~(isfield(PAR,'Nep')))
-        PAR.Nep = 200;
+        PAR.Nep = 50;
     end
     if (~(isfield(PAR,'Nk')))
-        PAR.Nk = [4 3];
+        PAR.Nk = [5 4];
     end
     if (~(isfield(PAR,'init')))
         PAR.init = 2;

@@ -55,7 +55,7 @@ function [PARout] = ksom_ef_cluster(DATA,PAR)
 %% SET DEFAULT HYPERPARAMETERS
 
 if ((nargin == 1) || (isempty(PAR)))
-    PARaux.Nep = 200;       % max number of epochs
+    PARaux.Nep = 50;        % max number of epochs
     PARaux.Nk = [5 4];    	% number of neurons (prototypes)
     PARaux.init = 2;        % neurons' initialization
     PARaux.dist = 2;        % type of distance
@@ -73,7 +73,7 @@ if ((nargin == 1) || (isempty(PAR)))
     PAR = PARaux;
 else
     if (~(isfield(PAR,'Nep')))
-        PAR.Nep = 200;
+        PAR.Nep = 50;
     end
     if (~(isfield(PAR,'Nk')))
         PAR.Nk = [5 4];

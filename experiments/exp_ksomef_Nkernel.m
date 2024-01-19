@@ -16,8 +16,8 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'ksomef'; % Which Classifier will be used
-OPT.prob = 10;      % Which problem will be solved / used
-OPT.prob2 = 01;     % When it needs an specification of data set
+OPT.prob = 07;      % Which problem will be solved / used
+OPT.prob2 = 02;     % When it needs an specification of data set
 OPT.norm = 3;       % Normalization definition
 OPT.lbl = 1;        % Data labeling definition
 OPT.hold = 01;      % Hold out method
@@ -32,7 +32,7 @@ OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Prototypes' labeling strategy
 
-prot_lbl = 3;               % = 1 (MV) / 2 (AD) / 3 (MD)
+prot_lbl = 2;               % = 1 (MV) / 2 (AD) / 3 (MD)
 
 % Metaparameters
 
@@ -45,7 +45,7 @@ MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err
 
 HP_common.lbl = prot_lbl;       % Neurons' labeling function;
 HP_common.Nep = 50;             % max number of epochs
-HP_common.k = [5 4];            % number of neurons (prototypes)
+HP_common.Nk = [5 4];           % number of neurons (prototypes)
 HP_common.init = 02;            % neurons' initialization
 HP_common.dist = 02;            % type of distance
 HP_common.learn = 02;           % type of learning step
@@ -101,39 +101,39 @@ HP_ksomef_kmo.gamma = 2;       	% Exponential order
 if(~strcmp(OPT.hpo,'none'))
 
 HPgs_ksomef_lin = HP_ksomef_lin;
-HPgs_ksomef_lin.k = {HP_ksomef_lin.k};
+HPgs_ksomef_lin.Nk = {HP_ksomef_lin.Nk};
 HPgs_ksomef_lin.theta = [0,2.^linspace(-10,10,21)];
     
 HPgs_ksomef_gau = HP_ksomef_gau;
-HPgs_ksomef_gau.k = {HP_ksomef_gau.k};
+HPgs_ksomef_gau.Nk = {HP_ksomef_gau.Nk};
 HPgs_ksomef_gau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_pol = HP_ksomef_pol;
-HPgs_ksomef_pol.k = {HP_ksomef_pol.k};
+HPgs_ksomef_pol.Nk = {HP_ksomef_pol.Nk};
 HPgs_ksomef_pol.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
 HPgs_ksomef_pol.alpha = 2.^linspace(-10,10,21);
 HPgs_ksomef_pol.theta = [0,2.^linspace(-10,10,21)];
 
 HPgs_ksomef_exp = HP_ksomef_exp;
-HPgs_ksomef_exp.k = {HP_ksomef_exp.k};
+HPgs_ksomef_exp.Nk = {HP_ksomef_exp.Nk};
 HPgs_ksomef_exp.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_cau = HP_ksomef_cau;
-HPgs_ksomef_cau.k = {HP_ksomef_cau.k};
+HPgs_ksomef_cau.Nk = {HP_ksomef_cau.Nk};
 HPgs_ksomef_cau.sigma = 2.^linspace(-10,10,21);
 
 HPgs_ksomef_log = HP_ksomef_log;
-HPgs_ksomef_log.k = {HP_ksomef_log.k};
+HPgs_ksomef_log.Nk = {HP_ksomef_log.Nk};
 HPgs_ksomef_log.sigma = 2.^linspace(-10,10,21);
 HPgs_ksomef_log.gamma = [0.2,0.4,0.6,0.8,1,2,2.2,2.4,2.6,2.8,3];
 
 HPgs_ksomef_sig = HP_ksomef_sig;
-HPgs_ksomef_sig.k = {HP_ksomef_sig.k};
+HPgs_ksomef_sig.Nk = {HP_ksomef_sig.Nk};
 HPgs_ksomef_sig.alpha = 2.^linspace(-10,10,21);
 HPgs_ksomef_sig.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
 HPgs_ksomef_kmo = HP_ksomef_kmo;
-HPgs_ksomef_kmo.k = {HP_ksomef_kmo.k};
+HPgs_ksomef_kmo.Nk = {HP_ksomef_kmo.Nk};
 HPgs_ksomef_kmo.sigma = 2.^linspace(-10,10,21);
 HPgs_ksomef_kmo.gamma = 2.^linspace(-10,10,21);
 
@@ -216,11 +216,11 @@ ksomef_kmo_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 OPT.filename = strcat(DATA.name,'_',int2str(OPT.prob2),'_ksomef', ...
                       '_hpo_',OPT.hpo, ...
-                      '_norm',int2str(OPT.norm), ...
+                      '_norm_',int2str(OPT.norm), ...
                       '_lbl_',int2str(prot_lbl), ...
                       '_nn_',int2str(HP_common.K), ...
                       '_Nep_', int2str(HP_common.Nep), ...
-                      '_Nprot_',int2str(prod(HP_common.k)), ...
+                      '_Nprot_',int2str(prod(HP_common.Nk)), ...
                       '_Kt_all');
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
@@ -530,7 +530,6 @@ if(OPT.savefile)
     variables.ksomef_kmo_out_ts_acc = ksomef_kmo_out_ts_acc;
     variables.ksomef_kmo_stats_ts_acc = ksomef_kmo_stats_ts_acc;
 
-    disp(variables);
     save(OPT.filename,'variables');
     clear variables;
 end

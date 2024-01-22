@@ -8,7 +8,7 @@
 
 % Datasets Specification
 
-datasets = 07;  % datasets = [06,07,10,19,22];
+datasets = 10;  % datasets = [06,07,10,19,22];
 
 OPT.prob2 = 02; % Some especific characteristic of a dataset
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
@@ -19,7 +19,7 @@ OPT.ptrn = 0.7; % Percentage of samples for training. [0,1]
 
 % Hyperparameter Optimization (Grid or random search Cross-validation)
 
-CVp.max_it = 10;        % Maximum number of iterations (random search)
+CVp.max_it = 100;       % Maximum number of iterations (random search)
 CVp.fold = 5;           % number of data partitions for cross validation
 CVp.cost = 2;           % Which cost function will be used
 CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (prototype-based models)
@@ -29,8 +29,8 @@ CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (prototype-based models)
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-% kernels = 2;
-kernels = [1,2,3,4,5,6,7,8];
+kernels = 1;
+% kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
@@ -53,8 +53,8 @@ HP_gs.min_prot = 1;            % Min number of prototypes
 
 HP_gs.Von = 0;                 % Enable / disable video 
 
-% HP_gs.K = 1;                   % Number of nearest neighbors (classify)
-HP_gs.K = [2 3 4 5 6 7];       % Number of nearest neighbors (classify)
+HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+% HP_gs.K = [2 3 4 5 6 7];       % Number of nearest neighbors (classify)
 
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
@@ -76,7 +76,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % Motor Failure (prob2 = 2)     => 07: 504 / 06 / 02
 % Short-circuit
 
-% Vertebral Column              => 10: xx / xx / xx
+% Vertebral Column              => 10: 310 / 06 / 03
 % Images of Vertebral Columns 
 % in order to find deseases
 

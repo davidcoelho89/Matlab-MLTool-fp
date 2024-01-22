@@ -101,10 +101,10 @@ switch (choice)
         DATA.name = 'yaleA';
     case 4
         % Load Four Groups Data
-        load data_four_groups.mat;
-        DATAaux.input = DATA.dados;
-        DATAaux.output = DATA.alvos;
-        DATAaux.lbl = DATA.rot;
+        variables = load('data_four_groups.mat');
+        DATAaux.input = variables.DATA.dados;
+        DATAaux.output = variables.DATA.alvos;
+        DATAaux.lbl = variables.DATA.rot;
         DATA = DATAaux;
         DATA.name = 'four_groups';
     case 5
@@ -239,9 +239,9 @@ switch (choice)
         DATA.lbl = DATA.output;
         DATA.name = 'sensorless';
     case 21
-        load('mnist.mat');
-        DATA.input = mnist_data;
-        DATA.output = mnist_lbl + 1;
+        variables = load('mnist.mat');
+        DATA.input = variables.mnist_data;
+        DATA.output = variables.mnist_lbl + 1;
         DATA.lbl = DATA.output;
         DATA.name = 'mnist';
     case 22

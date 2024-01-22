@@ -23,6 +23,7 @@ CVp.max_it = 100;       % Maximum number of iterations (random search)
 CVp.fold = 5;           % number of data partitions for cross validation
 CVp.cost = 2;           % Which cost function will be used
 CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (prototype-based models)
+CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (prototype-based models)
 
 % Which Kernels Will be tested
 

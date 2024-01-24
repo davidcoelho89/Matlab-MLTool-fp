@@ -2,15 +2,14 @@
 
 % Spok Model testing in various stationary datasets
 % Author: David Nascimento Coelho
-% Last Update: 2023/04/20
+% Last Update: 2024/01/20
 
 %% Choices
 
 % Datasets Specification
 
-datasets = 07;  % datasets = [06,07,10,19,22];
+datasets = 19;  % datasets = [06,07,10,19,22];
 
-OPT.prob2 = 02; % Some especific characteristic of a dataset
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
 OPT.Nr = 10;    % Number of repetitions
@@ -19,17 +18,18 @@ OPT.ptrn = 0.7; % Percentage of samples for training. [0,1]
 
 % Hyperparameter Optimization (Grid or random search Cross-validation)
 
-CVp.max_it = 10;        % Maximum number of iterations (random search)
+CVp.max_it = 100;       % Maximum number of iterations (random search)
 CVp.fold = 5;           % number of data partitions for cross validation
 CVp.cost = 2;           % Which cost function will be used
 CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (prototype-based models)
+CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (prototype-based models)
 
 % Which Kernels Will be tested
 
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-% kernels = 2;
+% kernels = 1;
 kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
@@ -38,7 +38,7 @@ HP_gs.Ne = 01;                 % Number of epochs
 HP_gs.is_static = 1;           % Verify if the dataset is stationary
 HP_gs.Dm = 1;                  % Design Method
 
-HP_gs.Ss = 2;                  % Sparsification strategy
+HP_gs.Ss = 1;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
 HP_gs.v2 = 0.9;                % Sparseness parameter 2
 
@@ -53,8 +53,8 @@ HP_gs.min_prot = 1;            % Min number of prototypes
 
 HP_gs.Von = 0;                 % Enable / disable video 
 
-% HP_gs.K = 1;                   % Number of nearest neighbors (classify)
-HP_gs.K = [2 3 4 5 6 7];       % Number of nearest neighbors (classify)
+HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
 
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
@@ -64,6 +64,8 @@ HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP_gs.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
 HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
 HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
+
+% Obs: the hyperparameters related to kernel functions are at the pipelines
 
 %% Datasets List
 
@@ -76,7 +78,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % Motor Failure (prob2 = 2)     => 07: 504 / 06 / 02
 % Short-circuit
 
-% Vertebral Column              => 10: xx / xx / xx
+% Vertebral Column              => 10: 310 / 06 / 03
 % Images of Vertebral Columns 
 % in order to find deseases
 
@@ -91,26 +93,31 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 if any(datasets == 06)
     OPT.prob = 06;
+    OPT.prob2 = 01; % Some especific characteristic of a dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 07)
     OPT.prob = 07;
+    OPT.prob2 = 02; % Some especific characteristic of a dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 10)
     OPT.prob = 10;
+    OPT.prob2 = 01; % Some especific characteristic of a dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 19)
     OPT.prob = 19;
+    OPT.prob2 = 01; % Some especific characteristic of a dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 22)
     OPT.prob = 22;
+    OPT.prob2 = 01; % Some especific characteristic of a dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 

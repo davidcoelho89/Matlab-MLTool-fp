@@ -39,8 +39,9 @@ str9 = int2str(HP_gs.Us);
 str10 = '_Ps';
 str11 = int2str(HP_gs.Ps);
 % str12 = '_<kernel>_';
-str13 = int2str(HP_gs.K(1));
-str14 = 'nn.mat';
+str13 = 'nn';
+str14 = int2str(HP_gs.K(1));
+str15 = '.mat';
 
 %% KERNEL = LINEAR
 
@@ -69,13 +70,13 @@ if (any(kernels == 1))
     HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished linear kernel!");
 
-disp("finished linear kernel!");
+end
 
 %% KERNEL = GAUSSIAN
 
@@ -104,13 +105,13 @@ if (any(kernels == 2))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished gaussian kernel!");
 
-disp("finished gaussian kernel!");
+end
 
 %% KERNEL = POLYNOMIAL
 
@@ -139,13 +140,13 @@ if (any(kernels == 3))
    	HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished polynomial kernel!");
 
-disp("finished polynomial kernel!");
+end
 
 %% KERNEL = EXPONENTIAL
 
@@ -174,13 +175,13 @@ if (any(kernels == 4))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished exponential kernel!");
 
-disp("finished exponential kernel!");
+end
 
 %% KERNEL = CAUCHY
 
@@ -209,13 +210,13 @@ if (any(kernels == 5))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished cauchy kernel!");
 
-disp("finished cauchy kernel!");
+end
 
 %% KERNEL = LOG
 
@@ -244,13 +245,13 @@ if (any(kernels == 6))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished log kernel!");
 
-disp("finished log kernel!");
+end
 
 %% KERNEL = SIGMOID
 
@@ -279,13 +280,13 @@ if (any(kernels == 7))
 	HP_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished sigmoid kernel!");
 
-disp("finished sigmoid kernel!");
+end
 
 %% KERNEL = KMOD
 
@@ -314,12 +315,12 @@ if (any(kernels == 8))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
-end
+    disp("finished kmod kernel!");
 
-disp("finished kmod kernel!");
+end
 
 %% END

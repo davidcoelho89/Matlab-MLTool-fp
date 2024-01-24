@@ -2,7 +2,7 @@
 
 % Spok Model testing in various streaming datasets
 % Author: David Nascimento Coelho
-% Last Update: 2023/01/14
+% Last Update: 2024/01/20
 
 %% Choices
 
@@ -10,7 +10,6 @@
 
 datasets = 28;  % datasets = [28,29,30,33,34,35,36,37,38]
 
-OPT.prob2 = 1;  % Specific choice about dataset
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
 
@@ -19,30 +18,42 @@ OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
 PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
+PSpar.gamma = 0.1; % Jpbc = Ds + lambda * Err + gamma * mcc (prototype-based models)
 
 % Which Kernels Will be tested
 
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = 2;          % kernels = [1,2,3,4,5,6,7,8];
+kernels = 2;
+% kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
 HP_gs.Ne = 01;                 % Number of epochs
+HP_gs.is_static = 0;           % Verify if the dataset is stationary
 HP_gs.Dm = 2;                  % Design Method
+
 HP_gs.Ss = 1;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
 HP_gs.v2 = 0.9;                % Sparseness parameter 2
+
 HP_gs.Us = 1;                  % Update strategy
 HP_gs.eta = 0.10;              % Update rate
+
 HP_gs.Ps = 2;                  % Prunning strategy
 HP_gs.min_score = -10;         % Score that leads the sample to be pruned
+
 HP_gs.max_prot = 600;          % Max number of prototypes
 HP_gs.min_prot = 1;            % Min number of prototypes
+
 HP_gs.Von = 0;                 % Enable / disable video 
+
 HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
+
 HP_gs.knn_type = 2;            % Type of knn aproximation
+
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
 HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
 HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
@@ -116,76 +127,91 @@ OPT.max_prot_after_gs = 1000;
 
 if any(datasets == 25)
     OPT.prob = 25;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 26)
     OPT.prob = 26;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 27)
     OPT.prob = 27;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 28)
     OPT.prob = 28;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 29)
     OPT.prob = 29;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 30)
     OPT.prob = 30;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 31)
     OPT.prob = 31;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 32)
     OPT.prob = 32;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 33)
     OPT.prob = 33;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 34)
     OPT.prob = 34;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 35)
     OPT.prob = 35;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 36)
     OPT.prob = 36;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 37)
     OPT.prob = 37;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 38)
     OPT.prob = 38;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 39)
     OPT.prob = 39;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 

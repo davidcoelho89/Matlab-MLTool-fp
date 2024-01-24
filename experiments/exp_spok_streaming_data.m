@@ -25,24 +25,35 @@ PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = 2;          % kernels = [1,2,3,4,5,6,7,8];
+kernels = 2;
+% kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
 HP_gs.Ne = 01;                 % Number of epochs
+HP_gs.is_static = 0;           % Verify if the dataset is stationary
 HP_gs.Dm = 2;                  % Design Method
+
 HP_gs.Ss = 1;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
 HP_gs.v2 = 0.9;                % Sparseness parameter 2
+
 HP_gs.Us = 1;                  % Update strategy
 HP_gs.eta = 0.10;              % Update rate
+
 HP_gs.Ps = 2;                  % Prunning strategy
 HP_gs.min_score = -10;         % Score that leads the sample to be pruned
+
 HP_gs.max_prot = 600;          % Max number of prototypes
 HP_gs.min_prot = 1;            % Min number of prototypes
+
 HP_gs.Von = 0;                 % Enable / disable video 
+
 HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
+
 HP_gs.knn_type = 2;            % Type of knn aproximation
+
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
 HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
 HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)

@@ -10,7 +10,6 @@
 
 datasets = 28;  % datasets = [28,29,30,33,34,35,36,37,38]
 
-OPT.prob2 = 1;  % Specific choice about dataset
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
 
@@ -127,76 +126,91 @@ OPT.max_prot_after_gs = 1000;
 
 if any(datasets == 25)
     OPT.prob = 25;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 26)
     OPT.prob = 26;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 27)
     OPT.prob = 27;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 28)
     OPT.prob = 28;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 29)
     OPT.prob = 29;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 30)
     OPT.prob = 30;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 31)
     OPT.prob = 31;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 32)
     OPT.prob = 32;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 33)
     OPT.prob = 33;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 34)
     OPT.prob = 34;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 35)
     OPT.prob = 35;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 36)
     OPT.prob = 36;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 37)
     OPT.prob = 37;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 38)
     OPT.prob = 38;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 
 if any(datasets == 39)
     OPT.prob = 39;
+    OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
 end
 

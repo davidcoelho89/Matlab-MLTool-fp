@@ -41,7 +41,7 @@ str10 = '_Ps_';
 str11 = int2str(HP_gs.Ps);
 % str12 = '_<kernel>_';
 str13 = 'nn';
-str14 = int2str(HP_gs.K);
+str14 = int2str(HP_gs.K(1));
 str15 = '.mat';
 
 %% KERNEL = LINEAR

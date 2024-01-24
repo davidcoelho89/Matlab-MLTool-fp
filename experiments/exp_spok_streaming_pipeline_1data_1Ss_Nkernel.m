@@ -29,19 +29,20 @@ DATA = data_class_loading(OPT);
 %% FILE NAME - STRINGS
 
 str1 = DATA.name;
-str2 = '_spok_hpo1_norm';
+str2 = '_spok_hpo_1_norm_';
 str3 = int2str(OPT.norm);
-str4 = '_Dm';
+str4 = '_Dm_';
 str5 = int2str(HP_gs.Dm);
-str6 = '_Ss';
+str6 = '_Ss_';
 str7 = int2str(HP_gs.Ss);
-str8 = '_Us';
+str8 = '_Us_';
 str9 = int2str(HP_gs.Us);
-str10 = '_Ps';
+str10 = '_Ps_';
 str11 = int2str(HP_gs.Ps);
 % str12 = '_<kernel>_';
-str13 = int2str(HP_gs.K);
-str14 = 'nn.mat';
+str13 = 'nn';
+str14 = int2str(HP_gs.K);
+str15 = '.mat';
 
 %% KERNEL = LINEAR
 
@@ -70,7 +71,7 @@ if (any(kernels == 1))
     HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
@@ -105,7 +106,7 @@ if (any(kernels == 2))
     HP_gs.theta = 1;
     
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
@@ -140,7 +141,7 @@ if (any(kernels == 3))
     HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
@@ -175,7 +176,7 @@ if (any(kernels == 4))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
@@ -210,7 +211,7 @@ if (any(kernels == 5))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
@@ -281,7 +282,7 @@ if (any(kernels == 7))
     HP_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
@@ -316,7 +317,7 @@ if (any(kernels == 8))
     HP_gs.theta = 1;
 
     OPT.file = strcat(str1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14);
+                      str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 

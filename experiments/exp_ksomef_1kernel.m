@@ -2,7 +2,7 @@
 
 % KSOM-EF Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2024/01/12
+% Last Update: 2024/01/20
 
 close;          % Close all windows
 clear;          % Clear all variables

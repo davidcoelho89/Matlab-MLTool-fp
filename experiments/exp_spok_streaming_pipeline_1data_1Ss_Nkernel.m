@@ -74,10 +74,9 @@ if (any(kernels == 1))
                       str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
-
+    
+    disp("finished linear kernel!");
 end
-
-disp("finished linear kernel!");
 
 %% KERNEL = GAUSSIAN
 
@@ -110,9 +109,9 @@ if (any(kernels == 2))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
-end
+    disp("finished gaussian kernel!");
 
-disp("finished gaussian kernel!");
+end
 
 %% KERNEL = POLYNOMIAL
 
@@ -145,9 +144,9 @@ if (any(kernels == 3))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
-end
+    disp("finished polynomial kernel!");
 
-disp("finished polynomial kernel!");
+end
 
 %% KERNEL = EXPONENTIAL
 
@@ -180,9 +179,9 @@ if (any(kernels == 4))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
-end
+    disp("finished exponential kernel!");
 
-disp("finished exponential kernel!");
+end
 
 %% KERNEL = CAUCHY
 
@@ -215,10 +214,9 @@ if (any(kernels == 5))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
+    disp("finished cauchy kernel!");
+
 end
-
-disp("finished cauchy kernel!");
-
 
 %% KERNEL = LOG
 
@@ -251,9 +249,9 @@ if (any(kernels == 6))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
-end
+    disp("finished log kernel!");
 
-disp("finished log kernel!");
+end
 
 %% KERNEL = SIGMOID
 
@@ -286,9 +284,9 @@ if (any(kernels == 7))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
-end
+    disp("finished sigmoid kernel!");
 
-disp("finished sigmoid kernel!");
+end
 
 %% KERNEL = KMOD
 
@@ -321,8 +319,8 @@ if (any(kernels == 8))
 
     exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,PSp);
 
-end
+    disp("finished kmod kernel!");
 
-disp("finished kmod kernel!");
+end
 
 %% END

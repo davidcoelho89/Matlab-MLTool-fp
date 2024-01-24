@@ -80,4 +80,13 @@ for j = 1:length(ss)
     end
 end
 
+%% MOTOR FAILURE (02 - balanced), SPARK, HPO RANDOM, LOG KERNEL
+
+% Init
+close;
+clear;
+clc;
+
+
+
 %% END

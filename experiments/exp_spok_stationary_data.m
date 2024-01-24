@@ -2,7 +2,7 @@
 
 % Spok Model testing in various stationary datasets
 % Author: David Nascimento Coelho
-% Last Update: 2023/04/20
+% Last Update: 2024/01/20
 
 %% Choices
 

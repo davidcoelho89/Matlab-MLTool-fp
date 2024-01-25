@@ -73,6 +73,8 @@ accuracy = 0;                   % Init accurary
 Ds = 0;                         % Init # prototypes (dictionary size)
 Nneurons = 0;                   % Init # of neurons (for ANNs)
 Nsv = 0;                        % Init # of support vectors (for SVMs)
+fsc = 0;                        % Init F1-score measure
+mcc = 0;                        % Init Matthews Correlation Coefficient
 
 % Init Parameters
 
@@ -178,5 +180,7 @@ PVout.err = error;          % Error of trained model
 PVout.Ds = Ds;              % Dictionary Size
 PVout.Nneurons = Nneurons;  % Number of neurons
 PVout.Nsv = Nsv;            % Number of support vectors
+PVout.fsc = fsc;            % F1-score measure
+PVout.mcc = mcc;            % Matthews Correlation Coefficient Measure
 
 %% END

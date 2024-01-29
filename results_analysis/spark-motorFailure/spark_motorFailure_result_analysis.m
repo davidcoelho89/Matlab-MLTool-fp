@@ -1,4 +1,4 @@
-% %% RESULT ANALYSIS
+%% RESULT ANALYSIS
 
 % SPARK and Stationary Data Sets
 % Author: David Nascimento Coelho

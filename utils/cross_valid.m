@@ -67,7 +67,8 @@ Y = DATAtr.output;     	% labels Matriz [Nc x N]
 Nfold = CVp.fold;     	% Number of data partitions
 part = floor(N/Nfold); 	% Size of each data partition
 cost = CVp.cost;        % Which cost function will be used
-lambda = CVp.lambda;    % trade-off between error and dictionary size
+lambda = CVp.lambda;    % trade-off between error and dic size
+gamma = CVp.gamma;      % trade-off between error, dict size, fsc
 
 % Init Outupts
 
@@ -76,7 +77,7 @@ Ds = 0;                 % Dictionary Size
 Nneurons = 0;           % Init # of neurons (NN based)
 Nsv = 0;                % Init # of support vectors (SVC based)
 fsc = 0;                % Init F1-score measure
-mcc = -1;               % Init Matthews Correlation Coefficient
+mcc = 0;                % Init Matthews Correlation Coefficient
 
 %% ALGORITHM
 
@@ -135,6 +136,12 @@ for fold = 1:Nfold
 
     % Accumulate Accuracy rate
     accuracy = accuracy + STATS_ts.acc;
+
+    % Accumulate macro f1-score
+    fsc = fsc + STATS_ts.fsc_macro;
+
+    % Accumulate mcc multiclass
+    mcc = mcc + STATS_ts.mcc_multiclass;
     
 end
 
@@ -144,10 +151,15 @@ if(restriction1)
     restriction2 = 1;
     mean_error = 1;
     mean_accuracy = 0;
+    mean_mcc = -1;
+    mean_fsc = 0;
 else
     
     mean_accuracy = accuracy / Nfold;
     mean_error = 1 - mean_accuracy;
+
+    mean_fsc = fsc / Nfold;
+    mean_mcc = mcc / Nfold;
 
     % Restriction 2: About combination of parameters after training
     restriction2 = restriction_par_final(DATAtr,PAR,class_train);    
@@ -170,9 +182,9 @@ elseif (cost == 2)
     Ds = Ds / (N * Nfold);
     
     if(restriction1 || restriction2)
-        measure = 1 + lambda;           % Maximum value
+        measure = 1 + lambda;               % Maximum value
     else
-        measure = Ds + lambda * mean_error;  % Measure
+        measure = Ds + lambda * mean_error; % Measure
     end
 
 elseif (cost == 3)
@@ -182,7 +194,22 @@ elseif (cost == 4)
     % ToDo - all
 
 elseif (cost == 5)
-    % ToDo - all
+    
+    % Restricition about mcc or fsc
+    if (mean_fsc == 0 || mean_mcc == -1)
+        restriction3 = 1;
+    else
+        restriction3 = 0;
+    end
+
+    % Get dictionary mean size (Mean Percentage of Prototypes)
+    Ds = Ds / (N * Nfold);
+    
+    if(restriction1 || restriction2 || restriction3)
+        measure = 1 + lambda;               % Maximum value
+    else
+        measure = Ds + lambda * mean_error - gamma * mean_fsc; % Measure
+    end
     
 end
 
@@ -194,7 +221,7 @@ CVout.err = mean_error;     % Error of trained model
 CVout.Ds = Ds;              % Dictionary Size
 CVout.Nneurons = Nneurons;  % Number of neurons
 CVout.Nsv = Nsv;            % Number of support vectors
-CVout.fsc = fsc;            % F1-score measure
-CVout.mcc = mcc;            % Matthews Correlation Coefficient Measure
+CVout.fsc = mean_fsc;       % F1-score measure
+CVout.mcc = mean_mcc;       % Matthews Correlation Coefficient Measure
 
 %% END

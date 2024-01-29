@@ -93,31 +93,31 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 if any(datasets == 06)
     OPT.prob = 06;
-    OPT.prob2 = 01; % Some especific characteristic of a dataset
+    OPT.prob2 = 01;
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 07)
     OPT.prob = 07;
-    OPT.prob2 = 02; % Some especific characteristic of a dataset
+    OPT.prob2 = 02; % Binary Problem, balanced dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 10)
     OPT.prob = 10;
-    OPT.prob2 = 01; % Some especific characteristic of a dataset
+    OPT.prob2 = 01;
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 19)
     OPT.prob = 19;
-    OPT.prob2 = 01; % Some especific characteristic of a dataset
+    OPT.prob2 = 02; % Treated as Binary problem (2 classes)
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 22)
     OPT.prob = 22;
-    OPT.prob2 = 01; % Some especific characteristic of a dataset
+    OPT.prob2 = 01;
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 

@@ -2,7 +2,7 @@
 
 % Sample used to run spok Algorithm and a Streaming DataSet
 % Author: David Nascimento Coelho
-% Last Update: 2022/04/11
+% Last Update: 2024/01/26
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -21,6 +21,7 @@ OPT.lbl = 1;                % Labeling definition. 1: [-1 +1] pattern
 OPT.Nr = 01;              	% Number of repetitions of the algorithm
 OPT.hold = 2;               % Hold out method
 OPT.ptrn = 0.7;             % Percentage of samples for training
+OPT.hpo = 'none';           % 'grid' ; 'random' ; 'none' ; 'pso'
 OPT.file = 'fileX.mat';     % file where all the variables will be saved
 
 % "Hyperparameters Optimization" Parameters

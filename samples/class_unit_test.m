@@ -2,7 +2,7 @@
 
 % Classification Algorithms - Unit Test
 % Author: David Nascimento Coelho
-% Last Update: 2023/01/23
+% Last Update: 2024/01/26
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -14,14 +14,14 @@ format long e;  % Output data style (float)
 % General options' structure
 
 OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'mlp';        % Which classifier will be used
-OPT.prob = 06;        	% Which problem will be solved / used
-OPT.prob2 = 30;       	% More details about a specific data set
+OPT.alg = 'ols';        % Which classifier will be used
+OPT.prob = 19;        	% Which problem will be solved / used
+OPT.prob2 = 02;       	% More details about a specific data set
 OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
 OPT.ptrn = 0.7;        	% Percentage of samples for training
-OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none' ; pso
+OPT.hpo = 'none';       % 'grid' ; 'random' ; 'none' ; 'pso'
 OPT.file = 'fileX.mat';	% file where all the variables will be saved
 
 OPT.savefile = 0;               % decides if file will be saved

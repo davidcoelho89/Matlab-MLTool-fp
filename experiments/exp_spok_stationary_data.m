@@ -36,7 +36,7 @@ kernels = [1,2,3,4,5,6,7,8];
 
 HP_gs.Ne = 01;                 % Number of epochs
 HP_gs.is_static = 1;           % Verify if the dataset is stationary
-HP_gs.Dm = 1;                  % Design Method
+HP_gs.Dm = 2;                  % Design Method
 
 HP_gs.Ss = 2;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
@@ -53,8 +53,8 @@ HP_gs.min_prot = 1;            % Min number of prototypes
 
 HP_gs.Von = 0;                 % Enable / disable video 
 
-HP_gs.K = 1;                   % Number of nearest neighbors (classify)
-% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
+% HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
 
 HP_gs.knn_type = 2;            % Type of knn aproximation
 

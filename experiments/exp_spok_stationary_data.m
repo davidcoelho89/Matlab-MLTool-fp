@@ -8,7 +8,7 @@
 
 % Datasets Specification
 
-datasets = 19;  % datasets = [06,07,10,19,22];
+datasets = 07;  % datasets = [06,07,10,19,22];
 
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
@@ -36,9 +36,9 @@ kernels = [1,2,3,4,5,6,7,8];
 
 HP_gs.Ne = 01;                 % Number of epochs
 HP_gs.is_static = 1;           % Verify if the dataset is stationary
-HP_gs.Dm = 2;                  % Design Method
+HP_gs.Dm = 1;                  % Design Method
 
-HP_gs.Ss = 4;                  % Sparsification strategy
+HP_gs.Ss = 1;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
 HP_gs.v2 = 0.9;                % Sparseness parameter 2
 
@@ -53,8 +53,8 @@ HP_gs.min_prot = 1;            % Min number of prototypes
 
 HP_gs.Von = 0;                 % Enable / disable video 
 
-% HP_gs.K = 1;                   % Number of nearest neighbors (classify)
-HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
+HP_gs.K = 1;                   % Number of nearest neighbors (classify)
+% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
 
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
@@ -75,7 +75,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % Iris                          => 06: 150 / 04 / 03
 % Easiest. Used for debug.
 
-% Motor Failure (prob2 = 2)     => 07: 504 / 06 / 02
+% Motor Failure (prob2 = 1, 2)	=> 07: 504 / 06 / 02
 % Short-circuit
 
 % Vertebral Column              => 10: 310 / 06 / 03
@@ -91,6 +91,18 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% Run algorithm at datasets
 
+for i = 1:4
+for j = 1:2
+for k = 1:2
+    
+HP_gs.Ss = i;
+HP_gs.Dm = j;
+if(k == 1)
+    HP_gs.K = 1;
+else
+    HP_gs.K = 2:10;
+end
+
 if any(datasets == 06)
     OPT.prob = 06;
     OPT.prob2 = 01;
@@ -99,7 +111,8 @@ end
 
 if any(datasets == 07)
     OPT.prob = 07;
-    OPT.prob2 = 02; % Binary Problem, balanced dataset
+    OPT.prob2 = 01; % Binary Problem. Unbalanced dataset
+    % OPT.prob2 = 02; % Binary Problem, balanced dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
@@ -111,6 +124,7 @@ end
 
 if any(datasets == 19)
     OPT.prob = 19;
+    % OPT.prob2 = 01; % Tretar as Multiclass (7 classes)
     OPT.prob2 = 02; % Treated as Binary problem (2 classes)
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
@@ -119,6 +133,10 @@ if any(datasets == 22)
     OPT.prob = 22;
     OPT.prob2 = 01;
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
+end
+
+end
+end
 end
 
 %% FINISHED!

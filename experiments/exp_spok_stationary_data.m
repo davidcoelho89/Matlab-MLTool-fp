@@ -112,19 +112,20 @@ end
 if any(datasets == 07)
     OPT.prob = 07;
     OPT.prob2 = 01; % Binary Problem. Unbalanced dataset
-    % OPT.prob2 = 02; % Binary Problem, balanced dataset
+    % OPT.prob2 = 02; % Binary Problem. Balanced dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 10)
     OPT.prob = 10;
-    OPT.prob2 = 01;
+    % OPT.prob2 = 01; % Treated as Multiclass (3 classes)
+    OPT.prob2 = 02; % Treated as Binary problem (2 classes)
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
 if any(datasets == 19)
     OPT.prob = 19;
-    % OPT.prob2 = 01; % Tretar as Multiclass (7 classes)
+    % OPT.prob2 = 01; % Treated as Multiclass (7 classes)
     OPT.prob2 = 02; % Treated as Binary problem (2 classes)
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end

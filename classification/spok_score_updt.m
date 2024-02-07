@@ -76,10 +76,10 @@ else
     [~,Dy_class] = max(Cy);
     
     % number of elements, in the dictionary, of the same class as yt
-    mc = sum(Dy_class == yt_class); 
+    Qc = sum(Dy_class == yt_class); 
     
     % if there are no prototypes from yt class
-    if (mc == 0)
+    if (Qc == 0)
 
         % Does nothing
         

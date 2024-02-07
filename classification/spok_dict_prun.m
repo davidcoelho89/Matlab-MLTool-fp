@@ -61,10 +61,10 @@ elseif (Ps == 1 || Ps == 2)
             
             % number of elements from the same class as the prototypes'
             c = Dy_seq(k);
-            mc = sum(Dy_seq == c);
+            Qc = sum(Dy_seq == c);
 
             % dont rem element if it is the only element of its class
-            if (mc == 1)
+            if (Qc == 1)
                 continue;
             end
             

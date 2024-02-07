@@ -68,24 +68,24 @@ y = DATA.output;
 
 % Get problem parameters
 
-[~,m] = size(Cx);       % Dictionary size
+[~,Q] = size(Cx);       % Dictionary size
 
 [~,c] = max(y);         % Class of sample (Sequential encoding)
 
 [~,Cy_seq] = max(Cy);	% Classes of dictionary (Sequential encoding)
 
-mc = sum(Cy_seq == c);	% Number of prototypes from samples' class
+Qc = sum(Cy_seq == c);	% Number of prototypes from samples' class
 
 %% ALGORITHM
 
 % Add first element to dictionary (total or from class)
-if (m == 0 || (Dm == 2 && mc == 0))
+if (Q == 0 || (Dm == 2 && Qc == 0))
     
     HP = spok_add_sample(DATA,HP);
     
 else
     % Dont add if number of prototypes is too high
-    if (m < max_prot)
+    if (Q < max_prot)
     	
         % Get Dictionary Samples and Inverse Kernel Matrix
         if (Dm == 1)

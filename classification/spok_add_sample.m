@@ -61,7 +61,7 @@ times_selected = HP.times_selected; % Prototypes # of selection
 ktt = kernel_func(xt,xt,HP);    % Kernel function of sample and itself
 [Nc,~] = size(yt);              % Number of classes
 [~,c] = max(yt);                % Class of sample
-[~,m] = size(Dx);               % Number of prototypes in the Dictionary
+[~,Q] = size(Dx);               % Number of prototypes in the Dictionary
 [~,Dy_seq] = max(Dy);           % Sequential classes of dictionary
 
 %% ALGORITHM
@@ -70,7 +70,7 @@ ktt = kernel_func(xt,xt,HP);    % Kernel function of sample and itself
 
 if(HP.update_kernel_matrix)
 
-    if (m == 0) % First element of dictionary
+    if (Q == 0) % First element of dictionary
 
         % Build Kernel matrix and its inverse for each class
         Kmc_out = cell(Nc,1);
@@ -85,10 +85,10 @@ if(HP.update_kernel_matrix)
     else
 
         % Get number of prototypes from samples' class
-        mc = sum(Dy_seq == c);	
+        Qc = sum(Dy_seq == c);	
 
         % Build kernel matrix and its inverse of samples' class
-        if (mc == 0)
+        if (Qc == 0)
             Kmc{c} = ktt + sig2n;
             Kmc_out = Kmc;
             Kinvc{c} = 1/Kmc{c};

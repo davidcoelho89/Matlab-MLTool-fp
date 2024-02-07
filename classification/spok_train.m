@@ -78,7 +78,7 @@ if ((nargin == 1) || (isempty(HP)))
     PARaux.min_prot = 1;    % Min number of prototypes
     PARaux.Von = 0;         % Enable / disable video
     PARaux.K = 1;           % Number of nearest neighbors (classify)
-    PARaux.knn_type = 1;    % Majority voting for knn
+    PARaux.knn_type = 2;    % Distance Weighted knn
     PARaux.Ktype = 2;       % Kernel Type (gaussian)
     PARaux.sig2n = 0.001;   % Kernel regularization parameter
     PARaux.sigma = 2;       % Kernel width (gaussian)
@@ -130,7 +130,7 @@ else
         HP.K = 1;
     end
     if (~(isfield(HP,'knn_type')))
-        HP.knn_type = 1;
+        HP.knn_type = 2;
     end
     if (~(isfield(HP,'Ktype')))
         HP.Ktype = 2;
@@ -220,10 +220,10 @@ for epoch = 1:Ne
         DATAn.output = Y(:,n);
 
         % Get dictionary size (cardinality, number of prototypes)
-        [~,mt1] = size(PAR.Cx);
+        [~,Qt1] = size(PAR.Cx);
 
         % Init Dictionary (if it is the first sample)
-        if (mt1 == 0)
+        if (Qt1 == 0)
             % Make a guess (yh = [1 -1 -1 ... -1 -1]' : first class)
             yh(1,n) = 1;
             % Add sample to dictionary
@@ -245,14 +245,14 @@ for epoch = 1:Ne
         PAR = spok_dict_grow(DATAn,PAR);
 
         % Get dictionary size (cardinality, number of prototypes)
-        [~,mt2] = size(PAR.Cx);
+        [~,Qt2] = size(PAR.Cx);
 
         % Update Strategy (if prototype was not added)
-        if(mt2-mt1 == 0)
+        if(Qt2 - Qt1 == 0)
             PAR = spok_dict_updt(DATAn,PAR);
         else
             % For debug. Display dictionary size when it grows.
-            % display(mt2);
+            % display(Qt2);
         end
 
         % Prunning Strategy (heuristic based)

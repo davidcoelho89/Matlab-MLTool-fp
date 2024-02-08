@@ -39,11 +39,14 @@ Nr = variables.OPT.Nr;
 line = 0;
 lines = length(ss) * length(dm) * length(knn);
 
-mat_mean_values = zeros(lines,length(kt));
-mat_median_values = zeros(lines,length(kt));
-mat_nprot = zeros(lines,length(kt));
-mat_boxplot_acc = zeros(Nr,length(kt));
-
+mat_acc_mean = zeros(lines,length(kt));
+mat_acc_median = zeros(lines,length(kt));
+mat_acc_best = zeros(lines,length(kt));
+mat_acc_boxplot = zeros(Nr,length(kt));
+mat_nprot_best = zeros(lines,length(kt));
+mat_nprot_mean = zeros(lines,length(kt));
+mat_K_best = zeros(lines,length(kt));
+mat_K_mean = zeros(lines,length(kt));
 
 % Get Values
 
@@ -65,40 +68,52 @@ for j = 1:length(ss)
                 disp(filename);
                 % Get variables
                 variables = load(filename);
-                % Update matrices
-                mat_mean_values(line,k) = variables.nSTATS_ts.acc_mean;
-                mat_median_values(line,k) = variables.nSTATS_ts.acc_median;
-                mat_boxplot_acc(:,k) = variables.nSTATS_ts.acc';
+                best_acc_index = variables.nSTATS_ts.acc_max_i;
+                % Update acc matrices
+                mat_acc_best(line,k) = variables.STATS_ts_acc{best_acc_index,1}.acc;
+                mat_acc_mean(line,k) = variables.nSTATS_ts.acc_mean;
+                mat_acc_median(line,k) = variables.nSTATS_ts.acc_median;
+                mat_acc_boxplot(:,k) = variables.nSTATS_ts.acc';
+                % Update Nprot
+                mat_nprot_best(line,k) = size(variables.PAR_acc{best_acc_index,1}.Cx,2);
+                mat_K_best(line,k) = variables.PAR_acc{best_acc_index,1}.K;
+                for m = 1:Nr
+                    mat_nprot_mean(line,k) = mat_nprot_mean(line,k) + ...
+                                  size(variables.PAR_acc{m,1}.Cx,2);
+                    mat_K_mean(line,k) = mat_K_mean(line,k) + ...
+                                  variables.PAR_acc{m,1}.K;
+                end
                 % Clear variables;
                 clear variables;
 
             end
 
             % Generate Accuracy boxplot (1 line)
-            figure; boxplot(mat_boxplot_acc, 'label', kt);
-            set(gcf,'color',[1 1 1])        % Removes Gray Background
-            ylabel('Accuracy')
-            xlabel('Kernels')
-            title_str = strcat('Accuracy-','Ss',ss{j},'Dm',dm{i},'nn',knn{l});
-            title(title_str)
-            axis ([0 length(kt)+1 -0.05 1.05])
-
-            hold on
-            plot(mean(mat_boxplot_acc),'*k')
-            hold off
+%             figure; boxplot(mat_acc_boxplot, 'label', kt);
+%             set(gcf,'color',[1 1 1])        % Removes Gray Background
+%             ylabel('Accuracy')
+%             xlabel('Kernels')
+%             title_str = strcat('Accuracy-','Ss',ss{j},'Dm',dm{i},'nn',knn{l});
+%             title(title_str)
+%             axis ([0 length(kt)+1 -0.05 1.05])
+% 
+%             hold on
+%             plot(mean(mat_acc_boxplot),'*k')
+%             hold off
 
         end
     end
 end
+mat_nprot_mean = mat_nprot_mean/Nr;
+mat_K_mean = mat_K_mean/Nr;
 
 %% MOTOR FAILURE (01 - unbalanced), SPARK, HPO RANDOM, LOG KERNEL
 
 % Init
 
-close;
-clear;
-clc;
-
+% close;
+% clear;
+% clc;
 
 
 %% END

@@ -82,9 +82,10 @@ if (K == 1)        % if it is a nearest neighbor case
     for n = 1:N
         
         % Display classification iteration (for debug)
-        if(mod(n,1000) == 0)
-            disp(n);
-        end
+%         if(mod(n,1000) == 0)
+%             disp('debug in prototypes_class_function');
+%             disp(n);
+%         end
         
         % Get test sample
         sample = X(:,n);
@@ -152,9 +153,10 @@ elseif (K > 1)    % if it is a knn case
     for n = 1:N
         
         % Display classification iteration (for debug)
-        if(mod(n,1000) == 0)
-            disp(n);
-        end
+%         if(mod(n,1000) == 0)
+%             disp('debug in prototypes_class_function');
+%             disp(n);
+%         end
         
         % Get test sample
         sample = X(:,n);

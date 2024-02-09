@@ -2,13 +2,17 @@
 
 % Spok Model testing in various stationary datasets
 % Author: David Nascimento Coelho
-% Last Update: 2024/02/06
+% Last Update: 2024/02/09
+
+clear;
+clc;
+format long e;
 
 %% Choices
 
 % Datasets Specification
 
-datasets = 07;  % datasets = [06,07,10,19,22];
+datasets = 22;  % datasets = [06,07,10,19,22];
 
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
@@ -59,7 +63,7 @@ HP_gs.K = 1;                   % Number of nearest neighbors (classify)
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
-HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
+HP_gs.sig2n = 0.0001;          % Kernel Regularization parameter
 HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP_gs.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
 HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
@@ -75,14 +79,14 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % Iris                              => 06: 150 / 04 / 03
 % Easiest. Used for debug.
 
-% Motor Failure (prob2 = 1, 2)      => 07: 504 / 06 / 7 or 2
+% Motor Failure (prob2 = 1, 2)      => 07: 504 / 06 / 07 or 02
 % Short-circuit
 
-% Vertebral Column (prob2 = 1, 2)	=> 10: 310 / 06 / 3 or 2
+% Vertebral Column (prob2 = 1, 2)	=> 10: 310 / 06 / 03 or 02
 % Images of Vertebral Columns 
 % in order to find deseases
 
-% Cervical Cancer (prob2 = 1, 2)    => 19: 917 / 20 / 7 or 2
+% Cervical Cancer (prob2 = 1, 2)    => 19: 917 / 20 / 07 or 02
 % Image of Pap-Smear Cells 
 % To detect Cervical Cancer
 

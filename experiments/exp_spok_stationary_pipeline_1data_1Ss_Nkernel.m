@@ -29,7 +29,9 @@ DATA = data_class_loading(OPT);
 
 str1 = DATA.name;
 str1_1 = int2str(OPT.prob2);
-str2 = '_spok_hpo1_norm';
+str2 = '_spok_hold';
+str2_2 = int2str(OPT.hold);
+str2_3 = '_norm';
 str3 = int2str(OPT.norm);
 str4 = '_Dm';
 str5 = int2str(HP_gs.Dm);
@@ -70,8 +72,8 @@ if (any(kernels == 1))
     HP_gs.alpha = 1;
     HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -105,8 +107,8 @@ if (any(kernels == 2))
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -140,8 +142,8 @@ if (any(kernels == 3))
 	HP_gs.alpha = 2.^linspace(-10,10,21);
    	HP_gs.theta = [0,2.^linspace(-10,10,21)];
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -175,8 +177,8 @@ if (any(kernels == 4))
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -210,8 +212,8 @@ if (any(kernels == 5))
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -245,8 +247,8 @@ if (any(kernels == 6))
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -280,8 +282,8 @@ if (any(kernels == 7))
     HP_gs.alpha = 2.^linspace(-10,10,21);
 	HP_gs.theta = [-2.^linspace(10,-10,21), 2.^linspace(-10,10,21)];
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 
@@ -315,8 +317,8 @@ if (any(kernels == 8))
     HP_gs.alpha = 1;
     HP_gs.theta = 1;
 
-    OPT.file = strcat(str1,str1_1,str2,str3,str4,str5,str6,str7,str8,...
-                      str9,str10,str11,str12,str13,str14,str15);
+    OPT.file = strcat(str1,str1_1,str2,str2_2,str2_3,str3,str4,str5,str6,...
+                      str7,str8,str9,str10,str11,str12,str13,str14,str15);
 
     exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HP_gs,CVp);
 

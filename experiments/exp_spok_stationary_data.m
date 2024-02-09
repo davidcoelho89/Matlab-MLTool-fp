@@ -8,12 +8,12 @@
 
 % Datasets Specification
 
-datasets = 10;  % datasets = [06,07,10,19,22];
+datasets = 07;  % datasets = [06,07,10,19,22];
 
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
 OPT.Nr = 10;    % Number of repetitions
-OPT.hold = 2;   % Hold out method.
+OPT.hold = 1;   % Hold out method.
 OPT.ptrn = 0.7; % Percentage of samples for training. [0,1]
 
 % Hyperparameter Optimization (Grid or random search Cross-validation)
@@ -72,21 +72,21 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % # code: # samples / # attributes / # classes
 % Brief Description
 
-% Iris                          => 06: 150 / 04 / 03
+% Iris                              => 06: 150 / 04 / 03
 % Easiest. Used for debug.
 
-% Motor Failure (prob2 = 1, 2)	=> 07: 504 / 06 / 7 or 2
+% Motor Failure (prob2 = 1, 2)      => 07: 504 / 06 / 7 or 2
 % Short-circuit
 
-% Vertebral Column              => 10: 310 / 06 / 3 or 2
+% Vertebral Column (prob2 = 1, 2)	=> 10: 310 / 06 / 3 or 2
 % Images of Vertebral Columns 
 % in order to find deseases
 
-% Cervical Cancer               => 19: 917 / 20 / 7 or 2
+% Cervical Cancer (prob2 = 1, 2)    => 19: 917 / 20 / 7 or 2
 % Image of Pap-Smear Cells 
 % To detect Cervical Cancer
 
-% Wall-Following                => 22: 5456 / 02 / 02
+% Wall-Following                    => 22: 5456 / 02 / 04
 % An avoiding Wall Robot.
 
 %% Run algorithm at datasets

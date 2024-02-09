@@ -2,7 +2,7 @@
 
 % Spok Model testing in various streaming datasets
 % Author: David Nascimento Coelho
-% Last Update: 2024/01/20
+% Last Update: 2024/02/09
 
 %% Choices
 
@@ -55,7 +55,7 @@ HP_gs.K = 1;                   % Number of nearest neighbors (classify)
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
-HP_gs.sig2n = 0.001;           % Kernel Regularization parameter
+HP_gs.sig2n = 0.0001;          % Kernel Regularization parameter
 HP_gs.sigma = 2;               % Kernel width (gauss, exp, cauchy, log, kmod)
 HP_gs.alpha = 0.1;             % Dot product multiplier (poly 1 / sigm 0.1)
 HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)

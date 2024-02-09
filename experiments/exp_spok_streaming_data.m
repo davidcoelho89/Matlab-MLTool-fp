@@ -4,6 +4,10 @@
 % Author: David Nascimento Coelho
 % Last Update: 2024/02/09
 
+clear;
+clc;
+format long e;
+
 %% Choices
 
 % Datasets Specification

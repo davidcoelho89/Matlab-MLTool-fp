@@ -18,8 +18,6 @@ close;
 clear;
 clc;
 
-% Choices for filename
-
 str1 = 'cervicalCancer_spok_hpo1_norm3_Dm';
 
 dm = {'1','2'};

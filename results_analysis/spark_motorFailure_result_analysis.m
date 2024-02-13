@@ -35,6 +35,7 @@ i = 1; j = 1; k = 1; l = 1;
 filename = strcat(str1,dm{i},'_Ss',ss{j},'_Us0_Ps0_',kt{k},'_',knn{l},'nn');
 variables = load(filename);
 Nr = variables.OPT.Nr;
+clear variables;
 
 % Init variables
 
@@ -269,6 +270,7 @@ filename = strcat(str1,dm{i},...
                   'nn',knn{l});
 variables = load(filename);
 Nr = variables.OPT.Nr;
+clear variables;
 
 % Init variables
 
@@ -512,6 +514,9 @@ filename = strcat(str1,dm{i},...
                   'nn',knn{l});
 variables = load(filename);
 Nr = variables.OPT.Nr;
+clear variables;
+
+% Init variables
 
 lines = length(ss) * length(dm) * length(knn);
 

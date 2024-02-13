@@ -279,6 +279,9 @@ mat_acc_median = zeros(lines,length(kt));
 mat_acc_best = zeros(lines,length(kt));
 mat_acc_boxplot = zeros(Nr,length(kt));
 
+mat_fsc_best = zeros(lines,length(kt));
+mat_mcc_best = zeros(lines,length(kt));
+
 mat_nprot_best = zeros(lines,length(kt));
 mat_nprot_mean = zeros(lines,length(kt));
 
@@ -389,6 +392,10 @@ for j = 1:length(ss)
                 mat_acc_mean(line,k) = variables.nSTATS_ts.acc_mean;
                 mat_acc_median(line,k) = variables.nSTATS_ts.acc_median;
                 mat_acc_boxplot(:,k) = variables.nSTATS_ts.acc';
+                
+                % Update mcc and fsc
+                mat_fsc_best(line,k) = variables.STATS_ts_acc{best_acc_index,1}.fsc_macro;
+                mat_mcc_best(line,k) = variables.STATS_ts_acc{best_acc_index,1}.mcc_multiclass;
                 
                 % Update Hyperparameters
                 mat_nprot_best(line,k) = size(variables.PAR_acc{best_acc_index,1}.Cx,2);
@@ -513,6 +520,9 @@ mat_acc_median = zeros(lines,length(kt));
 mat_acc_best = zeros(lines,length(kt));
 mat_acc_boxplot = zeros(Nr,length(kt));
 
+mat_fsc_best = zeros(lines,length(kt));
+mat_mcc_best = zeros(lines,length(kt));
+
 mat_nprot_best = zeros(lines,length(kt));
 mat_nprot_mean = zeros(lines,length(kt));
 
@@ -623,7 +633,11 @@ for j = 1:length(ss)
                 mat_acc_median(line,k) = variables.nSTATS_ts.acc_median;
                 mat_acc_boxplot(:,k) = variables.nSTATS_ts.acc';
                 
-                                % Update Hyperparameters
+                % Update mcc and fsc
+                mat_fsc_best(line,k) = variables.STATS_ts_acc{best_acc_index,1}.fsc_macro;
+                mat_mcc_best(line,k) = variables.STATS_ts_acc{best_acc_index,1}.mcc_multiclass;
+
+                % Update Hyperparameters
                 mat_nprot_best(line,k) = size(variables.PAR_acc{best_acc_index,1}.Cx,2);
                 mat_K_best(line,k) = variables.PAR_acc{best_acc_index,1}.K;
                 

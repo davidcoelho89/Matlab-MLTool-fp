@@ -12,7 +12,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 22;  % datasets = [06,07,10,19,22];
+datasets = 06;  % datasets = [06,07,10,19,22];
 
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  

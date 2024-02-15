@@ -5,7 +5,7 @@ function [c] = prototypes_win(C,sample,PAR)
 %   [c] = prototype_win(C,sample,PAR)
 %
 %   Input:
-%       C = prototypes                                          [p x Nk]
+%       C = prototypes                                          [p x Q]
 %       sample = data vector                                    [p x 1]
 %       PAR.
 %           dist = Type of metric                               [cte]
@@ -42,8 +42,8 @@ end
 
 % Init Variables
 
-[~,Nk] = size(C);               % Number of prototypes
-Vdist = zeros(1,Nk);            % Vector of distances
+[~,Q] = size(C);                % Number of prototypes
+Vdist = zeros(1,Q);             % Vector of distances
 dist = PAR.dist;                % Type of distance
 Ktype = PAR.Ktype;              % Kernel type
 
@@ -51,7 +51,7 @@ Ktype = PAR.Ktype;              % Kernel type
     
 % Calculate Distance Vector
 
-for i = 1:Nk 
+for i = 1:Q 
     % Get Prototype
     prot = C(:,i);
     % Calculate distance

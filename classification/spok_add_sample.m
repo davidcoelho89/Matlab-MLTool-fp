@@ -1,13 +1,13 @@
-function [PAR] = spok_add_sample(DATA,HP)
+function [PAR] = spok_add_sample(DATAn,HP)
 
 % --- Add a Sample to Dictionary and Update its Variables ---
 %
-%   [PAR] = spok_add_sample(DATA,HP)
+%   [PAR] = spok_add_sample(DATAn,HP)
 %
 %   Input:
-%       DATA.
-%           xt = attributes of sample                           [p x 1]
-%           yt = class of sample                                [Nc x 1]
+%       DATAn.
+%           input = attributes of sample                     	[p x 1]
+%           output = class of sample                        	[Nc x 1]
 %       HP.
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
@@ -35,8 +35,8 @@ function [PAR] = spok_add_sample(DATA,HP)
 
 % Get Data
 
-xt = DATA.input;
-yt = DATA.output;
+xt = DATAn.input;
+yt = DATAn.output;
 
 % Get Hyperparameters
 

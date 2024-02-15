@@ -5,18 +5,18 @@ function [ALDout] = ald_criterion(Dx,xt,HP,Kinv)
 %   [ALDout] = ald_criterion(Dx,xt,Kinv,HP)
 %
 %   Input:
-%       Dx = dictionary prototypes' inputs                      [p x Nk]
+%       Dx = dictionary prototypes' inputs                      [p x Q]
 %       xt = sample to be tested                                [p x 1]
 %       HP.
 %           v1 = Sparseness parameter 1                         [cte]
 %           sig2n = Kernel regularization parameter             [cte]
-%       Kinv = inverse kernel matrix                            [Nk x Nk]
+%       Kinv = inverse kernel matrix                            [Q x Q]
 %   Output:
 %       ALDout.
 %           result = if a sample fulfill the test               [0 or 1]
 %           ktt = kernel function between sample and itself     [cte]
-%           kt = kernel function between sample and dict prot   [Nk x 1]
-%           at = ald coefficients                               [Nk x 1]
+%           kt = kernel function between sample and dict prot   [Q x 1]
+%           at = ald coefficients                               [Q x 1]
 %           delta = ald measure                                 [cte]
 
 %% INITIALIZATIONS

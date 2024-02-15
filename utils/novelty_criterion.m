@@ -1,12 +1,11 @@
-function [NOVout] = novelty_criterion(Dx,Dy,xt,yt,HP)
+function [NOVout] = novelty_criterion(Dx,xt,yt,HP)
 
 % --- Apply the novelty criterion between a dictionary and a sample ---
 %
 %   [NOVout] = novelty_criterion(Dx,Dy,xt,yt,HP)
 %
 %   Input:
-%       Dx = dictionary prototypes' inputs                      [p x Nk]
-%       Dy = dictionary prototypes' outputs                     [Nc x Nk]
+%       Dx = dictionary prototypes' inputs                      [p x Q]
 %       xt = input of sample to be tested                       [p x 1]
 %       yt = input of sample to be tested                       [p x 1]
 %       HP.
@@ -23,39 +22,39 @@ function [NOVout] = novelty_criterion(Dx,Dy,xt,yt,HP)
 %% INITIALIZATIONS
 
 v1 = HP.v1;                 	% Sparseness parameter 1
-% v2 = HP.v2;                     % Sparseness parameter 2
+v2 = HP.v2;                     % Sparseness parameter 2
 
 %% ALGORITHM
 
-% Apply prototypes' classification function
+% OBS: NEW IMPLEMENTATION!
 
-HP.Cx = Dx; HP.Cy = Dy;             % Get current dictionary
-DATA.input = xt;                    % Get current input
-OUT = prototypes_class(DATA,HP);    % Output of classification
-yh = OUT.y_h;                       % Output Prediction
+% Get model's output (prediction, winner, distances)
 
-% Find nearest prototype to sample
-win = OUT.win;
+DATA.input = xt;
+OUT = prototypes_class(DATA,HP);
 
-% Get distance between sample and nearest prototype 
-dist1 = OUT.dist(win);
+% 1st part - measure distance between sample and nearest prototype 
 
-% First part of Criterion
+win = prototypes_win(Dx,xt,HP);
+dist1 = vectors_dist(Dx(:,win),xt,HP);
 result1 = (dist1 > v1);
 
-% % Second part of Criterion (method 1 - expand dictionary if estimation
-% % and real output are very diferrent from each other)
-% dist2 = vectors_dist(yt,yh,PAR);
-% result2 = (dist2 > v2);
+% 2nd part - method 1 - Measure distance from outputs
 
-% Second part of Criterion (method 2 - expand dictionary if the sample
-% was misclassified)
-[~,yh_seq] = max(yh);
-[~,yt_seq] = max(yt);
-dist2 = yh_seq;
-result2 = (yt_seq ~= yh_seq);
+yh = OUT.y_h;
+dist2 = sqrt(sum((yt - yh).^2));
+% dist2 = vectors_dist(yt,yh,HP);
+result2 = (dist2 > v2);
+
+% 2nd part - method 2 - Verify if sample was misclassified
+
+% [~,yh_seq] = max(yh);
+% [~,yt_seq] = max(yt);
+% dist2 = vectors_dist(yt,yh,HP);
+% result2 = (yt_seq ~= yh_seq);
 
 % Calculate Criterion
+
 result = (result1 && result2);
 
 %% FILL OUTPUT STRUCTURE

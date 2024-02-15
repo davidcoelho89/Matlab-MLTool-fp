@@ -39,15 +39,15 @@ function [PAR] = spok_dict_updt(DATA,HP)
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
 %   Output: 
 %       PAR.
-%           Cx = Attributes of output dictionary                [p x Nk]
-%           Cy = Classes of  output dictionary                  [Nc x Nk]
-%           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Cx = Attributes of output dictionary                [p x Q]
+%           Cy = Classes of  output dictionary                  [Nc x Q]
+%           Km = Kernel matrix of dictionary                    [Q x Q]
 %           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
-%           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinv = Inverse Kernel matrix of dicitionary         [Q x Q]
 %           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
-%           score = used for prunning method                    [1 x Nk]
-%           class_history = used for prunning method           	[1 x Nk]
-%           times_selected = used for prunning method           [1 x Nk]
+%           score = used for prunning method                    [1 x Q]
+%           class_history = used for prunning method           	[1 x Q]
+%           times_selected = used for prunning method           [1 x Q]
 
 %% INITIALIZATIONS
 

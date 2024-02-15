@@ -9,15 +9,15 @@ function [PAR] = spok_dict_grow(DATAn,HP)
 %           input = attributes of sample                      	[p x 1]
 %           output = class of sample                            [Nc x 1]
 %       HP.
-%           Cx = Attributes of input dictionary                 [p x Nk]
-%           Cy = Classes of input dictionary                    [Nc x Nk]
-%           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Cx = Attributes of input dictionary                 [p x Q]
+%           Cy = Classes of input dictionary                    [Nc x Q]
+%           Km = Kernel matrix of dictionary                    [Q x Q]
 %           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
-%           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinv = Inverse Kernel matrix of dicitionary         [Q x Q]
 %           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
-%           score = used for prunning method                    [1 x Nk]
-%           class_history = used for prunning method           	[1 x Nk]
-%           times_selected = used for prunning method           [1 x Nk]
+%           score = used for prunning method                    [1 x Q]
+%           class_history = used for prunning method           	[1 x Q]
+%           times_selected = used for prunning method           [1 x Q]
 %           Dm = Design Method                                  [cte]
 %               = 1 -> all data set
 %               = 2 -> per class
@@ -38,15 +38,15 @@ function [PAR] = spok_dict_grow(DATAn,HP)
 %           gamma = kernel hyperparameter ( see kernel_func() ) [cte]
 %   Output: 
 %       PAR.
-%           Cx = Attributes of output dictionary                [p x Nk]
-%           Cy = Classes of  output dictionary                  [Nc x Nk]
-%           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Cx = Attributes of output dictionary                [p x Q]
+%           Cy = Classes of  output dictionary                  [Nc x Q]
+%           Km = Kernel matrix of dictionary                    [Q x Q]
 %           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
-%           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinv = Inverse Kernel matrix of dicitionary         [Q x Q]
 %           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
-%           score = used for prunning method                    [1 x Nk]
-%           class_history = used for prunning method           	[1 x Nk]
-%           times_selected = used for prunning method           [1 x Nk]
+%           score = used for prunning method                    [1 x Q]
+%           class_history = used for prunning method           	[1 x Q]
+%           times_selected = used for prunning method           [1 x Q]
 
 %% INITIALIZATIONS
 

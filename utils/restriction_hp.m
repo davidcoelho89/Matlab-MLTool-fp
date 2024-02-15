@@ -26,8 +26,8 @@ if (strcmp(algorithm_name,'spok_train'))
     v1 = HP.v1;
     v2 = HP.v2;
     Ss = HP.Ss;
-    % Verify v2 and v1 for novelty and suprise methods
-    if((v2 <= v1) && (Ss == 3 || Ss == 4))
+    % Verify v2 and v1 for suprise method
+    if((v2 <= v1) && (Ss == 4))
         restriction = 1;
     end
 end

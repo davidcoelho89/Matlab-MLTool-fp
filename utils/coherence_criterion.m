@@ -5,7 +5,7 @@ function [COEHout] = coherence_criterion(Dx,xt,HP)
 %   [COEHout] = coherence_criterion(Dx,xt,Kinv,HP)
 %
 %   Input:
-%       Dx = dictionary prototypes' inputs                      [p x Nk]
+%       Dx = dictionary prototypes' inputs                      [p x Q]
 %       xt = sample to be tested                                [p x 1]
 %       HP.
 %           v1 = Sparseness parameter 1                         [cte]

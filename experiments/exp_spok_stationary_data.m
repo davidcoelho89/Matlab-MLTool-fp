@@ -12,7 +12,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 06;  % datasets = [06,07,10,19,22];
+datasets = 07;  % datasets = [06,07,10,19,22];
 
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
@@ -95,13 +95,13 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% Run algorithm at datasets
 
-for i = 1:4
-for j = 1:2
-for k = 1:2
+for Ss = 3:3
+for Dm = 1:2
+for K = 1:2
     
-HP_gs.Ss = i;
-HP_gs.Dm = j;
-if(k == 1)
+HP_gs.Ss = Ss;
+HP_gs.Dm = Dm;
+if(K == 1)
     HP_gs.K = 1;
 else
     HP_gs.K = 2:10;
@@ -115,8 +115,8 @@ end
 
 if any(datasets == 07)
     OPT.prob = 07;
-    OPT.prob2 = 01; % Binary Problem. Unbalanced dataset
-    % OPT.prob2 = 02; % Binary Problem. Balanced dataset
+    % OPT.prob2 = 01; % Binary Problem. Unbalanced dataset
+    OPT.prob2 = 02; % Binary Problem. Balanced dataset
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 

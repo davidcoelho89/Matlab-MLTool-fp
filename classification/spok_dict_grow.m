@@ -1,13 +1,13 @@
-function [PAR] = spok_dict_grow(DATA,HP)
+function [PAR] = spok_dict_grow(DATAn,HP)
 
 % --- Sparsification Procedure for Increasing the Dictionary ---
 %
-%   [PAR] = spok_dict_grow(DATA,HP)
+%   [PAR] = spok_dict_grow(DATAn,HP)
 %
 %   Input:
-%       DATA.
-%           xt = attributes of sample                           [p x 1]
-%           yt = class of sample                                [Nc x 1]
+%       DATAn.
+%           input = attributes of sample                      	[p x 1]
+%           output = class of sample                            [Nc x 1]
 %       HP.
 %           Cx = Attributes of input dictionary                 [p x Nk]
 %           Cy = Classes of input dictionary                    [Nc x Nk]
@@ -63,14 +63,14 @@ Cy = HP.Cy;           	% Classes of prototypes
 
 % Get Data
 
-x = DATA.input;
-y = DATA.output;
+xt = DATAn.input;
+yt = DATAn.output;
 
 % Get problem parameters
 
 [~,Q] = size(Cx);       % Dictionary size
 
-[~,c] = max(y);         % Class of sample (Sequential encoding)
+[~,c] = max(yt);        % Class of sample (Sequential encoding)
 
 [~,Cy_seq] = max(Cy);	% Classes of dictionary (Sequential encoding)
 
@@ -81,7 +81,7 @@ Qc = sum(Cy_seq == c);	% Number of prototypes from samples' class
 % Add first element to dictionary (total or from class)
 if (Q == 0 || (Dm == 2 && Qc == 0))
     
-    HP = spok_add_sample(DATA,HP);
+    HP = spok_add_sample(DATAn,HP);
     
 else
     % Dont add if number of prototypes is too high
@@ -91,7 +91,11 @@ else
         if (Dm == 1)
             Dx = Cx;
             Dy = Cy;
-            Kinv = HP.Kinv;
+            if(HP.update_kernel_matrix)
+                Kinv = HP.Kinv;
+            else
+                Kinv = [];
+            end
         elseif (Dm == 2)
             Dx = Cx(:,Cy_seq == c);
             Dy = Cy(:,Cy_seq == c);
@@ -104,18 +108,18 @@ else
 
         % Get criterion result
         if Ss == 1
-            OUTcrit = ald_criterion(Dx,x,HP,Kinv);
+            OUTcrit = ald_criterion(Dx,xt,HP,Kinv);
         elseif Ss == 2
-            OUTcrit = coherence_criterion(Dx,x,HP);
+            OUTcrit = coherence_criterion(Dx,xt,HP);
         elseif Ss == 3
-            OUTcrit = novelty_criterion(Dx,Dy,x,y,HP);
+            OUTcrit = novelty_criterion(Dx,xt,yt,HP);
         elseif Ss == 4
-            OUTcrit = surprise_criterion(Dx,Dy,x,y,HP,Kinv);
+            OUTcrit = surprise_criterion(Dx,Dy,xt,yt,HP,Kinv);
         end
 
         % Expand or not Dictionary
         if(OUTcrit.result == 1)
-            HP = spok_add_sample(DATA,HP);
+            HP = spok_add_sample(DATAn,HP);
         end
         
     end

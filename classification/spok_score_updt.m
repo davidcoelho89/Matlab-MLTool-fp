@@ -9,31 +9,31 @@ function [PAR] = spok_score_updt(DATAn,OUTn,HP)
 %           input = attributes of sample                     	[p x 1]
 %           output = class of sample                            [Nc x 1]
 %       HP.
-%           Cx = Attributes of input dictionary                 [p x Nk]
-%           Cy = Classes of input dictionary                    [Nc x Nk]
+%           Cx = Attributes of input dictionary                 [p x Q]
+%           Cy = Classes of input dictionary                    [Nc x Q]
 %           Ps = Prunning strategy                              [cte]
 %               = 0 -> do not remove prototypes
 %               = 1 -> score-based method 1
 %               = 2 -> score-based method 2
-%           score = used for prunning method                    [1 x Nk]
-%           class_history = used for prunning method           	[1 x Nk]
-%           times_selected = used for prunning method           [1 x Nk]
+%           score = used for prunning method                    [1 x Q]
+%           class_history = used for prunning method           	[1 x Q]
+%           times_selected = used for prunning method           [1 x Q]
 %       OUT.
 %           y_h = classifier's output                           [Nc x 1]
 %           win = closest prototype to each sample              [1 x 1]
-%           dist = distance from sample to each prototype       [Nk x 1]
+%           dist = distance from sample to each prototype       [Q x 1]
 %           near_ind = indexes for nearest prototypes           [K x N]
 %   Output: 
 %       PAR.
-%           Cx = Attributes of output dictionary                [p x Nk]
-%           Cy = Classes of  output dictionary                  [Nc x Nk]
-%           Km = Kernel matrix of dictionary                    [Nk x Nk]
+%           Cx = Attributes of output dictionary                [p x Q]
+%           Cy = Classes of  output dictionary                  [Nc x Q]
+%           Km = Kernel matrix of dictionary                    [Q x Q]
 %           Kmc = Kernel Matrix for each class (cell)           [Nc x 1]
-%           Kinv = Inverse Kernel matrix of dicitionary         [Nk x Nk]
+%           Kinv = Inverse Kernel matrix of dicitionary         [Q x Q]
 %           Kinvc = Inverse Kernel Matrix for each class (cell) [Nc x 1]
-%           score = used for prunning method                    [1 x Nk]
-%           class_history = used for prunning method           	[1 x Nk]
-%           times_selected = used for prunning method           [1 x Nk]
+%           score = used for prunning method                    [1 x Q]
+%           class_history = used for prunning method           	[1 x Q]
+%           times_selected = used for prunning method           [1 x Q]
 
 %% INITIALIZATIONS
 
@@ -56,7 +56,7 @@ nearIndex = OUTn.near_ind;
 [K,~] = size(nearIndex);
 
 % Get problem parameters
-[~,Nk] = size(Cy);                  % hold dictionary size
+[~,Q] = size(Cy);                   % hold dictionary size
 
 % Init Outputs
 score_out = score;
@@ -86,22 +86,22 @@ else
     % Update all scores
     elseif (Ps == 1)
         
-        for k = 1:Nk
+        for q = 1:Q
             % if it was a hit
             if (yt_class == yh_class)
-                if (k == winnner)
-                    score_out(k) = score(k) + 1;
-                elseif (Dy_class(k) == yh_class)
-                    score_out(k) = score(k) - 0.1;
+                if (q == winnner)
+                    score_out(q) = score(q) + 1;
+                elseif (Dy_class(q) == yh_class)
+                    score_out(q) = score(q) - 0.1;
                 else
-                    score_out(k) = score(k);
+                    score_out(q) = score(q);
                 end
             % if it was an error
             else
-                if (k == winnner)
-                    score_out(k) = score(k) - 1;
+                if (q == winnner)
+                    score_out(q) = score(q) - 1;
                 else
-                    score_out(k) = score(k);
+                    score_out(q) = score(q);
                 end
             end
         end

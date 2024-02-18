@@ -44,13 +44,13 @@ at = Kinv * ht;
 sig2 = sig2n + ktt -  ht' * at;
 
 % Estimated output 1: ( yh = ( ht' / Gt ) * Dy' ) (from GP)
-yh = (ht' * Kinv) * Dy';
-yh = yh';
+% yh = (ht' * Kinv) * Dy';
+% yh = yh';
 
 % Estimated output 2: NN or KNN (from PBC)
-% DATA.input = xt;
-% OUT = prototypes_class(DATA,HP);
-% yh = OUT.y_h;
+DATA.input = xt;
+OUT = prototypes_class(DATA,HP);
+yh = OUT.y_h;
 
 % Distance between estimated output and real output
 y_dist = sqrt(sum((yt - yh).^2));

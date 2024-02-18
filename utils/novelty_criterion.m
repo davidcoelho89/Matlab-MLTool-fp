@@ -41,17 +41,18 @@ result1 = (dist1 > v1);
 
 % 2nd part - method 1 - Measure distance from outputs
 
-yh = OUT.y_h;
-dist2 = sqrt(sum((yt - yh).^2));
-% dist2 = vectors_dist(yt,yh,HP);
-result2 = (dist2 > v2);
+% yh = OUT.y_h;
+% dist2 = sqrt(sum((yt - yh).^2));
+% % dist2 = vectors_dist(yt,yh,HP);
+% result2 = (dist2 > v2);
 
 % 2nd part - method 2 - Verify if sample was misclassified
 
-% [~,yh_seq] = max(yh);
-% [~,yt_seq] = max(yt);
-% dist2 = vectors_dist(yt,yh,HP);
-% result2 = (yt_seq ~= yh_seq);
+yh = OUT.y_h;
+[~,yh_seq] = max(yh);
+[~,yt_seq] = max(yt);
+dist2 = vectors_dist(yt,yh,HP);
+result2 = (yt_seq ~= yh_seq);
 
 % Calculate Criterion
 

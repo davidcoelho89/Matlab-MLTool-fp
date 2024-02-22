@@ -17,7 +17,7 @@ datasets = 07;  % datasets = [06,07,10,19,22];
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
 OPT.Nr = 10;    % Number of repetitions
-OPT.hold = 1;   % Hold out method.
+OPT.hold = 2;   % Hold out method.
 OPT.ptrn = 0.7; % Percentage of samples for training. [0,1]
 
 % Hyperparameter Optimization (Grid or random search Cross-validation)

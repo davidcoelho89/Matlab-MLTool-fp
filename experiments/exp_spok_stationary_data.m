@@ -12,7 +12,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 07;  % datasets = [06,07,10,19,22];
+datasets = 22;  % datasets = [06,07,10,19,22];
 
 OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
@@ -95,7 +95,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% Run algorithm at datasets
 
-for Ss = 3:3
+for Ss = 1:2
 for Dm = 1:2
 for K = 1:2
     
@@ -122,8 +122,8 @@ end
 
 if any(datasets == 10)
     OPT.prob = 10;
-    % OPT.prob2 = 01; % Treated as Multiclass (3 classes)
-    OPT.prob2 = 02; % Treated as Binary problem (2 classes)
+    OPT.prob2 = 01; % Treated as Multiclass (3 classes)
+    % OPT.prob2 = 02; % Treated as Binary problem (2 classes)
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 
@@ -136,7 +136,9 @@ end
 
 if any(datasets == 22)
     OPT.prob = 22;
-    OPT.prob2 = 01;
+    OPT.prob2 = 01; % with 2 features
+    % OPT.prob2 = 02; % with 4 features
+    % OPT.prob2 = 03; % with 24 features
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 

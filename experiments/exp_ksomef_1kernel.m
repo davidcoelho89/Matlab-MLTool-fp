@@ -46,7 +46,7 @@ MP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc
 
 HP_ksomef.lbl = prot_lbl;	 % Neurons' labeling function
 HP_ksomef.Nep = 50;          % max number of epochs
-HP_ksomef.Nk = [5 4];        % number of neurons (prototypes)
+HP_ksomef.Nk = [6 5];        % number of neurons (prototypes)
 HP_ksomef.init = 02;         % neurons' initialization
 HP_ksomef.dist = 02;         % type of distance
 HP_ksomef.learn = 02;        % type of learning step
@@ -59,7 +59,7 @@ HP_ksomef.Vt = 0.3;          % final neighbor constant
 HP_ksomef.Von = 0;           % disable video
 HP_ksomef.K = 1;         	 % Number of nearest neighbors (classify)
 HP_ksomef.knn_type = 2; 	 % Type of knn aproximation
-HP_ksomef.Ktype = 6;         % Type of Kernel
+HP_ksomef.Ktype = 2;         % Type of Kernel
 
 %% CHOOSE HYPERPARAMETERS - FOR OPTIMIZATION
 
@@ -119,8 +119,15 @@ ksomef_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
 
 %% FILE NAME
 
+if(strcmp(OPT.hpo,'none'))
+    hpo_str = '0';
+else
+    hpo_str = '1';
+end
+
 OPT.filename = strcat(DATA.name,'_',int2str(OPT.prob2),'_ksomef',...
-                      '_hpo_',OPT.hpo, ...
+                      '_hold_',int2str(OPT.hold), ...
+                      '_hpo_',hpo_str, ...
                       '_norm_',int2str(OPT.norm), ...
                       '_lbl_',int2str(prot_lbl), ...
                       '_nn_',int2str(HP_ksomef.K), ...

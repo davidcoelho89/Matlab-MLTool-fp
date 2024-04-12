@@ -37,59 +37,54 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 %% HYPERPARAMETERS - DEFAULT
 
+PAR_common.on = 1;              % Run the classifier
+PAR_common.v = 0.1;           	% sparsiveness parameter
+
 KALD1p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-1
-PAR_kald_1.on = 1;              % Run the classifier
+PAR_kald_1 = PAR_common;        % Get common parameters
 PAR_kald_1.St = 1;              % Sparsification Type (per data set or per class)
-PAR_kald_1.v = 0.1;           	% sparsiveness parameter
 PAR_kald_1.Ktype = 1;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_1.sig2 = 2;            % comprehensiveness of cluster
 
 KALD2p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-2
-PAR_kald_2.on = 1;              % Run the classifier
+PAR_kald_2 = PAR_common;        % Get common parameters
 PAR_kald_2.St = 2;              % Sparsification Type (per data set or per class)
-PAR_kald_2.v = 0.1;           	% sparsiveness parameter
 PAR_kald_2.Ktype = 1;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_2.sig2 = 2;            % comprehensiveness of cluster
 
 KALD3p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-3
-PAR_kald_3.on = 1;              % Run the classifier
+PAR_kald_3 = PAR_common;        % Get common parameters
 PAR_kald_3.St = 1;              % Sparsification Type (per data set or per class)
-PAR_kald_3.v = 0.1;           	% sparsiveness parameter
 PAR_kald_3.Ktype = 2;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_3.sig2 = 2;            % comprehensiveness of cluster
 
 KALD4p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-4
-PAR_kald_4.on = 1;              % Run the classifier
+PAR_kald_4 = PAR_common;        % Get common parameters
 PAR_kald_4.St = 2;              % Sparsification Type (per data set or per class)
-PAR_kald_4.v = 0.1;           	% sparsiveness parameter
 PAR_kald_4.Ktype = 2;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_4.sig2 = 2;            % comprehensiveness of cluster
 
 KALD5p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-5
-PAR_kald_5.on = 1;              % Run the classifier
+PAR_kald_5 = PAR_common;        % Get common parameters
 PAR_kald_5.St = 1;              % Sparsification Type (per data set or per class)
-PAR_kald_5.v = 0.1;           	% sparsiveness parameter
 PAR_kald_5.Ktype = 3;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_5.sig2 = 2;            % comprehensiveness of cluster
 
 KALD6p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-6
-PAR_kald_6.on = 1;              % Run the classifier
+PAR_kald_6 = PAR_common;        % Get common parameters
 PAR_kald_6.St = 2;              % Sparsification Type (per data set or per class)
-PAR_kald_6.v = 0.1;           	% sparsiveness parameter
 PAR_kald_6.Ktype = 3;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_6.sig2 = 2;            % comprehensiveness of cluster
 
 KALD7p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-7
-PAR_kald_7.on = 1;              % Run the classifier
+PAR_kald_7 = PAR_common;        % Get common parameters
 PAR_kald_7.St = 1;              % Sparsification Type (per data set or per class)
-PAR_kald_7.v = 0.1;           	% sparsiveness parameter
 PAR_kald_7.Ktype = 4;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_7.sig2 = 2;            % comprehensiveness of cluster
 
 KALD8p_acc = cell(OPT.Nr,1);    % Init of Acc Hyperparameters of KALD-8
-PAR_kald_8.on = 1;              % Run the classifier
+PAR_kald_8 = PAR_common;        % Get common parameters
 PAR_kald_8.St = 2;              % Sparsification Type (per data set or per class)
-PAR_kald_8.v = 0.1;           	% sparsiveness parameter
 PAR_kald_8.Ktype = 4;           % Kernel Type (lin, gauss, cauchy, log)
 PAR_kald_8.sig2 = 2;            % comprehensiveness of cluster
 
@@ -108,7 +103,7 @@ KALD8cv = PAR_kald_8;
 
 % Set Variable HyperParameters
 
-if CVp.on == 1,
+if CVp.on == 1
 
 KALD1cv.v = 2.^linspace(-4,3,8);
 
@@ -172,11 +167,11 @@ kald8_Mconf_sum = zeros(Nc,Nc);  	% Aux var for mean confusion matrix calc
 
 %% HOLD OUT / CROSS VALIDATION / TRAINING / TEST
 
-for r = 1:OPT.Nr,
+for r = 1:OPT.Nr
 
 % %%%%%%%%% DISPLAY REPETITION AND DURATION %%%%%%%%%%%%%%
 
-display(r);
+disp(r);
 display(datestr(now));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%

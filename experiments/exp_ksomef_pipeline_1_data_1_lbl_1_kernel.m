@@ -98,7 +98,7 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 if(strcmp(OPT.hpo,'none'))
     % Does nothing
 elseif(strcmp(OPT.hpo,'random'))
-    HP_ksomef = random_search_cv(DATAtr,HP_ksomef_gs,...
+    HP_ksomef = random_search_cv(DATAtr,HP_gs,...
                                  @ksom_ef_train,@ksom_ef_classify,MP);
 end
 
@@ -141,7 +141,7 @@ class_stats_ncomp(nstats_all,NAMES);
 %% SAVE DATA
 
 if(OPT.savefile)
-    save(OPT.filename);
+    save(OPT.file);
 end
 
 %% END

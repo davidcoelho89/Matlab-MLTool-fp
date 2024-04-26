@@ -12,7 +12,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 07;      % datasets = [06,07,10,19,22];
+datasets = 06;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -33,7 +33,7 @@ OPT.class_1_vect = 1;   % [2,3] which classes belongs together
 
 % Metaparameters (Grid or random search Cross-validation)
 
-MP.max_it = 100;   	% Maximum number of iterations (random search)
+MP.max_it = 050;   	% Maximum number of iterations (random search)
 MP.fold = 5;     	% number of data partitions (cross validation)
 MP.cost = 2;        % Takes into account also the dicitionary size
 MP.lambda = 2.0;    % Jpbc = Ds + lambda * Err

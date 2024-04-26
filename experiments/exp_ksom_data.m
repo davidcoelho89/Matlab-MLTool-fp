@@ -1,8 +1,8 @@
 %% Machine Learning ToolBox
 
-% KSOM-EF Model testing in various stationary datasets
+% KSOM Model testing in various stationary datasets
 % Author: David Nascimento Coelho
-% Last Update: 2024/04/18
+% Last Update: 2024/04/26
 
 clear;
 clc;
@@ -16,9 +16,10 @@ datasets = 07;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
+OPT.Nr = 10;        % Number of experiment realizations
+OPT.alg = 'ksom_ef';% ksom_ef or ksom_gd
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm 
-OPT.Nr = 10;        % Number of experiment realizations
 OPT.hold = 01;      % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 
@@ -98,28 +99,28 @@ HP_gs.lbl = prot_lbl;
 if any(datasets == 06) % Iris
     OPT.prob = 06;
     OPT.prob2 = 01;
-    exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
+    exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
 end
 
 if any(datasets == 07) % Motor Failure
     OPT.prob = 07;
     % OPT.prob2 = 01; % Binary Problem. Unbalanced dataset
     OPT.prob2 = 02; % Binary Problem. Balanced dataset
-    exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
+    exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
 end
 
 if any(datasets == 10) % Vertebral Column
     OPT.prob = 10;
     % OPT.prob2 = 01; % Treated as Multiclass (3 classes)
     OPT.prob2 = 02; % Treated as Binary problem (2 classes)
-    exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
+    exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
 end
 
 if any(datasets == 19) % Cervical Cancer
     OPT.prob = 19;
     % OPT.prob2 = 01; % Treated as Multiclass (7 classes)
     OPT.prob2 = 02; % Treated as Binary problem (2 classes)
-    exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
+    exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
 end
 
 if any(datasets == 22) % Wall-Following
@@ -127,7 +128,7 @@ if any(datasets == 22) % Wall-Following
     OPT.prob2 = 01; % with 2 features
     % OPT.prob2 = 02; % with 4 features
     % OPT.prob2 = 03; % with 24 features
-    exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
+    exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,MP,kernels);
 end
 
 end

@@ -1,8 +1,8 @@
-function [] = exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP)
+function [] = exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP)
 
 % --- Pipeline used to test ksom model with 1 dataset and 1 Kernel ---
 %
-%   [] = exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP)
+%   [] = exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP)
 %
 %   Input:
 %       DATA.
@@ -41,11 +41,19 @@ data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
 
 nstats_all = cell(length(NAMES),1);     % Group Stats from Tr and Ts
 
-ksomef_par_acc = cell(OPT.Nr,1);        % Acc Parameters of KSOM-EF
-ksomef_out_tr_acc = cell(OPT.Nr,1);     % Acc of training data output
-ksomef_out_ts_acc = cell(OPT.Nr,1);     % Acc of test data output
-ksomef_stats_tr_acc = cell(OPT.Nr,1);   % Acc of training statistics
-ksomef_stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
+par_acc = cell(OPT.Nr,1);        % Acc Parameters of KSOM
+out_tr_acc = cell(OPT.Nr,1);     % Acc of training data output
+out_ts_acc = cell(OPT.Nr,1);     % Acc of test data output
+stats_tr_acc = cell(OPT.Nr,1);   % Acc of training statistics
+stats_ts_acc = cell(OPT.Nr,1);   % Acc of test statistics
+
+%% HANDLERS FOR CLASSIFICATION FUNCTIONS
+
+str_train = strcat(lower(OPT.alg),'_train');
+class_train = str2func(str_train);
+
+str_test = strcat(lower(OPT.alg),'_classify');
+class_test = str2func(str_test);
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
@@ -98,21 +106,20 @@ DATAtr.lbl = DATAtr.lbl(:,I);
 if(strcmp(OPT.hpo,'none'))
     % Does nothing
 elseif(strcmp(OPT.hpo,'random'))
-    HP_ksomef = random_search_cv(DATAtr,HP_gs,...
-                                 @ksom_ef_train,@ksom_ef_classify,MP);
+    HP = random_search_cv(DATAtr,HP_gs,@ksom_ef_train,@ksom_ef_classify,MP);
 end
 
 % %%%%%%%%%%%%%% CLASSIFIERS' TRAINING %%%%%%%%%%%%%%%%%%%
 
-ksomef_par_acc{r} = ksom_ef_train(DATAtr,HP_ksomef);
+par_acc{r} = class_train(DATAtr,HP);
 
 % %%%%%%%%%%%%%%%%% CLASSIFIERS' TEST %%%%%%%%%%%%%%%%%%%%
 
-ksomef_out_tr_acc{r} = ksom_ef_classify(DATAtr,ksomef_par_acc{r});
-ksomef_stats_tr_acc{r} = class_stats_1turn(DATAtr,ksomef_out_tr_acc{r});
+out_tr_acc{r} = class_test(DATAtr,par_acc{r});
+stats_tr_acc{r} = class_stats_1turn(DATAtr,out_tr_acc{r});
 
-ksomef_out_ts_acc{r} = ksom_ef_classify(DATAts,ksomef_par_acc{r});
-ksomef_stats_ts_acc{r} = class_stats_1turn(DATAts,ksomef_out_ts_acc{r});
+out_ts_acc{r} = class_test(DATAts,par_acc{r});
+stats_ts_acc{r} = class_stats_1turn(DATAts,out_ts_acc{r});
     
 end
 
@@ -120,8 +127,8 @@ end
 
 % Statistics for n turns (multiclass)
 
-ksomef_nstats_tr = class_stats_nturns(ksomef_stats_tr_acc);
-ksomef_nstats_ts = class_stats_nturns(ksomef_stats_ts_acc);
+nstats_tr = class_stats_nturns(stats_tr_acc);
+nstats_ts = class_stats_nturns(stats_ts_acc);
 
 % Statistics for n turns (binary)
 
@@ -131,8 +138,8 @@ end
 
 % Get all Statistics in one Cell
 
-nstats_all{1,1} = ksomef_nstats_tr;
-nstats_all{2,1} = ksomef_nstats_ts;
+nstats_all{1,1} = nstats_tr;
+nstats_all{2,1} = nstats_ts;
 
 % Compare Training and Test Statistics
 

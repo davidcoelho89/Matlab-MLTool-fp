@@ -1,10 +1,10 @@
-function [] = exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,...
-                                                        MP,kernels)
+function [] = exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,...
+                                                      MP,kernels)
 
-% --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
+% --- Pipeline used to test ksom model with 1 dataset and 1 Kernel ---
 %
-%   [] = exp_ksomef_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,...
-%                                                  MP,kernels)
+%   [] = exp_ksom_pipeline_1_data_1_lbl_N_kernel(OPT,HP_gs,...
+%                                                MP,kernels)
 %
 %   Input:
 %       OPT.
@@ -31,7 +31,12 @@ end
 str1 = DATA.name;
 str1_1 = '_';
 str1_2 = int2str(OPT.prob2);
-str2 = '_ksomef';
+str2_1 = '_';
+if(strcmp(OPT.alg,'ksom_ef'))
+    str2_2 = 'ksomef';
+else
+    str2_2 = 'ksomgd';
+end
 str3 = '_hold_';
 str3_1 = int2str(OPT.hold);
 str4 = '_hpo_';
@@ -63,11 +68,11 @@ if (any(kernels == 1))
     HP_gs.alpha = 1;
     HP_gs.theta = [0,2.^linspace(-10,10,21)];
     
-    OPT.file = strcat(str1,str1_1,str1_2,str2,str3,str3_1,str4,...
+    OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished linear kernel!");
 end
@@ -87,7 +92,7 @@ if (any(kernels == 2))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished gaussian kernel!");
 end
@@ -107,7 +112,7 @@ if (any(kernels == 3))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished polynomial kernel!");
 end
@@ -127,7 +132,7 @@ if (any(kernels == 4))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished exponential kernel!");
 end
@@ -147,7 +152,7 @@ if (any(kernels == 5))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished cauchy kernel!");
 end
@@ -167,7 +172,7 @@ if (any(kernels == 6))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished log kernel!");
 end
@@ -187,7 +192,7 @@ if (any(kernels == 7))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished sigmoid kernel!");
 end
@@ -207,27 +212,7 @@ if (any(kernels == 8))
                       str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
                       str8,str8_1,str9,str9_1,str10,str10_1,str11);
     
-    exp_ksomef_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
+    exp_ksom_pipeline_1_data_1_lbl_1_kernel(DATA,OPT,HP_gs,MP);
     
     disp("finished kmod kernel!");
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

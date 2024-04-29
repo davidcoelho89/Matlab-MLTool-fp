@@ -22,7 +22,7 @@ OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
 PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
-PSpar.gamma = 0.1; % Jpbc = Ds + lambda * Err + gamma * mcc (prototype-based models)
+PSpar.gamma = 0.1;    % Jpbc = Ds + lambda * Err + gamma * mcc 
 
 % Which Kernels Will be tested
 

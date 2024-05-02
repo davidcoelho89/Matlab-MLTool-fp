@@ -384,7 +384,6 @@ for j = 1:length(ss)
                                   'nn',knn{l});
                 disp(filename);
                 
-
                 % Get variables
                 variables = load(filename);
                 best_acc_index = variables.nSTATS_ts.acc_max_i;

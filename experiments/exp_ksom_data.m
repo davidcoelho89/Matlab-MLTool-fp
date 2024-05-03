@@ -1,6 +1,7 @@
 %% Machine Learning ToolBox
 
 % KSOM Model testing in various stationary datasets
+% (using hyperparameter optimization)
 % Author: David Nascimento Coelho
 % Last Update: 2024/04/26
 
@@ -12,12 +13,12 @@ format long e;
 
 % Datasets Specification
 
-datasets = 07;      % datasets = [06,07,10,19,22];
+datasets = 10;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
 OPT.Nr = 10;        % Number of experiment realizations
-OPT.alg = 'ksom_ef';% ksom_ef or ksom_gd
+OPT.alg = 'ksom_gd';% ksom_ef or ksom_gd
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm 
 OPT.hold = 01;      % Hold out method

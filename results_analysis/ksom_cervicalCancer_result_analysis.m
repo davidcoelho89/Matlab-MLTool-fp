@@ -10,7 +10,7 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% MOTOR FAILURE (02 - balanced), KSOM, HOLD 1, HPO RANDOM, VARIOUS KERNELS
+%% CERVICAL CANCER (02 - binary), KSOM, HOLD 1, HPO RANDOM, VARIOUS KERNELS
 
 % Init
 
@@ -20,7 +20,7 @@ clc;
 
 % Choices for filename
 
-str1 = 'motorFailure_2_';
+str1 = 'cervicalCancer_2_';
 ksom = {'ksomef','ksomgd'};
 str2 = '_hold_1_hpo_1_norm_3_lbl_';
 lbl = {'1','2','3'};
@@ -109,9 +109,35 @@ for i = 1:length(ksom)
             
             % Clear variables;
             clear variables;
-            
+           
         end
     end
 end
 
 %% END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

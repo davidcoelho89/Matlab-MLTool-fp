@@ -1,6 +1,6 @@
 %% RESULT ANALYSIS
 
-% Analysis of results from ksom model and motorFailure dataset
+% Analysis of results from ksom model and CervicalCancer dataset
 % Author: David Nascimento Coelho
 % Last Update: 2024/05/03
 
@@ -81,8 +81,7 @@ for i = 1:length(ksom)
                 par_acc = variables.ksomef_par_acc;
             elseif(isfield(variables,'par_acc'))
                 par_acc = variables.par_acc;
-            end
-            
+            end            
             
             if (k == 1)
                 mat_hp_best(line,1) = par_acc{best_acc_index,1}.theta;

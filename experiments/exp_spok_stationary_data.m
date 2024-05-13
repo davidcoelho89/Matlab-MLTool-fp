@@ -1,8 +1,9 @@
 %% Machine Learning ToolBox
 
-% Spok Model testing in various stationary datasets
+% SPOK Model testing in various stationary datasets
+% (using hyperparameter optimization)
 % Author: David Nascimento Coelho
-% Last Update: 2024/02/09
+% Last Update: 2024/04/26
 
 clear;
 clc;
@@ -12,13 +13,16 @@ format long e;
 
 % Datasets Specification
 
-datasets = 22;  % datasets = [06,07,10,19,22];
+datasets = 22;      % datasets = [06,07,10,19,22];
 
-OPT.Nr = 10;    % Number of repetitions
-OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
-OPT.norm = 3;   % Normalization. 0: Don't normalize. 3: z-score norm  
-OPT.hold = 2;   % Hold out method.
-OPT.ptrn = 0.7; % Percentage of samples for training. [0,1]
+% General options' structure
+
+OPT.Nr = 10;        % Number of experiment realizations
+OPT.alg = 'spark';  % spark or spok
+OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
+OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm  
+OPT.hold = 2;       % Hold out method.
+OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 
 % Hyperparameter Optimization (Grid or random search Cross-validation)
 

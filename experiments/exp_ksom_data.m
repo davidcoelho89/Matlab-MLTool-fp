@@ -13,7 +13,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 10;      % datasets = [06,07,10,19,22];
+datasets = 22;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -50,7 +50,7 @@ kernels = [1,2,3,4,5,6,7,8];
 
 % Which Prototype Labeling Strategy to use
 
-prot_lbl = [1,2,3];
+prot_lbl = [2,3];
 
 % Hyperparameters - Default
 

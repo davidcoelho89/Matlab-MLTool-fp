@@ -27,8 +27,15 @@ DATA = data_class_loading(OPT);
 
 %% FILE NAME - STRINGS
 
+if(strcmp(OPT.hpo,'none'))
+    hpo_str = '0';
+else
+    hpo_str = '1';
+end
+
 str1 = DATA.name;
-str1_1 = int2str(OPT.prob2);
+str1_1 = '_';
+str1_2 = int2str(OPT.prob2);
 str2 = '_spok_hold';
 str2_2 = int2str(OPT.hold);
 str2_3 = '_norm';

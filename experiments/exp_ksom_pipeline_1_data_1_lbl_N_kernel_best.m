@@ -67,14 +67,144 @@ disp("finished linear kernel!");
 
 end
 
+if (any(kernels == 2))
+
+str10_1 = int2str(2);
+
+OPT.Ktype = 2;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
+if (any(kernels == 3))
+
+str10_1 = int2str(3);
+
+OPT.Ktype = 3;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
+if (any(kernels == 4))
+
+str10_1 = int2str(4);
+
+OPT.Ktype = 4;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
+if (any(kernels == 5))
+
+str10_1 = int2str(5);
+
+OPT.Ktype = 5;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
+if (any(kernels == 6))
+
+str10_1 = int2str(6);
+
+OPT.Ktype = 6;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
+if (any(kernels == 7))
+
+str10_1 = int2str(7);
+
+OPT.Ktype = 7;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
+if (any(kernels == 8))
+
+str10_1 = int2str(8);
+
+OPT.Ktype = 8;
+
+OPT.file = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      str4_1,str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+                  
+OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
+                      int2str(1),str5,str5_1,str6,str6_1,str7,str7_1, ...
+                      str8,str8_1,str9,str9_1,str10,str10_1,str11);
+
+exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
+    
+disp("finished linear kernel!");
+
+end
+
 %% END
-
-
-
-
-
-
-
-
-
-

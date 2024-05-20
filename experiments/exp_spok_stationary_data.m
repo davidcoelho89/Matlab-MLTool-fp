@@ -13,7 +13,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 22;      % datasets = [06,07,10,19,22];
+datasets = 07;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -24,13 +24,15 @@ OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm
 OPT.hold = 2;       % Hold out method.
 OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
+
 % Hyperparameter Optimization (Grid or random search Cross-validation)
 
 CVp.max_it = 100;       % Maximum number of iterations (random search)
 CVp.fold = 5;           % number of data partitions for cross validation
 CVp.cost = 2;           % Which cost function will be used
 CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (prototype-based models)
-CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (prototype-based models)
+CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (PB models)
 
 % Which Kernels Will be tested
 
@@ -99,7 +101,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% Run algorithm at datasets
 
-for Ss = 1:2
+for Ss = 1:4
 for Dm = 1:2
 for K = 1:2
     

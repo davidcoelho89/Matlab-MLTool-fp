@@ -50,7 +50,7 @@ kernels = [1,2,3,4,5,6,7,8];
 
 % Which Prototype Labeling Strategy to use
 
-prot_lbl = [2,3];
+prot_lbl = [1,2,3];
 
 % Hyperparameters - Default
 

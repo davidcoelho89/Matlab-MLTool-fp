@@ -9,4 +9,21 @@ clear;
 clc;
 format long e;
 
-%% 
+%% Choices
+
+
+
+%% Datasets List
+
+
+
+%% Run algorithm at datasets
+
+
+
+%% FINISHED!
+
+% load handel
+% sound(y,Fs)
+
+%% END

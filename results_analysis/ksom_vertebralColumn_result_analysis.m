@@ -1,6 +1,6 @@
 %% RESULT ANALYSIS
 
-% Analysis of results from ksom model and CervicalCancer dataset
+% Analysis of results from ksom model and VertebralColumn dataset
 % Author: David Nascimento Coelho
 % Last Update: 2024/05/03
 
@@ -10,7 +10,7 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% CERVICAL CANCER (02 - binary), KSOM, HOLD 1, HPO RANDOM, VARIOUS KERNELS
+%% VERTEBRAL COLUMN (02 - binary), KSOM, HOLD 1, HPO RANDOM, VARIOUS KERNELS
 
 % Init
 
@@ -20,7 +20,7 @@ clc;
 
 % Choices for filename
 
-str1 = 'cervicalCancer_2_';
+str1 = 'vertebral_2_';
 ksom = {'ksomef','ksomgd'};
 str2 = '_hold_1_hpo_1_norm_3_lbl_';
 lbl = {'1','2','3'};
@@ -33,8 +33,6 @@ filename = strcat(str1,ksom{i},str2,lbl{j},str3,kt{k});
 variables = load(filename);
 Nr = variables.OPT.Nr;
 clear variables;
-
-% Init variables
 
 lines = length(ksom) * length(lbl);
 
@@ -108,8 +106,9 @@ for i = 1:length(ksom)
             
             % Clear variables;
             clear variables;
-           
+            
         end
+        
     end
 end
 

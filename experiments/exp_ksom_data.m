@@ -13,7 +13,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 10;      % datasets = [06,07,10,19,22];
+datasets = 22;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -21,7 +21,7 @@ OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'ksom_gd';% ksom_ef or ksom_gd
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm 
-OPT.hold = 01;      % Hold out method
+OPT.hold = 1;       % Hold out method
 OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 
 OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
@@ -50,7 +50,7 @@ kernels = [1,2,3,4,5,6,7,8];
 
 % Which Prototype Labeling Strategy to use
 
-prot_lbl = [1,2,3];
+prot_lbl = [2,3];
 
 % Hyperparameters - Default
 

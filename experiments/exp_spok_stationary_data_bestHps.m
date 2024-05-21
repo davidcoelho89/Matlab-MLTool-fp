@@ -18,7 +18,7 @@ datasets = 07;      % datasets = [06,07,10,19,22];
 % General options' structure
 
 OPT.Nr = 100;       % Number of experiment realizations
-OPT.alg = 'spark';  % spark or spok
+OPT.alg = 'spok';   % spark or spok
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm  
 OPT.hold = 2;       % Hold out method.

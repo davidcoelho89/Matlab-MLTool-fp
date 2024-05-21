@@ -83,7 +83,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished gaussian kernel!");
 
 end
 
@@ -103,7 +103,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished polynomial kernel!");
 
 end
 
@@ -123,7 +123,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished exponetial kernel!");
 
 end
 
@@ -143,7 +143,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished cauchy kernel!");
 
 end
 
@@ -163,7 +163,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished log kernel!");
 
 end
 
@@ -183,7 +183,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished sigmoid kernel!");
 
 end
 
@@ -203,7 +203,7 @@ OPT.file_hp = strcat(str1,str1_1,str1_2,str2_1,str2_2,str3,str3_1,str4,...
 
 exp_ksom_pipeline_1_data_1_lbl_1_kernel_best(DATA,OPT);
     
-disp("finished linear kernel!");
+disp("finished kmod kernel!");
 
 end
 

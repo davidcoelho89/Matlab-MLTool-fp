@@ -27,19 +27,13 @@ for Dm in old_file_2:
                                 old_file_5 + Kt + old_file_7 + NN + \
                                 old_file_9
                 print(old_file_name)
+
                 new_file_name = new_file_1 + Dm + old_file_3 + Ss + \
                                 old_file_5 + Kt + old_file_7 + NN + \
                                 old_file_9
                 print(new_file_name)
-
-
-"""
-old_file_name = "motorFailure_isk2nn_hpo1_norm3_Dm1_Ss1_Us0_Ps0_cau_1nn.mat"
-new_file_name = "motorFailure_spark_hpo1_norm3_Dm1_Ss1_Us0_Ps0_cau_1nn.mat"
-
-try:
-    os.rename(old_file_name, new_file_name)
-except FileNotFoundError:
-    print(f"{old_file_name} does not exist.")
-"""  
-  
+                
+                try:
+                    os.rename(old_file_name, new_file_name)
+                except FileNotFoundError:
+                    print(f"{old_file_name} does not exist.")

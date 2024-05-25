@@ -5,9 +5,11 @@
 % Author: David Nascimento Coelho
 % Last Update: 2024/04/26
 
-clear;
-clc;
-format long e;
+close;          % Close all windows
+clear;          % Clear all variables
+clc;            % Clear command window
+
+format long e;  % Output data style (float)
 
 %% Choices
 

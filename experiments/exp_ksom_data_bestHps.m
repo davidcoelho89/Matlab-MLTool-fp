@@ -29,7 +29,7 @@ OPT.savefile = 1;   % decides if file will be saved
 OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
 OPT.class_1_vect = 1;   % [2,3] which classes belongs together
                         % (for binary statistics)
-                        
+
 OPT.nn = '1';       % Number of Nearest Neighbors: 1 '1' ; or >1 '2'
 OPT.Nep = '50';     % Number of epochs
 OPT.Nprot = '30';   % Number of prototypes
@@ -108,7 +108,7 @@ if any(datasets == 22) % Wall-Following
     % OPT.prob2 = 03; % with 24 features
     exp_ksom_pipeline_1_data_1_lbl_N_kernel_best(OPT,kernels);
 end
-    
+
 end
 
 %% FINISHED!

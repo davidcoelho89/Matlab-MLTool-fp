@@ -2,7 +2,7 @@
 
 % Analysis of results from ksom model and VertebralColumn dataset
 % Author: David Nascimento Coelho
-% Last Update: 2024/05/03
+% Last Update: 2024/05/27
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -39,6 +39,7 @@ lines = length(ksom) * length(lbl);
 mat_acc_mean = zeros(lines,length(kt));
 mat_acc_median = zeros(lines,length(kt));
 mat_acc_best = zeros(lines,length(kt));
+mat_acc_std = zeros(lines,length(kt));
 mat_acc_boxplot = zeros(Nr,length(kt));
 
 mat_fsc_best = zeros(lines,length(kt));
@@ -66,6 +67,7 @@ for i = 1:length(ksom)
             mat_acc_best(line,k) = variables.nstats_all{2,1}.acc(best_acc_index);
             mat_acc_mean(line,k) = variables.nstats_all{2,1}.acc_mean;
             mat_acc_median(line,k) = variables.nstats_all{2,1}.acc_median;
+            mat_acc_std(line,k) = variables.nstats_all{2,1}.acc_std;
             mat_acc_boxplot(:,k) = variables.nstats_all{2,1}.acc';
             
             % Update mcc and fcc (from test)
@@ -141,6 +143,7 @@ lines = length(ksom) * length(lbl);
 mat_acc_mean = zeros(lines,length(kt));
 mat_acc_median = zeros(lines,length(kt));
 mat_acc_best = zeros(lines,length(kt));
+mat_acc_std = zeros(lines,length(kt));
 mat_acc_boxplot = zeros(Nr,length(kt));
 
 mat_fsc_best = zeros(lines,length(kt));
@@ -168,6 +171,7 @@ for i = 1:length(ksom)
             mat_acc_best(line,k) = variables.nstats_all{2,1}.acc(best_acc_index);
             mat_acc_mean(line,k) = variables.nstats_all{2,1}.acc_mean;
             mat_acc_median(line,k) = variables.nstats_all{2,1}.acc_median;
+            mat_acc_std(line,k) = variables.nstats_all{2,1}.acc_std;
             mat_acc_boxplot(:,k) = variables.nstats_all{2,1}.acc';
             
             % Update mcc and fcc (from test)

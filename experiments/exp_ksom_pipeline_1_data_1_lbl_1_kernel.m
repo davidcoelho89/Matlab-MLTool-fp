@@ -37,7 +37,7 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 NAMES = {'train','test'};               % Names for plots
 
-data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
+% data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
 
 nstats_all = cell(length(NAMES),1);     % Group Stats from Tr and Ts
 
@@ -68,7 +68,7 @@ display(datetime("now"));
 
 [DATAho] = hold_out(DATA,OPT);
 
-data_acc{r} = DATAho;
+% data_acc{r} = DATAho;
 DATAtr = DATAho.DATAtr;
 DATAts = DATAho.DATAts;
 

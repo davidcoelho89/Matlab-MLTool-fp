@@ -1,0 +1,61 @@
+[1mdiff --git a/experiments/exp_ksom_data.m b/experiments/exp_ksom_data.m[m
+[1mindex a58391e..e7fa98f 100644[m
+[1m--- a/experiments/exp_ksom_data.m[m
+[1m+++ b/experiments/exp_ksom_data.m[m
+[36m@@ -20,7 +20,7 @@[m [mdatasets = 22;      % datasets = [06,07,10,19,22];[m
+ % General options' structure[m
+ [m
+ OPT.Nr = 10;        % Number of experiment realizations[m
+[31m-OPT.alg = 'ksom_gd';% ksom_ef or ksom_gd[m
+[32m+[m[32mOPT.alg = 'ksom_ef';% ksom_ef or ksom_gd[m
+ OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1][m
+ OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm [m
+ OPT.hold = 1;       % Hold out method[m
+[36m@@ -47,12 +47,13 @@[m [mMP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc[m
+ % 1: linear | 2: rbf | 3: polynomial | 4: exp | [m
+ % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |[m
+ [m
+[31m-% kernels = 2;[m
+[31m-kernels = [1,2,3,4,5,6,7,8];[m
+[32m+[m[32mkernels = 6;[m
+[32m+[m[32m% kernels = [1,2,3,4,5,6,7,8];[m
+ [m
+ % Which Prototype Labeling Strategy to use[m
+ [m
+[31m-prot_lbl = [1,2,3];[m
+[32m+[m[32m% prot_lbl = [1,2,3];[m
+[32m+[m[32mprot_lbl = 2;[m
+ [m
+ % Hyperparameters - Default[m
+ [m
+[36m@@ -101,7 +102,7 @@[m [mHP_gs.Ktype = 3;        % Type of Kernel[m
+ [m
+ for lbl = 1:length(prot_lbl)[m
+ [m
+[31m-HP_gs.lbl = lbl;[m
+[32m+[m[32mHP_gs.lbl = prot_lbl(lbl);[m
+ [m
+ if any(datasets == 06) % Iris[m
+     OPT.prob = 06;[m
+[1mdiff --git a/experiments/exp_ksom_pipeline_1_data_1_lbl_1_kernel.m b/experiments/exp_ksom_pipeline_1_data_1_lbl_1_kernel.m[m
+[1mindex 9c47541..8955548 100644[m
+[1m--- a/experiments/exp_ksom_pipeline_1_data_1_lbl_1_kernel.m[m
+[1m+++ b/experiments/exp_ksom_pipeline_1_data_1_lbl_1_kernel.m[m
+[36m@@ -37,7 +37,7 @@[m [mDATA = label_encode(DATA,OPT);      % adjust labels for the problem[m
+ [m
+ NAMES = {'train','test'};               % Names for plots[m
+ [m
+[31m-data_acc = cell(OPT.Nr,1);              % Acc of labels and data division[m
+[32m+[m[32m% data_acc = cell(OPT.Nr,1);              % Acc of labels and data division[m
+ [m
+ nstats_all = cell(length(NAMES),1);     % Group Stats from Tr and Ts[m
+ [m
+[36m@@ -68,7 +68,7 @@[m [mdisplay(datetime("now"));[m
+ [m
+ [DATAho] = hold_out(DATA,OPT);[m
+ [m
+[31m-data_acc{r} = DATAho;[m
+[32m+[m[32m% data_acc{r} = DATAho;[m
+ DATAtr = DATAho.DATAtr;[m
+ DATAts = DATAho.DATAts;[m
+ [m

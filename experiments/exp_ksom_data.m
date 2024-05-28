@@ -20,7 +20,7 @@ datasets = 22;      % datasets = [06,07,10,19,22];
 % General options' structure
 
 OPT.Nr = 10;        % Number of experiment realizations
-OPT.alg = 'ksom_gd';% ksom_ef or ksom_gd
+OPT.alg = 'ksom_ef';% ksom_ef or ksom_gd
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm 
 OPT.hold = 1;       % Hold out method
@@ -47,12 +47,13 @@ MP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-% kernels = 2;
-kernels = [1,2,3,4,5,6,7,8];
+kernels = 6;
+% kernels = [1,2,3,4,5,6,7,8];
 
 % Which Prototype Labeling Strategy to use
 
-prot_lbl = [1,2,3];
+% prot_lbl = [1,2,3];
+prot_lbl = 2;
 
 % Hyperparameters - Default
 
@@ -101,7 +102,7 @@ HP_gs.Ktype = 3;        % Type of Kernel
 
 for lbl = 1:length(prot_lbl)
 
-HP_gs.lbl = lbl;
+HP_gs.lbl = prot_lbl(lbl);
 
 if any(datasets == 06) % Iris
     OPT.prob = 06;

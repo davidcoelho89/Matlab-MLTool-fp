@@ -47,8 +47,8 @@ MP.gamma = 0.1;     % Jpbc = Ds + lambda * Err + gamma * mcc
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-% kernels = 6;
-kernels = [1,2,3,4,5,7,8];
+kernels = 6;
+% kernels = [1,2,3,4,5,7,8];
 
 % Which Prototype Labeling Strategy to use
 

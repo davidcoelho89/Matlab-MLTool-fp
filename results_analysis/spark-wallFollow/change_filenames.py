@@ -16,7 +16,7 @@ old_file_7 = "_nn"
 old_file_8 = ["1","2"]
 old_file_9 = ".mat"
 
-# vertebral_1_spok_hpo1_norm3_Dm
+# wallFollow1_spok_hold1_norm3_Dm1_Ss1_Us0_Ps0_lin_nn1.mat
 
 new_file_1 = "vertebral_2_spok_hpo1_norm3_Dm"
 
@@ -39,4 +39,3 @@ for Dm in old_file_2:
                     os.rename(old_file_name, new_file_name)
                 except FileNotFoundError:
                     print(f"{old_file_name} does not exist.")
-                

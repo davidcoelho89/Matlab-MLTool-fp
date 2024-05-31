@@ -5,20 +5,20 @@ Change filename in order to put it in a new pattern
 
 import os
 
-old_file_1 = "vertebral1_spok_hpo1_norm3_Dm"
-old_file_2 = ["1","2"]
+old_file_1 = "wallFollow1_spok_hold2_norm3_Dm"
+# old_file_2 = ["1","2"]
+old_file_2 = ["2"]
 old_file_3 = "_Ss"
-# old_file_4 = ["1","2","3","4"]
-old_file_4 = ["3","4"]
+old_file_4 = ["1","2","3","4"]
 old_file_5 = "_Us0_Ps0_"
 old_file_6 = ["cau","exp","gau","kmod","lin","log","pol","sig"]
 old_file_7 = "_nn"
 old_file_8 = ["1","2"]
 old_file_9 = ".mat"
 
-# vertebral_1_spok_hpo1_norm3_Dm
+# wallFollow1_spok_hold2_norm3_Dm2_Ss1_Us0_Ps0_cau_nn1.mat
 
-new_file_1 = "vertebral_1_spok_hpo1_norm3_Dm"
+new_file_1 = "wallFollow_1_spok_hold2_norm3_Dm"
 
 for Dm in old_file_2:
     for Ss in old_file_4:
@@ -39,4 +39,3 @@ for Dm in old_file_2:
                     os.rename(old_file_name, new_file_name)
                 except FileNotFoundError:
                     print(f"{old_file_name} does not exist.")
-                

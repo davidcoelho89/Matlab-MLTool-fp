@@ -66,7 +66,7 @@ display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[DATAho] = hold_out(DATA,OPT);
+DATAho = hold_out(DATA,OPT);
 
 % data_acc{r} = DATAho;
 DATAtr = DATAho.DATAtr;

@@ -12,6 +12,16 @@ format long e;  % Output data style (float)
 
 %% MOTOR FAILURE 02 (balanced), SPARK, HOLD 2, HPO RANDOM, VARIOUS KERNELS
 
+% Init
+
+close;
+clear;
+clc;
+
+
+
+%% MOTOR FAILURE 02 (balanced), SPARK, HOLD 2, HPO RANDOM, VARIOUS KERNELS
+
 % Obs: f1-score and mcc were not yet implemented for multiclass
 
 % Init

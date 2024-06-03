@@ -22,10 +22,13 @@ v1 = HP.v1;                 	% Sparsification parameter
 %% ALGORITHM
 
 % Init coherence measure (first element of dictionary)
-u = kernel_func(Dx(:,1),xt,HP) / ...
-    (sqrt(kernel_func(Dx(:,1),Dx(:,1),HP) * ...
-    kernel_func(xt,xt,HP)));
-u_max = abs(u);
+% u = kernel_func(Dx(:,1),xt,HP) / ...
+%     (sqrt(kernel_func(Dx(:,1),Dx(:,1),HP) * ...
+%     kernel_func(xt,xt,HP)));
+% u_max = abs(u);
+u_max = kernel_func(Dx(:,1),xt,HP) / ...
+        (sqrt(kernel_func(Dx(:,1),Dx(:,1),HP) * ...
+        kernel_func(xt,xt,HP)));
 
 % Get coherence measure
 if (m >= 2)
@@ -35,8 +38,11 @@ if (m >= 2)
             (sqrt(kernel_func(Dx(:,i),Dx(:,i),HP) * ...
             kernel_func(xt,xt,HP)));
         % Calculate Coherence
-        if (abs(u) > u_max)
-            u_max = abs(u);
+%         if (abs(u) > u_max)
+%             u_max = abs(u);
+%         end
+        if (u > u_max)
+            u_max = u;
         end
     end
 end

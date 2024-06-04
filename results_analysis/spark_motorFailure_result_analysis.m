@@ -10,17 +10,7 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% MOTOR FAILURE 02 (balanced), SPARK, HOLD 2, HPO RANDOM, VARIOUS KERNELS
-
-% Init
-
-close;
-clear;
-clc;
-
-
-
-%% MOTOR FAILURE 02 (balanced), SPARK, HOLD 2, HPO RANDOM, VARIOUS KERNELS
+%% MOTOR FAILURE 02 (balanced), SPARK, HOLD 2, NORM 3, HPO RANDOM, VARIOUS KERNELS
 
 % Obs: f1-score and mcc were not yet implemented for multiclass
 
@@ -32,7 +22,7 @@ clc;
 
 % Choices for filename
 
-str1 = 'motorFailure_isk2nn_hpo1_norm3_Dm';
+str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_1_Dm';
 
 ss = {'1','2','3','4'};
 dm = {'1','2'};
@@ -42,7 +32,7 @@ knn = {'1','2'};
 % Get number of realizations
 
 i = 1; j = 1; k = 1; l = 1;
-filename = strcat(str1,dm{i},'_Ss',ss{j},'_Us0_Ps0_',kt{k},'_',knn{l},'nn');
+filename = strcat(str1,dm{i},'_Ss',ss{j},'_Us0_Ps0_',kt{k},'_',knn{l},'nn','.mat');
 variables = load(filename);
 Nr = variables.OPT.Nr;
 clear variables;
@@ -153,7 +143,8 @@ for j = 1:length(ss)
                                   '_Ss',ss{j}, ...
                                   '_Us0_Ps0_', ...
                                   kt{k},'_', ...
-                                  knn{l},'nn');
+                                  knn{l},'nn', ...
+                                  '.mat');
                 disp(filename);
 
                 % Get variables

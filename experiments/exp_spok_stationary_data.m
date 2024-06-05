@@ -12,7 +12,7 @@ clc;            % Clear command window
 format long e;  % Output data style (float)
 
 %% Choices
-p
+
 % Datasets Specification
 
 datasets = 10;      % datasets = [06,07,10,19,22];
@@ -130,8 +130,8 @@ end
 
 if any(datasets == 10)
     OPT.prob = 10;
-    OPT.prob2 = 01; % Treated as Multiclass (3 classes)
-    % OPT.prob2 = 02; % Treated as Binary problem (2 classes)
+    % OPT.prob2 = 01; % Treated as Multiclass (3 classes)
+    OPT.prob2 = 02; % Treated as Binary problem (2 classes)
     exp_spok_stationary_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,CVp,kernels);
 end
 

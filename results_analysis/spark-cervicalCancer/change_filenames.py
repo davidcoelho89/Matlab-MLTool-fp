@@ -7,7 +7,7 @@ import os
 
 old_file_1 = "cervicalCancer_1_spok_hpo1_norm3_Dm"
 # old_file_2 = ["1","2"]
-old_file_2 = ["2"]
+old_file_2 = ["1"]
 old_file_3 = "_Ss"
 old_file_4 = ["1","2","3","4"]
 old_file_5 = "_Us0_Ps0_"

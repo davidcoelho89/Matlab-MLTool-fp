@@ -18,7 +18,7 @@ close;
 clear;
 clc;
 
-str1 = 'cervicalCancer_spok_hpo1_norm3_Dm';
+str1 = 'cervicalCancer_1_spok_hold_2_norm_3_hpo_1_Dm';
 
 dm = {'1','2'};
 ss = {'1','2','3','4'};

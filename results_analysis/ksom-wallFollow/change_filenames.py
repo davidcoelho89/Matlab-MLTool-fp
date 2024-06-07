@@ -9,13 +9,13 @@ import os
 
 # wallFollow_1_ksomef_hold_2_hpo_1_norm_3_lbl_1_nn_1_Nep_50_Nprot_30_Kt_1.mat
 
-old_file_1 = "wallFollow_1_ksomef_hold_2_hpo_b_norm_3_lbl_"
+old_file_1 = "wallFollow_1_ksomgd_hold_2_hpo_1_norm_3_lbl_"
 old_file_2 = ["1","2","3"]
 old_file_3 = "_nn_1_Nep_50_Nprot_30_Kt_"
 old_file_4 = ["1","2","3","4","5","6","7","8"]
 old_file_5 = ".mat"
 
-new_file_1 = "wallFollow_1_ksomef_hold_2_norm_3_hpo_b_lbl_"
+new_file_1 = "wallFollow_1_ksomgd_hold_2_norm_3_hpo_1_lbl_"
 
 for lbl in old_file_2:
     for ktype in old_file_4:

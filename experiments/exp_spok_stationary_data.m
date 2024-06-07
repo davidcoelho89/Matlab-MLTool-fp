@@ -15,7 +15,7 @@ format long e;  % Output data style (float)
 
 % Datasets Specification
 
-datasets = 19;      % datasets = [06,07,10,19,22];
+datasets = 22;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -23,7 +23,7 @@ OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'spok';   % Algorithm name
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm  
-OPT.hold = 1;       % Hold out method.
+OPT.hold = 2;       % Hold out method.
 OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 
 OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'

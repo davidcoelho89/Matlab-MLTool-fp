@@ -15,7 +15,7 @@ format long e;  % Output data style (float)
 
 % Datasets Specification
 
-datasets = 19;      % datasets = [06,07,10,19,22];
+datasets = 22;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -23,7 +23,7 @@ OPT.Nr = 10;        % Number of experiment realizations
 OPT.alg = 'spok';   % Algorithm name
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm  
-OPT.hold = 1;       % Hold out method.
+OPT.hold = 2;       % Hold out method.
 OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 
 OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
@@ -42,7 +42,8 @@ CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (PB models)
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
 % kernels = 1;
-kernels = [1,2,3,4,5,6,7,8];
+% kernels = [1,2,3,4,5,6,7,8];
+kernels = [1,2,3,4];
 
 % Hyperparameters - Default
 
@@ -103,10 +104,13 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% Run algorithm at datasets
 
-for Ss = 1:4
-for Dm = 1:2
-for K = 1:2
-    
+% for Ss = 1:4
+% for Dm = 1:2
+for Ss = 4:4
+for Dm = 1:1
+% for K = 1:2
+for K = 2:2
+      
 HP_gs.Ss = Ss;
 HP_gs.Dm = Dm;
 if(K == 1)

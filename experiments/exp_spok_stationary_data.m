@@ -42,8 +42,7 @@ CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (PB models)
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
 % kernels = 1;
-% kernels = [1,2,3,4,5,6,7,8];
-kernels = [1,2,3,4];
+kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
@@ -107,8 +106,7 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 % for Ss = 1:4
 % for Dm = 1:2
 for Ss = 4:4
-for Dm = 1:1
-% for K = 1:2
+for Dm = 2:2
 for K = 2:2
       
 HP_gs.Ss = Ss;

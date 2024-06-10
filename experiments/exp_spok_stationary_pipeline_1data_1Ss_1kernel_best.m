@@ -50,10 +50,16 @@ class_test = str2func(str_test);
 %% GET HP FROM FILE
 
 variables = load(OPT.file_hp);
-max_acc_i = variables.nstats_all{2,1}.acc_max_i;
+if(isfield(variables,'nstats_all'))
+    max_acc_i = variables.nstats_all{2,1}.acc_max_i;
+elseif(isfield(variables,'nSTATS_all'))
+    max_acc_i = variables.nSTATS_all{2,1}.acc_max_i;
+end
 
 if(isfield(variables,'par_acc'))
     get_par_acc = variables.par_acc;
+elseif(isfield(variables,'PAR_acc'))
+    get_par_acc = variables.PAR_acc;
 end
 
 PAR = get_par_acc{max_acc_i,1};

@@ -3,7 +3,7 @@
 % KSOM Model testing in various stationary datasets
 % (using the best hyperparameters found using hpo)
 % Author: David Nascimento Coelho
-% Last Update: 2024/04/26
+% Last Update: 2024/06/10
 
 clear;
 clc;
@@ -13,12 +13,12 @@ format long e;
 
 % Datasets Specification
 
-datasets = 19;      % datasets = [06,07,10,19,22];
+datasets = 07;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
 OPT.Nr = 100;       % Number of experiment realizations
-OPT.alg = 'ksom_ef';% ksom_ef or ksom_gd
+% OPT.alg = 'ksom_ef';% ksom_ef or ksom_gd
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm 
 OPT.hold = 1;       % Hold out method
@@ -26,25 +26,26 @@ OPT.ptrn = 0.7;     % Percentage of samples for training. [0,1]
 OPT.hpo = 'best';   % 'grid' ; 'random' ; 'none' ; 'best'
 OPT.savefile = 1;   % decides if file will be saved
 
-OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
-OPT.class_1_vect = 1;   % [2,3] which classes belongs together
-                        % (for binary statistics)
-
-OPT.nn = '1';       % Number of Nearest Neighbors: 1 '1' ; or >1 '2'
-OPT.Nep = '50';     % Number of epochs
-OPT.Nprot = '30';   % Number of prototypes
+% OPT.calculate_bin = 0;  % [0 or 1] decides to calculate binary statistics
+% OPT.class_1_vect = 1;   % [2,3] which classes belongs together
+%                         % (for binary statistics)
 
 % Which Kernels Will be tested
 
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-% kernels = 2;
+% kernels = 1;
 kernels = [1,2,3,4,5,6,7,8];
 
-% Which Prototype Labeling Strategy to use
+% Specific Hyperparameters
 
-prot_lbls = [1,2,3];
+OPT.nn = '1';           % Number of Nearest Neighbors: 1 '1' ; or >1 '2'
+OPT.Nep = '50';         % Number of epochs
+OPT.Nprot = '30';       % Number of prototypes
+
+algs = {'ksom_ef','ksom_gd'};   % Which Algorithms
+prot_lbls = [1,2,3];            % Which labeling strategies
 
 %% Datasets List
 
@@ -70,9 +71,11 @@ prot_lbls = [1,2,3];
 
 %% Run algorithm at datasets
 
-for prot_lbl = 1:length(prot_lbls)
+for i = 1:length(algs)
+for j = 1:length(prot_lbls)
 
-OPT.prot_lbl = prot_lbl;
+OPT.alg = algs{i};
+OPT.prot_lbl = prot_lbls(j);
 
 if any(datasets == 06) % Iris
     OPT.prob = 06;
@@ -109,6 +112,7 @@ if any(datasets == 22) % Wall-Following
     exp_ksom_pipeline_1_data_1_lbl_N_kernel_best(OPT,kernels);
 end
 
+end
 end
 
 %% FINISHED!

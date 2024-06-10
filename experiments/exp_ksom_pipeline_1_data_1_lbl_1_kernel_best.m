@@ -27,7 +27,7 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 
 NAMES = {'train','test'};               % Names for plots
 
-data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
+% data_acc = cell(OPT.Nr,1);              % Acc of labels and data division
 
 nstats_all = cell(length(NAMES),1);     % Group Stats from Tr and Ts
 
@@ -58,8 +58,36 @@ elseif(isfield(variables,'par_acc'))
     get_par_acc = variables.par_acc;
 end
 
-HP = get_par_acc{max_acc_i,1};
+PAR = get_par_acc{max_acc_i,1};
 
+HP = struct();
+HP.Nep = PAR.Nep;
+HP.Nk = PAR.Nk;
+HP.init = PAR.init;
+HP.dist = PAR.dist;
+HP.learn = PAR.learn;
+HP.No = PAR.No;
+HP.Nt = PAR.Nt;
+HP.Nn = PAR.Nn;
+HP.neig = PAR.neig;
+HP.Vo = PAR.Vo;
+HP.Vt = PAR.Vt;
+HP.lbl = PAR.lbl;
+HP.Von = PAR.Von;
+HP.Ktype = PAR.Ktype;
+
+if(isfield(PAR,'sigma'))
+    HP.sigma = PAR.sigma;
+end
+if(isfield(PAR,'alpha'))
+    HP.alpha = PAR.alpha;
+end
+if(isfield(PAR,'theta'))
+    HP.theta = PAR.theta;
+end
+if(isfield(PAR,'gamma'))
+    HP.gamma = PAR.gamma;
+end
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / TRAINING / TEST / STATISTICS
 
@@ -74,7 +102,7 @@ display(datetime("now"));
 
 [DATAho] = hold_out(DATA,OPT);
 
-data_acc{r} = DATAho;
+% data_acc{r} = DATAho;
 DATAtr = DATAho.DATAtr;
 DATAts = DATAho.DATAts;
 

@@ -2,7 +2,7 @@
 
 % SPARK and Stationary Data Sets
 % Author: David Nascimento Coelho
-% Last Update: 2024/01/30
+% Last Update: 2024/06/11
 
 close;          % Close all windows
 clear;          % Clear all variables

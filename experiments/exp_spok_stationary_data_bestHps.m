@@ -13,7 +13,7 @@ format long e;
 
 % Datasets Specification
 
-datasets = 19;      % datasets = [06,07,10,19,22];
+datasets = 22;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
@@ -35,7 +35,6 @@ OPT.savefile = 1;   % decides if file will be saved
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-% kernels = 1;
 kernels = [1,2,3,4,5,6,7,8];
 
 % Specific Hyperparameters

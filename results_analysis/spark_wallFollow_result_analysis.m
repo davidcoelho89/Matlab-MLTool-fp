@@ -20,8 +20,8 @@ clc;
 
 % Choices for filename:
 
-str1 = 'wallFollow_1_spok_hold_2_norm_3_hpo_1_Dm';
-% str1 = 'wallFollow_1_spok_hold_2_norm_3_hpo_b_Dm';
+% str1 = 'wallFollow_1_spok_hold_2_norm_3_hpo_1_Dm';
+str1 = 'wallFollow_1_spok_hold_2_norm_3_hpo_b_Dm';
 
 dm = {'1','2'};
 ss = {'1','2','3','4'};

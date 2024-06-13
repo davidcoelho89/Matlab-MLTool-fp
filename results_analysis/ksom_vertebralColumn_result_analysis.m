@@ -10,7 +10,7 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% VERTEBRAL COLUMN (02 - binary), KSOM, HOLD 1, HPO RANDOM, VARIOUS KERNELS
+%% VERTEBRAL COLUMN (02 - binary), KSOM, VARIOUS KERNELS
 
 % Init
 
@@ -19,6 +19,8 @@ clear;
 clc;
 
 % Choices for filename
+
+
 
 str1 = 'vertebral_2_';
 ksom = {'ksomef','ksomgd'};

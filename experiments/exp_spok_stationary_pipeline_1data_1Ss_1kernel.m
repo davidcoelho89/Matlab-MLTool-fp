@@ -1,4 +1,7 @@
-function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
+function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,...
+                                                             OPT,...
+                                                             HPgs,...
+                                                             CVp)
 
 % --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
 %
@@ -15,7 +18,7 @@ function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
 %           lbl = which labeling strategy will be used
 %       HPgs = hyperparameters for grid searh of classifier
 %             (vectors containing values that will be tested)
-%       PSp.
+%       CVp.
 %           fold = % number of data partitions for cross validation
 %                        presented to the algorithm
 %           cost = type of cross validation                         [cte]

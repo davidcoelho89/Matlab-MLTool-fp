@@ -1,12 +1,15 @@
 %% Machine Learning ToolBox
 
 % Spok Model testing in various streaming datasets
+% (using hyperparameter optimization)
 % Author: David Nascimento Coelho
-% Last Update: 2024/02/09
+% Last Update: 2024/06/15
 
 clear;
 clc;
 format long e;
+
+format long e;  % Output data style (float)
 
 %% Choices
 
@@ -14,10 +17,18 @@ format long e;
 
 datasets = 28;  % datasets = [28,29,30,33,34,35,36,37,38]
 
-OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
-OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
+% General options' structure
 
-% Random-Search (Test-Then-Train)
+OPT.Nr = 1;         % Just need one realization
+OPT.alg = 'spok';   % algorithm name
+OPT.lbl = 1;        % Type of labeling. 1: from sequential to [-1 and +1]
+OPT.norm = 0;       % Normalization. 0: Don't normalize. 3: z-score norm
+% don't need hold out (Test-Then-Train)
+OPT.max_prot_after_gs = 1000;   % max #prototypes after grid-search
+
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
+
+% Hyperparameter Optimization (Grid or random search Cross-validation)
 
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
@@ -66,10 +77,6 @@ HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
 HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 % Obs: the hyperparameters related to kernel functions are at the pipelines
-
-% Hyperparameter - specific
-
-OPT.max_prot_after_gs = 1000;
 
 %% Datasets List
 

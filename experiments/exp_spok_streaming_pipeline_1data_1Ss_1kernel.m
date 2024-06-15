@@ -1,5 +1,7 @@
 function [] = exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,...
-                                                            OPT,HPgs,PSp)
+                                                            OPT,...
+                                                            HPgs,...
+                                                            PSp)
 
 % --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
 %
@@ -101,7 +103,7 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 disp('begin grid search')
 display(datetime("now"));
 
-% Grid Search Parameters
+% MetaParameters
 
 if (nargin == 2)
     PSp.iterations = 1;

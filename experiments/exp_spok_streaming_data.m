@@ -23,7 +23,7 @@ OPT.Nr = 1;         % Just need one realization
 OPT.alg = 'spok';   % algorithm name
 OPT.lbl = 1;        % Type of labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 0;       % Normalization. 0: Don't normalize. 3: z-score norm
-% don't need hold out (Test-Then-Train)
+OPT.hold = 'ttt';   % Test than train
 OPT.max_prot_after_gs = 1000;   % max #prototypes after grid-search
 
 OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'

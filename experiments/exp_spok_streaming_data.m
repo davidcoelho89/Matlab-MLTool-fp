@@ -136,6 +136,16 @@ HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 %% Run algorithm at datasets
 
+for Ss = 1:4
+for K = 1:2
+
+HP_gs.Ss = Ss;
+if(K == 1)
+    HP_gs.K = 1;
+else
+    HP_gs.K = 2:10;
+end
+
 if any(datasets == 25)
     OPT.prob = 25;
     OPT.prob2 = 1;  % Specific choice about dataset
@@ -224,6 +234,9 @@ if any(datasets == 39)
     OPT.prob = 39;
     OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
+end
+
+end
 end
 
 %% FINISHED!

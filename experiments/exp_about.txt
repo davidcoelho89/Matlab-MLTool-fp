@@ -31,29 +31,15 @@ cluster_test_3
 esann_test_1
         \item K2NN for sample selecting and model building.
 
-test_script
+exp_script
         \item General Drafts for algorithms
 
 exp_WSOMconf_2017
         \item SOM2D / KSOM-GD-G / KSOM-GD-C / KSOM-GD-L / KSOM-EF-G / KSOM-EF-C / KSOM-EF-L
 
-exp_WSOMJournal_2018_1
-        \item SOM2D / KSOM-GD / KSOM-EF / KSOM-PS-A / KSOM-PS-N / KSOM-PS-R
-
-exp_WSOMJournal_2018_2
-        \item SOM2D / KSOM-GD / KSOM-EF / KSOM-GD + ALD / KSOM-EF + ALD
-
-exp_WSOMJournal_2018_3
-        \item KSOM-ALD + GD test / KSOM-ALD + EF test
-
 exp_YaleA_GenClass_1
         \item Test for Yale Image DataBase and others classifiers
         \item OLS, MLP, SVM, LSSVM
 
-exp_YaleA_k2nn_1
-        \item Test For Yale Images DataBase and K2NN classifier
-        \item 8 types of k2nn
-        \item Ss = 1 (ALD) / Us = x / Ps = x / Dm = 1,2 / 
-        \item v = CV / Ktype = 1,2,3,4 / sig2 = CV /
-
 exp_YaleA_k2nn_2
+        \item Test For Yale Images DataBase and models over SPARK classifier

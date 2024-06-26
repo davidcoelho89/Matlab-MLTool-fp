@@ -65,8 +65,6 @@ HP_gs.min_prot = 1;            % Min number of prototypes
 HP_gs.Von = 0;                 % Enable / disable video 
 
 HP_gs.K = 1;                   % Number of nearest neighbors (classify)
-% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
-
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())

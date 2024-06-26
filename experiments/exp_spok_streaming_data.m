@@ -15,7 +15,7 @@ format long e;  % Output data style (float)
 
 % Datasets Specification
 
-datasets = 28;  % datasets = [28,29,30,33,34,35,36,37,38]
+datasets = 34;  % datasets = [28,29,30,33,34,35,36,37,38]
 
 % General options' structure
 
@@ -40,8 +40,8 @@ PSpar.gamma = 0.1;    % Jpbc = Ds + lambda * Err + gamma * mcc
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = 2;
-% kernels = [1,2,3,4,5,6,7,8];
+% kernels = 2;
+kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 

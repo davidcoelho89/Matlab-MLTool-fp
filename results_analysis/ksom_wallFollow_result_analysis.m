@@ -10,7 +10,7 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% WALL FOLLOWING (01 - 2 feat), KSOM, HOLD 2, HPO RANDOM, VARIOUS KERNELS
+%% WALL FOLLOWING (01 - 2 feat), KSOM, HOLD 1, HPO RANDOM, VARIOUS KERNELS
 
 % Init
 
@@ -22,7 +22,7 @@ clc;
 
 str1 = 'wallFollow_1_';
 ksom = {'ksomef','ksomgd'};
-str2 = '_hold_2_hpo_1_norm_3_lbl_';
+str2 = '_hold_1_norm_3_hpo_b_lbl_';
 lbl = {'1','2','3'};
 str3 = '_nn_1_Nep_50_Nprot_30_Kt_';
 kt = {'1','2','3','4','5','6','7','8'};

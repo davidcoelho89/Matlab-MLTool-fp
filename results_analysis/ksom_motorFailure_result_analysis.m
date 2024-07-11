@@ -22,7 +22,7 @@ clc;
 
 str1 = 'motorFailure_2_';
 ksom = {'ksomef','ksomgd'};
-str2 = '_hold_1_hpo_1_norm_3_lbl_';
+str2 = '_hold_1_norm_3_hpo_1_lbl_';
 lbl = {'1','2','3'};
 str3 = '_nn_1_Nep_50_Nprot_30_Kt_';
 kt = {'1','2','3','4','5','6','7','8'};
@@ -115,6 +115,8 @@ for i = 1:length(ksom)
         end
     end
 end
+
+clc;
 
 %% MOTOR FAILURE (02 - balanced), KSOM, HOLD 1, BEST HPS, VARIOUS KERNELS
 

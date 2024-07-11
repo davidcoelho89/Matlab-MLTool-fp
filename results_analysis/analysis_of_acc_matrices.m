@@ -118,21 +118,21 @@ end
 [max_n_times_3_best,best_kernel_2] = max(n_times_3_best);
 
 if(best_kernel_1 == 1)
-    disp('best kernel = linear');
+    disp('best kernel = LIN');
 elseif(best_kernel_1 == 2)
-    disp('best kernel = gaussian');
+    disp('best kernel = GAU');
 elseif(best_kernel_1 == 3)
-    disp('best kernel = poynomial');
+    disp('best kernel = POL');
 elseif(best_kernel_1 == 4)
-    disp('best kernel = exponential');
+    disp('best kernel = EXP');
 elseif(best_kernel_1 == 5)
-    disp('best kernel = cauchy');
+    disp('best kernel = CAU');
 elseif(best_kernel_1 == 6)
-    disp('best kernel = log');
+    disp('best kernel = LOG');
 elseif(best_kernel_1 == 7)
-    disp('best kernel = sigmoid');
+    disp('best kernel = SIG');
 elseif(best_kernel_1 == 8)
-    disp('best kernel = kmod');
+    disp('best kernel = KMOD');
 end
 
 %% SPARK - Result Analysis

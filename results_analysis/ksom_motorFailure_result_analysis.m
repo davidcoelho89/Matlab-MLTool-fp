@@ -22,8 +22,8 @@ clc;
 
 str1 = 'motorFailure_2_';
 ksom = {'ksomef','ksomgd'};
-str2 = '_hold_1_norm_3_hpo_1_lbl_';
-%str2 = '_hold_1_norm_3_hpo_b_lbl_';
+% str2 = '_hold_1_norm_3_hpo_1_lbl_';
+str2 = '_hold_1_norm_3_hpo_b_lbl_';
 lbl = {'1','2','3'};
 str3 = '_nn_1_Nep_50_Nprot_30_Kt_';
 kt = {'1','2','3','4','5','6','7','8'};
@@ -84,8 +84,7 @@ for i = 1:length(ksom)
                 par_acc = variables.ksomef_par_acc;
             elseif(isfield(variables,'par_acc'))
                 par_acc = variables.par_acc;
-            end
-            
+            end            
             
             if (k == 1)
                 mat_hp_best(line,1) = par_acc{best_acc_index,1}.theta;

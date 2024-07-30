@@ -246,6 +246,8 @@ end
 mat_nprot_mean = mat_nprot_mean/Nr;
 mat_K_mean = mat_K_mean/Nr;
 
+clc;
+
 % disp(mat_nprot_mean);
 % disp(mat_K_mean);
 

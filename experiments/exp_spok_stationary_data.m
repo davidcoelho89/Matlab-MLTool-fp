@@ -15,7 +15,8 @@ format long e;  % Output data style (float)
 
 % Datasets Specification
 
-datasets = 06;      % datasets = [06,07,10,19,22];
+% datasets = 06;      
+datasets = [07,10,19,22];
 
 % General options' structure
 
@@ -32,8 +33,8 @@ OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 CVp.max_it = 100;       % Maximum number of iterations (random search)
 CVp.fold = 5;           % number of data partitions for cross validation
-CVp.cost = 2;           % Which cost function will be used
-CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (prototype-based models)
+CVp.cost = 2;           % 2: Takes into account also the dicitionary size
+CVp.lambda = 2;         % Jpbc = Ds + lambda * Err (PB Models)
 CVp.gamma = 0.1;        % Jpbc = Ds + lambda * Err + gamma * mcc (PB models)
 
 % Which Kernels Will be tested
@@ -46,7 +47,7 @@ kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
-HP_gs.Ne = 01;                 % Number of epochs
+HP_gs.Ne = 05;                 % Number of epochs
 HP_gs.is_static = 1;           % Verify if the dataset is stationary
 HP_gs.Dm = 1;                  % Design Method
 
@@ -54,10 +55,10 @@ HP_gs.Ss = 1;                  % Sparsification strategy
 HP_gs.v1 = 0.4;                % Sparseness parameter 1 
 HP_gs.v2 = 0.9;                % Sparseness parameter 2
 
-HP_gs.Us = 0;                  % Update strategy
+HP_gs.Us = 1;                  % Update strategy
 HP_gs.eta = 0.1;               % Update rate
 
-HP_gs.Ps = 0;                  % Prunning strategy
+HP_gs.Ps = 2;                  % Prunning strategy
 HP_gs.min_score = -10;         % Score that leads the sample to be pruned
 
 HP_gs.max_prot = Inf;          % Max number of prototypes

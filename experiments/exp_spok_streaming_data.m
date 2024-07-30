@@ -32,8 +32,8 @@ OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
 
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
-PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
-PSpar.gamma = 0.1;    % Jpbc = Ds + lambda * Err + gamma * mcc 
+PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err (PB Models)
+PSpar.gamma = 0.1;    % Jpbc = Ds + lambda * Err + gamma * mcc (PB Models)
 
 % Which Kernels Will be tested
 

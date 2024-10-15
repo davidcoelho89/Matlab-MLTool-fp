@@ -133,86 +133,113 @@ for j = 1:length(ss)
                 disp(filename);
                 
                 % Get variables
+                
                 variables = load(filename);
-                best_acc_index = variables.nstats_ts.acc_max_i;
+                
+                if(isfield(variables,'nstats_ts'))
+                    nstats_ts = variables.nstats_ts;
+                elseif(isfield(variables,'nSTATS_ts'))
+                    nstats_ts = variables.nSTATS_ts;                    
+                end
+                
+                if(isfield(variables,'stats_ts_acc'))
+                    stats_ts_acc = variables.stats_ts_acc;
+                elseif(isfield(variables,'STATS_ts_acc'))
+                    stats_ts_acc = variables.STATS_ts_acc;
+                end
+                
+                if(isfield(variables,'par_acc'))
+                    par_acc = variables.par_acc;
+                elseif(isfield(variables,'PAR_acc'))
+                    par_acc = variables.PAR_acc;
+                end
+                
+                best_acc_index = nstats_ts.acc_max_i;
                 
                 % Update acc matrices
-                mat_acc_best(line,k) = variables.stats_ts_acc{best_acc_index,1}.acc;
-                mat_acc_mean(line,k) = variables.nstats_ts.acc_mean;
-                mat_acc_median(line,k) = variables.nstats_ts.acc_median;
-                mat_acc_std(line,k) = variables.nstats_ts.acc_std;
-                mat_acc_boxplot(:,k) = variables.nstats_ts.acc';
+                mat_acc_best(line,k) = stats_ts_acc{best_acc_index,1}.acc;
+                mat_acc_mean(line,k) = nstats_ts.acc_mean;
+                mat_acc_median(line,k) = nstats_ts.acc_median;
+                mat_acc_std(line,k) = nstats_ts.acc_std;
+                mat_acc_boxplot(:,k) = nstats_ts.acc';
                 
                 % Update mcc and fsc
-                mat_fsc_best(line,k) = variables.stats_ts_acc{best_acc_index,1}.fsc_macro;
-                mat_mcc_best(line,k) = variables.stats_ts_acc{best_acc_index,1}.mcc_multiclass;
+                if(isfield(stats_ts_acc{best_acc_index,1},'fsc_macro'))
+                    mat_fsc_best(line,k) = stats_ts_acc{best_acc_index,1}.fsc_macro;
+                end
+                if(isfield(stats_ts_acc{best_acc_index,1},'mcc_multiclass'))
+                    mat_mcc_best(line,k) = stats_ts_acc{best_acc_index,1}.mcc_multiclass;
+                end
                 
                 % Update Hyperparameters
-                mat_nprot_best(line,k) = size(variables.par_acc{best_acc_index,1}.Cx,2);
-                mat_K_best(line,k) = variables.par_acc{best_acc_index,1}.K;
+                mat_nprot_best(line,k) = size(par_acc{best_acc_index,1}.Cx,2);
+                mat_K_best(line,k) = par_acc{best_acc_index,1}.K;
                 
-                mat_hp_v1_v2_best(line,2*k-1) = variables.par_acc{best_acc_index,1}.v1;
-                mat_hp_v1_v2_best(line,2*k) = variables.par_acc{best_acc_index,1}.v2;
+                mat_hp_v1_v2_best(line,2*k-1) = par_acc{best_acc_index,1}.v1;
+                mat_hp_v1_v2_best(line,2*k) = par_acc{best_acc_index,1}.v2;
 
                 if(k == 1)
-                    mat_hp_kernel_best(line,1) = variables.par_acc{best_acc_index,1}.theta;
+                    mat_hp_kernel_best(line,1) = par_acc{best_acc_index,1}.theta;
                 elseif(k == 2)
-                    mat_hp_kernel_best(line,2) = variables.par_acc{best_acc_index,1}.sigma;
+                    mat_hp_kernel_best(line,2) = par_acc{best_acc_index,1}.sigma;
                 elseif(k == 3)
-                    mat_hp_kernel_best(line,3) = variables.par_acc{best_acc_index,1}.alpha;
-                    mat_hp_kernel_best(line,4) = variables.par_acc{best_acc_index,1}.theta;
-                    mat_hp_kernel_best(line,5) = variables.par_acc{best_acc_index,1}.gamma;
+                    mat_hp_kernel_best(line,3) = par_acc{best_acc_index,1}.alpha;
+                    mat_hp_kernel_best(line,4) = par_acc{best_acc_index,1}.theta;
+                    mat_hp_kernel_best(line,5) = par_acc{best_acc_index,1}.gamma;
                 elseif(k == 4)
-                    mat_hp_kernel_best(line,6) = variables.par_acc{best_acc_index,1}.sigma;
+                    mat_hp_kernel_best(line,6) = par_acc{best_acc_index,1}.sigma;
                 elseif(k == 5)
-                    mat_hp_kernel_best(line,7) = variables.par_acc{best_acc_index,1}.sigma;
+                    mat_hp_kernel_best(line,7) = par_acc{best_acc_index,1}.sigma;
                 elseif(k == 6)
-                    mat_hp_kernel_best(line,8) = variables.par_acc{best_acc_index,1}.gamma;
-                    mat_hp_kernel_best(line,9) = variables.par_acc{best_acc_index,1}.sigma;
+                    mat_hp_kernel_best(line,8) = par_acc{best_acc_index,1}.gamma;
+                    mat_hp_kernel_best(line,9) = par_acc{best_acc_index,1}.sigma;
                 elseif(k == 7)
-                    mat_hp_kernel_best(line,10) = variables.par_acc{best_acc_index,1}.alpha;
-                    mat_hp_kernel_best(line,11) = variables.par_acc{best_acc_index,1}.theta;
+                    mat_hp_kernel_best(line,10) = par_acc{best_acc_index,1}.alpha;
+                    mat_hp_kernel_best(line,11) = par_acc{best_acc_index,1}.theta;
                 elseif(k == 8)
-                    mat_hp_kernel_best(line,12) = variables.par_acc{best_acc_index,1}.gamma;
-                    mat_hp_kernel_best(line,13) = variables.par_acc{best_acc_index,1}.sigma;
+                    mat_hp_kernel_best(line,12) = par_acc{best_acc_index,1}.gamma;
+                    mat_hp_kernel_best(line,13) = par_acc{best_acc_index,1}.sigma;
                 end
 
                 for m = 1:Nr
                     
                     mat_nprot_mean(line,k) = mat_nprot_mean(line,k) + ...
-                                  size(variables.par_acc{m,1}.Cx,2);
+                                  size(par_acc{m,1}.Cx,2);
                     mat_K_mean(line,k) = mat_K_mean(line,k) + ...
-                                  variables.par_acc{m,1}.K;
+                                  par_acc{m,1}.K;
 
                     if(k == 1)
-                        cell_best_hps{line,k}.theta(1,m) = variables.par_acc{m,1}.theta;
+                        cell_best_hps{line,k}.theta(1,m) = par_acc{m,1}.theta;
                     elseif(k == 2)
-                        cell_best_hps{line,k}.sigma(1,m) = variables.par_acc{m,1}.sigma;
+                        cell_best_hps{line,k}.sigma(1,m) = par_acc{m,1}.sigma;
                     elseif(k == 3)
-                        cell_best_hps{line,k}.alpha(1,m) = variables.par_acc{m,1}.alpha;
-                        cell_best_hps{line,k}.theta(1,m) = variables.par_acc{m,1}.theta;
-                        cell_best_hps{line,k}.gamma(1,m) = variables.par_acc{m,1}.gamma;
+                        cell_best_hps{line,k}.alpha(1,m) = par_acc{m,1}.alpha;
+                        cell_best_hps{line,k}.theta(1,m) = par_acc{m,1}.theta;
+                        cell_best_hps{line,k}.gamma(1,m) = par_acc{m,1}.gamma;
                     elseif(k == 4)
-                        cell_best_hps{line,k}.sigma(1,m) = variables.par_acc{m,1}.sigma;
+                        cell_best_hps{line,k}.sigma(1,m) = par_acc{m,1}.sigma;
                     elseif(k == 5)
-                        cell_best_hps{line,k}.sigma(1,m) = variables.par_acc{m,1}.sigma;
+                        cell_best_hps{line,k}.sigma(1,m) = par_acc{m,1}.sigma;
                     elseif(k == 6)
-                        cell_best_hps{line,k}.gamma(1,m) = variables.par_acc{m,1}.gamma;
-                        cell_best_hps{line,k}.sigma(1,m) = variables.par_acc{m,1}.sigma;
+                        cell_best_hps{line,k}.gamma(1,m) = par_acc{m,1}.gamma;
+                        cell_best_hps{line,k}.sigma(1,m) = par_acc{m,1}.sigma;
                     elseif(k == 7)
-                        cell_best_hps{line,k}.alpha(1,m) = variables.par_acc{m,1}.alpha;
-                        cell_best_hps{line,k}.theta(1,m) = variables.par_acc{m,1}.theta;
+                        cell_best_hps{line,k}.alpha(1,m) = par_acc{m,1}.alpha;
+                        cell_best_hps{line,k}.theta(1,m) = par_acc{m,1}.theta;
                     elseif(k == 8)
-                        cell_best_hps{line,k}.gamma(1,m) = variables.par_acc{m,1}.gamma;
-                        cell_best_hps{line,k}.sigma(1,m) = variables.par_acc{m,1}.sigma;
+                        cell_best_hps{line,k}.gamma(1,m) = par_acc{m,1}.gamma;
+                        cell_best_hps{line,k}.sigma(1,m) = par_acc{m,1}.sigma;
                     end
-                    cell_best_hps{line,k}.v1(1,m) = variables.par_acc{m,1}.v1;
-                    cell_best_hps{line,k}.v2(1,m) = variables.par_acc{m,1}.v2;
+                    cell_best_hps{line,k}.v1(1,m) = par_acc{m,1}.v1;
+                    cell_best_hps{line,k}.v2(1,m) = par_acc{m,1}.v2;
 
                 end
                 
                 % Clear variables;
                 clear variables;
+                clear nstats_ts;
+                clear stats_ts_acc;
+                clear par_acc;
 
             end
             

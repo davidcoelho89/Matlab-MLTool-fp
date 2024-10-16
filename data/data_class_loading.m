@@ -47,6 +47,7 @@ function [DATAout] = data_class_loading(OPTION)
 %           39: Spam
 %           40: Beats Dataset
 %           41: Robot Manipulator dataset
+%           42: ECC
 %       OPTION.prob2 = specify data set
 %           databases that use this field: 03, 07, 08, 10, 19 
 %   Output:
@@ -365,6 +366,12 @@ switch (choice)
         DATA.output = ones(1,N);
         DATA.lbl = DATA.output;
         DATA.name = 'robManip';
+    case 42 % Error Correction Codes (ECC)
+        loaded_data = load('ecc.mat');
+        DATA.input = loaded_data.input_matrix';
+        DATA.output = loaded_data.output_matrix';
+        DATA.lbl = DATA.output;
+        DATA.name = 'ecc';
     otherwise
         % None of the sets
         disp('Unknown Data Base. Void Structure Created')

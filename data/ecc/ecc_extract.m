@@ -34,8 +34,22 @@ for i = 1:npatterns
     end
 end
 
-%% Clear Variables
+%% Clear and Variables
 
 clear i j ans
 
+save('ecc.mat','input_matrix','output_matrix');
+
+
 %% end
+
+
+
+
+
+
+
+
+
+
+

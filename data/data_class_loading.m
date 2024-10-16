@@ -367,7 +367,12 @@ switch (choice)
         DATA.lbl = DATA.output;
         DATA.name = 'robManip';
     case 42 % Error Correction Codes (ECC)
-        loaded_data = load('ecc.mat');
+        switch OPTION.prob2
+            case 1
+                loaded_data = load('ecc_pcosa.mat');
+            otherwise
+                loaded_data = load('ecc_pcosa.mat');
+        end
         DATA.input = loaded_data.input_matrix';
         DATA.output = loaded_data.output_matrix';
         DATA.lbl = DATA.output;

@@ -23,9 +23,9 @@ clc;
 % Obs: in hold 2, f1-score and mcc were not yet implemented for multiclass
 
 % str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_1_Dm'; % hold 1, hpo 1
-% str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_b_Dm'; % hold 1, hpo b
+str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_b_Dm'; % hold 1, hpo b
 % str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_1_Dm'; % hold 2, hpo 1
-str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_b_Dm'; % hold 2, hpo b
+% str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_b_Dm'; % hold 2, hpo b
 
 ss = {'1','2','3','4'};
 dm = {'1','2'};

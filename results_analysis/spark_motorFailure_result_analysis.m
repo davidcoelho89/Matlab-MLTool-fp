@@ -20,8 +20,6 @@ clc;
 
 % Choices for filename:
 
-% Obs: in hold 2, f1-score and mcc were not yet implemented for multiclass
-
 % str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_1_Dm'; % hold 1, hpo 1
 str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_b_Dm'; % hold 1, hpo b
 % str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_1_Dm'; % hold 2, hpo 1
@@ -48,37 +46,39 @@ clear variables;
 % Init variables
 
 lines = length(ss) * length(dm) * length(knn);
+nkernels = length(kt);
 
-mat_acc_mean = zeros(lines,length(kt));
-mat_acc_median = zeros(lines,length(kt));
-mat_acc_best = zeros(lines,length(kt));
-mat_acc_std = zeros(lines,length(kt));
-mat_acc_boxplot = zeros(Nr,length(kt));
+mat_acc_mean = zeros(lines,nkernels);
+mat_acc_median = zeros(lines,nkernels);
+mat_acc_best = zeros(lines,nkernels);
+mat_acc_std = zeros(lines,nkernels);
+mat_acc_boxplot = zeros(Nr,nkernels);
 
-mat_fsc_best = zeros(lines,length(kt));
-mat_mcc_best = zeros(lines,length(kt));
+mat_fsc_best = zeros(lines,nkernels);
+mat_mcc_best = zeros(lines,nkernels);
 
-mat_nprot_best = zeros(lines,length(kt));
-mat_nprot_mean = zeros(lines,length(kt));
+mat_nprot_best = zeros(lines,nkernels);
+mat_nprot_mean = zeros(lines,nkernels);
 
-mat_K_best = zeros(lines,length(kt));
-mat_K_mean = zeros(lines,length(kt));
+mat_K_best = zeros(lines,nkernels);
+mat_K_mean = zeros(lines,nkernels);
 
-% Obs: 13 are the number of optimized HPs (considering all kernels)
-mat_hp_kernel_best = zeros(lines,13); 
 
-mat_hp_v1_v2_best = zeros(lines,2*length(kt));
+mat_hp_kernel_best = zeros(lines,13); % Obs: 13 are the number of optim
+                                      % HPs (considering all kernels)
+
+mat_hp_v1_v2_best = zeros(lines,2*nkernels);
 
 % plot number of times a certain value of HP was chosen.
 
-cell_best_hps = cell(lines,length(kt));
+cell_best_hps = cell(lines,nkernels);
 
 line = 0;
 for j = 1:length(ss)
     for i = 1:length(dm)
         for l = 1:length(knn)
             line = line + 1;
-            for k = 1:length(kt)
+            for k = 1:nkernels
                 
                 best_hps = struct();
                 if(k == 1)
@@ -121,9 +121,9 @@ for j = 1:length(ss)
             
             line = line + 1;
             
-            for k = 1:length(kt)
+            for k = 1:nkernels
                 
-                % Generate filenames
+                % Generate filename
                 filename = strcat(str1,dm{i}, ...
                                   '_Ss',ss{j}, ...
                                   '_Us0_Ps0_', ...
@@ -250,7 +250,7 @@ for j = 1:length(ss)
 %             xlabel('Kernels')
 %             title_str = strcat('Accuracy-','Ss',ss{j},'Dm',dm{i},'nn',knn{l});
 %             title(title_str)
-%             axis ([0 length(kt)+1 -0.05 1.05])
+%             axis ([0 nkernels+1 -0.05 1.05])
 % 
 %             hold on
 %             plot(mean(mat_acc_boxplot),'*k')
@@ -265,7 +265,7 @@ for j = 1:length(ss)
 %             title(title_str)
 %             min_nprot = min(min(mat_boxplot_nprot));
 %             max_nprot = max(max(mat_boxplot_nprot));
-%             axis ([0 length(kt)+1 min_nprot-1 max_nprot+1])
+%             axis ([0 nkernels+1 min_nprot-1 max_nprot+1])
                 
         end
     end

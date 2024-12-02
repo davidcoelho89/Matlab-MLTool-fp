@@ -22,7 +22,7 @@ clc;
 
 % str1 = 'vertebral_1_spok_hold_1_norm_3_hpo_1_Dm'; % 1, hold 1, hpo 1
 % str1 = 'vertebral_2_spok_hold_1_norm_3_hpo_1_Dm'; % 2, hold 1, hpo 1
-% str1 = 'vertebral_2_spok_hold_1_norm_3_hpo_b_Dm'; % 2, hold 1, hpo b
+str1 = 'vertebral_2_spok_hold_1_norm_3_hpo_b_Dm'; % 2, hold 1, hpo b
 
 dm = {'1','2'};
 ss = {'1','2','3','4'};

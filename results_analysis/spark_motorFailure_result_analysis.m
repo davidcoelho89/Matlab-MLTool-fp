@@ -20,8 +20,8 @@ clc;
 
 % Choices for filename:
 
-% str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_1_Dm'; % hold 1, hpo 1
-str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_b_Dm'; % hold 1, hpo b
+str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_1_Dm'; % hold 1, hpo 1
+% str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_b_Dm'; % hold 1, hpo b
 % str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_1_Dm'; % hold 2, hpo 1
 % str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_b_Dm'; % hold 2, hpo b
 

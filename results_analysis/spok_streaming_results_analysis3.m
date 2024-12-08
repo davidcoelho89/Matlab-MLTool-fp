@@ -29,8 +29,8 @@ clc;
 % squaresMov_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
 % weather_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
 
-str1 = 'chess'; % 'coverType' 'electricity' 'outdoor' 'poker' 
-                % 'rbfInt' 'rialto' 'squaresMov' 'weather'
+str1 = 'weather'; % 'chess' 'coverType' 'electricity' 'outdoor' 'poker'
+                %  'rbfInt' 'rialto' 'squaresMov'
 str2 = '_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_';
 ss = {'1','2','3','4'};
 kt = {'lin','gau','pol','exp','cau','log','sig','kmod'};

@@ -91,12 +91,14 @@ for i = 1:length(ss)
             variables = load(filename);
             
             acc_vector = variables.accuracy_vector;
+            
             mat_acc_final(line,k) = acc_vector(end);
             mat_acc_mean(line,k) = mean(acc_vector);
             mat_acc_best(line,k) = max(acc_vector(1000:end));
             mat_acc_std(line,k) = std(acc_vector);
             
             prot_vector = variables.prot_per_class(end,:);
+            
             mat_nprot_final(line,k) = prot_vector(end);
             mat_nprot_mean(line,k) = mean(prot_vector);
             mat_nprot_std(line,k) = std(prot_vector);

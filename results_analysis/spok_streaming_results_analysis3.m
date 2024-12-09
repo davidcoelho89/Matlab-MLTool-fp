@@ -29,7 +29,7 @@ clc;
 % squaresMov_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
 % weather_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
 
-str1 = 'chess'; %  'coverType' 'electricity' 'outdoor' 'poker'
+str1 = 'coverType'; %  'chess' 'electricity' 'outdoor' 'poker'
                 %  'weather' 'rbfInt' 'rialto' 'squaresMov'
 str2 = '_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_';
 ss = {'1','2','3','4'};

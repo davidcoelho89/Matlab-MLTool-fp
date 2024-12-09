@@ -10,7 +10,7 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% CHESSBOARD, SPOK, VARIOUS KERNELS
+%% SPOK, 1 DATASET, VARIOUS KERNELS
 
 % Init
 
@@ -19,10 +19,19 @@ clear;
 clc;
 
 % Choices for filename:
-
 % chess_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% coverType_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% electricity_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% outdoor_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% poker_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% rbfInt_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% rialto_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% squaresMov_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
+% weather_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_1_Us_1_Ps_2_cau_nn1
 
-str1 = 'chess_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_';
+str1 = 'chess'; % 'coverType' 'electricity' 'outdoor' 'poker'
+                % 'rbfInt' 'squaresMov' 'weather' 'rialto'
+str2 = '_1_spok_hold_ttt_norm_0_hpo_1_Dm_2_Ss_';
 ss = {'1','2','3','4'};
 kt = {'lin','gau','pol','exp','cau','log','sig','kmod'};
 knn = {'1','2'};
@@ -30,7 +39,7 @@ knn = {'1','2'};
 % Get info from first file
 
 i = 1; j = 1; k = 1;
-filename = strcat(str1,ss{i},...
+filename = strcat(str1,str2,ss{i},...
                   '_Us_1_Ps_2_',...
                   kt{k},'_',...
                   'nn',knn{j},...
@@ -70,7 +79,7 @@ for i = 1:length(ss)
         for k = 1:nkernels
             
             % Generate filename
-            filename = strcat(str1,ss{i},...
+            filename = strcat(str1,str2,ss{i},...
                               '_Us_1_Ps_2_',...
                               kt{k},'_',...
                               'nn',knn{j},...
@@ -82,12 +91,14 @@ for i = 1:length(ss)
             variables = load(filename);
             
             acc_vector = variables.accuracy_vector;
+            
             mat_acc_final(line,k) = acc_vector(end);
             mat_acc_mean(line,k) = mean(acc_vector);
             mat_acc_best(line,k) = max(acc_vector(1000:end));
             mat_acc_std(line,k) = std(acc_vector);
             
             prot_vector = variables.prot_per_class(end,:);
+            
             mat_nprot_final(line,k) = prot_vector(end);
             mat_nprot_mean(line,k) = mean(prot_vector);
             mat_nprot_std(line,k) = std(prot_vector);

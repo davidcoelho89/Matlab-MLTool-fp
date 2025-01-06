@@ -211,7 +211,6 @@ best_result_str = strcat(best_result_str1,best_result_str2,...
                          best_result_str5);
 disp(best_result_str);
 
-
 % %%%%%%%%%%%%%%%%%%%%%%% Compare Sparsification Methods
 
 mat_acc_comp_sparse = zeros(16,8);
@@ -327,7 +326,7 @@ elseif(best_kernel_2 == 8)
     disp('best kernel = KMOD');
 end
 
-%% SPOK - Result Analysis
+%% SPOK - Result Analysis (1) - NN and KNN separated
 
 % %%%%%%%%%%%%%%%%%%%%%%% Max and Min Values
 
@@ -483,6 +482,210 @@ elseif(best_kernel_2 == 7)
 elseif(best_kernel_2 == 8)
     disp('best kernel = KMOD');
 end
+
+%% SPARK - Result Analysis (2) - NN and KNN together
+
+% Set filename
+
+clc;
+
+arquivo = 'spark_motorFailure_02_hold_01.xlsx';
+faixa = 'D5:K20';
+
+% Get Complete matrices
+
+planilha = 'acc_mean';
+
+tabela_acc_mean = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_acc_mean = table2array(tabela_acc_mean(:,:)); % mat_acc_mean = tabela{:,:};
+
+planilha = 'acc_std';
+
+tabela_acc_std = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_acc_std = table2array(tabela_acc_std(:,:)); % mat_acc_mean = tabela{:,:};
+
+planilha = 'K_best';
+
+tabela_K_best = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_K_best = table2array(tabela_K_best(:,:)); % mat_acc_mean = tabela{:,:};
+
+% Init Reduced matrices
+
+mat_acc_mean_red = zeros(8,8);
+mat_acc_std_red = zeros(8,8);
+mat_K_best_red = zeros(8,8);
+
+% Get Reduced Matrices
+
+for i = 1:8
+    for j = 1:8
+        if(mat_acc_mean(2*i,j) >= mat_acc_mean(2*i-1,j))
+            mat_acc_mean_red(i,j) = mat_acc_mean(2*i,j);
+            mat_acc_std_red(i,j) = mat_acc_std(2*i,j);
+            mat_K_best_red(i,j) = mat_K_best(2*i,j);
+        else
+            mat_acc_mean_red(i,j) = mat_acc_mean(2*i-1,j);
+            mat_acc_std_red(i,j) = mat_acc_std(2*i-1,j);
+            mat_K_best_red(i,j) = mat_K_best(2*i-1,j);
+        end
+    end
+end
+
+% %%%%%%%%%%%%%%%%%%%%%%% Max and Min Values
+
+disp('max value: ')
+disp(max(max(mat_acc_mean_red)));
+disp('min value: ')
+disp(min(min(mat_acc_mean_red)));
+
+% %%%%%%%%%%%%%%%%%%%%%%% Get best combination
+
+[max_mean_value,max_mean_index] = max(mat_acc_mean_red(:));
+[max_row, max_col] = ind2sub(size(mat_acc_mean_red),max_mean_index);
+
+disp(mat_acc_mean_red == max_mean_value);
+disp(sum(sum(mat_acc_mean_red == max_mean_value)))
+disp(max_mean_value);
+
+best_result_str1 = 'best result =';
+
+if(max_row <= 2)
+    best_result_str2 = ' ALD,';
+elseif(max_row <= 4)
+    best_result_str2 = ' COH,';
+elseif(max_row <= 6)
+    best_result_str2 = ' NOV,';
+elseif(max_row <= 8)
+    best_result_str2 = ' SUR,';
+end
+
+if(mod(max_row,2) == 1)
+    best_result_str4 = ' DM1,';
+else
+    best_result_str4 = ' DM2,';
+end
+
+if(max_col == 1)
+    best_result_str5 = ' LIN';
+elseif(max_col == 2)
+    best_result_str5 = ' GAU';
+elseif(max_col == 3)
+    best_result_str5 = ' POL';
+elseif(max_col == 4)
+    best_result_str5 = ' EXP';
+elseif(max_col == 5)
+    best_result_str5 = ' CAU';
+elseif(max_col == 6)
+    best_result_str5 = ' LOG';
+elseif(max_col == 7)
+    best_result_str5 = ' SIG';
+elseif(max_col == 8)
+    best_result_str5 = ' KMO';
+end
+
+best_result_str = strcat(best_result_str1,best_result_str2,...
+                         best_result_str4,best_result_str5);
+                        
+disp(best_result_str);
+
+% %%%%%%%%%%%%%%%%%%%%%%% Compare Sparsification Methods
+
+mat_acc_comp_sparse = zeros(8,8);
+cont_best_sparse = zeros(1,4);
+
+for j = 1:8
+    for i = 1:2
+        max_value = max([mat_acc_mean_red(i,j),...
+                         mat_acc_mean_red(i+2,j),...
+                         mat_acc_mean_red(i+4,j),...
+                         mat_acc_mean_red(i+6,j)]);
+        mat_acc_comp_sparse(i,j) = mat_acc_mean_red(i,j) - max_value;
+        mat_acc_comp_sparse(i+2,j) = mat_acc_mean_red(i+2,j) - max_value;
+        mat_acc_comp_sparse(i+4,j) = mat_acc_mean_red(i+4,j) - max_value;
+        mat_acc_comp_sparse(i+6,j) = mat_acc_mean_red(i+6,j) - max_value;
+    end
+end
+
+cont_best_sparse(1) = sum(sum( mat_acc_comp_sparse(1:2,:) == 0 ));
+cont_best_sparse(2) = sum(sum( mat_acc_comp_sparse(3:4,:) == 0 ));
+cont_best_sparse(3) = sum(sum( mat_acc_comp_sparse(5:6,:) == 0 ));
+cont_best_sparse(4) = sum(sum( mat_acc_comp_sparse(7:8,:) == 0 ));
+
+if (cont_best_sparse(1) == max(cont_best_sparse))
+    disp('best sparsification = ALD');
+elseif (cont_best_sparse(2) == max(cont_best_sparse))
+    disp('best sparsification = COH');
+elseif (cont_best_sparse(3) == max(cont_best_sparse))
+    disp('best sparsification = NOV');
+elseif (cont_best_sparse(4) == max(cont_best_sparse))
+    disp('best sparsification = SURP');
+end
+
+% %%%%%%%%%%%%%%%%%%%%%%% Compare Design Methods
+
+mat_acc_comp_dms = zeros(8,8);
+
+for j = 1:8
+    for i = 1:4
+        max_value = max([mat_acc_mean_red(2*i-1,j),mat_acc_mean_red(2*i,j)]);
+        mat_acc_comp_dms(2*i-1,j) = mat_acc_mean_red(2*i-1,j) - max_value;
+        mat_acc_comp_dms(2*i,j) = mat_acc_mean_red(2*i,j) - max_value;
+    end
+end
+
+cont_best_dms = zeros(1,2);
+cont_best_dms(1) = sum(sum(mat_acc_comp_dms([1,3,5,7],:) == 0));
+cont_best_dms(2) = sum(sum(mat_acc_comp_dms([2,4,6,8],:) == 0));
+
+if (cont_best_dms(1) >= cont_best_dms(2))
+    disp('best DM = 1');
+else
+    disp('best DM = 2');
+end
+
+% %%%%%%%%%%%%%%%%%%%%%%% Compare Kernels
+
+cont_times_best = zeros(1,8);
+cont_times_3_best = zeros(1,8);
+bests_3_kernels_per_line = zeros(8,3);
+
+for i = 1:8
+    line = mat_acc_mean_red(i,:);
+    [sorted_line,sorted_indexes] = sort(line,'descend');
+    bests_3_kernels_per_line(i,:) = sorted_indexes(1:3);
+    cont_times_best(sorted_indexes(1)) = cont_times_best(sorted_indexes(1)) + 1;
+    for j = 1:3
+        cont_times_3_best(sorted_indexes(j)) = cont_times_3_best(sorted_indexes(j)) + 1;
+    end
+end
+
+[max_n_times_best,best_kernel_1] = max(cont_times_best);
+[max_n_times_3_best,best_kernel_2] = max(cont_times_3_best);
+
+if(best_kernel_2 == 1)
+    disp('best kernel = LIN');
+elseif(best_kernel_2 == 2)
+    disp('best kernel = GAU');
+elseif(best_kernel_2 == 3)
+    disp('best kernel = POL');
+elseif(best_kernel_2 == 4)
+    disp('best kernel = EXP');
+elseif(best_kernel_2 == 5)
+    disp('best kernel = CAU');
+elseif(best_kernel_2 == 6)
+    disp('best kernel = LOG');
+elseif(best_kernel_2 == 7)
+    disp('best kernel = SIG');
+elseif(best_kernel_2 == 8)
+    disp('best kernel = KMOD');
+end
+
+%% SPOK - Result Analysis (2) - NN and KNN together
+
+
 
 %% END
 

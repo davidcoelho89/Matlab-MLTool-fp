@@ -489,7 +489,7 @@ end
 
 clc;
 
-arquivo = 'spark_motorFailure_02_hold_01.xlsx';
+arquivo = 'spark_motorFailure_02_hold_01_best.xlsx';
 faixa = 'D5:K20';
 
 % Get Complete matrices
@@ -512,11 +512,33 @@ tabela_K_best = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
                             'ReadVariableNames',false);
 mat_K_best = table2array(tabela_K_best(:,:)); % mat_acc_mean = tabela{:,:};
 
+planilha = 'K_mean';
+
+tabela_K_mean = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_K_mean = table2array(tabela_K_mean(:,:)); % mat_acc_mean = tabela{:,:};
+
+planilha = 'nprot_best';
+
+tabela_nprot_best = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_nprot_best = table2array(tabela_nprot_best(:,:)); % mat_acc_mean = tabela{:,:};
+
+planilha = 'nprot_mean';
+
+tabela_nprot_mean = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_nprot_mean = table2array(tabela_nprot_mean(:,:)); % mat_acc_mean = tabela{:,:};
+
+
 % Init Reduced matrices
 
 mat_acc_mean_red = zeros(8,8);
 mat_acc_std_red = zeros(8,8);
 mat_K_best_red = zeros(8,8);
+mat_K_mean_red = zeros(8,8);
+mat_nprot_best_red = zeros(8,8);
+mat_nprot_mean_red = zeros(8,8);
 
 % Get Reduced Matrices
 
@@ -526,10 +548,16 @@ for i = 1:8
             mat_acc_mean_red(i,j) = mat_acc_mean(2*i,j);
             mat_acc_std_red(i,j) = mat_acc_std(2*i,j);
             mat_K_best_red(i,j) = mat_K_best(2*i,j);
+            mat_K_mean_red(i,j) = mat_K_mean(2*i,j);
+            mat_nprot_best_red(i,j) = mat_nprot_best(2*i,j);
+            mat_nprot_mean_red(i,j) = mat_nprot_mean(2*i,j);
         else
             mat_acc_mean_red(i,j) = mat_acc_mean(2*i-1,j);
             mat_acc_std_red(i,j) = mat_acc_std(2*i-1,j);
             mat_K_best_red(i,j) = mat_K_best(2*i-1,j);
+            mat_K_mean_red(i,j) = mat_K_mean(2*i-1,j);
+            mat_nprot_best_red(i,j) = mat_nprot_best(2*i-1,j);
+            mat_nprot_mean_red(i,j) = mat_nprot_mean(2*i-1,j);
         end
     end
 end

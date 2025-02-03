@@ -1,8 +1,8 @@
 %% RESULT ANALYSIS
 
-% KSOM Algorithms and Stationary Data Sets
+% Analysis of results from ksom model and motorFailure dataset
 % Author: David Nascimento Coelho
-% Last Update: 2024/01/12
+% Last Update: 2024/05/27
 
 close;          % Close all windows
 clear;          % Clear all variables
@@ -10,90 +10,112 @@ clc;            % Clear command window
 
 format long e;  % Output data style (float)
 
-%% MOTOR FAILURE (02 - balanced), KSOMEF, HPO RANDOM, ONE KERNEL
+%% MOTOR FAILURE (02 - balanced), KSOM, HOLD 1, HPO RANDOM or BEST, VARIOUS KERNELS
 
-clear; clc;
+% Init
 
-% One result (to see others, just modify the number after Kt [1 - 8]
+close;
+clear;
+clc;
 
-results = load('motorFailure_prob2_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_200_Kt_2.mat');
-% results = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_1.mat');
-class_stats_ncomp(results.nstats_all,results.NAMES);
+% Choices for filename
 
-% All results - for lbl 1
+str1 = 'motorFailure_2_';
+ksom = {'ksomef','ksomgd'};
+% str2 = '_hold_1_norm_3_hpo_1_lbl_';
+str2 = '_hold_1_norm_3_hpo_b_lbl_';
+lbl = {'1','2','3'};
+str3 = '_nn_1_Nep_50_Nprot_30_Kt_';
+kt = {'1','2','3','4','5','6','7','8'};
 
-results_01 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_1.mat');
-results_02 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_2.mat');
-results_03 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_3.mat');
-results_04 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_4.mat');
-results_05 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_5.mat');
-% results_06 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_6.mat');
-% results_07 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_7.mat');
-% results_08 = load('motorFailure_2_ksomef_hpo_random_norm_3_lbl_1_nn_1_Nep_50_Nprot_20_Kt_8.mat');
+% Get number of realizations
+i = 1; j = 1; k = 1;
+filename = strcat(str1,ksom{i},str2,lbl{j},str3,kt{k});
+variables = load(filename);
+Nr = variables.OPT.Nr;
+clear variables;
 
-nstats_all = cell(5,1);
-nstats_all{1,1} = results_01.ksomef_nstats_ts;
-nstats_all{2,1} = results_02.ksomef_nstats_ts;
-nstats_all{3,1} = results_03.ksomef_nstats_ts;
-nstats_all{4,1} = results_04.ksomef_nstats_ts;
-nstats_all{5,1} = results_05.ksomef_nstats_ts;
-% nstats_all{6,1} = results_06.ksomef_nstats_ts;
-% nstats_all{7,1} = results_07.ksomef_nstats_ts;
-% nstats_all{8,1} = results_08.ksomef_nstats_ts;
+% Init variables
 
-NAMES = {'Linear','Gaussian',...    
-         'Polynomial', 'Exponential',...
-         'Cauchy'... ; 'Log', ...
-         % 'Sigmoid', 'Kmod'};
-         };
+lines = length(ksom) * length(lbl);
 
-class_stats_ncomp(nstats_all,NAMES);
+mat_acc_mean = zeros(lines,length(kt));
+mat_acc_median = zeros(lines,length(kt));
+mat_acc_best = zeros(lines,length(kt));
+mat_acc_std = zeros(lines,length(kt));
+mat_acc_boxplot = zeros(Nr,length(kt));
 
-% All results - for lbl 2
+mat_fsc_best = zeros(lines,length(kt));
+mat_mcc_best = zeros(lines,length(kt));
 
+mat_hp_best = zeros(lines,13); % Obs: 13 are the number of optimized HPs (considering all kernels)
 
+% Get values
 
-% All Results - for lbl 3
+line = 0;
+for i = 1:length(ksom)
+    for j = 1:length(lbl)
 
+        line = line + 1;
+        
+        for k = 1:length(kt)
+            
+            % Get variables from file
+            filename = strcat(str1,ksom{i},str2,lbl{j},str3,kt{k});
+            variables = load(filename);
+            disp(filename);
+            
+            % Update acc matrices (from test)
+            best_acc_index = variables.nstats_all{2,1}.acc_max_i;
+            mat_acc_best(line,k) = variables.nstats_all{2,1}.acc(best_acc_index);
+            mat_acc_mean(line,k) = variables.nstats_all{2,1}.acc_mean;
+            mat_acc_median(line,k) = variables.nstats_all{2,1}.acc_median;
+            mat_acc_std(line,k) = variables.nstats_all{2,1}.acc_std;
+            mat_acc_boxplot(:,k) = variables.nstats_all{2,1}.acc';
+            
+            % Update mcc and fcc (from test)
+            mat_fsc_best(line,k) = variables.nstats_all{2,1}.mcc(best_acc_index);
+            mat_mcc_best(line,k) = variables.nstats_all{2,1}.fsc(best_acc_index);
+            
+            % Update Hyperparameters
+            if(isfield(variables,'ksomgd_par_acc'))
+                par_acc = variables.ksomgd_par_acc;
+            elseif(isfield(variables,'ksomef_par_acc'))
+                par_acc = variables.ksomef_par_acc;
+            elseif(isfield(variables,'par_acc'))
+                par_acc = variables.par_acc;
+            end            
+            
+            if (k == 1)
+                mat_hp_best(line,1) = par_acc{best_acc_index,1}.theta;
+            elseif(k == 2)
+                mat_hp_best(line,2) = par_acc{best_acc_index,1}.sigma;
+            elseif(k == 3)
+                mat_hp_best(line,3) = par_acc{best_acc_index,1}.alpha;
+                mat_hp_best(line,4) = par_acc{best_acc_index,1}.theta;
+                mat_hp_best(line,5) = par_acc{best_acc_index,1}.gamma;
+            elseif(k == 4)
+                mat_hp_best(line,6) = par_acc{best_acc_index,1}.sigma;
+            elseif(k == 5)
+                mat_hp_best(line,7) = par_acc{best_acc_index,1}.sigma;
+            elseif(k == 6)
+                mat_hp_best(line,8) = par_acc{best_acc_index,1}.gamma;
+                mat_hp_best(line,9) = par_acc{best_acc_index,1}.sigma;
+            elseif(k == 7)
+                mat_hp_best(line,10) = par_acc{best_acc_index,1}.alpha;
+                mat_hp_best(line,11) = par_acc{best_acc_index,1}.theta;
+            elseif(k == 8)
+                mat_hp_best(line,12) = par_acc{best_acc_index,1}.gamma;
+                mat_hp_best(line,13) = par_acc{best_acc_index,1}.sigma;
+            end
+            
+            % Clear variables;
+            clear variables;
+            
+        end
+    end
+end
 
-
-%% MOTOR FAILURE (01 - unbalanced), KSOMEF, HPO RANDOM, VARIOUS KERNELS
-
-% Load Results
-results = load('motorFailure_1_ksomef_hpo_random_norm_3_lbl_1_nn_1_Kt_all.mat');
-
-% Kernel Names
-NAMES = {'Linear','Gaussian',... 
-         'Polynomial', 'Exponential',...
-         'Cauchy', 'Log',...
-         'Sigmoid', 'Kmod'};
-
-% Train Stats
-class_stats_ncomp(results.variables.nstats_all_tr,NAMES);
-
-% Test Stats
-class_stats_ncomp(results.variables.nstats_all_ts,NAMES);
-
-
-%% 
-
+clc;
 
 %% END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

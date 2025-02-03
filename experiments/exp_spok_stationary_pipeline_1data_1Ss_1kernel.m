@@ -1,4 +1,7 @@
-function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
+function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,...
+                                                             OPT,...
+                                                             HPgs,...
+                                                             CVp)
 
 % --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
 %
@@ -15,7 +18,7 @@ function [] = exp_spok_stationary_pipeline_1data_1Ss_1kernel(DATA,OPT,HPgs,CVp)
 %           lbl = which labeling strategy will be used
 %       HPgs = hyperparameters for grid searh of classifier
 %             (vectors containing values that will be tested)
-%       PSp.
+%       CVp.
 %           fold = % number of data partitions for cross validation
 %                        presented to the algorithm
 %           cost = type of cross validation                         [cte]
@@ -34,11 +37,14 @@ DATA = label_encode(DATA,OPT);      % adjust labels for the problem
 %% ACCUMULATORS
 
 NAMES = {'train','test'};           % Acc of names for plots
-DATA_acc = cell(OPT.Nr,1);       	% Acc of Data
-PAR_acc = cell(OPT.Nr,1);         	% Acc of Parameters and Hyperparameters
-STATS_tr_acc = cell(OPT.Nr,1);   	% Acc of Statistics of training data
-STATS_ts_acc = cell(OPT.Nr,1);   	% Acc of Statistics of test data
-nSTATS_all = cell(2,1);             % Acc of General statistics
+
+% data_acc = cell(OPT.Nr,1);       	% Acc of Data
+
+nstats_all = cell(2,1);             % Acc of General statistics
+
+par_acc = cell(OPT.Nr,1);         	% Acc of Parameters and Hyperparameters
+stats_tr_acc = cell(OPT.Nr,1);   	% Acc of Statistics of training data
+stats_ts_acc = cell(OPT.Nr,1);   	% Acc of Statistics of test data
 
 %% HOLD OUT / NORMALIZE / SHUFFLE / HPO / TRAINING / TEST / STATISTICS
 
@@ -51,9 +57,11 @@ display(datetime("now"));
 
 % %%%%%%%%%%%%%%%%%%%% HOLD OUT %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-DATA_acc{r} = hold_out(DATA,OPT);   % Hold Out Function
-DATAtr = DATA_acc{r}.DATAtr;        % Training Data
-DATAts = DATA_acc{r}.DATAts;      	% Test Data
+DATAho = hold_out(DATA,OPT);	% Hold Out Function
+
+% data_acc{r} = DATAho;
+DATAtr = DATAho.DATAtr;         % Training Data
+DATAts = DATAho.DATAts;     	% Test Data
 
 HPgs.max_prot = floor( ((CVp.fold-1) / CVp.fold) * size(DATAtr.input, 2) );
 
@@ -94,17 +102,17 @@ HP = random_search_cv(DATAtr,HPgs,@spok_train,@spok_classify,CVp);
 % %%%%%%%%%%%%%% CLASSIFIER'S TRAINING %%%%%%%%%%%%%%%%%%%
 
 % Calculate model's parameters
-PAR_acc{r} = spok_train(DATAtr,HP);
+par_acc{r} = spok_train(DATAtr,HP);
 
 % %%%%%%%%% CLASSIFIER'S TEST AND STATISTICS %%%%%%%%%%%%%
 
 % Results and Statistics with training data
-OUTtr = spok_classify(DATAtr,PAR_acc{r});
-STATS_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
+OUTtr = spok_classify(DATAtr,par_acc{r});
+stats_tr_acc{r} = class_stats_1turn(DATAtr,OUTtr);
 
 % Results and Statistics with test data
-OUTts = spok_classify(DATAts,PAR_acc{r});
-STATS_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
+OUTts = spok_classify(DATAts,par_acc{r});
+stats_ts_acc{r} = class_stats_1turn(DATAts,OUTts);
 
 end
 
@@ -112,17 +120,17 @@ end
 
 % Statistics for n turns
 
-nSTATS_tr = class_stats_nturns(STATS_tr_acc);
-nSTATS_ts = class_stats_nturns(STATS_ts_acc);
+nstats_tr = class_stats_nturns(stats_tr_acc);
+nstats_ts = class_stats_nturns(stats_ts_acc);
 
 % Get all Statistics in one Cell
 
-nSTATS_all{1,1} = nSTATS_tr;
-nSTATS_all{2,1} = nSTATS_ts;
+nstats_all{1,1} = nstats_tr;
+nstats_all{2,1} = nstats_ts;
 
 % Compare Training and Test Statistics
 
-class_stats_ncomp(nSTATS_all,NAMES);
+class_stats_ncomp(nstats_all,NAMES);
 
 %% SAVE FILE
 

@@ -1,5 +1,7 @@
 function [] = exp_spok_streaming_pipeline_1data_1Ss_1kernel(DATA,...
-                                                            OPT,HPgs,PSp)
+                                                            OPT,...
+                                                            HPgs,...
+                                                            PSp)
 
 % --- Pipeline used to test spok model with 1 dataset and 1 Kernel ---
 %
@@ -98,12 +100,12 @@ VID = struct('cdata',cell(1,Nttt),'colormap', cell(1,Nttt));
 
 %% CROSS VALIDATION FOR HYPERPARAMETERS OPTIMIZATION
 
-disp('begin grid search')
+disp('begin hyperparameters optimization')
 display(datetime("now"));
 
-% Grid Search Parameters
+% MetaParameters
 
-if (nargin == 2)
+if (nargin == 3)
     PSp.iterations = 1;
     PSp.type = 2;
     PSp.lambda = 2;

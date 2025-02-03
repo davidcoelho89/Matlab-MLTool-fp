@@ -1,36 +1,47 @@
 %% Machine Learning ToolBox
 
 % Spok Model testing in various streaming datasets
+% (using hyperparameter optimization)
 % Author: David Nascimento Coelho
-% Last Update: 2024/02/09
+% Last Update: 2024/06/15
 
 clear;
 clc;
 format long e;
 
+format long e;  % Output data style (float)
+
 %% Choices
 
 % Datasets Specification
 
-datasets = 28;  % datasets = [28,29,30,33,34,35,36,37,38]
+datasets = 34;  % datasets = [28,29,30,33,34,35,36,37,38]
 
-OPT.lbl = 1;    % Type of labeling. 1: from sequential to [-1 and +1]
-OPT.norm = 0;   % Normalization. 0: Don't normalize. 3: z-score norm
+% General options' structure
 
-% Random-Search (Test-Then-Train)
+OPT.Nr = 1;         % Just need one realization
+OPT.alg = 'spok';   % algorithm name
+OPT.lbl = 1;        % Type of labeling. 1: from sequential to [-1 and +1]
+OPT.norm = 0;       % Normalization. 0: Don't normalize. 3: z-score norm
+OPT.hold = 'ttt';   % Test than train
+OPT.max_prot_after_gs = 1000;   % max #prototypes after grid-search
+
+OPT.hpo = 'random'; % 'grid' ; 'random' ; 'none'
+
+% Hyperparameter Optimization (Grid or random search Cross-validation)
 
 PSpar.iterations = 5; % Number of times data is presented to the algorithm
 PSpar.type = 2;       % 2: Takes into account also the dicitionary size
-PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err
-PSpar.gamma = 0.1; % Jpbc = Ds + lambda * Err + gamma * mcc (prototype-based models)
+PSpar.lambda = 2;     % Jpbc = Ds + lambda * Err (PB Models)
+PSpar.gamma = 0.1;    % Jpbc = Ds + lambda * Err + gamma * mcc (PB Models)
 
 % Which Kernels Will be tested
 
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = 2;
-% kernels = [1,2,3,4,5,6,7,8];
+% kernels = 2;
+kernels = [1,2,3,4,5,6,7,8];
 
 % Hyperparameters - Default
 
@@ -54,8 +65,6 @@ HP_gs.min_prot = 1;            % Min number of prototypes
 HP_gs.Von = 0;                 % Enable / disable video 
 
 HP_gs.K = 1;                   % Number of nearest neighbors (classify)
-% HP_gs.K = 2:10;                % Number of nearest neighbors (classify)
-
 HP_gs.knn_type = 2;            % Type of knn aproximation
 
 HP_gs.Ktype = 2;               % Kernel Type (2: Gaussian / see kernel_func())
@@ -66,10 +75,6 @@ HP_gs.theta = 0.1;             % Dot product adding (poly 1 / sigm 0.1)
 HP_gs.gamma = 2;               % polynomial order (poly 2 or 3)
 
 % Obs: the hyperparameters related to kernel functions are at the pipelines
-
-% Hyperparameter - specific
-
-OPT.max_prot_after_gs = 1000;
 
 %% Datasets List
 
@@ -128,6 +133,16 @@ OPT.max_prot_after_gs = 1000;
 % Real Drift
 
 %% Run algorithm at datasets
+
+for Ss = 1:4
+for K = 1:2
+
+HP_gs.Ss = Ss;
+if(K == 1)
+    HP_gs.K = 1;
+else
+    HP_gs.K = 2:10;
+end
 
 if any(datasets == 25)
     OPT.prob = 25;
@@ -217,6 +232,9 @@ if any(datasets == 39)
     OPT.prob = 39;
     OPT.prob2 = 1;  % Specific choice about dataset
     exp_spok_streaming_pipeline_1data_1Ss_Nkernel(OPT,HP_gs,PSpar,kernels);
+end
+
+end
 end
 
 %% FINISHED!

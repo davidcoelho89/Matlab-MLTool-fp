@@ -487,9 +487,11 @@ end
 
 % Set filename
 
+format short;
+clear;
 clc;
 
-arquivo = 'spark_motorFailure_02_hold_01.xlsx';
+arquivo = 'spark_cervicalCancer_02_hold_02.xlsx';
 faixa = 'D5:K20';
 
 % Get Complete matrices
@@ -725,6 +727,17 @@ elseif(best_kernel_2 == 7)
 elseif(best_kernel_2 == 8)
     disp('best kernel = KMOD');
 end
+
+% %%%%%%%%%%%%%%%%%%%%%%% Round values for 3 decimal places
+
+% mat_acc_mean_red = round(mat_acc_mean_red,3);
+% mat_acc_std_red = round(mat_acc_std_red,3);
+% mat_K_best_red = round(mat_K_best_red,3);
+% mat_K_mean_red = round(mat_K_mean_red,3);
+% mat_nprot_best_red = round(mat_nprot_best_red,3);
+% mat_nprot_mean_red = round(mat_nprot_mean_red,3);
+% mat_hp_best_red = round(mat_hp_best_red,3);
+% mat_v1_v2_best_red = round(mat_v1_v2_best_red,3);
 
 %% SPOK - Result Analysis (2) - NN and KNN together
 

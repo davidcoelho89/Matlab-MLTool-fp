@@ -487,9 +487,11 @@ end
 
 % Set filename
 
+format short;
+clear;
 clc;
 
-arquivo = 'spark_motorFailure_02_hold_01_best.xlsx';
+arquivo = 'spark_wallFollow_01_hold_02_best.xlsx';
 faixa = 'D5:K20';
 
 % Get Complete matrices
@@ -530,6 +532,19 @@ tabela_nprot_mean = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
                             'ReadVariableNames',false);
 mat_nprot_mean = table2array(tabela_nprot_mean(:,:)); % mat_acc_mean = tabela{:,:};
 
+planilha = 'hp_best';
+faixa = 'D5:P20';
+
+tabela_hp_best = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_hp_best = table2array(tabela_hp_best(:,:)); % mat_acc_mean = tabela{:,:};
+
+planilha = 'v1_v2_best';
+faixa = 'D5:S20';
+
+tabela_v1_v2_best = readtable(arquivo, 'Sheet', planilha, 'Range', faixa,...
+                            'ReadVariableNames',false);
+mat_v1_v2_best = table2array(tabela_v1_v2_best(:,:)); % mat_acc_mean = tabela{:,:};
 
 % Init Reduced matrices
 
@@ -539,6 +554,8 @@ mat_K_best_red = zeros(8,8);
 mat_K_mean_red = zeros(8,8);
 mat_nprot_best_red = zeros(8,8);
 mat_nprot_mean_red = zeros(8,8);
+mat_hp_best_red = zeros(8,13);
+mat_v1_v2_best_red = zeros(8,16);
 
 % Get Reduced Matrices
 
@@ -710,6 +727,17 @@ elseif(best_kernel_2 == 7)
 elseif(best_kernel_2 == 8)
     disp('best kernel = KMOD');
 end
+
+% %%%%%%%%%%%%%%%%%%%%%%% Round values for 3 decimal places
+
+% mat_acc_mean_red = round(mat_acc_mean_red,3);
+% mat_acc_std_red = round(mat_acc_std_red,3);
+% mat_K_best_red = round(mat_K_best_red,3);
+% mat_K_mean_red = round(mat_K_mean_red,3);
+% mat_nprot_best_red = round(mat_nprot_best_red,3);
+% mat_nprot_mean_red = round(mat_nprot_mean_red,3);
+% mat_hp_best_red = round(mat_hp_best_red,3);
+% mat_v1_v2_best_red = round(mat_v1_v2_best_red,3);
 
 %% SPOK - Result Analysis (2) - NN and KNN together
 

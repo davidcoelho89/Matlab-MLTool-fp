@@ -491,7 +491,7 @@ format short;
 clear;
 clc;
 
-arquivo = 'spark_cervicalCancer_02_hold_02.xlsx';
+arquivo = 'spark_wallFollow_01_hold_02_best.xlsx';
 faixa = 'D5:K20';
 
 % Get Complete matrices

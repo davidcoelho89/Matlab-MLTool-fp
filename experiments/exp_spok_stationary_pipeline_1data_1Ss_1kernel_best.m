@@ -156,6 +156,8 @@ stats_tr_acc{r} = class_stats_1turn(DATAtr,out_tr_acc{r});
 out_ts_acc{r} = class_test(DATAts,par_acc{r});
 stats_ts_acc{r} = class_stats_1turn(DATAts,out_ts_acc{r});
 
+plot_stats_roc_curve(stats_ts_acc{r});
+
 end
 
 %% RESULTS / STATISTICS

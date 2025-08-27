@@ -13,10 +13,10 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 10;           	% Number of realizations
+OPT.Nr = 100;           % Number of realizations
 OPT.alg = 'ols';        % Which classifier will be used
-OPT.prob = 19;        	% Which problem will be solved / used
-OPT.prob2 = 02;       	% More details about a specific data set
+OPT.prob = 22;        	% Which problem will be solved / used
+OPT.prob2 = 01;       	% More details about a specific data set
 OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method

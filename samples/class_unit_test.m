@@ -15,8 +15,8 @@ format long e;  % Output data style (float)
 
 OPT.Nr = 100;           % Number of realizations
 OPT.alg = 'ols';        % Which classifier will be used
-OPT.prob = 22;        	% Which problem will be solved / used
-OPT.prob2 = 01;       	% More details about a specific data set
+OPT.prob = 19;        	% Which problem will be solved / used
+OPT.prob2 = 02;       	% More details about a specific data set
 OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
 OPT.hold = 2;         	% Hold out method
@@ -37,7 +37,11 @@ MP.lambda = 0.5;        % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-if(strcmp(OPT.alg,'mlp'))
+if(strcmp(OPT.alg,'lssvc'))
+    HP.lambda = 0.5;    % Regularization Constant
+    HP.Ktype = 2;       % Gaussian Kernel
+    HP.sigma = 11.3;    % Gaussian Kernel std
+elseif(strcmp(OPT.alg,'mlp'))
     HP.Nh = 05;         % Number of hidden neurons
     HP.Ne = 200;        % maximum number of training epochs
     HP.eta = 0.05;      % Learning step

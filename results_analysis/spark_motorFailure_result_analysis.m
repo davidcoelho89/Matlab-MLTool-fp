@@ -25,10 +25,10 @@ str1 = 'motorFailure_2_spok_hold_1_norm_3_hpo_1_Dm'; % hold 1, hpo 1
 % str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_1_Dm'; % hold 2, hpo 1
 % str1 = 'motorFailure_2_spok_hold_2_norm_3_hpo_b_Dm'; % hold 2, hpo b
 
-ss = {'1','2','3','4'};
-dm = {'1','2'};
-kt = {'lin','gau','pol','exp','cau','log','sig','kmod'};
-knn = {'1','2'};
+ss = {'3'}; %{'1','2','3','4'};
+dm = {'2'}; %{'1','2'};
+kt = {'gau'}; %{'lin','gau','pol','exp','cau','log','sig','kmod'};
+knn = {'2'}; %{'1','2'};
 
 % Get number of realizations
 

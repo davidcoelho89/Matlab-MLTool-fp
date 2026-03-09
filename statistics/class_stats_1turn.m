@@ -256,99 +256,99 @@ mcc_multiclass = num_mcc / den_mcc;
 
 %% Calculate ROC (Receiver Operating Characteristic) Curve
 
-% % Hyperparameters for ROC Curve
-% 
-% disc = 0.1;         % Discretization
-% len = (2/disc)+1;   % length of roc curve vectors
-% 
-% ROC_t = -1:disc:1;  % Threshold vector
-% 
-% % Ordinal Classification - Todo
-% 
-% if classType == 1
-% 
-%     ROC_PREC = [];      % Precision (positive predictive value)
-%     ROC_REC = [];       % Recall (used for unbalanced data)
-%     ROC_SPEC = [];      % Specificity
-%     ROC_FPR = [];       % False Positive Rate (1 - specificity)
-% 
-% % [0 1] or [-1 +1] Classification
-% 
-% else
-% 
-%     % Init outputs
-% 
-%     ROC_PREC = zeros(Nc,len);
-%     ROC_REC = zeros(Nc,len);
-%     ROC_SPEC = zeros(Nc,len);
-%     ROC_FPR = zeros(Nc,len);
-% 
-%     % One ROC curve for each class
-% 
-%     for c = 1:Nc
-% 
-%         y = Y(c,:);         % actual labels for class c
-%         yh = Yh(c,:);       % predicted labels for class c
-% 
-%         cont = 0;           % Counter
-% 
-%         for t = -1:disc:1   % t limiar
-% 
-%             cont = cont + 1;
-%             Mconf_roc = zeros(2,2);
-% 
-%             for i = 1:N    % calculate confusion matrix
-% 
-%                 % Get actual and predicted labels
-%                 y_i = y(i);
-%                 yh_i = yh(i);
-% 
-%                 % Get actual label position for confusion matrix
-%                 if y_i == 1
-%                     y_pos = 1;
-%                 else
-%                     y_pos = 2;
-%                 end
-% 
-%                 % Get predicted label position for confusion matrix
-%                 if (yh_i > t)
-%                     yh_pos = 1;
-%                 else
-%                     yh_pos = 2;
-%                 end
-% 
-%                 % Update confusion matrix
-%                 Mconf_roc(yh_pos,y_pos) = Mconf_roc(yh_pos,y_pos) + 1;
-% 
-%             end
-% 
-%             % Get True and False, Positives and Negatives.
-%             TP = Mconf_roc(1,1);
-%             TN = Mconf_roc(2,2);
-%             FP = Mconf_roc(1,2);
-%             FN = Mconf_roc(2,1);
-% 
-%             % Get ROC curve vectors
-%             ROC_PREC(c,cont) = TP / (TP + FP);
-%             ROC_REC(c,cont)  = TP / (TP + FN);
-%             ROC_SPEC(c,cont) = TN / (TN + FP);
-%             ROC_FPR(c,cont)  = 1 - (TN / (TN + FP));
-% 
-%         end
-% 
-%     end
-% 
-% end
+% Hyperparameters for ROC Curve
+
+disc = 0.1;         % Discretization
+len = (2/disc)+1;   % length of roc curve vectors
+
+ROC_t = -1:disc:1;  % Threshold vector
+
+% Ordinal Classification - Todo
+
+if classType == 1
+
+    ROC_PREC = [];      % Precision (positive predictive value)
+    ROC_REC = [];       % Recall (used for unbalanced data)
+    ROC_SPEC = [];      % Specificity
+    ROC_FPR = [];       % False Positive Rate (1 - specificity)
+
+% [0 1] or [-1 +1] Classification
+
+else
+
+    % Init outputs
+
+    ROC_PREC = zeros(Nc,len);
+    ROC_REC = zeros(Nc,len);
+    ROC_SPEC = zeros(Nc,len);
+    ROC_FPR = zeros(Nc,len);
+
+    % One ROC curve for each class
+
+    for c = 1:Nc
+
+        y = Y(c,:);         % actual labels for class c
+        yh = Yh(c,:);       % predicted labels for class c
+
+        cont = 0;           % Counter
+
+        for t = -1:disc:1   % t limiar
+
+            cont = cont + 1;
+            Mconf_roc = zeros(2,2);
+
+            for i = 1:N    % calculate confusion matrix
+
+                % Get actual and predicted labels
+                y_i = y(i);
+                yh_i = yh(i);
+
+                % Get actual label position for confusion matrix
+                if y_i == 1
+                    y_pos = 1;
+                else
+                    y_pos = 2;
+                end
+
+                % Get predicted label position for confusion matrix
+                if (yh_i > t)
+                    yh_pos = 1;
+                else
+                    yh_pos = 2;
+                end
+
+                % Update confusion matrix
+                Mconf_roc(yh_pos,y_pos) = Mconf_roc(yh_pos,y_pos) + 1;
+
+            end
+
+            % Get True and False, Positives and Negatives.
+            TP = Mconf_roc(1,1);
+            TN = Mconf_roc(2,2);
+            FP = Mconf_roc(1,2);
+            FN = Mconf_roc(2,1);
+
+            % Get ROC curve vectors
+            ROC_PREC(c,cont) = TP / (TP + FP);
+            ROC_REC(c,cont)  = TP / (TP + FN);
+            ROC_SPEC(c,cont) = TN / (TN + FP);
+            ROC_FPR(c,cont)  = 1 - (TN / (TN + FP));
+
+        end
+
+    end
+
+end
 
 %% Calculate AUC
 
 % Needs "another loop" for multiclass 
 
-% AUC = zeros(Nc,1);
+AUC = zeros(Nc,1);
 
-% for c = 1:Nc
-%     AUC(c) = sum(ROC_TPR(c,:))/len;
-% end
+for c = 1:Nc
+    AUC(c) = sum(ROC_REC(c,:))/len;
+end
 
 %% FILL OUTPUT STRUCTURE
 
@@ -368,11 +368,11 @@ STATS.mcc_per_class = mcc_per_class;
 STATS.mcc_mean = mcc_mean;
 STATS.mcc_multiclass = mcc_multiclass;
 
-% STATS.roc_t = ROC_t;
-% STATS.roc_prec = ROC_PREC;
-% STATS.roc_rec = ROC_REC;
-% STATS.roc_spec = ROC_SPEC;
-% STATS.roc_fpr = ROC_FPR;
-% STATS.auc = AUC;
+STATS.roc_t = ROC_t;
+STATS.roc_prec = ROC_PREC;
+STATS.roc_rec = ROC_REC;
+STATS.roc_spec = ROC_SPEC;
+STATS.roc_fpr = ROC_FPR;
+STATS.auc = AUC;
 
 %% END

@@ -13,11 +13,11 @@ format long e;
 
 % Datasets Specification
 
-datasets = 22;      % datasets = [06,07,10,19,22];
+datasets = 19;      % datasets = [06,07,10,19,22];
 
 % General options' structure
 
-OPT.Nr = 100;       % Number of experiment realizations
+OPT.Nr = 002;       % Number of experiment realizations
 OPT.alg = 'spok';   % spark or spok
 OPT.lbl = 1;        % Type of data labeling. 1: from sequential to [-1 and +1]
 OPT.norm = 3;       % Normalization. 0: Don't normalize. 3: z-score norm  
@@ -35,16 +35,16 @@ OPT.savefile = 1;   % decides if file will be saved
 % 1: linear | 2: rbf | 3: polynomial | 4: exp | 
 % 5: cauchy | 6: log | 7: sigmoid | 8: kmod |
 
-kernels = [1,2,3,4,5,6,7,8];
+kernels = [6]; % kernels = [1,2,3,4,5,6,7,8];
 
 % Specific Hyperparameters
 
 OPT.Us = 0;         % Update Strategy
 OPT.Ps = 0;         % Prunning Strategy
 
-Ss = [1,2,3,4];     % Sparsification procedures
-Dm = [1,2];         % Design methods
-K = [1,2];          % Number of Nearest Neighbors: 1 '1' ; or >1 '2'
+Ss = [1]; % Ss = [1,2,3,4];     % Sparsification procedures
+Dm = [2]; %Dm = [1,2];         % Design methods
+K = [2]; %K = [1,2];          % Number of Nearest Neighbors: 1 '1' ; or >1 '2'
 
 %% Datasets List
 

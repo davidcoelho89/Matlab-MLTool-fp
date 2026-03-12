@@ -32,7 +32,7 @@ f = (Fs/2)*linspace(0,1,Nfreq)';    % frequencies for spectrum plot
 
 %% CREATE SIGNAL
 
-f1 = 50;                % 50Hz (main frequency)
+f1 = 60;                % 50Hz (main frequency)
 
 w1 = 2*pi*f1;           % first harmonic
 a1 = 10;                % first amplitude

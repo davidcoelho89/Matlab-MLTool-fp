@@ -13,13 +13,16 @@ function [] = plot_stats_roc_curve(STATS)
 
 %% INITIALIZATIONS
 
-% Get number of classes
+% Get number of classes and curves
 
-[Nc,~] = size(STATS.roc_tpr);
+if(isfield(STATS,'roc_tpr'))
+    roc_tpr = STATS.roc_tpr;
+    [Nc,~] = size(STATS.roc_tpr);
+elseif(isfield(STATS,'roc_rec'))
+    roc_tpr = STATS.roc_rec;
+    [Nc,~] = size(STATS.roc_rec);
+end
 
-% Get curves
-
-roc_tpr = STATS.roc_tpr;
 roc_fpr = STATS.roc_fpr;
 
 %% ALGORITHM

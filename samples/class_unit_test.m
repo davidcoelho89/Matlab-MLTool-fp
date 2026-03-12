@@ -37,7 +37,11 @@ MP.lambda = 0.5;        % Jpbc = Ds + lambda * Err (prototype-based models)
 
 %% CHOOSE FIXED HYPERPARAMETERS 
 
-if(strcmp(OPT.alg,'mlp'))
+if(strcmp(OPT.alg,'lssvc'))
+    HP.lambda = 0.5;    % Regularization Constant
+    HP.Ktype = 2;       % Gaussian Kernel
+    HP.sigma = 11.3;    % Gaussian Kernel std
+elseif(strcmp(OPT.alg,'mlp'))
     HP.Nh = 05;         % Number of hidden neurons
     HP.Ne = 200;        % maximum number of training epochs
     HP.eta = 0.05;      % Learning step

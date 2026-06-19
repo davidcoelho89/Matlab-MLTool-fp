@@ -30,7 +30,7 @@ OPT.show_specific_stats = 0;    % roc, class boundary, precision-recall
 
 % Metaparameters
 
-MP.max_it = 9;          % Maximum number of iterations (random search)
+MP.max_it = 10;         % Maximum number of iterations (random search)
 MP.fold = 5;            % number of data partitions (cross validation)
 MP.cost = 1;            % Which cost function will be used
 MP.lambda = 0.5;        % Jpbc = Ds + lambda * Err (prototype-based models)

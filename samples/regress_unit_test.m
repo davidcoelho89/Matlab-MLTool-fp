@@ -13,7 +13,7 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 10;           	% Number of realizations
+OPT.Nr = 100;         	% Number of realizations
 OPT.alg = 'ols';        % Which classifier will be used
 OPT.prob = 42;        	% Which problem will be solved / used
 OPT.prob2 = 01;       	% More details about a specific data set

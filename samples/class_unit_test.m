@@ -13,9 +13,9 @@ format long e;  % Output data style (float)
 
 % General options' structure
 
-OPT.Nr = 10;           	% Number of realizations
-OPT.alg = 'mlp';        % Which classifier will be used
-OPT.prob = 22;        	% Which problem will be solved / used
+OPT.Nr = 100;         	% Number of realizations
+OPT.alg = 'ols';        % Which classifier will be used
+OPT.prob = 06;        	% Which problem will be solved / used
 OPT.prob2 = 01;       	% More details about a specific data set
 OPT.norm = 3;         	% Normalization definition
 OPT.lbl = 1;           	% Labeling definition
